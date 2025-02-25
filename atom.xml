@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Ben</title>
+  
+  <subtitle>个人学习笔记</subtitle>
+  <link href="http://example.com/atom.xml" rel="self"/>
+  
+  <link href="http://example.com/"/>
+  <updated>2025-02-25T04:25:52.754Z</updated>
+  <id>http://example.com/</id>
+  
+  <author>
+    <name>Ben</name>
+    
+  </author>
+  
+  <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Shell基础</title>
+    <link href="http://example.com/2025/02/25/Shell%E5%9F%BA%E7%A1%80/"/>
+    <id>http://example.com/2025/02/25/Shell%E5%9F%BA%E7%A1%80/</id>
+    <published>2025-02-25T04:16:28.000Z</published>
+    <updated>2025-02-25T04:25:52.754Z</updated>
+    
+    <content type="html"><![CDATA[<p>Shell的两种主语法类型有Bourne和C，这两种语法彼此不兼容。Bourne家族主要包括sh、ksh、Bash、psh、zsh；C家族主要包括：csh、tcsh（Bash和zsh在不同程度上支持csh的语法）。</p><p>可以通过&#x2F;etc&#x2F;shells文件来查询Linux支持的Shell：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# cat /etc/shells</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">/etc/shells: valid login shells</span></span><br><span class="line">/bin/sh</span><br><span class="line">/bin/bash</span><br><span class="line">/usr/bin/bash</span><br><span class="line">/bin/rbash</span><br><span class="line">/usr/bin/rbash</span><br><span class="line">/usr/bin/dash</span><br><span class="line">/usr/bin/sh</span><br></pre></td></tr></table></figure>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;Shell的两种主语法类型有Bourne和C，这两种语法彼此不兼容。Bourne家族主要包括sh、ksh、Bash、psh、zsh；C家族主要包括：csh、tcsh（Bash和zsh在不同程度上支持csh的语法）。&lt;/p&gt;
+&lt;p&gt;可以通过&amp;#x2F;etc&amp;#x2F;she</summary>
+      
+    
+    
+    
+    
+  </entry>
+  
+</feed>
