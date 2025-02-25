@@ -2,7 +2,7 @@
 <search>
   <entry>
     <title>Shell基础</title>
-    <url>/2025/02/25/Shell%E5%9F%BA%E7%A1%80/</url>
+    <url>/bentech8.github.io/2025/02/25/Shell%E5%9F%BA%E7%A1%80/</url>
     <content><![CDATA[<h2 id="Shell概述"><a href="#Shell概述" class="headerlink" title="Shell概述"></a>Shell概述</h2><h3 id="Shell分类"><a href="#Shell分类" class="headerlink" title="Shell分类"></a>Shell分类</h3><table>
 <thead>
 <tr>
@@ -270,7 +270,7 @@
   </entry>
   <entry>
     <title>Linux常用命令</title>
-    <url>/2025/02/25/Linux%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</url>
+    <url>/bentech8.github.io/2025/02/25/Linux%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</url>
     <content><![CDATA[<h1 id="Linux常用命令"><a href="#Linux常用命令" class="headerlink" title="Linux常用命令"></a>Linux常用命令</h1><h2 id="1-命令提示符"><a href="#1-命令提示符" class="headerlink" title="1. 命令提示符"></a>1. 命令提示符</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ben@ben-NBLK-WAX9X:~$</span><br></pre></td></tr></table></figure>
 
 <ul>
@@ -1095,7 +1095,7 @@
   </entry>
   <entry>
     <title>vim编辑器</title>
-    <url>/2025/02/25/vim%E7%BC%96%E8%BE%91%E5%99%A8/</url>
+    <url>/bentech8.github.io/2025/02/25/vim%E7%BC%96%E8%BE%91%E5%99%A8/</url>
     <content><![CDATA[<h1 id="vim编辑器"><a href="#vim编辑器" class="headerlink" title="vim编辑器"></a>vim编辑器</h1><p>vim是一个全屏幕纯文本编辑器，是vi编辑器的增强版。</p>
 <p>可以利用别名让输入vi命令的时候，实际上执行vim编辑器，如：</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">定义别名</span></span><br><span class="line">alias vi=&#x27;vim&#x27;</span><br></pre></td></tr></table></figure>
@@ -1434,7 +1434,7 @@
   </entry>
   <entry>
     <title>软件包安装</title>
-    <url>/2025/02/25/%E8%BD%AF%E4%BB%B6%E5%8C%85%E5%AE%89%E8%A3%85/</url>
+    <url>/bentech8.github.io/2025/02/25/%E8%BD%AF%E4%BB%B6%E5%8C%85%E5%AE%89%E8%A3%85/</url>
     <content><![CDATA[<h1 id="软件包安装"><a href="#软件包安装" class="headerlink" title="软件包安装"></a>软件包安装</h1><h2 id="1-软件包分类"><a href="#1-软件包分类" class="headerlink" title="1. 软件包分类"></a>1. 软件包分类</h2><ul>
 <li>源码包</li>
 <li>二进制包</li>
@@ -1752,7 +1752,7 @@
   </entry>
   <entry>
     <title>用户管理</title>
-    <url>/2025/02/25/%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86/</url>
+    <url>/bentech8.github.io/2025/02/25/%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86/</url>
     <content><![CDATA[<h1 id="用户管理"><a href="#用户管理" class="headerlink" title="用户管理"></a>用户管理</h1><h2 id="1-用户相关文件"><a href="#1-用户相关文件" class="headerlink" title="1. 用户相关文件"></a>1. 用户相关文件</h2><h3 id="1）用户信息文件"><a href="#1）用户信息文件" class="headerlink" title="1）用户信息文件"></a>1）用户信息文件</h3><p>&#x2F;etc&#x2F;passwd</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">root:x:0:0:root:/root:/bin/bash</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
 
@@ -1964,7 +1964,7 @@
   </entry>
   <entry>
     <title>权限管理</title>
-    <url>/2025/02/25/%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86/</url>
+    <url>/bentech8.github.io/2025/02/25/%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86/</url>
     <content><![CDATA[<h1 id="权限管理"><a href="#权限管理" class="headerlink" title="权限管理"></a>权限管理</h1><h2 id="1-ACL权限"><a href="#1-ACL权限" class="headerlink" title="1. ACL权限"></a>1. ACL权限</h2><h3 id="1）ACL概述"><a href="#1）ACL概述" class="headerlink" title="1）ACL概述"></a>1）ACL概述</h3><p>ACL是用于解决用户对文件身份不足问题的。</p>
 <h3 id="2）开启ACL"><a href="#2）开启ACL" class="headerlink" title="2）开启ACL"></a>2）开启ACL</h3><p>查询acl是否开启：</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">dumpe2fs命令是查询指定分区详细文件系统信息的命令</span></span><br><span class="line">dumpe2fs -h &lt;根分区&gt;</span><br><span class="line">选项：</span><br><span class="line">  -h:    仅显示超级地中信息，而不显示磁盘块组的详细信息。</span><br><span class="line"> </span><br><span class="line"> ...</span><br><span class="line"> Default mount options:     user_xattr acl</span><br><span class="line"> ...</span><br></pre></td></tr></table></figure>
@@ -2141,7 +2141,7 @@
   </entry>
   <entry>
     <title>文件系统管理</title>
-    <url>/2025/02/25/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86/</url>
+    <url>/bentech8.github.io/2025/02/25/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86/</url>
     <content><![CDATA[<h1 id="文件系统管理"><a href="#文件系统管理" class="headerlink" title="文件系统管理"></a>文件系统管理</h1><h2 id="1-硬盘结构"><a href="#1-硬盘结构" class="headerlink" title="1. 硬盘结构"></a>1. 硬盘结构</h2><h3 id="1）硬盘的逻辑结构"><a href="#1）硬盘的逻辑结构" class="headerlink" title="1）硬盘的逻辑结构"></a>1）硬盘的逻辑结构</h3><p>每个扇区的大小是固定的，为512Byte。扇区也是磁盘的最小存储单位。</p>
 <p>硬盘的大小是用”磁头数X柱面数X扇区数X每个扇区的大小”这样的公式来计算的。其中磁头数(Heads)表示硬盘总共有几个磁头，也可以理解成硬盘有几个盘面，然后乘以2；柱面数(Cylinders)表示硬盘每一面盘片有几条磁道；扇区数(Sectors)表示每条磁道上有几个扇区；每个扇区的大小一般是512Byte。</p>
 <h3 id="2）硬盘接口"><a href="#2）硬盘接口" class="headerlink" title="2）硬盘接口"></a>2）硬盘接口</h3><ul>
@@ -2534,7 +2534,7 @@
   </entry>
   <entry>
     <title>高级文件系统管理</title>
-    <url>/2025/02/25/%E9%AB%98%E7%BA%A7%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86/</url>
+    <url>/bentech8.github.io/2025/02/25/%E9%AB%98%E7%BA%A7%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86/</url>
     <content><![CDATA[<h1 id="高级文件系统管理"><a href="#高级文件系统管理" class="headerlink" title="高级文件系统管理"></a>高级文件系统管理</h1><h2 id="1-磁盘配额"><a href="#1-磁盘配额" class="headerlink" title="1. 磁盘配额"></a>1. 磁盘配额</h2><h3 id="1）磁盘配额条件"><a href="#1）磁盘配额条件" class="headerlink" title="1）磁盘配额条件"></a>1）磁盘配额条件</h3><ul>
 <li><p>内核必须支持磁盘配额</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# grep CONFIG_QUOTA /boot/config-2.6.32-279.el6.i686</span><br><span class="line">CONFIG_QUOTA=y</span><br><span class="line">CONFIG_QUOTA_NETLINK_INTERFACE=y</span><br><span class="line"># CONFIG_QUOTA_DEBUG is not set</span><br><span class="line">CONFIG_QUOTA_TREE=m</span><br><span class="line">CONFIG_QUOTACTL=y</span><br></pre></td></tr></table></figure>
