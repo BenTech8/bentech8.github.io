@@ -28,7 +28,7 @@
 <meta property="og:description" content="Shell概述Shell分类   Shell类别 易学性 可移植性 编辑性 快捷性    Bourne Shell（sh） 容易 好 较差 较差   Korn Shell（ksh） 较难 较好 好 较好   Bourne Again（Bash） 难 较好 好 好   POSIX Shell（psh） 较难 好 好 较好   C Shell（csh） 较难 差 较好 较好   TC Shell（tc">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-02-25T04:16:28.000Z">
-<meta property="article:modified_time" content="2025-02-25T04:50:32.498Z">
+<meta property="article:modified_time" content="2025-02-25T04:58:23.292Z">
 <meta property="article:author" content="Ben">
 <meta name="twitter:card" content="summary">
 
@@ -217,7 +217,16 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2025-02-25 12:16:28 / 修改时间：12:50:32" itemprop="dateCreated datePublished" datetime="2025-02-25T12:16:28+08:00">2025-02-25</time>
+              <time title="创建时间：2025-02-25 12:16:28 / 修改时间：12:58:23" itemprop="dateCreated datePublished" datetime="2025-02-25T12:16:28+08:00">2025-02-25</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Shell/" itemprop="url" rel="index"><span itemprop="name">Shell</span></a>
+                </span>
             </span>
 
           
@@ -288,6 +297,209 @@
 <p>可以通过&#x2F;etc&#x2F;shells文件来查询Linux支持的Shell：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# cat /etc/shells</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">/etc/shells: valid login shells</span></span><br><span class="line">/bin/sh</span><br><span class="line">/bin/bash</span><br><span class="line">/usr/bin/bash</span><br><span class="line">/bin/rbash</span><br><span class="line">/usr/bin/rbash</span><br><span class="line">/usr/bin/dash</span><br><span class="line">/usr/bin/sh</span><br></pre></td></tr></table></figure>
 
+<h3 id="Shell脚本的执行方式"><a href="#Shell脚本的执行方式" class="headerlink" title="Shell脚本的执行方式"></a>Shell脚本的执行方式</h3><p>a）echo命令</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# echo [选项] [输出内容]</span><br><span class="line">选项：</span><br><span class="line">  -e：    支持反斜线控制的字符转换（如下表）</span><br><span class="line">  -n：    取消输出后行末的换行符号(就是内容输出后不换行)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# echo &quot;Mr. Ben is the most honest man!&quot;</span><br><span class="line">Mr. Ben is the most honest man!</span><br><span class="line"></span><br><span class="line">[root@localhost ~]# echo -n &quot;Mr. Ben is the most honest man!&quot;</span><br><span class="line">Mr. Ben is the most honest man![root@localhost ~]#</span><br></pre></td></tr></table></figure>
+
+<p>在echo命令中如果使用了”-e”选项，则可以支持控制字符。</p>
+<table>
+<thead>
+<tr>
+<th>控制字符</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>\\</td>
+<td>输出\本身</td>
+</tr>
+<tr>
+<td>\a</td>
+<td>输出警告音</td>
+</tr>
+<tr>
+<td>\b</td>
+<td>退格键，也就是向左删除键</td>
+</tr>
+<tr>
+<td>\c</td>
+<td>取消输出行末的换行符。和“-n”选项一致</td>
+</tr>
+<tr>
+<td>\e</td>
+<td>ESCAPE键</td>
+</tr>
+<tr>
+<td>\f</td>
+<td>换页符</td>
+</tr>
+<tr>
+<td>\n</td>
+<td>换行符</td>
+</tr>
+<tr>
+<td>\r</td>
+<td>回车键</td>
+</tr>
+<tr>
+<td>\t</td>
+<td>制表符，也就是Tab键</td>
+</tr>
+<tr>
+<td>\v</td>
+<td>垂直制表符</td>
+</tr>
+<tr>
+<td>\0nnn</td>
+<td>按照八进制ASCII码表输出字符。其中0为数字零，nnn是三位八进制数</td>
+</tr>
+<tr>
+<td>\xhh</td>
+<td>按照十六进制ASCII码表输出字符。其中hh是两位十六进制数</td>
+</tr>
+</tbody></table>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# echo -e &quot;\\ \a&quot;</span><br><span class="line">\</span><br><span class="line"># 这个输出会输出\，同时会在系统音响中输出一声提示音</span><br><span class="line"></span><br><span class="line">[root@localhost ~]# echo -e &quot;ab\bc&quot;</span><br><span class="line">ac</span><br><span class="line"></span><br><span class="line">[root@localhost ~]# echo -e &quot;a\tb\tc\nd\te\tf&quot;</span><br><span class="line">a    b    c</span><br><span class="line">d    e    f</span><br><span class="line"></span><br><span class="line"># 八进制输出</span><br><span class="line">[root@localhost ~]# echo -e &quot;\0141\t\0142\t\0143\n\0144\t\0145\t\0146&quot;</span><br><span class="line">a    b    c</span><br><span class="line">d    e    f</span><br><span class="line"></span><br><span class="line"># 十六进制</span><br><span class="line">[root@localhost ~]# echo -e &quot;\x61\t\x62\t\x63\n\x64\t\x65\t\x66&quot;</span><br><span class="line">a    b    c</span><br><span class="line">d    e    f</span><br><span class="line"></span><br><span class="line"># 按颜色输出</span><br><span class="line">[root@localhost ~]# echo -e &quot;\e[1;31m    abcd \e[0m&quot;</span><br><span class="line">    abcd</span><br></pre></td></tr></table></figure>
+
+<p>按颜色输出这个命令，“\e[1”是标准格式，代表颜色输出开始，”\e[0m”代表颜色输出结束，31m定义字体颜色是红色。echo能够识别的颜色：</p>
+<ul>
+<li>30m：黑色</li>
+<li>31m：红色</li>
+<li>32m：绿色</li>
+<li>33m：黄色</li>
+<li>34m：蓝色</li>
+<li>35m：洋红</li>
+<li>36m：青色</li>
+<li>37m：白色</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# echo -e &quot;\e[1;42m abcd \e[0m&quot;</span><br></pre></td></tr></table></figure>
+
+<p>这条命令会给abcd加一个绿色的背景。echo可以使用的背景颜色如下：</p>
+<ul>
+<li>40m：黑色</li>
+<li>41m：红色</li>
+<li>42m：绿色</li>
+<li>43m：黄色</li>
+<li>44m：蓝色</li>
+<li>45m：洋红</li>
+<li>46m：青色</li>
+<li>47m：白色</li>
+</ul>
+<p>b）Shell脚本的执行</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/bash</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">The first program</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Author: Ben（E-mail: 326525276@qq.com）</span></span><br><span class="line"></span><br><span class="line">echo -e &quot;Mr. Ben is the most honest man! &quot;</span><br></pre></td></tr></table></figure>
+
+<p>在Linux中脚本的执行主要有两种方法：</p>
+<ul>
+<li><p>赋予执行权限，直接运行（推荐）</p>
+<p>这种方法是最常用的Shell脚本运行方法，也最为直接简单。运行时可以使用绝对路径，也可以使用相对路径。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">赋予执行权限</span></span><br><span class="line">[root@localhost sh]# chmod +x hello.sh</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">绝对路径执行</span></span><br><span class="line">[root@localhost sh]# /root/sh/hello.sh</span><br><span class="line">Mr. Ben is the most honest man!</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">相对路径执行</span></span><br><span class="line">[root@localhost sh]# ./hello.sh</span><br><span class="line">Mr. Ben is the most honest man!</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>通过Bash调用执行脚本</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost sh]# bash hello.sh</span><br><span class="line">Mr. Ben is the most honest man!</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="Bash的基本功能"><a href="#Bash的基本功能" class="headerlink" title="Bash的基本功能"></a>Bash的基本功能</h2><h3 id="历史命令"><a href="#历史命令" class="headerlink" title="历史命令"></a>历史命令</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# history [选项] [历史命令保存文件]</span><br><span class="line">选项：</span><br><span class="line">  -c：    清空历史命令</span><br><span class="line">  -w：    把缓存中的历史命令写入历史命令保存文件。如果不手工指定历史命令保存文件，则放入默认历史命令保存文件~/.bash_history中</span><br></pre></td></tr></table></figure>
+
+<p>history命令查看的历史命令和<del>&#x2F;.bash_history文件中保存的历史命令是不同的。那是因为当前登录操作的命令并没有直接写入</del>&#x2F;.bash_history文件，而是保存在缓存当中的。需要等当前用户注销之后，缓存中的命令才会写入<del>&#x2F;.bash_history文件。如果需要把内存中的命令直接写入</del>&#x2F;.bash_history文件，而不等用户注销时再写入，就需要使用”-w”选项。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># 把缓存中的历史命令直接写入~/.bash_history</span><br><span class="line">[root@localhost ~]# history -w</span><br><span class="line"></span><br><span class="line"># 清空历史命令</span><br><span class="line">[root@localhost ~]# history -c</span><br></pre></td></tr></table></figure>
+
+<h3 id="历史命令的调用"><a href="#历史命令的调用" class="headerlink" title="历史命令的调用"></a>历史命令的调用</h3><p>如果想要使用原先的历史命令有这样几种方法：</p>
+<ul>
+<li>使用上、下箭头调用以前的历史命令</li>
+<li>使用“!n”重复执行第n条历史命令</li>
+<li>使用”!!”重复执行上一条命令</li>
+<li>使用”!字串”重复执行最后一条以该字串开头的命令</li>
+<li>使用”!$”重复上一条命令的最后一个参数</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">调用最后一条以<span class="built_in">cat</span>开头的命令</span></span><br><span class="line">[root@localhost ~]# !cat</span><br></pre></td></tr></table></figure>
+
+<h3 id="输入输出重定向"><a href="#输入输出重定向" class="headerlink" title="输入输出重定向"></a>输入输出重定向</h3><p>bash的标准输入输出</p>
+<table>
+<thead>
+<tr>
+<th>设备</th>
+<th>设备文件名</th>
+<th>文件描述符</th>
+<th>类型</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>键盘</td>
+<td>&#x2F;dev&#x2F;stdin</td>
+<td>0</td>
+<td>标准输入</td>
+</tr>
+<tr>
+<td>显示器</td>
+<td>&#x2F;dev&#x2F;stdout</td>
+<td>1</td>
+<td>标准输出</td>
+</tr>
+<tr>
+<td>显示器</td>
+<td>&#x2F;dev&#x2F;stderr</td>
+<td>2</td>
+<td>标准错误输出</td>
+</tr>
+</tbody></table>
+<p>输出重定向</p>
+<ul>
+<li><p>标准输出重定向：</p>
+<ul>
+<li>命令 &gt; 文件：以覆盖的方式，把命令的正确输出输出到指定的文件或设备当中。</li>
+<li>命令 &gt;&gt; 文件：以追加的方式，把命令的正确输出输出到指定的文件或设备当中。</li>
+</ul>
+</li>
+<li><p>标准错误输出重定向：</p>
+<ul>
+<li>错误命令 2&gt;文件：以覆盖的方式，把命令的错误输出输出到指定的文件或设备当中。</li>
+<li>错误命令 2&gt;&gt;文件：以追加的方式，把命令的错误输出输出到指定的文件或设备当中。</li>
+</ul>
+</li>
+<li><p>正确输出和错误输出同时保存：</p>
+<ul>
+<li>命令 &gt; 文件 2&gt;&amp;1：以覆盖的方式，把正确输出和错误输出都保存在同一个文件当中。</li>
+<li>命令 &gt;&gt; 文件 2&gt;&amp;1：以追加的方式，把正确输出和错误输出都保存在同一个文件当中。</li>
+<li>命令 &amp;&gt;文件：以覆盖的方式，把正确输出和错误输出都保存在同一个文件当中。</li>
+<li>命令 &amp;&gt;&gt;文件：以追加的方式，把正确输出和错误输出都保存在同一个文件当中。</li>
+<li>命令&gt;&gt;文件1 2&gt;&gt;文件2：把正确的输出追加到文件1中，把错误的输出追加到文件2中。</li>
+</ul>
+</li>
+</ul>
+<p>输入重定向</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# wc [选项] [文件名]</span><br><span class="line">选项：</span><br><span class="line">  -c    统计字节数</span><br><span class="line">  -w    统计单词数</span><br><span class="line">  -l    统计行数</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="多命令执行顺序"><a href="#多命令执行顺序" class="headerlink" title="多命令执行顺序"></a>多命令执行顺序</h3><table>
+<thead>
+<tr>
+<th>多命令执行符</th>
+<th>格式</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>；</td>
+<td>命令1 ; 命令2</td>
+<td>多个命令顺序执行，命令之间没有任何逻辑联系</td>
+</tr>
+<tr>
+<td>&amp;&amp;</td>
+<td>命令1 &amp;&amp; 命令2</td>
+<td>1）当命令1正确执行($?&#x3D;0)，则命令2才会执行。2）当命令1执行不正确，则命令2不会执行。</td>
+</tr>
+<tr>
+<td>||</td>
+<td>命令1 || 命令2</td>
+<td>1）当命令1执行不正确，则命令2才会执行。2）当命令1正确执行，则命令2不会执行。</td>
+</tr>
+</tbody></table>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# ls &amp;&amp; echo yes || echo no</span><br><span class="line">yes</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="管道符"><a href="#管道符" class="headerlink" title="管道符"></a>管道符</h3><p>a）行提取命令grep</p>
+<p>b）</p>
 
     </div>
 
@@ -301,6 +513,13 @@
 
 
         
+    <div class="post-nav">
+      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2025/02/25/Linux%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/" rel="next" title="Linux常用命令">
+      Linux常用命令 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
       </footer>
     
   </article>
@@ -358,7 +577,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Shell%E6%A6%82%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">Shell概述</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Shell%E5%88%86%E7%B1%BB"><span class="nav-number">1.1.</span> <span class="nav-text">Shell分类</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Shell%E6%A6%82%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">Shell概述</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Shell%E5%88%86%E7%B1%BB"><span class="nav-number">1.1.</span> <span class="nav-text">Shell分类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Shell%E8%84%9A%E6%9C%AC%E7%9A%84%E6%89%A7%E8%A1%8C%E6%96%B9%E5%BC%8F"><span class="nav-number">1.2.</span> <span class="nav-text">Shell脚本的执行方式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Bash%E7%9A%84%E5%9F%BA%E6%9C%AC%E5%8A%9F%E8%83%BD"><span class="nav-number">2.</span> <span class="nav-text">Bash的基本功能</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8E%86%E5%8F%B2%E5%91%BD%E4%BB%A4"><span class="nav-number">2.1.</span> <span class="nav-text">历史命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8E%86%E5%8F%B2%E5%91%BD%E4%BB%A4%E7%9A%84%E8%B0%83%E7%94%A8"><span class="nav-number">2.2.</span> <span class="nav-text">历史命令的调用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E9%87%8D%E5%AE%9A%E5%90%91"><span class="nav-number">2.3.</span> <span class="nav-text">输入输出重定向</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%9A%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E9%A1%BA%E5%BA%8F"><span class="nav-number">2.4.</span> <span class="nav-text">多命令执行顺序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%A1%E9%81%93%E7%AC%A6"><span class="nav-number">2.5.</span> <span class="nav-text">管道符</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -372,9 +591,15 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">1</span>
+          <span class="site-state-item-count">8</span>
           <span class="site-state-item-name">日志</span>
         </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span></a>
       </div>
   </nav>
 </div>

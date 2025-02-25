@@ -60,6 +60,2673 @@
 <p>可以通过&#x2F;etc&#x2F;shells文件来查询Linux支持的Shell：</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# cat /etc/shells</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">/etc/shells: valid login shells</span></span><br><span class="line">/bin/sh</span><br><span class="line">/bin/bash</span><br><span class="line">/usr/bin/bash</span><br><span class="line">/bin/rbash</span><br><span class="line">/usr/bin/rbash</span><br><span class="line">/usr/bin/dash</span><br><span class="line">/usr/bin/sh</span><br></pre></td></tr></table></figure>
 
+<h3 id="Shell脚本的执行方式"><a href="#Shell脚本的执行方式" class="headerlink" title="Shell脚本的执行方式"></a>Shell脚本的执行方式</h3><p>a）echo命令</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# echo [选项] [输出内容]</span><br><span class="line">选项：</span><br><span class="line">  -e：    支持反斜线控制的字符转换（如下表）</span><br><span class="line">  -n：    取消输出后行末的换行符号(就是内容输出后不换行)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# echo &quot;Mr. Ben is the most honest man!&quot;</span><br><span class="line">Mr. Ben is the most honest man!</span><br><span class="line"></span><br><span class="line">[root@localhost ~]# echo -n &quot;Mr. Ben is the most honest man!&quot;</span><br><span class="line">Mr. Ben is the most honest man![root@localhost ~]#</span><br></pre></td></tr></table></figure>
+
+<p>在echo命令中如果使用了”-e”选项，则可以支持控制字符。</p>
+<table>
+<thead>
+<tr>
+<th>控制字符</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>\\</td>
+<td>输出\本身</td>
+</tr>
+<tr>
+<td>\a</td>
+<td>输出警告音</td>
+</tr>
+<tr>
+<td>\b</td>
+<td>退格键，也就是向左删除键</td>
+</tr>
+<tr>
+<td>\c</td>
+<td>取消输出行末的换行符。和“-n”选项一致</td>
+</tr>
+<tr>
+<td>\e</td>
+<td>ESCAPE键</td>
+</tr>
+<tr>
+<td>\f</td>
+<td>换页符</td>
+</tr>
+<tr>
+<td>\n</td>
+<td>换行符</td>
+</tr>
+<tr>
+<td>\r</td>
+<td>回车键</td>
+</tr>
+<tr>
+<td>\t</td>
+<td>制表符，也就是Tab键</td>
+</tr>
+<tr>
+<td>\v</td>
+<td>垂直制表符</td>
+</tr>
+<tr>
+<td>\0nnn</td>
+<td>按照八进制ASCII码表输出字符。其中0为数字零，nnn是三位八进制数</td>
+</tr>
+<tr>
+<td>\xhh</td>
+<td>按照十六进制ASCII码表输出字符。其中hh是两位十六进制数</td>
+</tr>
+</tbody></table>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# echo -e &quot;\\ \a&quot;</span><br><span class="line">\</span><br><span class="line"># 这个输出会输出\，同时会在系统音响中输出一声提示音</span><br><span class="line"></span><br><span class="line">[root@localhost ~]# echo -e &quot;ab\bc&quot;</span><br><span class="line">ac</span><br><span class="line"></span><br><span class="line">[root@localhost ~]# echo -e &quot;a\tb\tc\nd\te\tf&quot;</span><br><span class="line">a    b    c</span><br><span class="line">d    e    f</span><br><span class="line"></span><br><span class="line"># 八进制输出</span><br><span class="line">[root@localhost ~]# echo -e &quot;\0141\t\0142\t\0143\n\0144\t\0145\t\0146&quot;</span><br><span class="line">a    b    c</span><br><span class="line">d    e    f</span><br><span class="line"></span><br><span class="line"># 十六进制</span><br><span class="line">[root@localhost ~]# echo -e &quot;\x61\t\x62\t\x63\n\x64\t\x65\t\x66&quot;</span><br><span class="line">a    b    c</span><br><span class="line">d    e    f</span><br><span class="line"></span><br><span class="line"># 按颜色输出</span><br><span class="line">[root@localhost ~]# echo -e &quot;\e[1;31m    abcd \e[0m&quot;</span><br><span class="line">    abcd</span><br></pre></td></tr></table></figure>
+
+<p>按颜色输出这个命令，“\e[1”是标准格式，代表颜色输出开始，”\e[0m”代表颜色输出结束，31m定义字体颜色是红色。echo能够识别的颜色：</p>
+<ul>
+<li>30m：黑色</li>
+<li>31m：红色</li>
+<li>32m：绿色</li>
+<li>33m：黄色</li>
+<li>34m：蓝色</li>
+<li>35m：洋红</li>
+<li>36m：青色</li>
+<li>37m：白色</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# echo -e &quot;\e[1;42m abcd \e[0m&quot;</span><br></pre></td></tr></table></figure>
+
+<p>这条命令会给abcd加一个绿色的背景。echo可以使用的背景颜色如下：</p>
+<ul>
+<li>40m：黑色</li>
+<li>41m：红色</li>
+<li>42m：绿色</li>
+<li>43m：黄色</li>
+<li>44m：蓝色</li>
+<li>45m：洋红</li>
+<li>46m：青色</li>
+<li>47m：白色</li>
+</ul>
+<p>b）Shell脚本的执行</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/bash</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">The first program</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Author: Ben（E-mail: 326525276@qq.com）</span></span><br><span class="line"></span><br><span class="line">echo -e &quot;Mr. Ben is the most honest man! &quot;</span><br></pre></td></tr></table></figure>
+
+<p>在Linux中脚本的执行主要有两种方法：</p>
+<ul>
+<li><p>赋予执行权限，直接运行（推荐）</p>
+<p>这种方法是最常用的Shell脚本运行方法，也最为直接简单。运行时可以使用绝对路径，也可以使用相对路径。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">赋予执行权限</span></span><br><span class="line">[root@localhost sh]# chmod +x hello.sh</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">绝对路径执行</span></span><br><span class="line">[root@localhost sh]# /root/sh/hello.sh</span><br><span class="line">Mr. Ben is the most honest man!</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">相对路径执行</span></span><br><span class="line">[root@localhost sh]# ./hello.sh</span><br><span class="line">Mr. Ben is the most honest man!</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>通过Bash调用执行脚本</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost sh]# bash hello.sh</span><br><span class="line">Mr. Ben is the most honest man!</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="Bash的基本功能"><a href="#Bash的基本功能" class="headerlink" title="Bash的基本功能"></a>Bash的基本功能</h2><h3 id="历史命令"><a href="#历史命令" class="headerlink" title="历史命令"></a>历史命令</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# history [选项] [历史命令保存文件]</span><br><span class="line">选项：</span><br><span class="line">  -c：    清空历史命令</span><br><span class="line">  -w：    把缓存中的历史命令写入历史命令保存文件。如果不手工指定历史命令保存文件，则放入默认历史命令保存文件~/.bash_history中</span><br></pre></td></tr></table></figure>
+
+<p>history命令查看的历史命令和<del>&#x2F;.bash_history文件中保存的历史命令是不同的。那是因为当前登录操作的命令并没有直接写入</del>&#x2F;.bash_history文件，而是保存在缓存当中的。需要等当前用户注销之后，缓存中的命令才会写入<del>&#x2F;.bash_history文件。如果需要把内存中的命令直接写入</del>&#x2F;.bash_history文件，而不等用户注销时再写入，就需要使用”-w”选项。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 把缓存中的历史命令直接写入~/.bash_history</span><br><span class="line">[root@localhost ~]# history -w</span><br><span class="line"></span><br><span class="line"># 清空历史命令</span><br><span class="line">[root@localhost ~]# history -c</span><br></pre></td></tr></table></figure>
+
+<h3 id="历史命令的调用"><a href="#历史命令的调用" class="headerlink" title="历史命令的调用"></a>历史命令的调用</h3><p>如果想要使用原先的历史命令有这样几种方法：</p>
+<ul>
+<li>使用上、下箭头调用以前的历史命令</li>
+<li>使用“!n”重复执行第n条历史命令</li>
+<li>使用”!!”重复执行上一条命令</li>
+<li>使用”!字串”重复执行最后一条以该字串开头的命令</li>
+<li>使用”!$”重复上一条命令的最后一个参数</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">调用最后一条以<span class="built_in">cat</span>开头的命令</span></span><br><span class="line">[root@localhost ~]# !cat</span><br></pre></td></tr></table></figure>
+
+<h3 id="输入输出重定向"><a href="#输入输出重定向" class="headerlink" title="输入输出重定向"></a>输入输出重定向</h3><p>bash的标准输入输出</p>
+<table>
+<thead>
+<tr>
+<th>设备</th>
+<th>设备文件名</th>
+<th>文件描述符</th>
+<th>类型</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>键盘</td>
+<td>&#x2F;dev&#x2F;stdin</td>
+<td>0</td>
+<td>标准输入</td>
+</tr>
+<tr>
+<td>显示器</td>
+<td>&#x2F;dev&#x2F;stdout</td>
+<td>1</td>
+<td>标准输出</td>
+</tr>
+<tr>
+<td>显示器</td>
+<td>&#x2F;dev&#x2F;stderr</td>
+<td>2</td>
+<td>标准错误输出</td>
+</tr>
+</tbody></table>
+<p>输出重定向</p>
+<ul>
+<li><p>标准输出重定向：</p>
+<ul>
+<li>命令 &gt; 文件：以覆盖的方式，把命令的正确输出输出到指定的文件或设备当中。</li>
+<li>命令 &gt;&gt; 文件：以追加的方式，把命令的正确输出输出到指定的文件或设备当中。</li>
+</ul>
+</li>
+<li><p>标准错误输出重定向：</p>
+<ul>
+<li>错误命令 2&gt;文件：以覆盖的方式，把命令的错误输出输出到指定的文件或设备当中。</li>
+<li>错误命令 2&gt;&gt;文件：以追加的方式，把命令的错误输出输出到指定的文件或设备当中。</li>
+</ul>
+</li>
+<li><p>正确输出和错误输出同时保存：</p>
+<ul>
+<li>命令 &gt; 文件 2&gt;&amp;1：以覆盖的方式，把正确输出和错误输出都保存在同一个文件当中。</li>
+<li>命令 &gt;&gt; 文件 2&gt;&amp;1：以追加的方式，把正确输出和错误输出都保存在同一个文件当中。</li>
+<li>命令 &amp;&gt;文件：以覆盖的方式，把正确输出和错误输出都保存在同一个文件当中。</li>
+<li>命令 &amp;&gt;&gt;文件：以追加的方式，把正确输出和错误输出都保存在同一个文件当中。</li>
+<li>命令&gt;&gt;文件1 2&gt;&gt;文件2：把正确的输出追加到文件1中，把错误的输出追加到文件2中。</li>
+</ul>
+</li>
+</ul>
+<p>输入重定向</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# wc [选项] [文件名]</span><br><span class="line">选项：</span><br><span class="line">  -c    统计字节数</span><br><span class="line">  -w    统计单词数</span><br><span class="line">  -l    统计行数</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="多命令执行顺序"><a href="#多命令执行顺序" class="headerlink" title="多命令执行顺序"></a>多命令执行顺序</h3><table>
+<thead>
+<tr>
+<th>多命令执行符</th>
+<th>格式</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>；</td>
+<td>命令1 ; 命令2</td>
+<td>多个命令顺序执行，命令之间没有任何逻辑联系</td>
+</tr>
+<tr>
+<td>&amp;&amp;</td>
+<td>命令1 &amp;&amp; 命令2</td>
+<td>1）当命令1正确执行($?&#x3D;0)，则命令2才会执行。2）当命令1执行不正确，则命令2不会执行。</td>
+</tr>
+<tr>
+<td>||</td>
+<td>命令1 || 命令2</td>
+<td>1）当命令1执行不正确，则命令2才会执行。2）当命令1正确执行，则命令2不会执行。</td>
+</tr>
+</tbody></table>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# ls &amp;&amp; echo yes || echo no</span><br><span class="line">yes</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="管道符"><a href="#管道符" class="headerlink" title="管道符"></a>管道符</h3><p>a）行提取命令grep</p>
+<p>b）</p>
 ]]></content>
+      <categories>
+        <category>Shell</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Linux常用命令</title>
+    <url>/2025/02/25/Linux%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</url>
+    <content><![CDATA[<h1 id="Linux常用命令"><a href="#Linux常用命令" class="headerlink" title="Linux常用命令"></a>Linux常用命令</h1><h2 id="1-命令提示符"><a href="#1-命令提示符" class="headerlink" title="1. 命令提示符"></a>1. 命令提示符</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ben@ben-NBLK-WAX9X:~$</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>[]：这是提示符的分隔符号，没有特殊含义</li>
+<li>ben：显示的是当前的登录用户。</li>
+<li>@：分隔符号，没有特殊含义。</li>
+<li>ben-NBLK-WAX9X：当前系统的简写主机名。</li>
+<li>~：代表用户当前所在的目录。</li>
+<li>$：命令提示符，超级用户是#，普通用户是$。</li>
+</ul>
+<h2 id="2-文件操作命令"><a href="#2-文件操作命令" class="headerlink" title="2. 文件操作命令"></a>2. 文件操作命令</h2><h3 id="1）touch"><a href="#1）touch" class="headerlink" title="1）touch"></a>1）touch</h3><p>创建空文件或者修改文件时间。</p>
+<h3 id="2）stat"><a href="#2）stat" class="headerlink" title="2）stat"></a>2）stat</h3><p>查看文件详细信息，而且可以看到文件的四个时间。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">stat abc</span><br><span class="line">文件：abc</span><br><span class="line">  大小：0         	块：0          IO 块大小：4096   普通空文件</span><br><span class="line">设备：259,10	Inode: 2953378     硬链接：1</span><br><span class="line">权限：(0664/-rw-rw-r--)  Uid: ( 1000/     ben)   Gid: ( 1000/     ben)</span><br><span class="line">访问时间：2024-11-19 16:04:02.421884754 +0800      # 最后一次访问时间</span><br><span class="line">修改时间：2024-11-19 16:04:02.421884754 +0800      # 数据修改时间</span><br><span class="line">变更时间：2024-11-19 16:04:02.421884754 +0800      # 状态修改时间</span><br><span class="line">创建时间：2024-11-19 16:03:01.150885757 +0800</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="3）cat"><a href="#3）cat" class="headerlink" title="3）cat"></a>3）cat</h3><p>【功能描述】：查看文件内容。</p>
+<p>选项：</p>
+<ul>
+<li>-A：相当于-vET选项的整合，用于列出所有隐藏符号</li>
+<li>-E：列出每行结尾的回车符$</li>
+<li>-n：显示行号</li>
+<li>-T：把Tab键用^T显示出来</li>
+<li>-v：列出特殊字符</li>
+</ul>
+<h3 id="4）more"><a href="#4）more" class="headerlink" title="4）more"></a>4）more</h3><p>【功能描述】：分屏显示文件内容。</p>
+<p>more命令比较简单，一般不用什么选项，命令会打开一个交互界面，可以识别一些交互命令。常用交互命令如下：</p>
+<ul>
+<li>空格键：向下翻页</li>
+<li>b：向上翻页</li>
+<li>回车键：向下滚动一行</li>
+<li>&#x2F;字符串：指定搜索的字符串</li>
+<li>q：退出</li>
+</ul>
+<h3 id="5）less"><a href="#5）less" class="headerlink" title="5）less"></a>5）less</h3><p>【功能描述】：分行显示文件内容。</p>
+<h3 id="6）head"><a href="#6）head" class="headerlink" title="6）head"></a>6）head</h3><p>【功能描述】：显示文件开头的命令。</p>
+<h3 id="7）tail"><a href="#7）tail" class="headerlink" title="7）tail"></a>7）tail</h3><p>【功能描述】：显示文件结尾的命令。</p>
+<p>选项：</p>
+<ul>
+<li>-n 行数：从文件结尾开始，显示指定行数。</li>
+<li>-f：监听文件的新增内容，ctrl+c退出。</li>
+</ul>
+<h3 id="8）ln"><a href="#8）ln" class="headerlink" title="8）ln"></a>8）ln</h3><p>【功能描述】：在文件之间建立链接</p>
+<h4 id="1）硬链接"><a href="#1）硬链接" class="headerlink" title="1）硬链接"></a>1）硬链接</h4><p>特征：</p>
+<ul>
+<li>源文件和硬链接文件拥有相同的Inode和Block</li>
+<li>修改任意一个文件，另一个都改变</li>
+<li>删除任意一个文件，另一个都能使用</li>
+<li>硬链接标记不清，很难确认硬链接文件位置，不建议使用</li>
+<li>硬链接不能链接目录</li>
+<li>硬链接不能跨分区</li>
+</ul>
+<h4 id="2）软链接"><a href="#2）软链接" class="headerlink" title="2）软链接"></a>2）软链接</h4><p>特征：</p>
+<ul>
+<li>软链接和源文件拥有不同的Inode和Block</li>
+<li>两个文件修改任意一个，另一个都改变</li>
+<li>删除软链接，源文件不受影响；删除源文件，软链接不能使用</li>
+<li>软链接没有实际数据，只保存源文件的Inode，不论源文件多大，软链接大小不变</li>
+<li>软链接的权限是最大权限lrwxrwxrwx.，但是由于没有实际数据，最终访问时需要参考源文件权限</li>
+<li>软链接可以链接目录</li>
+<li>软链接可以跨分区</li>
+<li>软链接特征明显，建议使用软链接</li>
+</ul>
+<h2 id="3-目录和文件都能操作的命令"><a href="#3-目录和文件都能操作的命令" class="headerlink" title="3. 目录和文件都能操作的命令"></a>3. 目录和文件都能操作的命令</h2><h3 id="1）rm"><a href="#1）rm" class="headerlink" title="1）rm"></a>1）rm</h3><p>【功能描述】：删除文件或目录</p>
+<p>选项：</p>
+<ul>
+<li>-f：强制删除</li>
+<li>-i：交互删除，在删除之前会询问用户(默认)</li>
+<li>-r：递归删除，可以删除目录</li>
+</ul>
+<h3 id="2）cp"><a href="#2）cp" class="headerlink" title="2）cp"></a>2）cp</h3><p>【功能描述】：复制文件和目录</p>
+<p>选项：</p>
+<ul>
+<li>-a：相当于-dpr选项的集合。</li>
+<li>-d：如果源文件为软链接(硬链接无效)，则复制出的目标文件也为软链接。</li>
+<li>-i：询问，如果目标文件已经存在，则会询问是否覆盖。</li>
+<li>-p：复制后目标文件保留源文件的属性(包括所有者、所属组、权限和时间)</li>
+<li>-r：递归复制，用于复制目录</li>
+</ul>
+<h3 id="3）mv"><a href="#3）mv" class="headerlink" title="3）mv"></a>3）mv</h3><p>【功能描述】：移动文件或者改名</p>
+<p>选项：</p>
+<ul>
+<li>-f：强制覆盖，如果目标文件已经存在，则不询问，直接强制覆盖</li>
+<li>-i：交互移动，如果目标文件已经存在，则询问用户是否覆盖(默认)</li>
+<li>-v：显示详细信息</li>
+</ul>
+<h2 id="4-权限"><a href="#4-权限" class="headerlink" title="4. 权限"></a>4. 权限</h2><h3 id="1）权限位含义"><a href="#1）权限位含义" class="headerlink" title="1）权限位含义"></a>1）权限位含义</h3><ul>
+<li>第一位代表<strong>文件类型</strong>。Linux不像Windows使用扩展名表示文件类型，而是使用权限位的第1位表示文件类型。虽然Linux文件的种类不像Windows中那么多，但是分类也不少，详细情况可以使用“info ls”命令查看。<ul>
+<li>“-”：普通文件。</li>
+<li>“b”：块设备文件。</li>
+<li>“c”：字符设备文件。</li>
+<li>“d”：目录文件。</li>
+<li>“l”：软链接文件。</li>
+<li>“p”：管道符文件。</li>
+<li>“s”：套接字文件。</li>
+</ul>
+</li>
+<li>第2-4位代表<strong>文件所有者</strong>(u)的权限<ul>
+<li>r：读权限</li>
+<li>w：写权限</li>
+<li>x：执行权限</li>
+</ul>
+</li>
+<li>第5-7位代表<strong>文件所属组</strong>(g)的权限</li>
+<li>第8-10位代表<strong>其他人</strong>(o)的权限</li>
+</ul>
+<h3 id="2）基本权限的作用"><a href="#2）基本权限的作用" class="headerlink" title="2）基本权限的作用"></a>2）基本权限的作用</h3><h4 id="a-权限含义的解释"><a href="#a-权限含义的解释" class="headerlink" title="a.权限含义的解释"></a>a.权限含义的解释</h4><p>首先，读、写、执行权限对文件和目录的作用是不同的。</p>
+<p>权限对文件的作用</p>
+<ul>
+<li>读(r)：对文件有读(r)权限，代表可以读取文件中的数据。如果把权限对应到命令上，那么一旦对文件有读(r)权限，就可以对文件执行cat、more、less、head、tail等文件查看命令。</li>
+<li>写(w)：对文件有写(w)权限，代表可以修改文件中的数据。如果把权限对应到命令上，那么一旦对文件有写(w)权限，就可以对文件执行vim、echo等修改文件数据的命令。注意：对文件有写权限，是不能删除文件本身的，只能修改文件中的数据。如果要想删除文件，则需要对文件的上级目录有写权限。</li>
+<li>执行(x)：对文件有执行(x)权限，代表文件拥有了执行权限。可以运行。在Linux中，只要文件有执行(x)权限，这个文件就是执行文件了。只是这个文件到底能不能正确执行，不仅需要执行(x)权限，还要看文件中的代码是不是正确的语言代码。对文件来说，执行(x)权限是最高权限。</li>
+</ul>
+<p>权限对目录的作用</p>
+<ul>
+<li>读(r)：对目录有读(r)权限，代表可以查看目录下的内容，也就是可以查看目录下有哪些子文件和子目录。如果把权限对应到命令上，那么一旦对目录拥有了读(r)权限，就可以在下执行ls命令，查看目录下的内容了。</li>
+<li>写(w)：对目录有写(w)权限，代表可以修改目录下的数据，也就是可以在目录中新建、删除、复制、剪切子文件或目录。如果把权限对应到命令上，那么一旦对目录拥有了写(w)权限，就可以在目录下执行touch、rm、cp、mv命令。对目录来说，写(w)权限是最高权限。</li>
+<li>执行(x)：目录是不能运行的，那么对目录拥有了执行(x)权限，代表可以进入目录。如果把权限对应到命令上，那么一旦对目录拥有了执行(x)权限，就可以对目录执行cd命令，进入目录。</li>
+</ul>
+<h4 id="b-目录的可用权限"><a href="#b-目录的可用权限" class="headerlink" title="b.目录的可用权限"></a>b.目录的可用权限</h4><p>目录的可用权限其实只有以下几个：</p>
+<ul>
+<li>0：任何权限都不赋予。</li>
+<li>5：基本的目录浏览和进入权限。</li>
+<li>7：完全权限。</li>
+</ul>
+<h3 id="3）chmod"><a href="#3）chmod" class="headerlink" title="3）chmod"></a>3）chmod</h3><p>【功能描述】：修改文件的权限模式。</p>
+<p>选项：</p>
+<ul>
+<li>-R：递归设置权限，也就是给子目录中的所有文件设定权限。</li>
+</ul>
+<p>【注意】</p>
+<ul>
+<li>普通用户可以修改所有者是自己的文件的权限</li>
+</ul>
+<h3 id="4）chown"><a href="#4）chown" class="headerlink" title="4）chown"></a>4）chown</h3><p>【功能描述】：修改文件和目录的所有者和所有组。</p>
+<p>选项：</p>
+<ul>
+<li>-R：递归设置权限，也就是给子目录中的所有文件设置权限。</li>
+</ul>
+<p>【注意】</p>
+<ul>
+<li>普通用户不能修改文件的所有者(哪怕文件属于这个普通用户)，只有超级用户才能修改所有者。</li>
+</ul>
+<h3 id="5）chgrp"><a href="#5）chgrp" class="headerlink" title="5）chgrp"></a>5）chgrp</h3><p>【功能描述】：修改文件和目录的所属组。</p>
+<h3 id="6）umask"><a href="#6）umask" class="headerlink" title="6）umask"></a>6）umask</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 查询系统umask权限</span><br><span class="line">umask</span><br><span class="line">0002       # 用八进制数值表示umask权限</span><br><span class="line"></span><br><span class="line">umask -S</span><br><span class="line">u=rwx,g=rwx,o=rx      # 用字母表示文件和目录的初始权限</span><br></pre></td></tr></table></figure>
+
+
+
+<p>umask权限的计算方法</p>
+<p>新建文件和目录的默认最大权限：</p>
+<ul>
+<li>对文件来讲，新建文件的默认最大权限是666，没有执行(x)权限。这是因为执行权限对文件来讲比较危险，不能在新建文件的时候默认赋予，而必须通过用户手工赋予。</li>
+<li>对目录来讲，新建目录的默认最大权限是777，这是因为对目录而言，执行(x)权限仅仅代表进入目录，所以即使建立新文件时直接默认赋予，也没有什么危险。</li>
+</ul>
+<p>按照官方的标准算法，umask默认权限需要使用二进制进行逻辑与和逻辑非联合运算才可以得到正确的新建文件和目录的默认权限。这种方法既不好计算，也不好理解，不太推荐。</p>
+<p>按照权限字母来讲解umask权限的计算方法：</p>
+<ul>
+<li><p>文件的默认权限最大只能是666，而umask的值是002</p>
+<p>“-rw-rw-rw-” - “——-w-” &#x3D; “-rw-rw-r–”</p>
+</li>
+<li><p>目录的默认权限最大可以是777，而umask的值是002</p>
+<p>“drwxrwxrwx” - “d——-w-“ &#x3D; “drwxrwxr-x”</p>
+</li>
+</ul>
+<h2 id="5-帮助命令"><a href="#5-帮助命令" class="headerlink" title="5. 帮助命令"></a>5. 帮助命令</h2><h3 id="1）man"><a href="#1）man" class="headerlink" title="1）man"></a>1）man</h3><p>【功能描述】：显示联机帮助手册</p>
+<p>man命令快捷键</p>
+<table>
+<thead>
+<tr>
+<th>快捷键</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>上箭头</td>
+<td>向上移动一行</td>
+</tr>
+<tr>
+<td>下箭头</td>
+<td>向下移动一行</td>
+</tr>
+<tr>
+<td>PgUp</td>
+<td>向上翻一页</td>
+</tr>
+<tr>
+<td>PgDn</td>
+<td>向下翻一页</td>
+</tr>
+<tr>
+<td>g</td>
+<td>移动到第一页</td>
+</tr>
+<tr>
+<td>G</td>
+<td>移动到最后一页</td>
+</tr>
+<tr>
+<td>q</td>
+<td>退出</td>
+</tr>
+<tr>
+<td>&#x2F;字符串</td>
+<td>从当前页向下搜索字符串</td>
+</tr>
+<tr>
+<td>?字符串</td>
+<td>从当前页向上搜索字符串</td>
+</tr>
+<tr>
+<td>n</td>
+<td>当搜索字符串时，可以使用n键找到下一个字符串</td>
+</tr>
+<tr>
+<td>N</td>
+<td>当搜索字符串时，使用N键反向查询字符串。也就是说，如果使用“&#x2F;字符串”方式搜索，则N键表示向上搜索字符串；如果使用“?字符串”方式搜索，则N键表示向下搜索字符串。</td>
+</tr>
+</tbody></table>
+<p>man命令的帮助级别</p>
+<table>
+<thead>
+<tr>
+<th>级别</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>普通用户可以执行的系统命令和可执行文件的帮助</td>
+</tr>
+<tr>
+<td>2</td>
+<td>内核可以调用的函数和工具的帮助</td>
+</tr>
+<tr>
+<td>3</td>
+<td>C语言函数的帮助</td>
+</tr>
+<tr>
+<td>4</td>
+<td>设备和特殊文件的帮助</td>
+</tr>
+<tr>
+<td>5</td>
+<td>配置文件的帮助</td>
+</tr>
+<tr>
+<td>6</td>
+<td>游戏的帮助(个人版的Linux中是有游戏的)</td>
+</tr>
+<tr>
+<td>7</td>
+<td>杂项的帮助</td>
+</tr>
+<tr>
+<td>8</td>
+<td>超级用户可以执行的系统命令的帮助</td>
+</tr>
+<tr>
+<td>9</td>
+<td>内核的帮助</td>
+</tr>
+</tbody></table>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查看命令拥有哪个级别的帮助</span></span><br><span class="line">man -f 命令 或 whatis 命令</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查看和命令相关的所有帮助</span></span><br><span class="line">man -k 命令 或 apropos 命令</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="2）info"><a href="#2）info" class="headerlink" title="2）info"></a>2）info</h3><p>【功能描述】：一套完整资料的帮助信息</p>
+<p>info命令快捷键</p>
+<table>
+<thead>
+<tr>
+<th>快捷键</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>上箭头</td>
+<td>向上移动一行</td>
+</tr>
+<tr>
+<td>下箭头</td>
+<td>向下移动一行</td>
+</tr>
+<tr>
+<td>PgUp</td>
+<td>向上翻一页</td>
+</tr>
+<tr>
+<td>PgDn</td>
+<td>向下翻一页</td>
+</tr>
+<tr>
+<td>Tab</td>
+<td>在有“*”符号的节点间进行切换</td>
+</tr>
+<tr>
+<td>回车</td>
+<td>进入有“*”符号的子页面，查看详细帮助信息</td>
+</tr>
+<tr>
+<td>u</td>
+<td>进入上一层信息(回车是进入下一层信息)</td>
+</tr>
+<tr>
+<td>n</td>
+<td>进入下一小节信息</td>
+</tr>
+<tr>
+<td>p</td>
+<td>进入上一小节信息</td>
+</tr>
+<tr>
+<td>？</td>
+<td>查看帮助信息</td>
+</tr>
+<tr>
+<td>q</td>
+<td>退出info信息</td>
+</tr>
+</tbody></table>
+<h3 id="3）help-基本不用"><a href="#3）help-基本不用" class="headerlink" title="3）help(基本不用)"></a>3）help(基本不用)</h3><p>【功能描述】：显示Shell内置命令的帮助。</p>
+<p>区分Shell内置命令与外部命令：type 命令。</p>
+<h3 id="4）–help"><a href="#4）–help" class="headerlink" title="4）–help"></a>4）–help</h3><p>【功能描述】：man命令的信息简要版。</p>
+<h2 id="6-搜索命令"><a href="#6-搜索命令" class="headerlink" title="6. 搜索命令"></a>6. 搜索命令</h2><h3 id="1）whereis"><a href="#1）whereis" class="headerlink" title="1）whereis"></a>1）whereis</h3><p>搜索系统命令的命令。</p>
+<p>【功能描述】：查找二进制命令、源文件和帮助文档的命令。</p>
+<h3 id="2）which"><a href="#2）which" class="headerlink" title="2）which"></a>2）which</h3><p>搜索系统命令的命令。</p>
+<p>和whereis命令的区别在于：</p>
+<ul>
+<li>whereis命令可以在查找到二进制命令的同时，查找到帮助文档的位置；</li>
+<li>which命令在查找到二进制命令的同时，如果这个命令有别名，则还可以找到别名命令。</li>
+</ul>
+<h3 id="3）locate"><a href="#3）locate" class="headerlink" title="3）locate"></a>3）locate</h3><p>【功能描述】：按照文件名搜索文件。</p>
+<p>优点：按照数据库搜索，搜索速度快，消耗资源小。数据库位置&#x2F;var&#x2F;lib&#x2F;mlocate&#x2F;mlocate.db（更新数据库：updatedb）。</p>
+<p>缺点：只能按照文件名来搜索文件，而不能执行更复杂的搜索，比如按照权限、大小、修改时间等搜索文件。</p>
+<h3 id="4）find"><a href="#4）find" class="headerlink" title="4）find"></a>4）find</h3><ul>
+<li><p>按照文件名搜索</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">find 搜索路径 [选项] 搜索内容</span><br><span class="line">选项：</span><br><span class="line">  -name: 按照文件名搜索</span><br><span class="line">  -iname: 按照文件名搜索，不区分文件名大小写</span><br><span class="line">  -inum: 按照inode号搜索</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>按照文件大小搜索</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">find 搜索路径 [选项] 搜索内容</span><br><span class="line">选项：</span><br><span class="line">  -size [+|-]大小: 按照指定大小搜索文件。&quot;+&quot;指搜索比指定大小还大的文件，&quot;-&quot;指搜索比指定大小还小的文件。 </span><br><span class="line"></span><br><span class="line">单位：</span><br><span class="line">- b：默认单位，如果单位为b或者不写单位，则按照512 Byte搜索</span><br><span class="line">- c：按照字节搜索</span><br><span class="line">- w：按照双字节搜索</span><br><span class="line">- k：按KB搜索</span><br><span class="line">- M：按MB搜索</span><br><span class="line">- G：按GB搜索</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>按照修改时间搜索</p>
+<p>Linux中的文件有访问时间(atime)、数据修改时间(mtime)、状态修改时间(ctime)等时间。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">find 搜索路径 [选项] 搜索内容</span><br><span class="line">先项：</span><br><span class="line">  -atime [+|-]时间(天)：按照访问时间搜索</span><br><span class="line">  -mtime [+|-]时间(天)：按照数据修改时间搜索</span><br><span class="line">  -ctime [+|-]时间(天)：按照状态修改时间搜索</span><br><span class="line">  </span><br><span class="line">以mtime数据修改时间为例，说明时间含义：</span><br><span class="line">- -5：代表5天内修改的文件</span><br><span class="line">- 5：代表前5~6天那一天修改的文件</span><br><span class="line">- +5：代表6天前修改的文件</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>按照权限搜索</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">find 搜索路径 [选项] 搜索内容</span><br><span class="line">选项：</span><br><span class="line">  -perm 权限模式：查找文件权限刚好等于&quot;权限模式&quot;的文件</span><br><span class="line">  -perm -权限模式：查找文件权限全部包含&quot;权限模式&quot;的文件</span><br><span class="line">  -perm +权限模式：查找文件权限包含&quot;权限模式&quot;的任意一个权限的文件</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>按照所有者和所属组搜索</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">find 搜索路径 [选项] 搜索内容</span><br><span class="line">选项：</span><br><span class="line">  -uid 用户ID：按照用户ID查找所有者是指定ID的文件</span><br><span class="line">  -gid 组ID：按照用户组ID查找所属组是指定ID的文件</span><br><span class="line">  -user 用户名：按照用户名查找所有者是指定用户的文件</span><br><span class="line">  -group 组名：按照组名查打所属组是指定用户组的文件</span><br><span class="line">  -nouser：查找没有所有者的文件</span><br></pre></td></tr></table></figure>
+
+<p>按照所有者和所属组搜索时，“-nouser”选项比较常用，主要用于查找垃圾文件。</p>
+<p>只有一种情况例外，那就是外来文件。比如光盘和U盘中的文件如果是由Windows复制的，在Linux中查看就是没有所有者的文件，再比如手工源码包安装的文件，也有可能没有所有者。</p>
+</li>
+<li><p>按照文件类型搜索</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">find 搜索路径 [选项] 搜索内容</span><br><span class="line">选项：</span><br><span class="line">  -type d：查找目录</span><br><span class="line">  -type f：查找普通文件</span><br><span class="line">  -type l：查找软链接文件</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>逻辑运算符</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">find 搜索路径 [选项] 搜索内容</span><br><span class="line">选项：</span><br><span class="line">  -a：逻辑与(and)</span><br><span class="line">  -o：逻辑或(or)</span><br><span class="line">  -not(!)：逻辑非(not)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>-a：逻辑与(and)</p>
+<p>find命令也支持逻辑运算符先项，其中-a代表逻辑与运算，也就是-a的两个条件都成立，find搜索的结果才成立</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">在当前目录下搜索大小2KB，并且文件类型是普通文件的文件</span></span><br><span class="line">find . -size +2k -a -type f</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>-o：逻辑或(or)</p>
+<p>-o选项代表逻辑或运算，也就是-o的两个条件只要其中一个成立，find命令就可以找到结果</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">在当前目录下搜索文件名要么是cangls的文件，要么是bols的文件</span></span><br><span class="line">find . -name cangls -o -name bols</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>-not(!)：逻辑非(not)</p>
+<p>-not是逻辑非，也就是取反的意思</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">在当前目录下搜索文件名不是cangls文件</span></span><br><span class="line">find . -not -name cangls</span><br><span class="line">find . ! -name cangls</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p>其他选项</p>
+<ul>
+<li><p>-exec选项</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">find 搜索路径 [选项] 搜索内容 -exec 命令2 &#123;&#125; \；</span><br></pre></td></tr></table></figure>
+
+<p>这个选项的作用其实是把find命令的结果交由“-exec”调用的命令2来处理。”{}”就代表find命令的查找结果。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">find /var/log -mtime +10 -exec ls -ahl &#123;&#125; \;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>-ok选项</p>
+<p>“-ok”选项和”-exec”选项的作用基本一致，区别在于：“-exec”的命令2会直接处理，而不询问：”-ok”的命令2在处理前会先询问用户是否这样处理，在得到确认命令后，才会执行。</p>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="7-补充命令"><a href="#7-补充命令" class="headerlink" title="7. 补充命令"></a>7. 补充命令</h2><h3 id="1）grep"><a href="#1）grep" class="headerlink" title="1）grep"></a>1）grep</h3><p>grep的作用是在文件中提取和匹配符合条件的字符串行。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">grep [选项] &quot;搜索内容&quot; 文件名</span><br><span class="line">选项：</span><br><span class="line">  -i：忽略大小写</span><br><span class="line">  -n：输出行号</span><br><span class="line">  -v：反向查找</span><br><span class="line">  --color=auto：搜索出的关键字用颜色显示</span><br></pre></td></tr></table></figure>
+
+
+
+<p>find和grep区别：</p>
+<ul>
+<li>find命令用于在系统中搜索符合条件的文件名，如果需要模糊查询，则使用通配符进行匹配。搜索文件名是完全匹配的。</li>
+<li>grep命令用于在文件中搜索符合条件的字符串，如果需要模糊查询，则使用正则表达式进行匹配。搜索时字符串是包含匹配的。</li>
+</ul>
+<p>通匹符和正则表达式的区别：</p>
+<ul>
+<li><p>通配符：用于匹配文件名，完全匹配。</p>
+<table>
+<thead>
+<tr>
+<th>通配符</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>？</td>
+<td>匹配一个任意字符</td>
+</tr>
+<tr>
+<td>*</td>
+<td>匹配0个或任意多个任意字符，也就是可以匹配任何内容</td>
+</tr>
+<tr>
+<td>[]</td>
+<td>匹配中括号中任意一个字符。例如，[abc]代表一定匹配一个字符，或者是a，或者是b，或者是c</td>
+</tr>
+<tr>
+<td>[-]</td>
+<td>匹配中括号中任意一个字符，-代表一个范围，例如，[a-z]代表匹配一个小写字母</td>
+</tr>
+<tr>
+<td>[^]</td>
+<td>逻辑非，表示匹配不是中括号内的一个字符，例如，[^0-9]代表匹配一个不是数字的字符</td>
+</tr>
+</tbody></table>
+</li>
+<li><p>正则表达式：用于匹配字符串，包含匹配。</p>
+<table>
+<thead>
+<tr>
+<th>正则符</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>？</td>
+<td>匹配前一个字符重复0次，或1次。只能用egrep才生效</td>
+</tr>
+<tr>
+<td>*</td>
+<td>匹配前一个字符重复0次，或任意多次</td>
+</tr>
+<tr>
+<td>[]</td>
+<td>匹配中括号中任意一个字符，例如，[abc]代表一定匹配一个字符，或者是a，或者是b，或者是c</td>
+</tr>
+<tr>
+<td>[-]</td>
+<td>匹配中括号中任意一个字符，-代表一个范围，例如，[a-z]代表匹配一个小写字母</td>
+</tr>
+<tr>
+<td>[^]</td>
+<td>逻辑非，表示匹配不是中括号内的一个字符，例如，[^0-9]代表匹配一个不是数字的字符</td>
+</tr>
+<tr>
+<td>^</td>
+<td>匹配行首</td>
+</tr>
+<tr>
+<td>$</td>
+<td>匹配行尾</td>
+</tr>
+</tbody></table>
+</li>
+</ul>
+<h3 id="2）管道符"><a href="#2）管道符" class="headerlink" title="2）管道符"></a>2）管道符</h3><p>命令格式：命令1 | 命令2</p>
+<p>命令1的正确输出作为命令2的操作对象。</p>
+<h3 id="3）命令的别名"><a href="#3）命令的别名" class="headerlink" title="3）命令的别名"></a>3）命令的别名</h3><p>命令的别名，就是命令的小名，主要是用于照顾管理员使用习惯的。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查询命令别名</span></span><br><span class="line">alias</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">设定命令别名. <span class="built_in">alias</span> 别名=‘原命令’</span></span><br><span class="line">alias ser=&#x27;service network restart&#x27;</span><br></pre></td></tr></table></figure>
+
+<p>用命令定义的别名，是临时生效的，要想永久生效，需要写入环境变量配置文件~&#x2F;.bashrc。</p>
+<p>命令的执行顺序：</p>
+<ul>
+<li>第一顺位执行用绝对路径或相对路径执行的命令。</li>
+<li>第二顺位执行别名。</li>
+<li>第三顺位执行bash的内部命令。</li>
+<li>第四顺位执行按照$PATH环境变量定义的目录查找顺序找到的第一个命令。</li>
+</ul>
+<h3 id="4）常用快捷键"><a href="#4）常用快捷键" class="headerlink" title="4）常用快捷键"></a>4）常用快捷键</h3><table>
+<thead>
+<tr>
+<th>快捷键</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Tab键</td>
+<td>命令或文件补全</td>
+</tr>
+<tr>
+<td>ctrl+A</td>
+<td>把光标移动到命令行开头。如果我们输入的命令过长，想要把光标移动到命令行开头时使用。</td>
+</tr>
+<tr>
+<td>ctrl+E</td>
+<td>把光标移动到命令行结尾。</td>
+</tr>
+<tr>
+<td>ctrl+C</td>
+<td>强制终止当前的命令。</td>
+</tr>
+<tr>
+<td>ctrl+L</td>
+<td>清屏，相当于clear命令</td>
+</tr>
+<tr>
+<td>ctrl+U</td>
+<td>删除或剪切光标之前的命令。我输入了一行很长的命令，不用使用退格键一个一个字符的删除，使用这个快捷键会更加方便。</td>
+</tr>
+<tr>
+<td>ctrl+Y</td>
+<td>粘贴ctrl+U剪切的内容。</td>
+</tr>
+<tr>
+<td>ctrl+D</td>
+<td>退出当前终端</td>
+</tr>
+<tr>
+<td>ctrl+Z</td>
+<td>暂停，并放入后台。</td>
+</tr>
+<tr>
+<td>ctrl+S</td>
+<td>暂停屏幕输出</td>
+</tr>
+<tr>
+<td>ctrl+Q</td>
+<td>恢复屏幕输出</td>
+</tr>
+</tbody></table>
+<h2 id="8-压缩和解压缩"><a href="#8-压缩和解压缩" class="headerlink" title="8. 压缩和解压缩"></a>8. 压缩和解压缩</h2><p>在Linux中可以识别的常见压缩格式有十几种，比如“.zip”，“.gz”，“.bz2”，“.tar”，“.tar.gz”，“.tar.bz2”等。</p>
+<h3 id="1）“-zip”格式"><a href="#1）“-zip”格式" class="headerlink" title="1）“.zip”格式"></a>1）“.zip”格式</h3><p>“.zip”是Windows中最常见的压缩格式。Linux也可以正确识别”.zip”格式，这可以方便地和Windows系统通用压缩文件。</p>
+<p>a）压缩命令(zip)</p>
+<p>【功能描述】：压缩文件或目录。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">命令格式</span></span><br><span class="line">zip [选项] 压缩包名 源文件或源目录</span><br><span class="line"></span><br><span class="line">选项：</span><br><span class="line">  -r: 压缩目录</span><br></pre></td></tr></table></figure>
+
+
+
+<p>b）解压缩(unzip)</p>
+<p>【功能描述】：列表、测试和提取压缩文件中的文件。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">命令格式</span></span><br><span class="line">unzip [选项] 压缩包名</span><br><span class="line"></span><br><span class="line">选项：</span><br><span class="line">  -d：指定解压缩位置</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="2）“-gz”格式-不会打包"><a href="#2）“-gz”格式-不会打包" class="headerlink" title="2）“.gz”格式(不会打包)"></a>2）“.gz”格式(不会打包)</h3><p>“.gz”格式是Linux中最常用的压缩格式，使用gzip命令进行压缩。</p>
+<p>a）压缩命令(gzip)</p>
+<p>【功能描述】：压缩文件或目录。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">命令格式</span></span><br><span class="line">gzip [选项] 源文件</span><br><span class="line"></span><br><span class="line">选项：</span><br><span class="line">  -c：将压缩数据输出到标准输出中，可以用于保留源文件</span><br><span class="line">  -d：解压缩</span><br><span class="line">  -r：压缩目录（将目录下的文件进行压缩）</span><br></pre></td></tr></table></figure>
+
+
+
+<p>b）解压缩(gunzip)</p>
+<p>如果要解压缩”.gz”格式，那么使用”gzip -d 压缩包”和”gunzip 压缩包”命令都可以。</p>
+<p>【功能描述】：解压缩文件或目录。</p>
+<h3 id="3）“-bz2”格式-不能压缩目录"><a href="#3）“-bz2”格式-不能压缩目录" class="headerlink" title="3）“.bz2”格式(不能压缩目录)"></a>3）“.bz2”格式(不能压缩目录)</h3><p>“.bz2”格式是Linux的另一种压缩格式，从理论上来讲，“.bz2”格式的算法更先进、压缩比更好；而”.gz”格式相对来讲压缩的时间更快。</p>
+<p>a）压缩命令(bzip2)</p>
+<p>【功能描述】：bz2格式的压缩命令。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">bzip2命令格式</span></span><br><span class="line">bzip2 [选项] 源文件</span><br><span class="line"></span><br><span class="line">选项：</span><br><span class="line">  -d：解压缩</span><br><span class="line">  -k：压缩时，保留源文件</span><br><span class="line">  -v：显示压缩的详细信息</span><br><span class="line"><span class="meta prompt_">  </span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">压缩成.bz2格式</span></span><br><span class="line">bzip2 anaconda-ks.cfg</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">保留源文件压缩</span></span><br><span class="line">bzip2 -k install.log.syslog</span><br></pre></td></tr></table></figure>
+
+
+
+<p>b）解压缩（bunzip2）</p>
+<p>“.bz2”格式可以使用”bzip2 -d 压缩包”命令来进行解压缩，也可以使用”bunzip2 压缩包”命令来进行解压缩。</p>
+<p>【功能描述】：.bz2格式的解压缩命令。</p>
+<h3 id="4）“-tar”格式-打包不压缩"><a href="#4）“-tar”格式-打包不压缩" class="headerlink" title="4）“.tar”格式(打包不压缩)"></a>4）“.tar”格式(打包不压缩)</h3><p>“.tar”格式的打包和解打包都使用tar命令，区别只是选项不同。</p>
+<p>a）打包(tar)</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">tar命令格式</span></span><br><span class="line">tar [选项] [-f 压缩包名] 源文件或目录</span><br><span class="line">选项：</span><br><span class="line">  -c：打包</span><br><span class="line">  -f：指定压缩包的文件名。压缩包的扩展名是用来给管理员识别格式的，所以一定要正确指定扩展名</span><br><span class="line">  -v：显示打包文件过程</span><br><span class="line"> </span><br><span class="line">tar -cvf anaconda-ks.cfg.tar anaconda-ks.cfg</span><br></pre></td></tr></table></figure>
+
+
+
+<p>b）解打包(tar)</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">命令格式</span></span><br><span class="line">tar [选项] 压缩包</span><br><span class="line">选项：</span><br><span class="line">  -x：解打包</span><br><span class="line">  -f：指定压缩包的文件名</span><br><span class="line">  -v：显示解打包文件过程</span><br><span class="line">  -t：测试，就是不解打包，只是查看包中有哪些文件</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="5）“-tar-gz”和”-tar-bz2”格式"><a href="#5）“-tar-gz”和”-tar-bz2”格式" class="headerlink" title="5）“.tar.gz”和”.tar.bz2”格式"></a>5）“.tar.gz”和”.tar.bz2”格式</h3><p>使用tar命令直接打包压缩。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">命令格式</span></span><br><span class="line">tar [选项] 压缩包 源文件或目录</span><br><span class="line">选项：</span><br><span class="line">  -z：压缩和解压缩“.tar.gz”格式</span><br><span class="line">  -j：压缩和解压缩“.tar.bz2”格式</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">将/tmp目录打包压缩</span></span><br><span class="line">tar -zcvf tmp.tar.gz /tmp/</span><br><span class="line">tar -jcvf tmp.tar.bz2 /tmp/</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">解压缩与解打包</span></span><br><span class="line">tar -zxvf tmp.tar.gz</span><br><span class="line">tar -jxvf tmp.tar.gz</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">只查看，不解压</span></span><br><span class="line">tar -ztvf tmptar.gz</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">解压到指定位置</span></span><br><span class="line">tar -zxvf tmp.tar.gz -C /tmp</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">只解压压缩包中的特定文件，到指定位置</span></span><br><span class="line">tar -zxvf tmp.tar.gz -C /tmp test/cde</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="9-关机和重启"><a href="#9-关机和重启" class="headerlink" title="9. 关机和重启"></a>9. 关机和重启</h2><h3 id="1）sync数据同步"><a href="#1）sync数据同步" class="headerlink" title="1）sync数据同步"></a>1）sync数据同步</h3><p>【功能描述】：刷新文件系统缓冲区</p>
+<h3 id="2）shutdown-推荐"><a href="#2）shutdown-推荐" class="headerlink" title="2）shutdown(推荐)"></a>2）shutdown(推荐)</h3><p>【功能描述】：关机和重启</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 基本命令格式</span><br><span class="line">shutdown [选项] 时间 [警告信息]</span><br><span class="line">选项：</span><br><span class="line">   -c：取消已经执行的shutdown命令</span><br><span class="line">   -h：关机</span><br><span class="line">   -r：重启</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="3）reboot"><a href="#3）reboot" class="headerlink" title="3）reboot"></a>3）reboot</h3><p>在现在的系统中，reboot命令也是安全的，而且不需要加入过多的选项。</p>
+<h3 id="4）halt和poweroff"><a href="#4）halt和poweroff" class="headerlink" title="4）halt和poweroff"></a>4）halt和poweroff</h3><p>这两个都是关机命令，直接执行即可。这两个命令不会完整关闭和保存系统的服务，不建议使用。</p>
+<h3 id="5）init"><a href="#5）init" class="headerlink" title="5）init"></a>5）init</h3><p>init是修改Linux运行级别的命令，也可以用于关机和重启，这个命令并不安全，不建议使用。</p>
+<h2 id="10-网络命令"><a href="#10-网络命令" class="headerlink" title="10. 网络命令"></a>10. 网络命令</h2><h3 id="1）配置IP地址"><a href="#1）配置IP地址" class="headerlink" title="1）配置IP地址"></a>1）配置IP地址</h3><p>a. 配置IP地址</p>
+<p>IP地址是计算机在互联网中唯一的地址编码。每台计算机如果需要接入网络和其他计算机进行数据通信，就必须配置唯一的公网IP地址。</p>
+<p>配置IP地址方法：</p>
+<ul>
+<li>setup工具</li>
+<li>手工修改配置文件：vi &#x2F;etc&#x2F;sysconfig&#x2F;network-scripts&#x2F;ifcfg-eth0</li>
+</ul>
+<p>b. 重启网络服务</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">重启网络服务</span></span><br><span class="line">service network restart</span><br></pre></td></tr></table></figure>
+
+
+
+<p>c. 虚拟机需要桥接到有线网卡，并重启网络服务。</p>
+<p>d. 复制镜像有可能需要重置UUID（唯一识别符）</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">删除MAC地址行</span></span><br><span class="line">vi /etc/sysconfig/network-scripts/ifcfg-eth0</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">删除MAC地址和UUID绑定文件</span></span><br><span class="line">rm -rf /etc/udev/rules.d/70-persistent-net.rules</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">重启Linux</span></span><br><span class="line">reboot</span><br></pre></td></tr></table></figure>
+
+<h3 id="2）ifconfig"><a href="#2）ifconfig" class="headerlink" title="2）ifconfig"></a>2）ifconfig</h3><p>【功能描述】：配置网络接口</p>
+<p>ifconfig命令最主要的作用就是查看IP地址的信息，直接输入ifconfig命令即可。</p>
+<h3 id="3）ping"><a href="#3）ping" class="headerlink" title="3）ping"></a>3）ping</h3><p>【功能描述】：向网络主机发送ICMP请求。</p>
+<p>ping是常用的网络命令，主要通过ICMP协议进行网络探测，测试网络中主机的通信情况。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 基本命令格式</span><br><span class="line">ping [选项] IP</span><br><span class="line">选项：</span><br><span class="line">  -b：后面加入广播地址，用于对整个网段进行探测</span><br><span class="line">  -c 次数：用于指定ping的次数</span><br><span class="line">  -s 字节：指定探测包的大小</span><br><span class="line"></span><br><span class="line"># 探测192.168.103.0/24网段中有多少可以通信的主机</span><br><span class="line">ping -b -c 3 192.168.103.255</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="4）netstat"><a href="#4）netstat" class="headerlink" title="4）netstat"></a>4）netstat</h3><p>【功能描述】：输出网络连接、路由表、接口统计、伪装连接和组播成员。</p>
+<p>netstat是网络状态查看命令，既可以查看到本机开启的端口，也可以查看有哪些客户端连接。</p>
+<p>在CentOS 7.x中netstat命令默认没有安装，如果需要使用，需要安装net-snmp和net-tools软件包。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 基本命令格式</span><br><span class="line">netstat [选项]</span><br><span class="line"></span><br><span class="line">选项：</span><br><span class="line">  -a：列出所有网络状态，包括Socket程序</span><br><span class="line">  -c 秒数：指定每隔几秒刷新一次网络状态</span><br><span class="line">  -n：使用IP地址和端口号显示，不使用域名与服务名</span><br><span class="line">  -p：显示PID和程序名</span><br><span class="line">  -t：显示使用TCP协议端口的连接状况</span><br><span class="line">  -u：显示使用UDP协议端口的连接状况</span><br><span class="line">  -l：仅显示监听状态的连接</span><br><span class="line">  -r：显示路由表</span><br><span class="line">  </span><br><span class="line"></span><br><span class="line"># 查看本机开启的端口</span><br><span class="line">netstat -tuln</span><br></pre></td></tr></table></figure>
+
+<p>命令输出结果：</p>
+<ul>
+<li>Proto：网络连接的协议，一般就是TCP协议或者UDP协议。</li>
+<li>Recv-Q：表示接收到的数据，已经在本地的缓冲中，但是还没有被进程取走。</li>
+<li>Send-Q：表示从本机发送，对方还没有收到的数据，依然在本地的缓冲中，一般是不具备ACK标志的数据包。</li>
+<li>Local Address：本机的IP地址和端口号。</li>
+<li>Foreign Address：远程主机的IP地址和端口号。</li>
+<li>State：状态。常见的状态主要有以下几种。<ul>
+<li>LISTEN：监听状态，只有TCP协议需要监听，而UDP协议不需要监听。</li>
+<li>ESTABLISHED：已经建立连接的状态。如果使用“-l”选项，则看不到已经建立连接的状态。</li>
+<li>SYN_SENT：SYN发起包，就是主动发起连接的数据包。</li>
+<li>SYN_RECV：接收到主动连接的数据包。</li>
+<li>FIN_WAIT1：正在中断的连接。</li>
+<li>FIN_WAIT2：已经中断的连接，但是正在等待对方主机进行确认。</li>
+<li>FIN_WAIT：连接已经中断，但是套接字依然在网络中等待结束。</li>
+<li>CLOSED：套接字没有被使用。</li>
+</ul>
+</li>
+</ul>
+<p>在这些状态中，我们最用的就是LISTEN和ESTABLISHED状态，一种代表正在监听，另一种代表已经建立连接。</p>
+<h3 id="5）write"><a href="#5）write" class="headerlink" title="5）write"></a>5）write</h3><p>【功能描述】：向其他用户发送信息</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查看有多少人正在登录</span></span><br><span class="line">ben@ben-NBLK-WAX9X:~$ w</span><br><span class="line"> 14:50:14 up 4 min,  1 user,  load average: 2.31, 1.29, 0.56</span><br><span class="line">USER     TTY      来自           LOGIN@   IDLE   JCPU   PCPU  WHAT</span><br><span class="line">ben               -                14:46     ?     0.00s  0.04s lightdm --session-child 13 20</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">向在pts/1（远程终端）登录的user1用户发送信息，使用<span class="string">&quot;Ctrl+D&quot;</span>快捷键保存发送的数据</span></span><br><span class="line">write user1 pts/1</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="6）wall"><a href="#6）wall" class="headerlink" title="6）wall"></a>6）wall</h3><p>write命令用于给指定用户发送信息，而wall命令用于给所有登录用户发送信息，包括自己。执行时，在wall命令后加入需要发送的信息即可。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">wall &quot;hello&quot;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="7）mail"><a href="#7）mail" class="headerlink" title="7）mail"></a>7）mail</h3><p>mail是Linux的邮件客户端命令，可以利用这个命令给其他用户发送邮件。</p>
+<p>【功能描述】：发送和接收电子邮件。</p>
+<p>a. 发送邮件</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">发送邮件, Ctrl+D发送</span></span><br><span class="line">mail user1</span><br></pre></td></tr></table></figure>
+
+<p>接收到的邮件都保存在“&#x2F;var&#x2F;spool&#x2F;mail&#x2F;用户名”中，每个用户都有一个以自己的用户名命令的邮箱。</p>
+<p>b. 发送文件内容</p>
+<p>如果想把某个文件的内容发送给指定用户，则可以执行如下命令：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">把/root/anaconda-ks.cfg文件内容发送给root用户</span></span><br><span class="line">mail -s &quot;test mail&quot; root &lt; /root/anaconda-ks.cfg</span><br><span class="line">选项：</span><br><span class="line">  -s：指定邮件标题</span><br></pre></td></tr></table></figure>
+
+<p>在写脚本时，有时需要脚本自动发送一些信息给指定用户，把要发送的信息预先写到文件中，是一个非常不错的选择。</p>
+<p>c. 查看已经接收的邮件</p>
+<p>我们可以直接在命令行中执行mail命令，进入mail的交互命令中，可以在这里查看已经接收到的邮件。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">mail</span></span><br><span class="line">&quot;/var/mail/test&quot;: 2 messages 2 new</span><br><span class="line"><span class="meta prompt_">&gt;</span><span class="language-bash">N   1 ben                日 12月 22 15:  13/425   hello</span></span><br><span class="line"> N   2 ben                日 12月 22 15:  15/434   hello</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">未阅读 编号 发件人            时间                  标题</span></span><br></pre></td></tr></table></figure>
+
+<p>可以看到已经接收到的邮件列表，“N”代表未读邮件，如果是已经阅读过的邮件，则前面是不会有这个“N”的；之后的数字是邮件的编号，我们主要通过这个编号来进行邮件的操作。如果我们想要查看第一封邮件，则只需要输入邮件的编号“1”就可以了。</p>
+<p>交互命令是可以简化输入的。</p>
+<ul>
+<li>headers: 列出邮件标题列表，直接输入“h”命令即可。</li>
+<li>delete：删除指定邮件。比如想要删除第二封邮件，可以输入“d 2”。</li>
+<li>save：保存邮件。可以把指定邮件保存成文件。如”s 2 &#x2F;tmp&#x2F;test.mail”。</li>
+<li>quit：退出，并把已经操作过的邮件进行保存。比如移除已删除邮件、保存已阅读邮件等。</li>
+<li>exit：退出，但是不保存任何操作。</li>
+</ul>
+<h2 id="11-痕迹命令"><a href="#11-痕迹命令" class="headerlink" title="11. 痕迹命令"></a>11. 痕迹命令</h2><p>系统中有一些重要的痕迹日志文件，如&#x2F;var&#x2F;log&#x2F;wtmp、&#x2F;var&#x2F;run&#x2F;utmp、&#x2F;var&#x2F;log&#x2F;btmp、&#x2F;var&#x2F;log&#x2F;lastlog等日志文件，如果你用vim打开这些文件，你会发现这些文件是二进制乱码。这是由于这些日志中保存的是系统的重要登录痕迹，包括某个用户何时登录了系统，何时退出了系统，错误登录等重要的系统信息。这些信息要是可以通过vim打开，就能编辑，这样痕迹信息就不准确，所以这些重要的痕迹日志，只能通过对应的命令来进行查看。</p>
+<h3 id="1）w"><a href="#1）w" class="headerlink" title="1）w"></a>1）w</h3><p>w命令是显示系统中正在登录的用户信息的命令，这个命令查看的痕迹日志是&#x2F;var&#x2F;run&#x2F;utmp。</p>
+<p>【功能描述】：显示登录用户，和他正在做什么。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">root@90ubuntu:~# w</span><br><span class="line"> 15:44:22 up  1:59,  1 user,  load average: 0.00, 0.00, 0.00</span><br><span class="line">USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU WHAT</span><br><span class="line">root     pts/0    192.168.0.75     15:44    3.00s  0.01s  0.00s w</span><br></pre></td></tr></table></figure>
+
+<p>第一行信息：</p>
+<ul>
+<li>系统当前时间</li>
+<li>系统运行时间</li>
+<li>当前登录用户数</li>
+<li>系统在之前1分钟、5分钟、15分钟的平均负载。如果CPU是单核的，则这个数值超过1就是高负载，如果CPU是四核的，则这个数值超过4就是高负载。</li>
+</ul>
+<p>第二行信息：</p>
+<ul>
+<li>USER: 当前登录的用户</li>
+<li>TTY: 登录的终端<ul>
+<li>tty1-6：本地字符终端(alt+F1-6切换)</li>
+<li>tty7：本地图形终端(ctrl+alt+F7切换，必须安装启动图形界面)</li>
+<li>pts&#x2F;0-255：远程终端</li>
+</ul>
+</li>
+<li>FROM：登录的IP地址，如果是本地终端，则是空</li>
+<li>LOGIN@：登录时间</li>
+<li>IDLE：用户闲置时间</li>
+<li>JCPU：所有进程占用的CPU时间</li>
+<li>PCPU：当前进程占用的CPU时间</li>
+<li>WHAT：用户正在进行的操作</li>
+</ul>
+<h3 id="2）who"><a href="#2）who" class="headerlink" title="2）who"></a>2）who</h3><p>who命令和w命令类似，用于查看正在登录的用户，但是显示的内容更加简单，也是查看&#x2F;var&#x2F;run&#x2F;utmp。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">root@90ubuntu:~# who</span><br><span class="line">root     pts/0        2024-12-22 15:44 (192.168.0.75)</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">用户名   登录终端      登录时间(来源IP)</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="3）last"><a href="#3）last" class="headerlink" title="3）last"></a>3）last</h3><p>last命令是查看系统所有登录过的用户的信息的，包括正在登录的用户和之前登录的用户。这个命令查看的是&#x2F;var&#x2F;log&#x2F;wtmp痕迹日志文件。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">root@90ubuntu:~# last</span><br><span class="line">root     pts/0        192.168.0.75     Sun Dec 22 15:44   still logged in</span><br><span class="line">reboot   system boot  5.15.0-117-gener Sun Dec 22 13:45   still running</span><br><span class="line">reboot   system boot  5.15.0-117-gener Sun Dec 22 13:15   still running</span><br><span class="line">reboot   system boot  5.15.0-117-gener Fri Dec 20 15:52   still running</span><br><span class="line">reboot   system boot  5.15.0-117-gener Fri Dec 20 15:44   still running</span><br><span class="line">reboot   system boot  5.15.0-117-gener Thu Dec 19 19:53   still running</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">系统重启信息记录</span></span><br><span class="line">root     pts/0        192.168.0.75     Thu Dec 19 17:00 - 18:02  (01:02)</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">用户名   终端号        来源IP地址        登录时间            退出时间</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="4）lastlog"><a href="#4）lastlog" class="headerlink" title="4）lastlog"></a>4）lastlog</h3><p>lastlog命令是查看系统中所有用户最后一次的登录时间的命令，他查看的日志是&#x2F;var&#x2F;log&#x2F;lastlog文件。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">root@90ubuntu:~# lastlog</span><br><span class="line">Username         Port     From             Latest</span><br><span class="line">root             pts/0    192.168.0.75     Sun Dec 22 15:44:19 +0800 2024</span><br><span class="line">daemon                                     **Never logged in**     # 系统伪用户</span><br><span class="line">bin                                        **Never logged in**</span><br><span class="line">sys                                        **Never logged in**</span><br><span class="line">sync                                       **Never logged in**</span><br><span class="line">games                                      **Never logged in**</span><br><span class="line">man                                        **Never logged in**</span><br><span class="line">lp                                         **Never logged in**</span><br><span class="line">...</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">用户名         终端       来源IP           登录时间</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="5）lastb"><a href="#5）lastb" class="headerlink" title="5）lastb"></a>5）lastb</h3><p>lastb命令是查看错误登录的信息的，查看的是&#x2F;var&#x2F;log&#x2F;btmp痕迹日志。。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">root@90ubuntu:~# lastb</span><br><span class="line">root         tty1                        Mon Nov 12 23:50 - 23:58 （00:00）</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">错误登录用户  终端                        尝试登录的时间</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="12-挂载命令"><a href="#12-挂载命令" class="headerlink" title="12. 挂载命令"></a>12. 挂载命令</h2><h3 id="1）mount"><a href="#1）mount" class="headerlink" title="1）mount"></a>1）mount</h3><p>linux所有存储设备都必须挂载使用，包括硬盘。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 查询系统中已经挂载的设备，-l会显示卷标名称</span><br><span class="line">mount -l</span><br><span class="line"></span><br><span class="line"># 依据配置文件/etc/fstab的内容，自动挂载</span><br><span class="line">mount -a</span><br><span class="line"></span><br><span class="line">mount [-t 文件系统] [-L 卷标名] [-o 特殊选项] 设备文件名 挂载点</span><br><span class="line">选项：</span><br><span class="line">  -t 文件系统：加入文件系统类型来指定挂载的类型，可以ext3、ext4、iso9660等文件系统</span><br><span class="line">  -L 卷标名：挂载指定卷标的分区，而不是安装设备文件名挂载</span><br><span class="line">  -o 特殊选项：可以指定挂载的额外选项，比如读写权限、同步异步等，如果不指定则默认值生效。参数如下表。</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>atime&#x2F;noatime</td>
+<td>更新访问时间&#x2F;不更新访问时间，访问时区文件时，是否更新文件的访问时间，默认为更新</td>
+</tr>
+<tr>
+<td>async&#x2F;sync</td>
+<td>异步&#x2F;同步，默认为异步</td>
+</tr>
+<tr>
+<td>auto&#x2F;noauto</td>
+<td>自动&#x2F;手动，mount -a命令执行时，是否会自动安装&#x2F;etc&#x2F;fstab文件内容挂载，默认为自动</td>
+</tr>
+<tr>
+<td>defaults</td>
+<td>定义默认值，相当于rw,suid,dev,exec,auto,nouser,async这七个选项</td>
+</tr>
+<tr>
+<td>exec &#x2F;noexec</td>
+<td>执行&#x2F;不执行，设定是否允许在文件系统中执行可执行文件，默认是exec允许</td>
+</tr>
+<tr>
+<td>remount</td>
+<td>重新挂载已经挂载的文件系统，一般用于指定修改特殊权限</td>
+</tr>
+<tr>
+<td>rw&#x2F;ro</td>
+<td>读写&#x2F;只读，文件系统挂载时，是否具有读写权限，默认是w</td>
+</tr>
+<tr>
+<td>suid&#x2F;nosuid</td>
+<td>具有&#x2F;不具有SUID权限，设定文件系统是否具有SUID和SGID的权限，默认是具有</td>
+</tr>
+<tr>
+<td>user&#x2F;nouser</td>
+<td>允许&#x2F;不允许普通用户挂载，设定文件系统是否允许普通用户挂载，默认是不允许，只有root挂载分区</td>
+</tr>
+<tr>
+<td>usrquota</td>
+<td>写入代表文件系统支持用户磁盘配额，默认不支持</td>
+</tr>
+<tr>
+<td>grpquota</td>
+<td>写入代表文件系统支持组磁盘配额，默认不支持</td>
+</tr>
+</tbody></table>
+<h3 id="2）挂载光盘"><a href="#2）挂载光盘" class="headerlink" title="2）挂载光盘"></a>2）挂载光盘</h3><p>光盘挂载的前提依然是指定光盘的设备文件名，不同版本的Linux，设备文件名并不相同。</p>
+<ul>
+<li>CentOS 5.x以前的系统，光盘设备文件名是&#x2F;dev&#x2F;hdc。</li>
+<li>CentOS 6.x以后的系统，光盘设备文件名是&#x2F;dev&#x2F;sr0。</li>
+</ul>
+<p>不论哪个系统都有软链接&#x2F;dev&#x2F;cdrom，都可以作为光盘的设备文件名。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">挂载光盘</span></span><br><span class="line">mount -t iso9660 /dev/cdrom /mnt/cdrom/</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">卸载</span></span><br><span class="line">umount /mnt/cdrom 或 umount /dev/sr0</span><br></pre></td></tr></table></figure>
+
+<p>【注意】：卸载的时候需要退出光盘目录，才能正常卸载。</p>
+<h3 id="3）挂载U盘"><a href="#3）挂载U盘" class="headerlink" title="3）挂载U盘"></a>3）挂载U盘</h3><p>U盘会和硬盘共用设备文件名，所以U盘的设备文件名不是固定的，需要手工查询。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查询硬盘</span></span><br><span class="line">fdisk -l</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">挂载</span></span><br><span class="line">mount -t vfat /dev/sdb1 /mnt/usb/</span><br></pre></td></tr></table></figure>
+
+<p>如果U盘中有中文，会发现中文是乱码，Linux要想正常显示中文，需要两个条件：</p>
+<ul>
+<li>安装了中文编码和中文字体。</li>
+<li>操作终端需要支持中文显示(纯字符终端，是不支持中文编码的)。</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">挂载U盘，指定中文编码格式为UTF-8</span></span><br><span class="line">mount -t vfat -o iocharset=utf8 /dev/sdb1 /mnt/usb/</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">卸载</span></span><br><span class="line">umount /mnt/usb/</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="4）挂载NTFS分区"><a href="#4）挂载NTFS分区" class="headerlink" title="4）挂载NTFS分区"></a>4）挂载NTFS分区</h3><p>Linux的驱动加载顺序：</p>
+<ul>
+<li>驱动直接放入系统内核之中，这种驱动主要是系统启动加载必须的驱动，数量较少。</li>
+<li>驱动以模块的形式放入硬盘。大多数驱动都以这种方式保存，保存位置在&#x2F;lib&#x2F;modules&#x2F;3.10.0-862.el7.x86_64&#x2F;kernel&#x2F;中。</li>
+<li>驱动可以被Linux识别，但是系统认为这种驱动一般不常用，默认不加载。如果需要加载这种驱动，需要重新编译内核，而NTFS文件系统的驱动就属于这种情况。</li>
+<li>硬件不能被Linux内核识别，需要手工安装驱动。当然前提是厂商提供了该硬件针对Linux的驱动，否则需要自己开发驱动了。</li>
+</ul>
+<p>使用NTFS-3G安装NTFS文件系统模块</p>
+<p>下载NTFS-3G插件：<a href="https://github.com/tuxera/ntfs-3g">https://github.com/tuxera/ntfs-3g</a></p>
+<p>安装完成后，就可以挂载和使用Windows的NTFS分区了：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">mount -t ntfs-3g /dev/sdb1 /mnt/win</span><br></pre></td></tr></table></figure>
+
+
+
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>vim编辑器</title>
+    <url>/2025/02/25/vim%E7%BC%96%E8%BE%91%E5%99%A8/</url>
+    <content><![CDATA[<h1 id="vim编辑器"><a href="#vim编辑器" class="headerlink" title="vim编辑器"></a>vim编辑器</h1><p>vim是一个全屏幕纯文本编辑器，是vi编辑器的增强版。</p>
+<p>可以利用别名让输入vi命令的时候，实际上执行vim编辑器，如：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">定义别名</span></span><br><span class="line">alias vi=&#x27;vim&#x27;</span><br></pre></td></tr></table></figure>
+
+<p>这样定义的别名是临时生效，如果需要永久生效，需要放入环境变量配置文件(~&#x2F;.bashrc)。</p>
+<h2 id="1-vim工作模式"><a href="#1-vim工作模式" class="headerlink" title="1. vim工作模式"></a>1. vim工作模式</h2><h3 id="1）命令模式"><a href="#1）命令模式" class="headerlink" title="1）命令模式"></a>1）命令模式</h3><p>主要使用快捷键的模式。</p>
+<p>命令模式想要进入输入模式，可以使用以下方式：</p>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>a</td>
+<td>在光标所在字符后插入</td>
+</tr>
+<tr>
+<td>A</td>
+<td>在光标所在行尾插入</td>
+</tr>
+<tr>
+<td>i</td>
+<td>在光标所在字符前插入</td>
+</tr>
+<tr>
+<td>I</td>
+<td>在光标所在行行首插入</td>
+</tr>
+<tr>
+<td>o</td>
+<td>在光标下插入新行</td>
+</tr>
+<tr>
+<td>O</td>
+<td>在光标上插入新行</td>
+</tr>
+<tr>
+<td>ZZ</td>
+<td>保存退出</td>
+</tr>
+</tbody></table>
+<h3 id="2）输入模式"><a href="#2）输入模式" class="headerlink" title="2）输入模式"></a>2）输入模式</h3><p>主要用于文本编辑，和记事本类似，输入数据就好。</p>
+<h3 id="3）编辑模式-末行模式"><a href="#3）编辑模式-末行模式" class="headerlink" title="3）编辑模式(末行模式)"></a>3）编辑模式(末行模式)</h3><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>:w</td>
+<td>保存不退出</td>
+</tr>
+<tr>
+<td>:w 新文件名</td>
+<td>把文件另存为新文件</td>
+</tr>
+<tr>
+<td>:q</td>
+<td>不保存退出</td>
+</tr>
+<tr>
+<td>:wq</td>
+<td>保存退出</td>
+</tr>
+<tr>
+<td>:!</td>
+<td>强制</td>
+</tr>
+<tr>
+<td>:q!</td>
+<td>强制不保存退出，用于修改文件之后，不保存数据退出</td>
+</tr>
+<tr>
+<td>:wq!</td>
+<td>强制保存退出，当文件的所有者或者root用户，对文件没有写权限的时候，强制写入数据使用</td>
+</tr>
+</tbody></table>
+<h2 id="2-命令模式操作"><a href="#2-命令模式操作" class="headerlink" title="2. 命令模式操作"></a>2. 命令模式操作</h2><h3 id="1）移动光标"><a href="#1）移动光标" class="headerlink" title="1）移动光标"></a>1）移动光标</h3><table>
+<thead>
+<tr>
+<th>功能</th>
+<th>快捷键</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>上下左右移动光标</td>
+<td>上、下、左、右方向键或者k、j、h、l</td>
+</tr>
+<tr>
+<td>移动到文件头</td>
+<td>gg</td>
+</tr>
+<tr>
+<td>移动到文件尾</td>
+<td>G或者shift+g</td>
+</tr>
+<tr>
+<td>移动到行首</td>
+<td>^</td>
+</tr>
+<tr>
+<td>移动到行尾</td>
+<td>$</td>
+</tr>
+<tr>
+<td>移动到指定行</td>
+<td>:n(这里n是数字，准备移动到第几行，就用哪个数字</td>
+</tr>
+</tbody></table>
+<h3 id="2）删除或剪切"><a href="#2）删除或剪切" class="headerlink" title="2）删除或剪切"></a>2）删除或剪切</h3><table>
+<thead>
+<tr>
+<th>功能</th>
+<th>快捷键</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>删除单个字母</td>
+<td>x</td>
+</tr>
+<tr>
+<td>删除n个字母</td>
+<td>nx</td>
+</tr>
+<tr>
+<td>删除单行</td>
+<td>dd</td>
+</tr>
+<tr>
+<td>删除多行</td>
+<td>ndd</td>
+</tr>
+<tr>
+<td>删除指定范围的行</td>
+<td>:n1,n2d</td>
+</tr>
+<tr>
+<td>粘贴到光标后</td>
+<td>p</td>
+</tr>
+<tr>
+<td>粘贴到光标前</td>
+<td>P(大)</td>
+</tr>
+<tr>
+<td>从光标所在行删除到文件尾</td>
+<td>dG</td>
+</tr>
+</tbody></table>
+<p>删除整行或多行，这是比较常用的删除方法，这里的dd快捷键既是删除，也是剪切。删除内容放入了剪切板，如果不粘贴就是剪切。</p>
+<h3 id="3）复制"><a href="#3）复制" class="headerlink" title="3）复制"></a>3）复制</h3><table>
+<thead>
+<tr>
+<th>功能</th>
+<th>快捷键</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>复制单行</td>
+<td>yy</td>
+</tr>
+<tr>
+<td>复制多行</td>
+<td>nyy</td>
+</tr>
+</tbody></table>
+<h3 id="4）撤销"><a href="#4）撤销" class="headerlink" title="4）撤销"></a>4）撤销</h3><table>
+<thead>
+<tr>
+<th>功能</th>
+<th>快捷键</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>撤销</td>
+<td>u</td>
+</tr>
+<tr>
+<td>反撤销</td>
+<td>ctrl+r</td>
+</tr>
+</tbody></table>
+<p>u键能一直撤销到文件打开时的状态，类似Windows下ctrl+z键的作用。</p>
+<p>ctrl+z能一直反撤销到最后一次操作状态，类似Windows下ctrl+y键的作用。</p>
+<h3 id="5）vim配置文件"><a href="#5）vim配置文件" class="headerlink" title="5）vim配置文件"></a>5）vim配置文件</h3><p>这些末行模式参数设置，多数需要在vim中才能生效。</p>
+<table>
+<thead>
+<tr>
+<th>设置参数</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>:set nu</td>
+<td>显示行号</td>
+</tr>
+<tr>
+<td>:set nonu</td>
+<td>取消行号</td>
+</tr>
+<tr>
+<td>:syntax on</td>
+<td>依据语法显示相关的颜色帮助</td>
+</tr>
+<tr>
+<td>:syntax off</td>
+<td>不显示语法相关的颜色帮助</td>
+</tr>
+<tr>
+<td>:set hlsearch</td>
+<td>设置将查找的字符串高亮显示，默认是set hlsearch高亮显示</td>
+</tr>
+<tr>
+<td>:set nohlsearch</td>
+<td>取消将查找的字符串高亮显示</td>
+</tr>
+<tr>
+<td>:set ruler</td>
+<td>设置显示右下角的状态栏</td>
+</tr>
+<tr>
+<td>:set noruler</td>
+<td>取消显示右下角的状态栏</td>
+</tr>
+<tr>
+<td>:set showmode</td>
+<td>设置在左下角显示如“–INSERT–”之类的状态栏，默认是set showmode显示</td>
+</tr>
+<tr>
+<td>:set noshowmode</td>
+<td>取消在左下角显示如”–INSERT–”之类的状态栏</td>
+</tr>
+<tr>
+<td>:set list</td>
+<td>设置显示隐藏字符(Tab键用”I”表示，回车符用“$”表示)</td>
+</tr>
+<tr>
+<td>:set nolist</td>
+<td>设置不显示隐藏字符，默认是nolist</td>
+</tr>
+<tr>
+<td>:set all</td>
+<td>查看所有设置参数</td>
+</tr>
+</tbody></table>
+<p>大家会发现，这些设置参数都只是临时生效，一旦关闭文件再打开，又需要重新输入。如果想要永久生效，需要手工建立vim的配置文件”~&#x2F;.vimrc”，把你需要的参数写入配置文件就永久生效了。</p>
+<p>Windows下回车符在Linux中是用“^M$”符号显示，而不是”$”符。这样会导致Windows下编辑的程序脚本，无法在Linux中执行。这时可以通过命令”dos2unix”，把Windows格式转为Linux格式，当然反过来”unix2dos”命令就是把Linux格式转为Windows格式。这两个命令默认没有安装，需要手工安装才能使用。</p>
+<h3 id="6）查找"><a href="#6）查找" class="headerlink" title="6）查找"></a>6）查找</h3><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>&#x2F;查找内容</td>
+<td>从光标所在行向下查找</td>
+</tr>
+<tr>
+<td>?查找内容</td>
+<td>从光标所在行向上查找</td>
+</tr>
+<tr>
+<td>n</td>
+<td>下一个</td>
+</tr>
+<tr>
+<td>N</td>
+<td>上一个</td>
+</tr>
+</tbody></table>
+<h3 id="7）替换"><a href="#7）替换" class="headerlink" title="7）替换"></a>7）替换</h3><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>r</td>
+<td>替换光标所在处的字符</td>
+</tr>
+<tr>
+<td>R</td>
+<td>从光标所在处开始替换字符，按ESC结束</td>
+</tr>
+<tr>
+<td>:1,10s&#x2F;old&#x2F;new&#x2F;g</td>
+<td>替换1到10行的所有old为new</td>
+</tr>
+<tr>
+<td>:%s&#x2F;old&#x2F;new&#x2F;g</td>
+<td>替换整个文件的old为new</td>
+</tr>
+</tbody></table>
+<p>示例</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 在shell中“#”开头是注释，批量注释1到10行</span><br><span class="line">:1,10s/^/#/g</span><br><span class="line"></span><br><span class="line"># 取消注释</span><br><span class="line">:1,10s/^#//g</span><br><span class="line"></span><br><span class="line"># 批量添加“//”注释</span><br><span class="line">:1,10s/^/\/\//g</span><br><span class="line"></span><br><span class="line"># 取消注释</span><br><span class="line">:1,10s/^\/\///g</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="3-vim使用技巧"><a href="#3-vim使用技巧" class="headerlink" title="3. vim使用技巧"></a>3. vim使用技巧</h2><h3 id="1）在vim中导入其他文件内容或命令结果"><a href="#1）在vim中导入其他文件内容或命令结果" class="headerlink" title="1）在vim中导入其他文件内容或命令结果"></a>1）在vim中导入其他文件内容或命令结果</h3><p>a）导入其他文件内容</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 把文件内容导入光标下一行</span><br><span class="line">:r 文件名            </span><br></pre></td></tr></table></figure>
+
+<p>可以把其他文件的内容导入到光标下一行位置。</p>
+<p>b）在vim中执行系统命令</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 在vim中执行系统命令</span><br><span class="line">:!命令</span><br></pre></td></tr></table></figure>
+
+<p>这里只是在vim中执行系统命令，但并不把系统命令的结果写入到文件中，主要用于在文件编辑中，查看系统信息如时间。</p>
+<p>c）导入命令结果</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 在vim中执行系统命令，并把命令结果导入光标下一行</span><br><span class="line">:r !命令</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="2）设定快捷键"><a href="#2）设定快捷键" class="headerlink" title="2）设定快捷键"></a>2）设定快捷键</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 自定义快捷键</span><br><span class="line">:map 快捷键 快捷键执行的命令</span><br></pre></td></tr></table></figure>
+
+<p>示例</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 按ctrl+p时，在行首加入注释</span><br><span class="line">:map ^P I#&lt;ESC&gt;</span><br><span class="line"></span><br><span class="line"># 按ctrl+b时，删除行首第一个字母</span><br><span class="line">:map ^B ^x</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意</strong>：^P快捷键不能手工输入，需要执行ctrl+V+P来定义，或ctrl+v，然后ctrl+p。</p>
+<h3 id="3）字符替换"><a href="#3）字符替换" class="headerlink" title="3）字符替换"></a>3）字符替换</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 字符替换</span><br><span class="line">:ab 源字符 替换为字符</span><br></pre></td></tr></table></figure>
+
+<p>在vim编辑中，有时候需要频繁输入某一长字符串(比如邮箱)，这时使用字符串替换，能增加输入效率。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 当碰到“mymail”时，转变为邮箱</span><br><span class="line">:ab mymail ben@163.com</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意：</strong>“源字符”不应设置的太短，否则有可能影响输入。</p>
+<h3 id="4）多文件打开"><a href="#4）多文件打开" class="headerlink" title="4）多文件打开"></a>4）多文件打开</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># vim上下分屏同时打开两个文件</span><br><span class="line">vim -o 文件1 文件2</span><br><span class="line"></span><br><span class="line"># vim左右分屏同时打开两个文件</span><br><span class="line">vim -O 文件1 文件2</span><br></pre></td></tr></table></figure>
+
+<p>这样可以同时打开两个文件，方便操作。可以通过先按”ctrl+w”，再按方向键的方式在两个文件之间切换。</p>
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>软件包安装</title>
+    <url>/2025/02/25/%E8%BD%AF%E4%BB%B6%E5%8C%85%E5%AE%89%E8%A3%85/</url>
+    <content><![CDATA[<h1 id="软件包安装"><a href="#软件包安装" class="headerlink" title="软件包安装"></a>软件包安装</h1><h2 id="1-软件包分类"><a href="#1-软件包分类" class="headerlink" title="1. 软件包分类"></a>1. 软件包分类</h2><ul>
+<li>源码包</li>
+<li>二进制包</li>
+</ul>
+<h2 id="2-源码包"><a href="#2-源码包" class="headerlink" title="2. 源码包"></a>2. 源码包</h2><h3 id="1）源码包优点"><a href="#1）源码包优点" class="headerlink" title="1）源码包优点"></a>1）源码包优点</h3><ul>
+<li>开源，如果有足够的能力，可以修改源码包。</li>
+<li>可以自由选择所需的功能</li>
+<li>软件是编译安装，所以更加适合自己的系统，更加稳定也效率更高</li>
+<li>卸载方便</li>
+</ul>
+<h3 id="2）源码包缺点"><a href="#2）源码包缺点" class="headerlink" title="2）源码包缺点"></a>2）源码包缺点</h3><ul>
+<li>安装过程步骤较多，尤其安装较大的软件集合时(如LAMP环境搭建)，容易出现拼写错误</li>
+<li>编译过程时间较长，安装比二进制安装时间长</li>
+<li>因为是编译安装，安装过程中一旦报错新手很难解决</li>
+</ul>
+<h2 id="3-二进制包"><a href="#3-二进制包" class="headerlink" title="3. 二进制包"></a>3. 二进制包</h2><p>Linux系列：Debian和RedHat。</p>
+<h3 id="1）二进制包分类"><a href="#1）二进制包分类" class="headerlink" title="1）二进制包分类"></a>1）二进制包分类</h3><p>a）DPKG包</p>
+<p>是由Debian Linux所开发出来的包管理机制，通过DPKG包，Debian Linux就可以进行软件包管理。主要应用在Debian和Ubuntu中。</p>
+<p>b）RPM包</p>
+<p>是由Red Hat公司所开发的包管理系统。功能强大，安装、升级、查询和卸载都非常简单和方便。目前很多Linux都在使用这种包管理方式，包括Fedora、CentOS、SuSE等。</p>
+<h3 id="2）RPM包特点"><a href="#2）RPM包特点" class="headerlink" title="2）RPM包特点"></a>2）RPM包特点</h3><p>RPM包优点：</p>
+<ul>
+<li>包管理系统简单，只通过几个命令就可以实现包的安装、升级、查询和卸载</li>
+<li>安装速度比源码包安装快的多</li>
+</ul>
+<p>RPM包缺点：</p>
+<ul>
+<li>经过编译，不再可以看到源代码</li>
+<li>功能选择不如源码包灵活</li>
+<li>依赖性。有时我们会发现需要安装软件包a时需要先安装b和c，而安装b时需要安装d和e。这时需要先安装d和e，再安装b和c，最后才能安装a包。</li>
+</ul>
+<h3 id="3）RPM包依赖"><a href="#3）RPM包依赖" class="headerlink" title="3）RPM包依赖"></a>3）RPM包依赖</h3><p>a）树形依赖</p>
+<p>a——&gt;b——&gt;c</p>
+<p>b）环形依赖</p>
+<p>a——&gt;b——&gt;c——&gt;a</p>
+<p>c）模块依赖</p>
+<p>什么是模块依赖？例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -ivh mysql-connector-odbc-5.2.5-7.el7.x86_64.rpm</span><br><span class="line">错误：依赖检测失败：</span><br><span class="line">    libodbc.so.2()(64bit) 被 mysql-connector-odbc-5.2.5-7.el7.x86_64 需要</span><br><span class="line">    libodbcinst.so.2()(64bit) 被 mysql-connector-odbc-5.2.5-7.el7.x86_64 需要</span><br></pre></td></tr></table></figure>
+
+<p>发现报错，需要安装”libodbc.so.2”函数库文件，这时会发现在光盘中根本找不到这个文件，那是因为函数库没有单独成包，是包含在某一个软件包中的，而如果知道在哪个软件包中，需要查询网站<a href="http://www.rpmfind.net./">www.rpmfind.net。</a></p>
+<h3 id="4）RPM包安装方法"><a href="#4）RPM包安装方法" class="headerlink" title="4）RPM包安装方法"></a>4）RPM包安装方法</h3><ul>
+<li>手工安装</li>
+<li>yum在线安装</li>
+</ul>
+<h2 id="4-软件包选择建议"><a href="#4-软件包选择建议" class="headerlink" title="4. 软件包选择建议"></a>4. 软件包选择建议</h2><ul>
+<li>源码包：如果软件包是给大量客户端提供访问，建议使用源码包安装，源码包效率更高(LAMP)。</li>
+<li>RPM包：如果软件包是给Linux底层使用，或只给少量客户访问，建议使用RPM包安装，因为RPM包简单。</li>
+</ul>
+<h2 id="5-RPM手工安装"><a href="#5-RPM手工安装" class="headerlink" title="5. RPM手工安装"></a>5. RPM手工安装</h2><p>rpm数据库路径：&#x2F;var&#x2F;lib&#x2F;rpm&#x2F;</p>
+<h3 id="1）RPM包命名规则"><a href="#1）RPM包命名规则" class="headerlink" title="1）RPM包命名规则"></a>1）RPM包命名规则</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">httpd-2.2.15-15.el6.centos.1.i686.rpm</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>httpd：软件包名</li>
+<li>2.2.15：软件版本</li>
+<li>15：软件发布的次数</li>
+<li>el6：软件发行商。el6是RedHat公司发布，适合RHEL6.x(Red Hat Enterprise Linux)和CentOS6.x下使用</li>
+<li>i686：适合的硬件平台。RPM包可以在不同的硬件平台安装，选择适合不同CPU的软件版本，可以最大化的发挥CPU性能，所以出现了所谓的i386（386以上计算机都可以安装）、i586（586以上的计算机都可以安装）、i686（奔腾II以上计算机都可以安装，目前所有的CPU都是奔腾II以上，所以这个软件版本居多）、x86_64（64位CPU可以安装）和noarch（没有硬件限制）等文件名了。</li>
+<li>rpm：rpm包的扩展名，我们说过Linux下文件不是靠扩展名区分文件类型，也就是Linux中扩展名没有任何意义。可是这里怎么又出现了扩展名呢？如果RPM包不用“rpm”作为扩展名，系统可以正确识别没有问题，可是管理员很难识别这是个什么样的软件。</li>
+</ul>
+<h3 id="2）RPM包手工命令安装"><a href="#2）RPM包手工命令安装" class="headerlink" title="2）RPM包手工命令安装"></a>2）RPM包手工命令安装</h3><p>a）默认安装位置</p>
+<table>
+<thead>
+<tr>
+<th>路径</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>&#x2F;etc&#x2F;</td>
+<td>配置文件安装目录</td>
+</tr>
+<tr>
+<td>&#x2F;usr&#x2F;bin&#x2F;</td>
+<td>可执行的命令安装目录</td>
+</tr>
+<tr>
+<td>&#x2F;usr&#x2F;lib&#x2F;</td>
+<td>程序所使用的函数库保存位置</td>
+</tr>
+<tr>
+<td>&#x2F;usr&#x2F;share&#x2F;doc&#x2F;</td>
+<td>基本的软件使用手册保存位置</td>
+</tr>
+<tr>
+<td>&#x2F;usr&#x2F;share&#x2F;man&#x2F;</td>
+<td>帮助文件保存位置</td>
+</tr>
+</tbody></table>
+<p>b）安装命令</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -ivh 包全名</span><br><span class="line">选项：</span><br><span class="line">  -i    install安装(install)</span><br><span class="line">  -v    显示更详细的信息(verbose)</span><br><span class="line">  -h    打印#显示安装进度(hash)</span><br></pre></td></tr></table></figure>
+
+<p>其他选项：</p>
+<ul>
+<li>–nodeps：不检测依赖性安装。安装软件时会检测依赖性，确定所需的底层软件是否安装。如果没有安装则会报错。如果我不管依赖性，想强行安装，可以使用这个选项。这样不检测依赖性安装的软件是不能使用的，所以不建议这样做。</li>
+<li>–replacefiles：替换文件安装。如果安装软件包，可是包中部分文件已经存在，那么正常安装时，会报错”某个文件已经存在”从而导致软件无法安装，使用这个选项可以忽视这个报错，而覆盖安装。</li>
+<li>–replacepkgs：替换软件包安装。如果软件包已经安装，此选项可以把软件包重复安装一遍。</li>
+<li>–force：强制安装。不管是否已经安装，都重新安装。就是–replacefiles和–replacepkgs的综合。</li>
+<li>–test：测试安装。不会实际安装，只是检测一下依赖性。</li>
+<li>–prefix：指定安装路径。为安装软件指定安装路径，而不使用默认安装路径。如果指定了安装路径，软件没有安装到系统默认路径中的话，系统会找不到这些安装的软件，需要进行手工配置才能被系统识别。所以rpm包我们一般都采用默认路径安装：1）默认安装位置是系统的习惯位置。2）RPM包管理系统是有卸载命令的(数据库记录安装位置)</li>
+</ul>
+<p>c）服务启动</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># service启动</span><br><span class="line">service 服务名 start|stop|restart|status</span><br><span class="line">参数：</span><br><span class="line">  start:    启动服务</span><br><span class="line">  stop:     停止服务</span><br><span class="line">  restart:  重启服务</span><br><span class="line">  status:   查看服务状态</span><br><span class="line">  </span><br><span class="line">  # 标准启动</span><br><span class="line">  /etc/init.d/服务名 start|stop|restart|status</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="3）RPM包升级"><a href="#3）RPM包升级" class="headerlink" title="3）RPM包升级"></a>3）RPM包升级</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -Uvh 包全名</span><br><span class="line">选项：</span><br><span class="line">  -U      升级安装，如果没有安装过，系统直接安装。如果安装过的版本较旧，则升级到新版本(upgrade)</span><br><span class="line"> </span><br><span class="line">rpm -Fvh 包全名</span><br><span class="line">选项：</span><br><span class="line">  -F      升级安装，如果没有安装过，则不会安装，必须安装有较旧版本，才能升级(freshen)</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="4）RPM包卸载"><a href="#4）RPM包卸载" class="headerlink" title="4）RPM包卸载"></a>4）RPM包卸载</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -e 包名</span><br><span class="line">选项：</span><br><span class="line">  --nodeps      不检查依赖性</span><br><span class="line">  -e            卸载</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="5）RPM包查询"><a href="#5）RPM包查询" class="headerlink" title="5）RPM包查询"></a>5）RPM包查询</h3><p>a）查询软件包是否安装</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -q 包名</span><br><span class="line">选项：</span><br><span class="line">  -q：查询(query)</span><br></pre></td></tr></table></figure>
+
+
+
+<p>b）查询系统中的所有安装软件包</p>
+<p>可以查询Linux系统中所有已经安装的软件包。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -qa</span><br><span class="line">选项：</span><br><span class="line">  -a：所有(all)</span><br></pre></td></tr></table></figure>
+
+<p>可以用管道符来查看所需内容</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -qa | grep 包名</span><br></pre></td></tr></table></figure>
+
+
+
+<p>c）查询软件包的详细信息</p>
+<p>可以查询已经安装的某个软件包的详细信息</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -qi 包名</span><br><span class="line">选项：</span><br><span class="line">  -i：查询软件信息(information)</span><br></pre></td></tr></table></figure>
+
+<p>也可以查询还没有安装的软件包的详细信息</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -qip 包全名</span><br><span class="line">选项：</span><br><span class="line">  -p：查询没有安装的软件包(package)</span><br></pre></td></tr></table></figure>
+
+
+
+<p>d）查询软件包中的文件列表</p>
+<p>可以查询已经安装的软件包中的文件列表和安装的完整目录</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -ql 包名</span><br><span class="line">选项：</span><br><span class="line">  -l：列出软件包中所有的文件列表和软件所安装的目录(list)</span><br></pre></td></tr></table></figure>
+
+<p>查询未安装的软件包中的文件列表和打算安装的位置</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -qlp 包全名</span><br><span class="line">选项：</span><br><span class="line">  -p：查询没有安装的软件包信息(package)</span><br></pre></td></tr></table></figure>
+
+
+
+<p>e）查询系统文件属于哪个RPM包</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -qf 系统文件名</span><br><span class="line">选项：</span><br><span class="line">  -f：查询系统文件属于哪个软件包(file)</span><br></pre></td></tr></table></figure>
+
+
+
+<p>f）查询软件包所依赖的软件包</p>
+<p>查询系统中和已经安装的软件包有依赖关系的软件包</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -qR 包名</span><br><span class="line">选项：</span><br><span class="line">  -R：查询软件包的依赖性(requires)</span><br></pre></td></tr></table></figure>
+
+<p>查询未安装的软件包的依赖包</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -qRp 包全名</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="6）验证"><a href="#6）验证" class="headerlink" title="6）验证"></a>6）验证</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">校验本机已经安装的所有软件包</span></span><br><span class="line">rpm -Va</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">校验指定RPM包中的文件(verify)</span></span><br><span class="line">rpm -V 已安装的名包</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">校验某个系统文件是否被修改</span></span><br><span class="line">rpm -Vf 系统文件名</span><br></pre></td></tr></table></figure>
+
+<p>示例：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -V httpd</span><br><span class="line">S.5....T.    c             /etc/httpd/conf/httpd.conf</span><br><span class="line">验证内容    文件类型          文件名</span><br></pre></td></tr></table></figure>
+
+<p>验证内容详情：</p>
+<ul>
+<li>S：文件大小是否改变</li>
+<li>M：文件的类型或文件的权限(rwx)是否被改变</li>
+<li>5：文件MD5校验和是否改变(可以看成文件内容是否改变)</li>
+<li>D：设备的主从代码是否改变</li>
+<li>L：文件路径是否改变</li>
+<li>U：文件的属主(所有者)是否改变</li>
+<li>G：文件的属组是否改变</li>
+<li>T：文件的修改时间是否改变</li>
+</ul>
+<p>文件类型：</p>
+<ul>
+<li>c：配置文件(config file)</li>
+<li>d：普通文档(documention)</li>
+<li>g：“鬼”文件(ghost file)，很少见，就是该文件不应该被这个RPM包包含 </li>
+<li>l：授权文件(license file)</li>
+<li>r：描述文件(readme)</li>
+</ul>
+<h3 id="7）数字证书"><a href="#7）数字证书" class="headerlink" title="7）数字证书"></a>7）数字证书</h3><p>前面的校验方法只能对已经安装的RPM包中的文件进行校验，但是如果RPM包本身就被动过手脚，那么校验就不能解决问题了，我们就必须使用数字证书验证了。</p>
+<p>数字证书特点：</p>
+<ul>
+<li>首先必须找到原厂的公钥文件，然后进行安装</li>
+<li>再安装RPM包时会提取RPM包中的证书信息，然后和本机安装的原厂证书进行验证</li>
+<li>如果验证通过，则允许安装；如果验证不通过，则不允许安装并警告</li>
+</ul>
+<p> a）数字证书导入</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm --import 数字证书文件</span><br><span class="line">选项：</span><br><span class="line">  --import：导入数字证书</span><br></pre></td></tr></table></figure>
+
+
+
+<p>b）查询系统中安装好的数字证书</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -qa | grep gpg-pubkey</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="8）RPM包中文件的提取"><a href="#8）RPM包中文件的提取" class="headerlink" title="8）RPM包中文件的提取"></a>8）RPM包中文件的提取</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm2cpio 包全名 | cpio -idv . 文件的绝对路径</span><br></pre></td></tr></table></figure>
+
+<p>rpm2cpio：将rpm包转换为cpio格式的命令。</p>
+<p>cpio：是一个标准工具，它用于创建软件档案文件和从档案文件中提取文件。</p>
+<h2 id="6-RPM包在线安装-yum"><a href="#6-RPM包在线安装-yum" class="headerlink" title="6. RPM包在线安装(yum)"></a>6. RPM包在线安装(yum)</h2><h3 id="1）yum源文件解析"><a href="#1）yum源文件解析" class="headerlink" title="1）yum源文件解析"></a>1）yum源文件解析</h3><p>yum源配置文件保存在&#x2F;etc&#x2F;yum.repos.d&#x2F;目录中，文件的扩展名一定是”*.repo”。也就是说，yum源配置文件只要扩展名是”*.repo”就会生效。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">ls /etc/yum.repos.d/</span><br><span class="line">CentOS-Base.repo    CentOS-Debuginfo.repo    CentOS-fasttrack.repo    CentOS-Media.repo    CentOS-Vault.repo</span><br></pre></td></tr></table></figure>
+
+<p>这个目录中有5个yum源配置文件，默认情况下CentOS-Base.repo文件生效。</p>
+<p>CentOS-Base.repo中有5个yum源容器，以base容器解释其内容详情：</p>
+<ul>
+<li>[base]：容器名称，一定要放在[]中。</li>
+<li>name：容器说明，可以自己随便写。</li>
+<li>mirrorlist：镜像站点，这个可以注释掉。</li>
+<li>baseurl：yum源服务器的地址。默认是CentOS官方的yum源服务器，是可以使用的。如果觉得慢，可以改成国内yum源地址。</li>
+<li>enabled：此容器是否生效，如果不写或写成enabled&#x3D;1则表示此容器生效，写成enabled&#x3D;0则表示此容器不生效。</li>
+<li>gpgcheck：如果为1则表示RPM的数字证书生效，如果为0则表示RPM的数字证书不生效。</li>
+<li>gpgkey：数字证书的公钥文件保存位置，不用修改。</li>
+</ul>
+<h3 id="2）搭建本地光盘yum源"><a href="#2）搭建本地光盘yum源" class="headerlink" title="2）搭建本地光盘yum源"></a>2）搭建本地光盘yum源</h3><p>a）放入CentOS安装光盘，并挂载光盘到指定位置。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">创建cdrom目录，作为光盘的挂载点</span></span><br><span class="line">mkdir /mnt/cdrom</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">挂载光盘到/mnt/cdrom</span></span><br><span class="line">mount /dev/cdrom /mnt/cdrom/</span><br></pre></td></tr></table></figure>
+
+<p>b）修改其他几个yum源配置文件的扩展名，让它们失效，因为只有扩展名是”*.repo”的文件才能作为yum源配置文件。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">cd /etc/yum.repo.d</span><br><span class="line">mv CentOS-Base.repo CentOS-Base.repo.bak</span><br></pre></td></tr></table></figure>
+
+<p>c）修改光盘yum源配置文件CentOS-Media.repo</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">vim CentOS-Media.repo</span><br><span class="line">[c6-media]</span><br><span class="line">name=CentOS-$releasever - Media</span><br><span class="line">baseurl=file:///mnt/cdrom/</span><br><span class="line">gpgcheck=1</span><br><span class="line">enabled=1   # 让配置生效</span><br><span class="line">gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-6</span><br></pre></td></tr></table></figure>
+
+<p>d）查看是否生效</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查询yum源所有可安装的软件包列表</span></span><br><span class="line">yum list</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="3）yum命令"><a href="#3）yum命令" class="headerlink" title="3）yum命令"></a>3）yum命令</h3><p>a）查询</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查询yum所有安装包</span></span><br><span class="line">yum list</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查询yum源服务器中是否包含某个软件包</span></span><br><span class="line">yum list 包名</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">搜索yum源服务器上所有和关键字相关的软件包</span></span><br><span class="line">yum search 关键字</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查询指定软件包的信息</span></span><br><span class="line">yum info samba</span><br></pre></td></tr></table></figure>
+
+<p>yum search搜索可以用于确定某个软件在哪个相关包当中。</p>
+<p>b）安装</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">yum -y install 包名</span><br><span class="line">选项：</span><br><span class="line">  install：    安装</span><br><span class="line">  -y：         自动回答yes。如果不加-y，那么每个安装的软件都需要手工回答yes</span><br></pre></td></tr></table></figure>
+
+
+
+<p>c）升级</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">yum -y update 包名</span><br><span class="line">选项：</span><br><span class="line">  update:    升级</span><br><span class="line">  -y：       自动回答yes</span><br><span class="line"><span class="meta prompt_">  </span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">升级本机所有软件包（包括内核，不常用）</span></span><br><span class="line">yum -y update</span><br></pre></td></tr></table></figure>
+
+
+
+<p>d）卸载</p>
+<p>除非你确定卸载的软件的依赖包不会对系统产生影响，否则不要执行yum的卸载，因为很有可能在卸载软件包的同时卸载的依赖包也是重要的系统文件，这就可能导致系统崩溃。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">yum remove 包名</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="4）yum组管理命令"><a href="#4）yum组管理命令" class="headerlink" title="4）yum组管理命令"></a>4）yum组管理命令</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">列出所有可用的软件组列表</span></span><br><span class="line">yum grouplist</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">列出软件组中包含的软件</span></span><br><span class="line">yum groupinfo 软件组名</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">安装指定软件组</span></span><br><span class="line">yum groupinstall 软件组名</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">卸载指定软件组</span></span><br><span class="line">yum groupremove 软件组名</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="7-源码包安装"><a href="#7-源码包安装" class="headerlink" title="7.源码包安装"></a>7.源码包安装</h2><h3 id="1）注意事项"><a href="#1）注意事项" class="headerlink" title="1）注意事项"></a>1）注意事项</h3><p>a）源码包是从哪里来的？</p>
+<p>源码包是通过官方网站下载的，如果需要使用，是需要单独下载的。</p>
+<p>b）是否可以在系统中既安装rpm包的Apache，又安装源码包的Apache？</p>
+<p>可以，因为两种安装方法安装的Apache，安装位置是不一样的：</p>
+<ul>
+<li>源码包必须指定安装位置(源码包没有安装数据库，没有删除命令)</li>
+<li>RPM包不建议指定安装位置，建议安装在默认位置(RPM包安装的服务有标准卸载命令，不怕文件到处安装)</li>
+</ul>
+<h3 id="2）安装过程"><a href="#2）安装过程" class="headerlink" title="2）安装过程"></a>2）安装过程</h3><p>a）下载软件包</p>
+<p>b）解压缩</p>
+<p>c）进入解压目录</p>
+<p>d）.&#x2F;configure（编译前准备）</p>
+<p>这一步主要有三个作用：</p>
+<ul>
+<li>在安装之前需要检测系统环境是否符合安装要求。</li>
+<li>定义需要的功能选项。”.&#x2F;configure”支持的功能选项较多，可以执行“.&#x2F;configure –help”命令查询其支持的功能，一般都会通过”.&#x2F;configure –prefix&#x3D;安装路径”来指定安装路径。</li>
+<li>把系统环境的检测结果和定义好的功能选项写入Makefile文件，后续的编译和安装需要依赖这个文件的内容。</li>
+</ul>
+<p>需要注意的是，configure不是系统命令，而是源码包软件自带的一个脚本程序，所以必须采用“.&#x2F;configure”方式执行。</p>
+<p>e）make（编译）</p>
+<p>make会调用gcc编译器，并读取Makefile文件中的信息进行系统软件编译。编译的目的就是把源码程序转变为能被Linux识别的可执行文件，这些可执行文件保存在当前目录下。编译过程较为耗时，需要有足够的耐心。</p>
+<p>f）make clean（清空编译内容，非必需步骤）</p>
+<p>如果在”.&#x2F;configure”或“make”编译中报错，那么我们在重新执行命令前一定要记得执行make clean命令，它会清空Makefile文件或编译产生的“.o”文件。</p>
+<p>g）make install（编译安装）</p>
+<p>这才是真正的安装过程，一般会写清楚程序的安装位置。如果忘记指定安装目录，则可以把这个命令的执行过程保存下来，以备将来删除使用。</p>
+<h3 id="3）删除"><a href="#3）删除" class="headerlink" title="3）删除"></a>3）删除</h3><p>源码包没有删除命令，如果需要删除，直接删除安装目录即可。</p>
+<h3 id="4）打入补丁"><a href="#4）打入补丁" class="headerlink" title="4）打入补丁"></a>4）打入补丁</h3><p>a）补丁的生成</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 比较old和new文件的不同</span><br><span class="line">diff 选项 old new</span><br><span class="line">选项：</span><br><span class="line">  -a    将任何文档当做文本文档处理</span><br><span class="line">  -b    忽略空格造成的不同</span><br><span class="line">  -B    忽略空白行造成的不同</span><br><span class="line">  -I    忽略大小写造成的不同</span><br><span class="line">  -N    当比较两个目录时，如果某个文件只在一个目录中，则另一个目录中视作空文件。</span><br><span class="line">  -r    当比较目录时，递归比较子目录</span><br><span class="line">  -u    使用统一的输出格式</span><br></pre></td></tr></table></figure>
+
+<p>比较两个文件的不同，并生成补丁文件”txt.patch”：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 比较两个文件的不同，同时生成txt.patch补丁文件</span><br><span class="line">diff -Naur /root/test/old.txt /root/test/new.txt &gt; txt.patch</span><br></pre></td></tr></table></figure>
+
+
+
+<p>b）打入补丁</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 按照补丁文件进行更新</span><br><span class="line">patch -pn &lt; 补丁文件</span><br><span class="line">选项：</span><br><span class="line">  -pn    n为数字。代表按照补丁文件中的路径，指定更新文件的位置。</span><br></pre></td></tr></table></figure>
+
+<p>“-pn”不好理解，补丁文件是要打入旧文件的，但是你当前所在的目录和补丁文件中的记录是不一定匹配的，所以就需要”-pn”来同步两个目录。</p>
+<p>比如我当前在“&#x2F;root&#x2F;test”目录下，补丁文件中记录的文件目录是为“&#x2F;root&#x2F;test&#x2F;old.txt”。这时如果写入“p1”，那么补丁文件就会打入”&#x2F;root&#x2F;test&#x2F;root&#x2F;test&#x2F;old.txt”。如果写入的是“p2”，那么补丁文件就会打入”&#x2F;root&#x2F;test&#x2F;test&#x2F;old.txt”。如果写入的是“p3”，那么补丁文件就会打入”&#x2F;root&#x2F;test&#x2F;old.txt”。即n表示删除补丁文件中记录的文件目录的路径。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">patch -p3 &lt; txt.patch</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="8-脚本安装程序"><a href="#8-脚本安装程序" class="headerlink" title="8. 脚本安装程序"></a>8. 脚本安装程序</h2><p>以Webmin安装为例。</p>
+<p>a）下载webmin软件，地址：<a href="http://sourceforge.net/projects/webadmin/files/webmin/">http://sourceforge.net/projects/webadmin/files/webmin/</a></p>
+<p>b）解压软件</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">tar -zxvf webmin-1.610.tar.gz</span><br></pre></td></tr></table></figure>
+
+<p>c）进入解压目录</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">cd webmin-1.610</span><br></pre></td></tr></table></figure>
+
+<p>d）执行安装程序setup.sh，并指定功能选项。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">./setup.sh</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>用户管理</title>
+    <url>/2025/02/25/%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86/</url>
+    <content><![CDATA[<h1 id="用户管理"><a href="#用户管理" class="headerlink" title="用户管理"></a>用户管理</h1><h2 id="1-用户相关文件"><a href="#1-用户相关文件" class="headerlink" title="1. 用户相关文件"></a>1. 用户相关文件</h2><h3 id="1）用户信息文件"><a href="#1）用户信息文件" class="headerlink" title="1）用户信息文件"></a>1）用户信息文件</h3><p>&#x2F;etc&#x2F;passwd</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">root:x:0:0:root:/root:/bin/bash</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>第一列：用户名</p>
+</li>
+<li><p>第二列：密码位</p>
+<p>x为密码标志位，代表用户有密码，用户密码放置在&#x2F;etc&#x2F;shadow文件中。</p>
+</li>
+<li><p>第三列：用户ID</p>
+<ul>
+<li>0：超级用户UID，如果用户UID为0，代表这个账号是管理员账号。那Linux中如何把普通用户升级为管理员呢？就是把其他用户的UID修改为0就可以了。不过不建议建立多个管理员账号。</li>
+<li>1-499：系统用户(伪用户)UID，这些UID账号是系统保留给系统用户的UID，也就是说UID是1-499范围内的用户是不能登录系统的，而是用来运行系统或服务的，其中1-99是系统保留的账号，系统自动创建。100-499是预留给用户创建系统账号的。</li>
+<li>500-65535：普通用户UID。建立的普通用户UID从500开始，最大到65535。这些用户足够使用了，但是如果不够也不用害怕，2.6.x内核以后的Linux系统用户UID已经可以支持2的32次方了。</li>
+</ul>
+</li>
+<li><p>第四列：组ID（GID）</p>
+<p>添加用户时，如果不指定用户所属的初始组，那么会建立和用户名相同的组。</p>
+</li>
+<li><p>第五列：用户说明</p>
+</li>
+<li><p>第六列：用户家目录（~）</p>
+</li>
+<li><p>第七列：登录shell（标准是&#x2F;bin&#x2F;bash）</p>
+</li>
+</ul>
+<h3 id="2）影子文件"><a href="#2）影子文件" class="headerlink" title="2）影子文件"></a>2）影子文件</h3><p>&#x2F;etc&#x2F;shadow</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">root:$6$jvGI3Z2PqL/TT4lT$q1lVTdba3dRsmWsEJVHzTqAHOSlb3qvM/hL7wKTQCo5148xfMiT0mnq1zQ7n7wCZu/QEdtP/57BVko4X6U4in0:18929:0:99999:7:::</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>第一列：用户名</p>
+</li>
+<li><p>第二列：加密密码</p>
+<p>我们也可以在密码前人为的加入“!”或“*”改变加密值让密码暂时失效，使这个用户无法登录，达到暂时禁止用户登录的效果。</p>
+<p>所有伪用户的密码都是”!!”或“*”，代表没有密码是不能登录的。当然新创建的用户如果不设定密码，它的密码项也是”!!”，代表这个用户没有密码，不能登录。</p>
+</li>
+<li><p>第三列：密码最近更改时间（day），1970年1月1日作为标准时间</p>
+<p>时间戳转日期</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">date -d &quot;1970-01-01 18929 days&quot;</span><br><span class="line">2021年 10月 29日 星期五 00:00:00 CST</span><br></pre></td></tr></table></figure>
+
+<p>日期转时间戳</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">echo $(($(date --date=&quot;2021/10/29&quot; +%s)/86400+1))</span><br><span class="line">18929</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>第四列：两次密码的修改间隔时间（和第3个字段相比）</p>
+</li>
+<li><p>第五列：密码有效期(和第3个字段相比)</p>
+</li>
+<li><p>第六列：密码修改到期前警告天数(和第5个字段相比)</p>
+</li>
+<li><p>第七列：密码过期后的宽限天数(和第5个字段相比)</p>
+</li>
+<li><p>第八列：密码失效时间</p>
+<p>这里同样要写时间戳，也就是用1970年1月1日进行时间换算，如果超过了失效时间，就算密码没有过期，用户也就失效无法使用了。</p>
+</li>
+<li><p>第九列：保留</p>
+</li>
+</ul>
+<h3 id="3）组信息文件"><a href="#3）组信息文件" class="headerlink" title="3）组信息文件"></a>3）组信息文件</h3><p>&#x2F;etc&#x2F;group</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">root:x:0:</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>第一列：组名</li>
+<li>第二列：组密码位</li>
+<li>第三列：GID</li>
+<li>第四列：此组中支持的其他用户，附加组是此组的用户<ul>
+<li>初始组：每个用户初始组只能有一个，一般都是和用户名相同的组作为初始组。</li>
+<li>附加组：每个用户可以属于多个附加组。要把用户加入组，都是加入附加组。</li>
+</ul>
+</li>
+</ul>
+<h3 id="4）组密码文件-不建议使用"><a href="#4）组密码文件-不建议使用" class="headerlink" title="4）组密码文件(不建议使用)"></a>4）组密码文件(不建议使用)</h3><p>&#x2F;etc&#x2F;gshadow</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">root:*::</span><br></pre></td></tr></table></figure>
+
+<p>如果给用户组设定了组管理员，并给该用户组设定了组密码，组密码就保存在这个文件当中。组管理员就可以利用这个密码管理这个用户组了。</p>
+<h3 id="5）用户家目录"><a href="#5）用户家目录" class="headerlink" title="5）用户家目录"></a>5）用户家目录</h3><h3 id="6）用户邮箱目录"><a href="#6）用户邮箱目录" class="headerlink" title="6）用户邮箱目录"></a>6）用户邮箱目录</h3><p>这个邮箱在&#x2F;var&#x2F;spool&#x2F;mail目录当中，例如lamp用户的邮箱就是&#x2F;var&#x2F;spool&#x2F;mail&#x2F;lamp文件</p>
+<h3 id="7）用户模板目录"><a href="#7）用户模板目录" class="headerlink" title="7）用户模板目录"></a>7）用户模板目录</h3><p>&#x2F;etc&#x2F;skel&#x2F;</p>
+<p>用户家目录初始化时的模板目录。</p>
+<h2 id="2-用户管理命令"><a href="#2-用户管理命令" class="headerlink" title="2.用户管理命令"></a>2.用户管理命令</h2><h3 id="1）添加用户"><a href="#1）添加用户" class="headerlink" title="1）添加用户"></a>1）添加用户</h3><p>a）手工删除用户</p>
+<p>手工删除用户试验：手工删除，如果可以正常建立用户，证明用户删除干净。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 创建用户，就是写入这6个文件</span><br><span class="line">/etc/passwd</span><br><span class="line">/etc/shadow</span><br><span class="line">/etc/group</span><br><span class="line">/etc/gshadow</span><br><span class="line">/home/user1</span><br><span class="line">/var/spool/mail/user1</span><br></pre></td></tr></table></figure>
+
+
+
+<p>b）useradd命令</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">useradd 选项 用户名</span><br><span class="line">选项：</span><br><span class="line">  -u：UID   指定UID</span><br><span class="line">  -g：组名   指定初始组，不要手工指定</span><br><span class="line">  -G：组名   指定附加组，把用户加入组，使用附加组</span><br><span class="line">  -c：说明   添加说明</span><br><span class="line">  -d：目录   手工指定家目录，目录不需要事先建立</span><br><span class="line">  -s：shell  /bin/bash</span><br><span class="line">  -m：创建家目录</span><br></pre></td></tr></table></figure>
+
+
+
+<p>c）useradd默认值</p>
+<p>useradd添加用户时参考的默认值文件主要有两个：</p>
+<ul>
+<li><p>&#x2F;etc&#x2F;default&#x2F;useradd</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># useradd defaults file</span><br><span class="line">GROUP=100</span><br><span class="line">HOME=/home</span><br><span class="line">INACTIVE=-1</span><br><span class="line">EXPIRE=</span><br><span class="line">SHELL=/bin/bash</span><br><span class="line">SKEL=/etc/skel</span><br><span class="line">CREATE_MAIL_SPOOL=yes</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>GROUP&#x3D;100</p>
+<p>这个选项是建立用户的默认组，也就是说添加每个用户时，用户的初始组就是GID为100的这个用户组。</p>
+</li>
+<li><p>HOME&#x3D;&#x2F;home</p>
+<p>这个选项是用户的家目录的默认位置，所以所有的新建用户的家目录默认都在&#x2F;home&#x2F;下。</p>
+</li>
+<li><p>INACTIVE&#x3D;-1</p>
+<p>这个选项就是密码过期后的宽限天数，也就是&#x2F;etc&#x2F;shadow文件的第七个字段。如果是天数，比如10代表密码过期后10天后失效；如果是0，代表密码过期后立即失效；如果是-1，则代表密码永远不会失效。这是默认值是-1，所以所有新建立的用户密码都不会失效。</p>
+</li>
+<li><p>EXPIRE&#x3D;</p>
+<p>这个选项是密码失效时间，也就是&#x2F;etc&#x2F;shadow文件的第八个字段，也就是说用户到达这个日期后就会直接失效。当然这里也是使用时间戳来表示日期的。默认是空，所以所有新建用户没有失效时间。永久有效。</p>
+</li>
+<li><p>SHELL&#x3D;&#x2F;bin&#x2F;bash</p>
+<p>这个选项是用户的默认shell。&#x2F;bin&#x2F;bash是Linux的标志shell，所以所有新建立的用户默认都具备shell赋予的权限。</p>
+</li>
+<li><p>SKEL&#x3D;&#x2F;etc&#x2F;skel</p>
+<p>这个选项就是定义用户的模板目录的位置，&#x2F;etc&#x2F;skel&#x2F;目录中的文件都会复制到新建用户的家目录当中。</p>
+</li>
+<li><p>CREATE_MAIL_SPOOL&#x3D;yes</p>
+<p>这个选项定义是否给新建用户建立邮箱，默认是创建，也就是说所有的新建用户系统都会新建一个邮箱，放在&#x2F;var&#x2F;spool&#x2F;mail&#x2F;下，和用户名相同。</p>
+</li>
+</ul>
+</li>
+<li><p>&#x2F;etc&#x2F;login.defs</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">MAIL_DIR        /var/spool/mail</span><br><span class="line"></span><br><span class="line">PASS_MAX_DAYS   99999</span><br><span class="line">PASS_MIN_DYAS   0</span><br><span class="line">PASS_MIN_LEN    5</span><br><span class="line">PASS_WARN_AGE   7</span><br><span class="line"></span><br><span class="line">UID_MIN         500</span><br><span class="line">UID_MAX         60000</span><br><span class="line"></span><br><span class="line">GID_MIN         500</span><br><span class="line">GID_MAX         60000</span><br><span class="line"></span><br><span class="line">CREATE_HOME     yes</span><br><span class="line"></span><br><span class="line">UMASK           077</span><br><span class="line"></span><br><span class="line">USERGROUPS_ENAB yes</span><br><span class="line"></span><br><span class="line">ENCRYPT_METHOD  SHA512</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>MAIL_DIR          &#x2F;var&#x2F;spool&#x2F;mail</p>
+<p>这行指定了新建用户的默认邮箱位置。比如lamp用户的邮箱就是&#x2F;var&#x2F;spool&#x2F;mail&#x2F;lamp。</p>
+</li>
+<li><p>PASS_MAX_DAYS    99999</p>
+<p>这行指定的是密码的有效期，也就是&#x2F;etc&#x2F;shadow文件的第五个字段。代表多少天之后必须修改密码，默认值是99999</p>
+</li>
+<li><p>PASS_MIN_DAYS    0</p>
+<p>这行指定是两次密码的修改间隔时间，也就是&#x2F;etc&#x2F;shadow文件的第四个字段。代表第一次修改密码之后，几天后才能再次修改密码，默认值是0</p>
+</li>
+<li><p>PASS_MIN_LEN    5</p>
+<p>这行代表密码的最小长度，默认不小于5位，但是我们现在用户登录时验证已经被PAM模块取代，所以这个选项并不生效。</p>
+</li>
+<li><p>PASS_WARN_AGE    7</p>
+<p>这行代表密码修改到期前的警告天数。也就是&#x2F;etc&#x2F;shadow文件的第六个字段。代表密码到底有效期前多少天开始进行警告提醒，默认值是7天。</p>
+</li>
+<li><p>UID_MIN|UID_MAX</p>
+<p>这两行指定了UID的最小值和最大值之间的范围。</p>
+</li>
+<li><p>GID_MIN|GID_MAX</p>
+<p>这两行指定了GID的最小值和最大值之间的范围。</p>
+</li>
+<li><p>CREATE_HOME    yes</p>
+<p>这行指定建立用户时是否自动建立用户的家目录，默认是建立。</p>
+</li>
+<li><p>UMASK    077</p>
+<p>这行指定的是建立的用户家目录的默认权限，因为umask值是077，所以新建的用户家目录的权限是700。</p>
+</li>
+<li><p>USERGROUPS_ENAB    yes</p>
+<p>这行指定的是使用命令userdel删除用户时，是否删除用户的初始组，默认是删除。</p>
+</li>
+<li><p>ENCRYPT_METHOD    SHA512</p>
+<p>这行指定Linux用户的密码使用SHA512散列模式加密，这是新的密码加密模式，原先的Linux只能用DES或MD5方式加密。</p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="2）设定密码"><a href="#2）设定密码" class="headerlink" title="2）设定密码"></a>2）设定密码</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">passwd [选项] 用户名</span><br><span class="line">选项：</span><br><span class="line">  -l:         暂时锁定用户。仅root用户可用（lock）</span><br><span class="line">  -u:         解锁用户。仅root用户可用（unlock）</span><br><span class="line">  --stdin:    可以将通过管道符输出的数据作为用户的密码。主要在批量添加用户时使用</span><br></pre></td></tr></table></figure>
+
+<p>示例：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 修改当前用户的密码</span><br><span class="line">passwd</span><br><span class="line"></span><br><span class="line"># 使用字符串作为密码</span><br><span class="line">echo &quot;123&quot; | passwd --stdin lamp</span><br><span class="line"></span><br><span class="line"># 把密码修改日期归零(shadow第3个字段，0代表1970年1月1日)。这样用户一登录就要修改密码。</span><br><span class="line">chage -d 0 lamp</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="3）用户信息修改"><a href="#3）用户信息修改" class="headerlink" title="3）用户信息修改"></a>3）用户信息修改</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">usermod [选项] 用户名</span><br><span class="line">选项：</span><br><span class="line">  -u UID:        修改用户的UID</span><br><span class="line">  -d 家目录：     修改用户的家目录。家目录必须写绝对路径</span><br><span class="line">  -c 用户说明:    修改用户的说明信息，就是/etc/passwd文件的第五个字段</span><br><span class="line">  -g 组名：       修改用户的初始组，就是/etc/passwd文件的第四个字段</span><br><span class="line">  -G 组名：       修改用户的附加组，其实就是把用户加入其他用户组</span><br><span class="line">  -s shell:      修改用户的登录Shell。默认是/bin/bash</span><br><span class="line">  -e 日期：       修改用户的失效日期，格式为&quot;YYYY-MM-DD&quot;。也就是/etc/shadow文件的第八个字段</span><br><span class="line">  -L:            临时锁定用户(Lock)</span><br><span class="line">  -U:            解锁用户(Unlock)</span><br></pre></td></tr></table></figure>
+
+<p>usermod也可以修改用户名，但不建议这么做，这样及其容易把管理员自己稿晕。建议删除旧用户，再建立新用户。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 修改用户名</span><br><span class="line">usermod -l 新名 旧名</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="4）删除用户"><a href="#4）删除用户" class="headerlink" title="4）删除用户"></a>4）删除用户</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">userdel [-r] 用户名</span><br><span class="line">选项：</span><br><span class="line">  -r:    在删除用户的同时删除用户的家目录</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="5）切换用户身份"><a href="#5）切换用户身份" class="headerlink" title="5）切换用户身份"></a>5）切换用户身份</h3><p>su命令可以切换成不同的用户身份。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">su [选项] 用户名</span><br><span class="line">选项：</span><br><span class="line">  -:          选项只使用“-”代表连带用户的环境变量一起切换</span><br><span class="line">  -c 命令:    仅执行一次命令，而不切换用户身份</span><br></pre></td></tr></table></figure>
+
+<p>“-”不能省略，它代表切换用户身份时，用户的环境变量也要切换成新用户的环境变量。</p>
+<h2 id="3-组管理命令"><a href="#3-组管理命令" class="headerlink" title="3. 组管理命令"></a>3. 组管理命令</h2><h3 id="1）添加用户组"><a href="#1）添加用户组" class="headerlink" title="1）添加用户组"></a>1）添加用户组</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">groupadd [选项] 组名</span><br><span class="line">选项：</span><br><span class="line">  -g GID:    指定组ID</span><br></pre></td></tr></table></figure>
+
+<p>示例：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 添加group1组</span><br><span class="line">groupadd group1</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="2）删除用户组"><a href="#2）删除用户组" class="headerlink" title="2）删除用户组"></a>2）删除用户组</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">groupdel 组名</span><br></pre></td></tr></table></figure>
+
+<p>不过要注意，要删除的组不能是其他用户的初始组，也就是说这个组中没有初始用户才可以删除。如果组中有附加用户，则删除组时不受影响。</p>
+<h3 id="3）把用户添加进组或从组中删除"><a href="#3）把用户添加进组或从组中删除" class="headerlink" title="3）把用户添加进组或从组中删除"></a>3）把用户添加进组或从组中删除</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">gpasswd [选项] 组名</span><br><span class="line">选项：</span><br><span class="line">  -a 用户名：    把用户加入组</span><br><span class="line">  -d 用户名：    把用户从组中删除</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 添加test组</span><br><span class="line">groupadd test</span><br><span class="line"></span><br><span class="line"># 把test1用户加入test组</span><br><span class="line">gpasswd -a test1 test</span><br><span class="line"></span><br><span class="line"># 把用户test1从test组中删除</span><br><span class="line">gpasswd -d test1 test</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="4）改变有效组"><a href="#4）改变有效组" class="headerlink" title="4）改变有效组"></a>4）改变有效组</h3><p>每个用户可以属于一个初始组（用户是这个组的初始用户），也可以属于多个附加组（用户是这个组的附加用户）。既然用户可以属于这么多用户组，那么用户在创建文件后，默认生效的组身份是哪个呢？当然是初始用户组的组身份。因为初始组是用户一旦登录就直接获得的组身份。也就是说，用户在创建文件后，文件的属组就是用户的初始组，因为用户的有效组默认是初始组。使用newgrp可以切换用户的有效组。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">newgrp 组名</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="5-组权限实验"><a href="#5-组权限实验" class="headerlink" title="5. 组权限实验"></a>5. 组权限实验</h3><p>根目录下创建个www目录，属主为teacher, 学生st1，st2可以往这个目录提交作业。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 创建www目录</span><br><span class="line">mkdir /www</span><br><span class="line"></span><br><span class="line"># 创建teacher用户</span><br><span class="line">useradd -m teacher</span><br><span class="line"></span><br><span class="line"># 设置teacher用户密码</span><br><span class="line">passwd teacher</span><br><span class="line"></span><br><span class="line"># 创建st1,st2用户并设置密码</span><br><span class="line">useradd -m st1</span><br><span class="line">useradd -m st2</span><br><span class="line"></span><br><span class="line"># 创建tg组</span><br><span class="line">groupadd tg</span><br><span class="line"></span><br><span class="line"># 将st1, st2加入tg组</span><br><span class="line">gpasswd -a st1 tg</span><br><span class="line">gpasswd -a st2 tg</span><br><span class="line"></span><br><span class="line"># 设置www目录属主和属组</span><br><span class="line">chown teacher:tg /www/</span><br><span class="line"></span><br><span class="line"># 设置www目录权限</span><br><span class="line">chmod 770 /www/</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>权限管理</title>
+    <url>/2025/02/25/%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86/</url>
+    <content><![CDATA[<h1 id="权限管理"><a href="#权限管理" class="headerlink" title="权限管理"></a>权限管理</h1><h2 id="1-ACL权限"><a href="#1-ACL权限" class="headerlink" title="1. ACL权限"></a>1. ACL权限</h2><h3 id="1）ACL概述"><a href="#1）ACL概述" class="headerlink" title="1）ACL概述"></a>1）ACL概述</h3><p>ACL是用于解决用户对文件身份不足问题的。</p>
+<h3 id="2）开启ACL"><a href="#2）开启ACL" class="headerlink" title="2）开启ACL"></a>2）开启ACL</h3><p>查询acl是否开启：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">dumpe2fs命令是查询指定分区详细文件系统信息的命令</span></span><br><span class="line">dumpe2fs -h &lt;根分区&gt;</span><br><span class="line">选项：</span><br><span class="line">  -h:    仅显示超级地中信息，而不显示磁盘块组的详细信息。</span><br><span class="line"> </span><br><span class="line"> ...</span><br><span class="line"> Default mount options:     user_xattr acl</span><br><span class="line"> ...</span><br></pre></td></tr></table></figure>
+
+<p>如果没有开启，手工开启分区的ACL权限：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">重新挂载根分区，并挂载加入acl权限</span></span><br><span class="line">mount -o remount,acl /</span><br></pre></td></tr></table></figure>
+
+<p>也可以通过修改&#x2F;etc&#x2F;fstab文件，永久开启ACL权限：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">vim /etc/fstab</span><br><span class="line">UUID=6f9a4f35-3b8f-425e-b8f3-4d46dbca87ad /               ext4       defaults.acl 0       1</span><br></pre></td></tr></table></figure>
+
+<p>验证目录ACL权限存在</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ls -ahl /</span><br><span class="line">drwxrwx---+   2 sc   tg         4096  2月 14 20:19 www/</span><br><span class="line"># “+”代表有ACL权限</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="3）ACL基本命令"><a href="#3）ACL基本命令" class="headerlink" title="3）ACL基本命令"></a>3）ACL基本命令</h3><p>a）查询文件的ACL权限</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">getfacl 文件名</span><br></pre></td></tr></table></figure>
+
+
+
+<p>b）设定ACL权限</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">setfacl [选项] 文件名</span><br><span class="line">选项：</span><br><span class="line">  -m    设定ACL权限</span><br><span class="line">  -b    删除ACL权限</span><br><span class="line">  -x    删除单个用户的ACL权限</span><br><span class="line">  -R    递归(只能赋予目录，且只对已经存在的文件生效)</span><br><span class="line"></span><br><span class="line">setfacl -m u:用户名:权限(1|2|4|5|7) 文件名</span><br><span class="line">setfacl -m g:组名:权限(1|2|4|5|7) 文件名</span><br><span class="line"></span><br><span class="line"># 赋予ACL默认权限。默认权限只能赋予目录，且只对以后新建的文件生效</span><br><span class="line">setfacl -m d:u:用户名|组名:权限(1|2|4|5|7) 目录</span><br></pre></td></tr></table></figure>
+
+<p>示例：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 给test目录赋予aa用户读写执行的ACL权限</span><br><span class="line">setfacl -m u:aa:rwx /test</span><br><span class="line"></span><br><span class="line"># 赋予递归ACL权限</span><br><span class="line">setfacl -m u:cc:rx -R soft/</span><br><span class="line"></span><br><span class="line"># ACL默认权限</span><br><span class="line">setfacl -m d:u:aa:rwx -R soft/</span><br></pre></td></tr></table></figure>
+
+<p>**注意：**ACL权限，一旦递归后，不可避免的出现权限溢出。因为x权限对目录来说相当于cd，而对文件是最大权限。所以ACL权限能不用则不用。</p>
+<h3 id="4）最大有效权限-mask"><a href="#4）最大有效权限-mask" class="headerlink" title="4）最大有效权限(mask)"></a>4）最大有效权限(mask)</h3><p>即最大ACL权限。设定用户或组ACL权限后，该用户或组最终权限是最大ACL权限(mask权限)与该用户或组权限逻辑与的结果的权限。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 设定mask权限为r-x,使用“m:权限”格式</span><br><span class="line">setfacl -m m:rx project/</span><br><span class="line"></span><br><span class="line"># 查询project/目录权限</span><br><span class="line"># file: project/</span><br><span class="line"># owner: root</span><br><span class="line"># group: tgroup</span><br><span class="line">user::rwx              #effective:r-x</span><br><span class="line">group::rwx             #effective:r-x</span><br><span class="line">mask::r-x</span><br><span class="line">other::---</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="5）删除ACL权限"><a href="#5）删除ACL权限" class="headerlink" title="5）删除ACL权限"></a>5）删除ACL权限</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 删除指定用户和用户组的ACL权限</span><br><span class="line">setfacl -x u:st /project/</span><br><span class="line"></span><br><span class="line"># 删除文件的所有ACL权限</span><br><span class="line">setfacl -b /project/</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="2-sudo授权"><a href="#2-sudo授权" class="headerlink" title="2. sudo授权"></a>2. sudo授权</h2><p>给普通用户赋予部分管理员权限。</p>
+<p>在&#x2F;sbin&#x2F;和&#x2F;usr&#x2F;sbin&#x2F;目录下的命令只有超级用户才能使用。</p>
+<h3 id="1）root身份"><a href="#1）root身份" class="headerlink" title="1）root身份"></a>1）root身份</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 执行visudo命令，赋予普通用户权限命令，命令执行后和vi一样使用</span><br><span class="line">visudo</span><br><span class="line"></span><br><span class="line">root     ALL=(ALL)                         ALL</span><br><span class="line">#用户名   被管理主机的地址=(可使用的身份)       授权命令(绝对路径)</span><br><span class="line"># %wheel        ALL=(ALL)                              ALL</span><br><span class="line">#%组名           被管理主机的地址=(可使用的身份)            授权命令(绝对路径)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>用户名&#x2F;组名：代表root给哪个用户或用户组赋予命令，注意组名前加“%”。</p>
+</li>
+<li><p>用户可以用指定的命令管理指定IP地址的服务器。如果写ALL，代表可以管理任务主机，如果写固定IP，代表用户可以管理指定的服务器。(这里的IP指定的是用户可以管理哪个IP地址的服务器，那么如果你是一台独立的服务器，这里写ALL和你服务器的IP地址，作用是一样的。而写入网段，只有对NIS服务这样用户和密码集中管理的服务器才有意义)。如果我们这里写本机的IP地址，不代表只允许本机的用户使用指定命令，而代表指定的用户可以从任何IP地址来管理当前服务器。</p>
+</li>
+<li><p>可使用身份：就是把来源用户切换成什么身份使用，(ALL)代表可以切换成任意身份。这个字段可以省略。</p>
+</li>
+<li><p>授权命令：代表root把什么命令授权给普通用户。默认是ALL，代表任何命令，这个当然不行，如果需要给哪个命令授权，写入命令名即可。不过需要注意一定要命令写成绝对路径。</p>
+</li>
+</ul>
+<p>【示例1】：授权用户user1可以重启服务器。</p>
+<p>则由root用户添加如下行：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# visudo</span><br><span class="line">user1         ALL=/sbin/shutdown -r now</span><br><span class="line"></span><br><span class="line"># 查看可用的授权</span><br><span class="line">[user1@localhost ~]$ sudo -l</span><br><span class="line"></span><br><span class="line"># 执行授权命令</span><br><span class="line">[user1@localhost ~]$ sudo /sbin/shutdown -r now</span><br></pre></td></tr></table></figure>
+
+
+
+<p>【示例2】：授权一个用户管理web服务器。</p>
+<p>首先要分析授权用户管理Apache至少要实现哪些基本授权：</p>
+<ul>
+<li>可以使用Apache管理脚本</li>
+<li>可以修改Apache配置文件</li>
+<li>可以更新网页内容</li>
+</ul>
+<p>假设Apache管理脚本程序为&#x2F;etc&#x2F;rc.d&#x2F;init.d&#x2F;httpd。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># visudo授权</span><br><span class="line">[root@loaclhost ~]# visudo</span><br><span class="line">user1      192.168.0.156=/etc/rc.d/init.d/httpd reload,/etc/rc.d/init.d/httpd configtest</span><br></pre></td></tr></table></figure>
+
+<p>授权用户user1可以连接192.168.0.156上的Apache服务器，通过Apache管理脚本重新读取配置文件让更改的设置生效(reload)和可以检测Apache配置文件语法错误(configtest)。</p>
+<p>为满足条件二：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# visudo</span><br><span class="line">user1      192.168.0.156=/usr/bin/vim /etc/httpd/conf/httpd.conf</span><br></pre></td></tr></table></figure>
+
+<p>授权用户user1可以用root身份使用vi编辑Apache配置文件。</p>
+<p>为满足条件三，假设网页存放目录为&#x2F;var&#x2F;www&#x2F;html，则只需要授权user1对此目录具有写权限或者索性更改目录所有者为user1即可。如果需要，还可以设置user1可以通过FTP等文件共享服务更新网页。</p>
+<p>【示例3】：授权aa用户可以添加其他普通用户。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# visudo</span><br><span class="line">aa    ALL=/usr/sbin/useradd</span><br><span class="line">aa    ALL=/usr/bin/passwd [A-Za-z]*, !/usr/bin/passwd &quot;&quot;, !/usr/bin/passwd root    # 不能改root用户密码</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="3-文件特殊权限"><a href="#3-文件特殊权限" class="headerlink" title="3.文件特殊权限"></a>3.文件特殊权限</h2><h3 id="1）SetUID"><a href="#1）SetUID" class="headerlink" title="1）SetUID"></a>1）SetUID</h3><p>a）SetUID概念</p>
+<p>SetUID的功能可以这样理解：</p>
+<ul>
+<li>只有可以执行的文件才能设定SUID权限</li>
+<li>命令执行者要对该程序拥有x（执行）权限</li>
+<li>命令执行者在执行该程序时获得该程序文件属主的身份(在执行程序的过程中灵魂附体为文件的属主)</li>
+<li>SetUID权限只在该程序执行过程中有效，也就是说身份改变只在程序执行过程中有效</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# ll /etc/passwd</span><br><span class="line">-rw-r--r-- 1 root root 3626  2月 15 11:38 /etc/passwd</span><br><span class="line"></span><br><span class="line">[root@localhost ~]# ll /etc/shadow</span><br><span class="line">-rw-r----- 1 root shadow 2092  2月 15 11:37 /etc/shadow</span><br><span class="line"></span><br><span class="line">[root@localhost ~]# ll /usr/bin/passwd</span><br><span class="line">-rwsr-xr-x 1 root root 64152  5月 30  2024 /usr/bin/passwd</span><br></pre></td></tr></table></figure>
+
+<p>&#x2F;usr&#x2F;bin&#x2F;passwd命令拥有特殊权限SetUID，也就是在属主的权限位的执行权限上是s。可以这样来理解它：当一个具有执行权限的文件设置SetUID权限后，用户执行这个文件时将以文件所有者的身份执行。&#x2F;usr&#x2F;bin&#x2F;passwd命令具有SetUID权限，所有者为root（Linux中的命令默认所有者都是root），也就是说当普通用户使用passwd更改自己密码的时候，那一瞬间突然灵魂附体了，实际是用passwd命令所有者root的身份在执行passwd命令，root当然可以将密码写入&#x2F;etc&#x2F;shadow文件，所以普通用户也可以修改&#x2F;etc&#x2F;shadow文件，命令执行完成后该身份也随之消失。如果取消SetUID权限，则普通用户就不能修改自己的密码了。</p>
+<p>b）设置SetUID权限</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 设置SetUID权限</span><br><span class="line">[root@localhost ~]# chmod u+s /usr/bin/vim      # 极其危险，意味着把服务器送给别人了，别人可以打开、修改任何文件了</span><br><span class="line"></span><br><span class="line"># 查看SetUID权限</span><br><span class="line">[root@localhost ~]# ll /usr/bin/vim</span><br><span class="line">-rwsr-xr-x 1 root root 1847752 4月 5 2012 /usr/bin/vim </span><br></pre></td></tr></table></figure>
+
+
+
+<p>c）建议</p>
+<ul>
+<li>关键目录应严格控制写权限，比如“&#x2F;”、“&#x2F;usr”等；</li>
+<li>用户的密码设置要严格遵守密码三原则；</li>
+<li>对系统中默认应该具有SetUID权限的文件作一列表，定时检查有没有这之外的文件被设置了SetUID权限。</li>
+</ul>
+<p>d）检测SetUID的脚本</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/bash</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Author: ben (E-main: 326525276@qq.com)</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">搜索系统中所有拥有SUID和SGID的文件，并保存到临时目录中</span></span><br><span class="line">find / -perm -4000 -o -perm -2000 &gt; /tmp/setuid.check</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">做循环，每次循环取出临时文件中的文件名</span></span><br><span class="line">for i in $(cat /tmp/setuid.check)</span><br><span class="line">do</span><br><span class="line"><span class="meta prompt_">	# </span><span class="language-bash">比对这个文件名是否在模板文件中</span></span><br><span class="line">	grep $i /root/suid.list &gt; /dev/null</span><br><span class="line">	if [&quot;$?&quot; != &quot;0&quot;]</span><br><span class="line"><span class="meta prompt_">		# </span><span class="language-bash">如果在，不报错</span></span><br><span class="line">	then</span><br><span class="line"><span class="meta prompt_">		# </span><span class="language-bash">如果文件不在模板文件中，则报错，并把报错存在日志中</span></span><br><span class="line">		echo &quot;$i isn&#x27;t in listfile!&quot; &gt;&gt; /root/suid_log_$(date +%F)</span><br><span class="line">	fi</span><br><span class="line">done</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">删除临时文件</span></span><br><span class="line">rm -rf /tmp/setuid.check</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="2）SetGID"><a href="#2）SetGID" class="headerlink" title="2）SetGID"></a>2）SetGID</h3><p>SGID既可以针对文件生效，也可以针对目录生效。这和SUID明显不同。</p>
+<p>a）针对文件的作用</p>
+<p>针对文件，SGID的含义如下：</p>
+<ul>
+<li>只有可执行的文件才能设置SGID权限</li>
+<li>命令执行者要对该文件拥有x（执行）权限</li>
+<li>命令执行者在执行文件的时候，组身份升级为该文件的属组</li>
+<li>SetGID权限同样只在该文件执行过程中有效，也就是说组身份改变只在文件执行过程中有效</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# ll /var/lib/mlocate/mlocate.db</span><br><span class="line">-rw-r----- 1 root slocate 1838850 1月    20 04：29 /var/lib/mlocate/mlocate.db</span><br></pre></td></tr></table></figure>
+
+<p>属主权限是r、w，属组权限是r，其他人权限是0；</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# ll /usr/bin/locate</span><br><span class="line">-rwx--s--x. 1 root slocate 38464  8月 24 2010 /usr/bin/locate    # 所属组s代表SetGID权限</span><br></pre></td></tr></table></figure>
+
+<p>当普通用户user1执行locate命令时，会发生如下事情：</p>
+<ul>
+<li>&#x2F;usr&#x2F;bin&#x2F;locate是可执行二进制程序，可以赋予SGID</li>
+<li>执行用户user1对&#x2F;usr&#x2F;bin&#x2F;locate命令拥有执行权限</li>
+<li>执行&#x2F;usr&#x2F;bin&#x2F;locate命令时，组身份会升级为slocate组，而slocate组对&#x2F;var&#x2F;lib&#x2F;mlocate&#x2F;mlocate.db数据库拥有r权限，所以普通用户可以使用locate</li>
+</ul>
+<p>命令查询mlocate.db数据库</p>
+<ul>
+<li>命令结束，user1用户的组身份返回为user1组</li>
+</ul>
+<p>b）针对目录的作用</p>
+<p>如果SGID针对目录设置，含义如下：</p>
+<ul>
+<li>普通用户必须对此目录拥有r和x权限，才能进入此目录</li>
+<li>普通用户在此目录中的有效组会变成此目录的属组</li>
+<li>若普通用户对此目录拥有w权限时，新建的文件的默认属组就是这个目录的属组</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 进入临时目录</span><br><span class="line">[root@localhost ~]# cd /tmp</span><br><span class="line"># 建立测试目录</span><br><span class="line">[root@localhost tmp]# mkdir dtest</span><br><span class="line"># 给测试目录赋予SGID</span><br><span class="line">[root@localhost tmp]# chmod g+s dtest</span><br><span class="line"># 查询SGID是否生效</span><br><span class="line">[root@localhost tmp]# ll -d dtest/</span><br><span class="line">drwxr-sr-x 2 root root 4096 1月 20 06：04 dtest/</span><br><span class="line"># 给测试目录权限，让普通用户可以写</span><br><span class="line">[root@localhost tmp]# chmod 777 dtest/</span><br><span class="line"># 切换成普通用户user1</span><br><span class="line">[root@localhost tmp]# su - user1</span><br><span class="line"># 普通用户进入测试目录</span><br><span class="line">[user1@localhost ~]$ cd /tmp/dtest/</span><br><span class="line"># 普通用户建立abc文件</span><br><span class="line">[user1@localhost ~]$ touch abc</span><br><span class="line"># abc文件的默认属组是root, 说明SGID生效</span><br><span class="line">[user1@localhost ~]$ ll</span><br><span class="line">总用量 0</span><br><span class="line">-rw-rw-r-- 1 user1 root 0 1月 20 06：07 abc</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="3）Sticky-BIT"><a href="#3）Sticky-BIT" class="headerlink" title="3）Sticky BIT"></a>3）Sticky BIT</h3><p>Sticky BIT粘着位，也简称为SBIT，SBIT目前仅针对目录有效。</p>
+<p>SBIT作用如下：</p>
+<ul>
+<li>粘着位目录只对目录有效</li>
+<li>普通用户对该目录拥有w和x权限，即普通用户可以在此目录拥有写入权限</li>
+<li>如果没有粘着位，因为普通用户拥有w权限，所以可以删除此目录下所有文件，包括其他用户建立的文件，一旦赋予了粘着位，除了root可以删除所有文件，普通用户就算拥有w权限，也只能删除自己建立的文件，但是不能删除其他用户建立的文件。</li>
+</ul>
+<h3 id="4）设定文件特殊权限"><a href="#4）设定文件特殊权限" class="headerlink" title="4）设定文件特殊权限"></a>4）设定文件特殊权限</h3><p>特殊权限：</p>
+<ul>
+<li>4代表SUID</li>
+<li>2代表SGID</li>
+<li>1代表SBIT</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 赋予SUID权限</span><br><span class="line">[root@localhost ~]# chmod 4755 ftest              # 或者chmod u+s ftest</span><br><span class="line"></span><br><span class="line"># 赋予SGID权限</span><br><span class="line">[root@localhost ~]# chmod 2755 ftest              # 或者chmod g+s ftest</span><br><span class="line"></span><br><span class="line"># 赋予SBIT权限</span><br><span class="line">[root@localhost ~]# mkdir dtest</span><br><span class="line">[root@localhost ~]# chmod 1755 dtest/             # 或者chmod o+t ftest</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="4-文件系统属性chattr权限"><a href="#4-文件系统属性chattr权限" class="headerlink" title="4. 文件系统属性chattr权限"></a>4. 文件系统属性chattr权限</h2><p>a）命令格式</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]chattr [+-=] [选项] 文件或目录名</span><br><span class="line">选项：</span><br><span class="line">  +：    增加权限</span><br><span class="line">  -：    删除权限</span><br><span class="line">  =：    等于某权限</span><br><span class="line">  i：    如果对文件设置i属性，那么不允许对文件进行删除、改名，也不能添加和修改数据；如果对目录设置i属性，那么只能修改目录下文件的数据，但不允许建立和          删除文件</span><br><span class="line">  a：    如果对文件设置a属性，那么只能在文件中增加数据，但是不能删除也不能修改数据；如果对目录设置a属性，那么只允许在目录中建立和修改文件，但是不允许          删除</span><br><span class="line">  e：    Linux中绝大多数的文件都默认拥有e属性。表示该文件是使用ext文件系统进行存储的，而且不能使用“chattr -e”命令取消e属性</span><br><span class="line">  </span><br></pre></td></tr></table></figure>
+
+<p>示例：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 赋予文件i属性</span><br><span class="line">chattr +i abc</span><br><span class="line"></span><br><span class="line"># 取消文件i属性</span><br><span class="line">chattr -i abc</span><br><span class="line"></span><br><span class="line"># 赋予目录i属性</span><br><span class="line">chattr +i bcd/</span><br><span class="line"></span><br><span class="line"># 取消目录i属性</span><br><span class="line">chattr -i bcd/</span><br></pre></td></tr></table></figure>
+
+
+
+<p>b) 查看文件系统属性(lsattr)</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# lsattr 选项 文件名</span><br><span class="line">选项：</span><br><span class="line">  -a:    显示所有文件和目录</span><br><span class="line">  -d:    若目标是目录，仅列出目录本身的属性，而不是子文件</span><br></pre></td></tr></table></figure>
+
+
+
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>文件系统管理</title>
+    <url>/2025/02/25/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86/</url>
+    <content><![CDATA[<h1 id="文件系统管理"><a href="#文件系统管理" class="headerlink" title="文件系统管理"></a>文件系统管理</h1><h2 id="1-硬盘结构"><a href="#1-硬盘结构" class="headerlink" title="1. 硬盘结构"></a>1. 硬盘结构</h2><h3 id="1）硬盘的逻辑结构"><a href="#1）硬盘的逻辑结构" class="headerlink" title="1）硬盘的逻辑结构"></a>1）硬盘的逻辑结构</h3><p>每个扇区的大小是固定的，为512Byte。扇区也是磁盘的最小存储单位。</p>
+<p>硬盘的大小是用”磁头数X柱面数X扇区数X每个扇区的大小”这样的公式来计算的。其中磁头数(Heads)表示硬盘总共有几个磁头，也可以理解成硬盘有几个盘面，然后乘以2；柱面数(Cylinders)表示硬盘每一面盘片有几条磁道；扇区数(Sectors)表示每条磁道上有几个扇区；每个扇区的大小一般是512Byte。</p>
+<h3 id="2）硬盘接口"><a href="#2）硬盘接口" class="headerlink" title="2）硬盘接口"></a>2）硬盘接口</h3><ul>
+<li><p>IDE硬盘接口(Integrated Drive Electronics，并口，即电子集成驱动器)</p>
+<p>也称作”ATA硬盘”或”PATA硬盘”，是早期机械硬盘的主要接口，ATA133硬盘的理论速度可以达到133MB&#x2F;s(此速度为理论平均值)。</p>
+</li>
+<li><p>SATA接口(Serial ATA，串口)</p>
+<p>是速度更高的硬盘标准，具备了更高的传输速度，并具备了更强的纠错能力。目前已经是SATA三代，理论传输速度达到600MB&#x2F;s(此速度为理论平均值)。</p>
+</li>
+<li><p>SCSI接口(Small Computer System Interface，小型计算机系统接口)广泛用在服务器上，具有应用范围广、多任务、带宽大、CPU占用率低及支持执插拔等优点，理论传输速度达到320MB&#x2F;s。</p>
+</li>
+</ul>
+<h2 id="2-文件系统"><a href="#2-文件系统" class="headerlink" title="2. 文件系统"></a>2. 文件系统</h2><h3 id="1）Linux文件系统的特性"><a href="#1）Linux文件系统的特性" class="headerlink" title="1）Linux文件系统的特性"></a>1）Linux文件系统的特性</h3><ul>
+<li><p>super block（超级块）</p>
+<p>记录整个文件系统的信息，包括：</p>
+<ul>
+<li>block与inode的总量</li>
+<li>已经使用的inode和block的数量</li>
+<li>未使用的inode和block的数量</li>
+<li>block与inode的大小</li>
+<li>文件系统的挂载时间</li>
+<li>最近一次的写入时间</li>
+<li>最近一次的磁盘检验时间等</li>
+</ul>
+</li>
+<li><p>data block（数据块，也称作block）</p>
+<p>用来实际保存数据的，block的大小(1KB|2KB|4KB)和数量在格式化后就已经决定，不能改变，除非重新格式化。每个block只能保存一个文件的数据，要是文件数据小于一个block块，那么这个block的剩余空间不能被其他文件使用；要是文件数据大于一个block块，则占用多个block块。Windows中磁盘碎片整理工具的原理就是把一个文件占用的多个block块尽量整理到一起，这样可以加快读写速度。</p>
+</li>
+<li><p>inode（i节点）</p>
+<p>用来记录文件的权限(r、w、x)，文件的所有者和属组，文件的大小，文件的状态改变时间(ctime)，文件的最近一次读取时间(atime)，文件的最近一次修改时间(mtime)，文件的数据真正保存的block编号。每个文件需要占一个inode。</p>
+</li>
+</ul>
+<h3 id="2）Linux常见文件系统"><a href="#2）Linux常见文件系统" class="headerlink" title="2）Linux常见文件系统"></a>2）Linux常见文件系统</h3><table>
+<thead>
+<tr>
+<th>文件系统</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ext</td>
+<td>Linux中最早的文件系统，由于在性能和兼容性上具有很多缺陷，现在已经很少使用。</td>
+</tr>
+<tr>
+<td>ext2</td>
+<td>是ext文件系统的升级版本，Red Hat Linux 7.2版本以前的系统默认都是ext2文件系统。于1993年发布，支持最大16TB的分区和最大2TB的文件</td>
+</tr>
+<tr>
+<td>ext3</td>
+<td>是ext2文件系统的升级版本，最大的区别就是带日志功能，以便在系统突然停止时提高文件系统的可靠性。支持最大16TB的分区和最大2TB的文件</td>
+</tr>
+<tr>
+<td>ext4</td>
+<td>是ext3文件系统的升级版。ext4在性能、伸缩性和可靠性方面进行了大量改进。ext4的变化可以说是翻天覆地的，比如向下兼容ext3、最大1EB文件系统和16TB文件、无限数量子目录、Extents连续数据块概念、多块分配、延迟分配、持久分配、快速FSCK、日志校验、无日志模式、在线碎片整理、inode增强、默认启用barrier等。它是CentOS 6.x的默认文件系统</td>
+</tr>
+<tr>
+<td>xfs</td>
+<td>XFS最早针对IRIX操作系统开发，是一个高性能的日志型文件系统，能够在断电以及操作系统崩溃的情况下保证文件系统数据的一致性。它是一个64位的文件系统，后来进行开源并且移植到了Linux操作系统中，目前CentOS 7.x将XFS+LVM作为默认的文件系统，据官方所称，XFS对于大文件的读写性能较好。</td>
+</tr>
+<tr>
+<td>swap</td>
+<td>swap是Linux中用于交换分区的文件系统(类似于Windows中的虚拟内存)，当内存不够用时，使用交换分区暂时替代内存。一般大小为内存的2倍，但不要超2GB。它是Linux的必需分区。</td>
+</tr>
+<tr>
+<td>NFS</td>
+<td>NFS是网络文件系统(Network File System)的缩写，是用来实现不同主机之间文件共享的一种网络服务，本地主机可以通过挂载的方式使用远程共享的资源</td>
+</tr>
+<tr>
+<td>ISO9660</td>
+<td>光盘的标准文件系统，Linux要想使用光盘，必须支持iso9660文件系统</td>
+</tr>
+<tr>
+<td>fat</td>
+<td>就是Windows下的fat16文件系统，在Linux中识别为fat</td>
+</tr>
+<tr>
+<td>vfat</td>
+<td>就是Windows下的fat32文件系统，在Linux中识别为vfat。支持最大32GB的分区和最大4GB的文件。</td>
+</tr>
+<tr>
+<td>NTFS</td>
+<td>就是Windows下的NTFS文件系统，不过Linux默认是不能识别NTFS文件系统的，如果需要识别，则需要重新编译内核才能支持。它比fat32文件系统更加安全，速度更快，支持最大2TB的分区和最大64GB的文件。</td>
+</tr>
+</tbody></table>
+<h2 id="3-常用的硬盘管理命令"><a href="#3-常用的硬盘管理命令" class="headerlink" title="3. 常用的硬盘管理命令"></a>3. 常用的硬盘管理命令</h2><h3 id="1）df命令"><a href="#1）df命令" class="headerlink" title="1）df命令"></a>1）df命令</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# df -ahT</span><br><span class="line">选项：</span><br><span class="line">  -a:    显示特殊文件系统，这些文件系统几乎都是保存在内存中的。如/proc,因为挂载在内存中，所以占用量都是0</span><br><span class="line">  -h:    单位不是只用KB，而是换算成习惯单位</span><br><span class="line">  -T:    多出了文件系统类型一列</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="2）du命令"><a href="#2）du命令" class="headerlink" title="2）du命令"></a>2）du命令</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# du [选项] [目录或文件名]</span><br><span class="line">选项：</span><br><span class="line">  -a 显示每个子文件的磁盘占用量。默认只统计子目录的磁盘占用量</span><br><span class="line">  -h 使用习惯单位显示磁盘占用量，如KB，MB或GB等</span><br><span class="line">  -s 统计总占用量，而不列出子目录和子文件的占用量</span><br></pre></td></tr></table></figure>
+
+<p>du与df的区别：du是用于统计文件大小的，统计的文件大小是准确的；df是用于统计空间大小的，统计的剩余空间是准确的。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# df -Th</span><br><span class="line">文件系统        类型      大小  已用  可用 已用% 挂载点</span><br><span class="line">tmpfs           tmpfs     687M  2.5M  685M    1% /run</span><br><span class="line">/dev/nvme0n1p10 ext4      187G  144G   34G   82% /</span><br><span class="line">tmpfs           tmpfs     3.4G  5.4M  3.4G    1% /dev/shm</span><br><span class="line">tmpfs           tmpfs     5.0M   12K  5.0M    1% /run/lock</span><br><span class="line">efivarfs        efivarfs  148K  112K   32K   79% /sys/firmware/efi/efivars</span><br><span class="line">/dev/nvme0n1p1  vfat       96M   53M   44M   56% /boot/efi</span><br><span class="line">tmpfs           tmpfs     687M  172K  687M    1% /run/user/1000</span><br><span class="line"></span><br><span class="line">[root@localhost ~]# du -sh /</span><br><span class="line">113G	/</span><br></pre></td></tr></table></figure>
+
+<p>df和du统计的根目录大小有差异，是因为du统计的是根目录文件大小，df统计的不仅只有根目录文件大小，还有临时文件的大小。</p>
+<h3 id="3）fsck文件系统修复命令"><a href="#3）fsck文件系统修复命令" class="headerlink" title="3）fsck文件系统修复命令"></a>3）fsck文件系统修复命令</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# fsck -y 分区                  # 开机重启自动修复</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="4）显示磁盘状态"><a href="#4）显示磁盘状态" class="headerlink" title="4）显示磁盘状态"></a>4）显示磁盘状态</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# dumpe2fs -h 分区</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="5）查看文件的详细时间"><a href="#5）查看文件的详细时间" class="headerlink" title="5）查看文件的详细时间"></a>5）查看文件的详细时间</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# stat 文件名</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="6）判断文件类型"><a href="#6）判断文件类型" class="headerlink" title="6）判断文件类型"></a>6）判断文件类型</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# file 文件名</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="7）判断命令类型"><a href="#7）判断命令类型" class="headerlink" title="7）判断命令类型"></a>7）判断命令类型</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# type 命令名</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="4-fdisk命令手工分区"><a href="#4-fdisk命令手工分区" class="headerlink" title="4. fdisk命令手工分区"></a>4. fdisk命令手工分区</h2><h3 id="1）查看系统所有硬盘及分区"><a href="#1）查看系统所有硬盘及分区" class="headerlink" title="1）查看系统所有硬盘及分区"></a>1）查看系统所有硬盘及分区</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# fdisk -l</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="2）磁盘分区"><a href="#2）磁盘分区" class="headerlink" title="2）磁盘分区"></a>2）磁盘分区</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# fdisk 磁盘</span><br></pre></td></tr></table></figure>
+
+<p>fdisk交互指令说明：</p>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>a</td>
+<td>设置可引导标记</td>
+</tr>
+<tr>
+<td>b</td>
+<td>编辑bsd磁盘标签</td>
+</tr>
+<tr>
+<td>c</td>
+<td>设置DOS操作系统兼容标记</td>
+</tr>
+<tr>
+<td>d</td>
+<td>删除一个分区</td>
+</tr>
+<tr>
+<td>l</td>
+<td>显示已知的文件系统类型。82为Linux swap分区，83为Linux分区</td>
+</tr>
+<tr>
+<td>m</td>
+<td>显示帮助菜单</td>
+</tr>
+<tr>
+<td>n</td>
+<td>新建分区</td>
+</tr>
+<tr>
+<td>o</td>
+<td>建立空白DOS分区表</td>
+</tr>
+<tr>
+<td>p</td>
+<td>显示分区列表</td>
+</tr>
+<tr>
+<td>q</td>
+<td>不保存退出</td>
+</tr>
+<tr>
+<td>s</td>
+<td>新建空白SUN磁盘标签</td>
+</tr>
+<tr>
+<td>t</td>
+<td>改变一个分区的系统ID</td>
+</tr>
+<tr>
+<td>u</td>
+<td>改变显示记录单位</td>
+</tr>
+<tr>
+<td>v</td>
+<td>验证分区表</td>
+</tr>
+<tr>
+<td>w</td>
+<td>保存退出</td>
+</tr>
+<tr>
+<td>x</td>
+<td>附加功能</td>
+</tr>
+</tbody></table>
+<p>新建主分区：n—p—1—1分区号—分区大小+100M—w</p>
+<p>新建扩展分区：n—e—2分区号—124起始柱面—1024柱面(所有剩余空间都分配给扩展分区)</p>
+<p>新建逻辑分区：n—l—不用指定分区号—124起始柱面—+100M(指定大小)—w</p>
+<h3 id="3）格式化"><a href="#3）格式化" class="headerlink" title="3）格式化"></a>3）格式化</h3><p>a）mkfs</p>
+<p>mkfs命令非常简单易用，不过是不能调整分区的默认参数的（比如块大小是4096），这些默认参数除非特殊情况，否则不能调整。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# mkfs -t 文件系统类型 分区</span><br></pre></td></tr></table></figure>
+
+
+
+<p>b）mke2fs</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# mke2fs [选项] 分区</span><br><span class="line">[选项]：</span><br><span class="line">  -t 文件系统：    指定格式化成哪个文件系统，如ext4, xfs</span><br><span class="line">  -b 字节:        指定block块的大小</span><br><span class="line">  -i 字切:        指定&quot;字节/inode&quot;的比例，也就是多少个字节分配一个inode</span><br><span class="line">  -j：            建立带有ext3日志功能的文件系统</span><br><span class="line">  -L 卷标名:      给文件系统设置卷标名，就不使用e2label命令设定了</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="4）建立挂载点"><a href="#4）建立挂载点" class="headerlink" title="4）建立挂载点"></a>4）建立挂载点</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# mkdir /disk1</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="5）挂载"><a href="#5）挂载" class="headerlink" title="5）挂载"></a>5）挂载</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# mount 分区 挂载点</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="6）查看"><a href="#6）查看" class="headerlink" title="6）查看"></a>6）查看</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 查看所有已经挂载的分区和光盘</span><br><span class="line">[root@localhost ~]# mount</span><br><span class="line"></span><br><span class="line"># 查看系统分区</span><br><span class="line">[root@localhost ~]# fdisk -l</span><br><span class="line"></span><br><span class="line"># 查看分区占用百分比</span><br><span class="line">[root@Loaclhost ~]# df -Th</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="7）自动挂载"><a href="#7）自动挂载" class="headerlink" title="7）自动挂载"></a>7）自动挂载</h3><p>修改分区自动挂载文件(&#x2F;etc&#x2F;fstab)。此文件直接参与系统启动，如果修改错误，系统启动报错。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# vim /etc/fstab</span><br><span class="line">...</span><br><span class="line">/dev/sdb1              /disk1               ext4            defaults            1                  2</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>第一列：设备文件名</li>
+<li>第二列：挂载点</li>
+<li>第三列：文件系统</li>
+<li>第四列：挂载选项</li>
+<li>第五列：是否可以被备份。0（不备份） 1（每天备份） 2（不定期备份）</li>
+<li>第六列：是否检测磁盘。0（不检测） 1（启动时检测） 2（启动后检测）</li>
+</ul>
+<p>也可以使用UUID进行挂载，UUID（硬盘通用唯一识别码，可以理解为硬盘的ID）。</p>
+<ul>
+<li>这个字段在CentOS 5.5的系统当中是写入分区的卷标名或分区设备文件名的，现在变更成硬盘的UUID。这样做的好处是当硬盘增加了新的分区，或者分区的顺序改变，再或者内核升级后，仍然能够保证分区能够正确的加载，而不至于造成启动障碍。</li>
+<li>dumpe2fs命令可以查看磁盘状态</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# dumpe2fs /dev/sdb5</span><br></pre></td></tr></table></figure>
+
+<p>或者：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# ls -l /dev/disk/by-uuid/</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="8）重启测试"><a href="#8）重启测试" class="headerlink" title="8）重启测试"></a>8）重启测试</h3><p>或者使用”mount -a”重新挂载所有内容，用它进行测试。</p>
+<h2 id="5-etc-fstab文件修复"><a href="#5-etc-fstab文件修复" class="headerlink" title="5. &#x2F;etc&#x2F;fstab文件修复"></a>5. &#x2F;etc&#x2F;fstab文件修复</h2><ul>
+<li><p>服务器连接显示器输入root密码登录系统。</p>
+</li>
+<li><p>此时根目录为只读文件系统，需要重新挂载</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# mount -o remount,rw /</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>修改&#x2F;etc&#x2F;fstab文件内容至正确。</p>
+</li>
+<li><p>重启服务器</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# reboot</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="6-parted命令分区"><a href="#6-parted命令分区" class="headerlink" title="6 parted命令分区"></a>6 parted命令分区</h2><p>Linux系统中有两种常见的分区表：</p>
+<ul>
+<li><p>MBR分区表（主引导记录分区表）</p>
+<p>支持的最大分区是2TB，最多支持4个主分区，或3个主分区1个扩展分区。</p>
+</li>
+<li><p>GPT分区表（GUID分区表）</p>
+<p>支持最大18EB分区，最多支持128个分区，其中1个系统保留分区，127个用户自定义分区。</p>
+</li>
+</ul>
+<p>不过parted命令也有点小问题，就是命令自身分区的时候只能格式化成ext2文件系统，不支持ext3和ext4文件系统。不过这没有太多的影响，因为我们可以先分区再用mkfs进行格式化。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# parted 硬盘</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>parted交互命令</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>check NUMBER</td>
+<td>做一次简单的文件系统检测</td>
+</tr>
+<tr>
+<td>cp [FROM-DEVICE] FROM-NUMBER TO NUMBER</td>
+<td>复制文件系统到另一个分区</td>
+</tr>
+<tr>
+<td>help [COMMAND]</td>
+<td>显示所有的命令帮助</td>
+</tr>
+<tr>
+<td>mklabel,mktable LABEL-TYPE</td>
+<td>创建新的磁盘卷标(分区表)</td>
+</tr>
+<tr>
+<td>mkfs NUMBER FS-TYPE</td>
+<td>在分区上建立文件系统</td>
+</tr>
+<tr>
+<td>mkpart PART-TYPE [FS-TYPE] START END</td>
+<td>创建一个分区</td>
+</tr>
+<tr>
+<td>mkpartfs PART-TYPE FS-TYPE START END</td>
+<td>创建分区，并建立文件系统</td>
+</tr>
+<tr>
+<td>move NUMBER START END</td>
+<td>移动分区</td>
+</tr>
+<tr>
+<td>name NUMBER NAME</td>
+<td>给分区命名</td>
+</tr>
+<tr>
+<td>print [devices|free|list,all|NUMBER]</td>
+<td>显示分区表，活动设备，空闲空间，所有分区</td>
+</tr>
+<tr>
+<td>quit</td>
+<td>退出</td>
+</tr>
+<tr>
+<td>rescue START END</td>
+<td>修复丢失的分区</td>
+</tr>
+<tr>
+<td>resize NUMBER START END</td>
+<td>修改分区大小</td>
+</tr>
+<tr>
+<td>rm NUMBER</td>
+<td>删除分区</td>
+</tr>
+<tr>
+<td>select DEVICE</td>
+<td>选择需要编辑的设备</td>
+</tr>
+<tr>
+<td>set NUMBER FLAG STATE</td>
+<td>改变分区标记</td>
+</tr>
+<tr>
+<td>toggle [NUMBER [FLAG]]</td>
+<td>切换分区表的状态</td>
+</tr>
+<tr>
+<td>unit UNIT</td>
+<td>设置默认的单位</td>
+</tr>
+<tr>
+<td>Version</td>
+<td>显示版本</td>
+</tr>
+</tbody></table>
+<h3 id="1）查看分区"><a href="#1）查看分区" class="headerlink" title="1）查看分区"></a>1）查看分区</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# parted /dev/sdb</span><br><span class="line">(parted) print                                 # 输入print指令</span><br><span class="line">Model： VMware, VMware Virtual S（scsi）        # 硬盘参数</span><br><span class="line">Disk /dev/sdb：21.5GB                           # 硬盘大小</span><br><span class="line">Sector size (logical/physical)：512B/512B       # 扇区大小</span><br><span class="line">Partition Table：msdos                          # 分区表类型，就是MBR分区表</span><br><span class="line">Number      Start    End     Size    Type    File system    标志</span><br><span class="line">1           32.3kB   5379MB  5379MB   primary</span><br></pre></td></tr></table></figure>
+
+<h3 id="2）修改成GPT分区表"><a href="#2）修改成GPT分区表" class="headerlink" title="2）修改成GPT分区表"></a>2）修改成GPT分区表</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# parted /dev/sdb</span><br><span class="line">（parted）mklabel gpt</span><br><span class="line">警告：正在使用/dev/sdb上的分区                            # 由于/dev/sdb分区已经挂载，所以有警告</span><br><span class="line"></span><br><span class="line">忽略/Ingore/放弃/Cancel? ignore                         # 输入ignore忽略报错</span><br><span class="line">警告：The existing disk label on /dev/sdb will be destroyed and all data on this disk will be lost, Do you want to continue?</span><br><span class="line">是/Yes/否/No? yes                                       # 输入yes</span><br><span class="line">警告：WARNING：the kernel failed to re-read the partition table on /dev/sdb（设备或资源忙）. As a result,it may not reflect all of your changes until after reboot.                        # 下次重启后，才能生效</span><br><span class="line"></span><br><span class="line">（parted）print                                          # 查看分区表</span><br><span class="line">Model：VMware, VMware Virtual S （scsi）</span><br><span class="line">Disk /dev/sdb：21.5GB</span><br><span class="line">Sector size （logical/physical）：512B/512B</span><br><span class="line">Partition Table: gpt                                     # 分区表已经变成GPT</span><br><span class="line"></span><br><span class="line">Number    Start    End    Size    File system    Name    标志          # 所有的分区都消失了</span><br></pre></td></tr></table></figure>
+
+<p>修改了分区表，如果这块硬盘已经有分区了，那么原有分区和分区中的数据都会消失，而且需要重启系统才会生效。</p>
+<p>转换分区表的目的是为了支持大于2TB的分区，如果分区并没有大于2TB，那么这步是可以不执行的。</p>
+<p>**注意：**一定要把&#x2F;etc&#x2F;fstab文件中和原有分区的内容删除掉，才能重启，不然系统重启一定会报错。</p>
+<h3 id="3）建立分区"><a href="#3）建立分区" class="headerlink" title="3）建立分区"></a>3）建立分区</h3><p>因为修改过分区表，所以&#x2F;dev&#x2F;sdb中的所有数据丢失了。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# parted /dev/sdb</span><br><span class="line">（parted）mkpart                                    # 输入创建分区命令</span><br><span class="line">分区名称?  []? disk1                                 # 分区名称</span><br><span class="line">文件系统类型？  [ext2]?                               # 文件系统类型，直接回车，使用默认ext2</span><br><span class="line">起始点? 1MB                                          # 分区从1MB开始</span><br><span class="line">结束点? 5GB                                          # 分区到5GB结束</span><br><span class="line">(parted) print                                      # 查看分区</span><br><span class="line">Model：VMware, VMware Virtual S （scsi）</span><br><span class="line">Disk /dev/sdb：21.5GB</span><br><span class="line">Sector size （logical/physical）：512B/512B</span><br><span class="line">Partition Table: gpt</span><br><span class="line"></span><br><span class="line">Number    Start    End    Size    File system    Name    标志</span><br><span class="line">1         1049kB   5000MB  4999MB                disk1</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="4）建立文件系统"><a href="#4）建立文件系统" class="headerlink" title="4）建立文件系统"></a>4）建立文件系统</h3><p>分区分完了，还需要格式化。不过如果使用parted交互命令格式化的话，只能格式化成ext2文件系统。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">（parted）mkfs</span><br><span class="line">WARNING：you are attempting to use parted to operate on （mkfs） a file system. parted&#x27;s file system manipulation code is not as rebust as what you&#x27;ll find in dedicated, file-system-specific packages like e2fsprogs. We recommand you use parted only to manipulate partition tables, whenever possible. Support for performing most operations on most types of file systems will be removed in an upcoming release.</span><br><span class="line">警告：The existing file system will be destoryed and all data on the partition will be lost.</span><br><span class="line">Do you want to continue?</span><br><span class="line">是/Yes/否/No? yes                                # 警告你格式化数据会丢失</span><br><span class="line">分区编号? 1</span><br><span class="line">文件系统类型?  [ext2]?                             # 指定文件系统类型</span><br><span class="line">(parted) print                                      # 查看分区</span><br><span class="line">Model：VMware, VMware Virtual S （scsi）</span><br><span class="line">Disk /dev/sdb：21.5GB</span><br><span class="line">Sector size （logical/physical）：512B/512B</span><br><span class="line">Partition Table: gpt</span><br><span class="line"></span><br><span class="line">Number    Start    End    Size    File system    Name    标志</span><br><span class="line">1         1049kB   5000MB  4999MB    ext2        disk1</span><br></pre></td></tr></table></figure>
+
+<p>如果要格式化成ext4文件系统，需要使用Linux的mkfs命令。</p>
+<h3 id="5）删除分区"><a href="#5）删除分区" class="headerlink" title="5）删除分区"></a>5）删除分区</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">(parted) rm                                     # 删除分区命令</span><br><span class="line">分区编号? 1                                      # 指定分区号</span><br><span class="line">(parted) print                                      # 查看分区</span><br><span class="line">Model：VMware, VMware Virtual S （scsi）</span><br><span class="line">Disk /dev/sdb：21.5GB</span><br><span class="line">Sector size （logical/physical）：512B/512B</span><br><span class="line">Partition Table: gpt</span><br><span class="line"></span><br><span class="line">Number    Start    End    Size    File system    Name    标志</span><br></pre></td></tr></table></figure>
+
+<p>parted中的所有操作都是立即生效，没有保存生效的概念，这点和fdisk交互命令明显不同。</p>
+<p>至于到底使用fdisk还是parted进行分区？推荐分区大小小于2GB，使用fdisk分区；分区大小大于2GB，使用parted分区。 </p>
+<h2 id="7-swap分区"><a href="#7-swap分区" class="headerlink" title="7. swap分区"></a>7. swap分区</h2><h3 id="1）分区"><a href="#1）分区" class="headerlink" title="1）分区"></a>1）分区</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# fdisk /dev/sdb</span><br><span class="line">Command (m for help): t                               # 修改分区的系统id</span><br><span class="line">Selected partition 1                                  # 选择分区</span><br><span class="line">Hex code (type L to list codes)：82                    # 改为swap的id</span><br><span class="line">Changed system type of partition 1 to 82 (Linux swap / Solaris)</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="2）格式化"><a href="#2）格式化" class="headerlink" title="2）格式化"></a>2）格式化</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# mkswap /dev/sdb1</span><br><span class="line">Setting up swapspace version 1, size = 522076 KiB</span><br><span class="line">no label, UUID=C3351dc3-f403-419a-9666-c24615e170fb</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="3）挂载"><a href="#3）挂载" class="headerlink" title="3）挂载"></a>3）挂载</h3><p>swap空间支持扩容。扩容也使用swapon命令</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# swapon /dev/sdb1</span><br></pre></td></tr></table></figure>
+
+<p>开机自动挂载：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# vim /etc/fstab</span><br><span class="line">...</span><br><span class="line">/dev/sdb1      swap      swap      defaults      0      0</span><br></pre></td></tr></table></figure>
+
+<p>也可以使用uuid。</p>
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>高级文件系统管理</title>
+    <url>/2025/02/25/%E9%AB%98%E7%BA%A7%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86/</url>
+    <content><![CDATA[<h1 id="高级文件系统管理"><a href="#高级文件系统管理" class="headerlink" title="高级文件系统管理"></a>高级文件系统管理</h1><h2 id="1-磁盘配额"><a href="#1-磁盘配额" class="headerlink" title="1. 磁盘配额"></a>1. 磁盘配额</h2><h3 id="1）磁盘配额条件"><a href="#1）磁盘配额条件" class="headerlink" title="1）磁盘配额条件"></a>1）磁盘配额条件</h3><ul>
+<li><p>内核必须支持磁盘配额</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# grep CONFIG_QUOTA /boot/config-2.6.32-279.el6.i686</span><br><span class="line">CONFIG_QUOTA=y</span><br><span class="line">CONFIG_QUOTA_NETLINK_INTERFACE=y</span><br><span class="line"># CONFIG_QUOTA_DEBUG is not set</span><br><span class="line">CONFIG_QUOTA_TREE=m</span><br><span class="line">CONFIG_QUOTACTL=y</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>系统中必须安装了quota工具，Linux默认是安装了quota工具</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# rpm -qa | grep quota</span><br><span class="line">quota-3.17-16.el6.i686</span><br></pre></td></tr></table></figure>
+
+<p>要支持磁盘配额的分区必须开启磁盘配额功能，这个功能需要手工开启，不再是默认就开启的。</p>
+</li>
+</ul>
+<h3 id="2）概念"><a href="#2）概念" class="headerlink" title="2）概念"></a>2）概念</h3><ul>
+<li>用户配额和组配额</li>
+<li>磁盘容量限制和文件个数限制</li>
+<li>软限制和硬限制</li>
+<li>宽限时间</li>
+</ul>
+<p>如果用户的空间占用数处于软限制和硬限制之间，都会在用户登录时警告用户磁盘将满，这个时间就是宽限时间，默认是7天。如果达到了宽限时间，用户的磁盘占用量还超过软限制，那么软限制就会升级为硬限制。</p>
+<h3 id="3）磁盘配额规划"><a href="#3）磁盘配额规划" class="headerlink" title="3）磁盘配额规划"></a>3）磁盘配额规划</h3><p>磁盘配额实验：</p>
+<ul>
+<li>磁盘配额是限制普通用户在分区上使用磁盘空间和文件个数的，所以我们需要指定一个分区，那么我们手工建立一个5GB的&#x2F;dev&#x2F;sdb1分区，把它挂载到&#x2F;disk目录当中。</li>
+<li>还有我们需要建立被限制的用户和用户组。那么我们假设需要限制user1、user2和user3用户，这三个用户属于test组。</li>
+<li>其中test组磁盘容量硬限制为500MB，软限制450MB，文件个数不做限制。user1用户为了便于测试，磁盘容量硬限制为50MB，软限制为40MB，文件个数硬限制为10个，软限制为8个。user2和user3用户磁盘容量硬限制为250MB，软限制为200MB，文件个数不做限制。</li>
+<li>user1、user2和user3用户加起来的磁盘容量限制为550MB，超过了test组的磁盘容量500MB。这样的话，某个用户可能达不到自己的用户限制，而达到组限制时就不能再写入数据了。也就是说，如果用户限制和组限制同时存在，那么哪个限制更小，哪个限制优先生效。</li>
+<li>系统宽限时间改为8天。</li>
+</ul>
+<p>磁盘配额步骤：</p>
+<ul>
+<li><p>分配5GB的&#x2F;dev&#x2F;sdb1分区，并将它挂载到&#x2F;disk目录当中。</p>
+</li>
+<li><p>建立需要做限制的用户和用户组</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# groupadd test</span><br><span class="line">[root@localhost ~]# useradd -G test user1</span><br><span class="line">[root@localhost ~]# useradd -G test user2</span><br><span class="line">[root@localhost ~]# useradd -G test user3</span><br><span class="line">[root@localhost ~]# passwd user1</span><br><span class="line">[root@localhost ~]# passwd user2</span><br><span class="line">[root@localhost ~]# passwd user3</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在分区上开启磁盘配额功能</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# mount -o remount,usruota,grpquota /disk    # 重新挂载/disk分区，并加入用户和用户组的磁盘配额功能</span><br></pre></td></tr></table></figure>
+
+<p>要想永久生效，则需要修改&#x2F;etc&#x2F;fstab文件：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# vim /etc/fstab</span><br><span class="line">...</span><br><span class="line">/dev/sdb1    /disk    ext4    defaults,usrquota,grpquota    0    0</span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">[root@localhost ~]# mount -o remount /disk    # 修改配置文件如果想要生效，必须重启系统，否则也需要把分区重新挂载一遍</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>建立磁盘配额的配置文件</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# quotacheck [选项] [分区名]</span><br><span class="line">选项：</span><br><span class="line">  -a：扫描/etc/mtab文件中所有启用磁盘配额功能的分区。如果加入此参数，命令后面就不需要加入分区名了</span><br><span class="line">  -c：不管原有的配置文件，重新扫描并建立新的配置文件</span><br><span class="line">  -u：建立用户配额的配置文件，也就是生成aquota.user文件</span><br><span class="line">  -g：建立组配额的配置文件，会生成aquota.group文件</span><br><span class="line">  -v：显示扫描过程</span><br><span class="line">  -m：强制以读写的方式扫描文件系统，和-M类似。一般扫描根分区时使用。</span><br><span class="line">  -f：强制扫描文件系统，并写入新的配置文件。一般扫描新添加的硬盘分区时使用。</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# quotacheck -avug</span><br></pre></td></tr></table></figure>
+
+<p>需要关闭SELinux，否则会报错。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# ll /disk/</span><br><span class="line">总计 24</span><br><span class="line">-rw-------   1 root root  6144  4月 31 19:30 aquota.group</span><br><span class="line">-rw-------   1 root root  6144  4月 18 19:30 aquota.user</span><br><span class="line"># /disk目录中两个配额配置文件已经建立</span><br></pre></td></tr></table></figure>
+
+<p>如果需要给根分区开启配额功能，需要：</p>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# vim /etc/fstab</span><br><span class="line">...</span><br><span class="line">UUID=c2ca6f57-b15c-43ea-bca0-f239083d8bd2    /    ext4    defaults,usrquota,grpquota    1    1</span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">[root@localhost ~]# mount -o remount /</span><br><span class="line">[root@localhost ~]# quotacheck -avugm</span><br></pre></td></tr></table></figure>
+
+<p>如果我们自动扫描&#x2F;分区建立配额文件时，因为&#x2F;分区已经挂载成读写系统，而quotacheck需要把分区先挂载成只读分区，然后建立配置文件，最后再挂载回来，所以不能直接在&#x2F;分区建立配置文件，这时就需要使用-m强制以读写方式扫描文件系统了。</p>
+<ul>
+<li><p>设置用户和组的配额限制</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# edquota [选项] [用户名或组名]</span><br><span class="line">选项：</span><br><span class="line">  -u 用户名：  设定用户配额</span><br><span class="line">  -g 组名：    设定组配额</span><br><span class="line">  -t：        设定宽限时间</span><br><span class="line">  -p：        复制配额限制。如果已经设定好某个用户的配额限制，其他用户的配额限制如果和这个用户相同，那么可以直接复制配额限制，而不用都手工指定</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# edquota -u user1</span><br><span class="line"># edquota命令进入之后，就是标准的vi操作方法</span><br><span class="line">Disk quotas for user user1（uid 500）：</span><br><span class="line"># 磁盘配额是设定用户user1（UID是500）</span><br><span class="line">Filesystem    blocks        soft     hard     inodes        soft      hard</span><br><span class="line">/dev/sdb1       0           40000    50000      0            8         10</span><br><span class="line"># 分区名        已占用容量    软限制    硬限制     已占用文件数   软限制     硬限制</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>配额复制</p>
+<p>user3用户的配额值和user2用户完全一样，就可以使用user2用户作为模板进行复制，这样我们如果需要建立大量的配额值一致的用户时，就会非常方便，不用一个个手工建立了：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# edquota -p user2 -u user3</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>修改宽限时间</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# edquota -t</span><br><span class="line">Grace period before enforcing soft limits for users:</span><br><span class="line">Time units may be: days, hours, minutes, or seconds</span><br><span class="line">Filesystem    Block grace period    Inode grace period</span><br><span class="line">/dev/sdb1       8days                8days</span><br><span class="line"># 分区名        容量的宽限时间          个数的宽限时间</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>启动和关闭配额</p>
+<p>启动配额：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# quotaon [选项] [分区名]</span><br><span class="line">选项：</span><br><span class="line">  -a：依据/etc/mtab文件启动所有的配额分区。如果不加-a，后面就一定要指定分区名</span><br><span class="line">  -u：启动用户配额</span><br><span class="line">  -g：启动组配额</span><br><span class="line">  -v：显示启动过程的信息</span><br><span class="line">  </span><br><span class="line">[root@localhost ~]# quotaon -vug /disk/        # 启动/disk分区的配额</span><br><span class="line">/dev/sdb1 [/disk]：group quotas turned on</span><br><span class="line">/dev/sdb1 [/disk]：user quotas turned on</span><br><span class="line"></span><br><span class="line">[root@localhost ~]# quotaon -avug        # 这条命令也可以</span><br></pre></td></tr></table></figure>
+
+<p>关闭配额：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# quotaoff [选项] [分区名]</span><br><span class="line">选项：</span><br><span class="line">  -a：依据/etc/mtab文件关闭所有的配额分区。如果不加-a，后面就一定要指定分区名</span><br><span class="line">  -u：关闭用户配额</span><br><span class="line">  -g：关闭组配额</span><br><span class="line">  </span><br><span class="line"> [root@localhost ~]# quotaoff -a        # 依据/etc/mtab文件关闭配额分区</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="4）磁盘配额查询"><a href="#4）磁盘配额查询" class="headerlink" title="4）磁盘配额查询"></a>4）磁盘配额查询</h3><ul>
+<li><p>quota查询用户或用户组配额</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# quota [选项] [用户名或组名]</span><br><span class="line">选项：</span><br><span class="line">  -u 用户名：   查询用户配额</span><br><span class="line">  -g 组名：     查询组配额</span><br><span class="line">  -v：          显示详细信息</span><br><span class="line">  -s：          以习惯单位显示容量大小，如M,G</span><br><span class="line">  </span><br><span class="line">[root@localhost ~]# quota -uvs user1</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>repquota查询文件系统配额</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# repquota [选项] [分区名]</span><br><span class="line">选项：</span><br><span class="line">  -a：    依据/etc/mtab文件查询配额，如果不加-a选项，就一定要加分区名</span><br><span class="line">  -u：    查询用户配额</span><br><span class="line">  -g:     查询组配额</span><br><span class="line">  -v：    显示详细信息</span><br><span class="line">  -s：    以习惯单位显示容量大小</span><br><span class="line"></span><br><span class="line">[root@localhost ~]# repquota -augvs</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="5）测试"><a href="#5）测试" class="headerlink" title="5）测试"></a>5）测试</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[user1@localhost disk]$ dd if=/dev/zero of=/disk/testfile bs=1M count=60    # 建立testfile文件，指定大小60MB</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="6）非交互设定用户磁盘配额"><a href="#6）非交互设定用户磁盘配额" class="headerlink" title="6）非交互设定用户磁盘配额"></a>6）非交互设定用户磁盘配额</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# setquota -u 用户名 容量软限制 容量硬限制 个数软限制 个数硬限制 分区名</span><br><span class="line"></span><br><span class="line">示例：</span><br><span class="line">[root@localhost ~]# setquota -u user4 10000 20000 5 8 /disk</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="2-LVM逻辑卷管理"><a href="#2-LVM逻辑卷管理" class="headerlink" title="2. LVM逻辑卷管理"></a>2. LVM逻辑卷管理</h2><h3 id="1）简介"><a href="#1）简介" class="headerlink" title="1）简介"></a>1）简介</h3><p>LVM是Logical Volume Manager的简称，中文就是逻辑卷管理。</p>
+<ul>
+<li>物理卷(PV, Physical Volume)：就是真正的物理硬盘或分区。</li>
+<li>卷组(VG, Volume Group)：将多个物理卷合起来就组成了卷组，组成同一个卷组的物理卷可以是同一个硬盘的不同分区，也可以是不同硬盘上的不同分区，可以把卷组想象为一个逻辑硬盘。</li>
+<li>逻辑卷(LV, Logical Volume)：卷组是一个逻辑硬盘，硬盘必须分区之后才能使用，这个分区称作逻辑卷，逻辑卷可以格式化和写入数据。可以把逻辑卷想象成为分区。</li>
+<li>物理扩展(PE, Physical Extend)：PE是用来保存数据的最小单元，数据实际上都是写入PE当中，PE的大小是可以配置的，默认是4MB。</li>
+</ul>
+<h3 id="2）建立LVM的步骤"><a href="#2）建立LVM的步骤" class="headerlink" title="2）建立LVM的步骤"></a>2）建立LVM的步骤</h3><ul>
+<li>首先需要把物理硬盘分成分区，当然也可以是整块物理硬盘。</li>
+<li>然后把物理分区建立成为物理卷(PV)，也可以直接把整块硬盘都建立为物理卷。</li>
+<li>接下来把物理卷整合成为卷组(VG)。卷组就已经可以动态的调整大小了，可以把物理分区加入卷组，也可以把物理分区从卷组中删除。</li>
+<li>最后就是把卷组再划分成为逻辑卷(LV)，当然逻辑卷也是可以直接调整大小的。逻辑卷可以想象成为分区，所以也需要格式化和挂载。</li>
+</ul>
+<h3 id="3）物理卷管理"><a href="#3）物理卷管理" class="headerlink" title="3）物理卷管理"></a>3）物理卷管理</h3><p>a）硬盘分区</p>
+<p>创建方式就是使用fdisk交互命令，不过需要注意的是分区的系统ID不再是Linux默认的分区ID号(83)了，而要改为LVM的ID号8e。</p>
+<p>b）建立物理卷</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# pvcreate [设备文件名]</span><br><span class="line"></span><br><span class="line">示例：</span><br><span class="line"># 把整块硬盘都建立成物理卷</span><br><span class="line">[root@localhost ~]# pvcreate /dev/sdb</span><br><span class="line"></span><br><span class="line"># 把分区建立成为物理卷</span><br><span class="line">[root@localhost ~]# pvcreate /dev/sdb5</span><br></pre></td></tr></table></figure>
+
+
+
+<p>c）查看物理卷</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# pvscan</span><br><span class="line">[root@localhost ~]# pvdisplay        # 更详细的物理卷信息</span><br></pre></td></tr></table></figure>
+
+
+
+<p>d）删除物理卷</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# pvremove /dev/sdb5</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="4）卷组管理"><a href="#4）卷组管理" class="headerlink" title="4）卷组管理"></a>4）卷组管理</h3><p>a）建立卷组</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# vgcreate [选项] 卷组名 物理卷名</span><br><span class="line">[选项]：</span><br><span class="line">  -s PE大小    指定PE的大小，单位可以是MB,GB,TB等。如是不写默认PE大小为4MB</span><br></pre></td></tr></table></figure>
+
+<p>示例：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# vgcreate -s 8MB scvg /dev/sdb5 /dev/sdb6</span><br></pre></td></tr></table></figure>
+
+
+
+<p>b）查看卷组</p>
+<p>查看卷组的命令有两个：</p>
+<ul>
+<li><p>vgscan</p>
+<p>vgscan主要是查看系统中是否有卷组。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# vgscan</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>vgdisplay</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# vgdisplay</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>c）增加卷组容量</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# vgextend scvg /dev/sdb7</span><br></pre></td></tr></table></figure>
+
+
+
+<p>d）减小卷组容量</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 在卷组中删除/dev/sdb7物理卷</span><br><span class="line">[root@localhost ~]# vgreduce scvg /dev/sdb7</span><br><span class="line"># 删除所有的未使用物理卷</span><br><span class="line">[root@localhost ~]# vgreduce -a</span><br></pre></td></tr></table></figure>
+
+
+
+<p>e）删除卷组</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# vgremove scvg</span><br></pre></td></tr></table></figure>
+
+<p>卷组删除之后，才能删除物理卷，要注意的是scvg卷组还没有添加任何的逻辑卷，如果拥有了逻辑卷，得先删除逻辑卷再删除卷组。</p>
+<h3 id="5）逻辑卷管理"><a href="#5）逻辑卷管理" class="headerlink" title="5）逻辑卷管理"></a>5）逻辑卷管理</h3><p>a）建立逻辑卷</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# lvcreate [选项] [-n 逻辑卷名] 卷组名</span><br><span class="line">选项：</span><br><span class="line">  -L 容量：指定逻辑卷大小，单位MB，GB，TB等</span><br><span class="line">  -l 个数：按照PE个数指定逻辑卷大小，这个参数需要换算容量，太麻烦</span><br><span class="line">  -n 逻辑卷名：指定逻辑卷名</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# lvcreate -L 1.5G -n userlv scvg    # 在scvg卷组中建立1.5GB的userlv逻辑卷</span><br></pre></td></tr></table></figure>
+
+<p>建立完成逻辑卷之后，还要格式化和挂载之后逻辑卷才能正常使用。不过需要注意的是逻辑卷的设备文件名是&#x2F;dev&#x2F;卷组名&#x2F;逻辑卷名。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# mkfs -t ext4 /dev/scvg/userlv</span><br><span class="line">[root@localhost ~]# mkdir /disklvm</span><br><span class="line">[root@localhost ~]# mount /dev/scvg/userlv /disklvm/</span><br><span class="line">[root@localhost ~]# mount      # 查看挂载</span><br></pre></td></tr></table></figure>
+
+<p>如果需要开机自动挂载，也要修改&#x2F;etc&#x2F;fstab文件。</p>
+<p>b）查看逻辑卷</p>
+<p>查看命令有两个：</p>
+<ul>
+<li><p>lvscan</p>
+<p>lvscan只能看到系统中是否拥有逻辑卷。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# lvscan</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>lvdisplay</p>
+<p>lvdisplay可以看到逻辑卷的详细信息。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# lvdisplay</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>c）调整逻辑卷大小</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# lvresize [选项] 逻辑卷设备文件名</span><br><span class="line">选项：</span><br><span class="line">  -L 容量：安装容量调整大小，单位KB,GB,TB等。使用+代表增加空间，-号代表减少空间。如果直接写容量，代表设定逻辑卷大小为指定大小。</span><br><span class="line">  -l 个数：按照PE个数调整逻辑卷大小</span><br></pre></td></tr></table></figure>
+
+<p>示例：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# lvresize -L 2.5.G /dev/scvg/userlv</span><br><span class="line">[root@localhost ~]# lvdisplay               # 逻辑卷的大小已经改变了</span><br><span class="line">[root@localhost ~]# df -h /disklvm/         # 大小没有变化</span><br></pre></td></tr></table></figure>
+
+<p>lvresize只能改变逻辑卷的大小，如果需要让分区使用这个新逻辑卷，还要使用resize2fs命令来调整分区的大小。不过这里体现了LVM的优势，不需要卸载分区，直接就能调整分区的大小。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# resize2fs [选项] [设备文件名] [调整的大小]</span><br><span class="line">选项：</span><br><span class="line">  -f：    强制调整</span><br><span class="line">  设备文件名：指定调整哪个分区的大小</span><br><span class="line">  调整的大小：指定把分区调整到多大，要加M,G等单位。如果不加大小，会使用整个分区</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# resize2fs /dev/scvg/userlv</span><br><span class="line">[root@localhost ~]# df -h /disklvm/       # 已经调整过来了</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="4）删除逻辑卷"><a href="#4）删除逻辑卷" class="headerlink" title="4）删除逻辑卷"></a>4）删除逻辑卷</h3><p>删除逻辑卷前要先卸载。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# lvremove 逻辑卷设备文件名</span><br></pre></td></tr></table></figure>
+
+
+
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
   </entry>
 </search>

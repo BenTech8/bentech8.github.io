@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":5,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="权限管理1. ACL权限1）ACL概述ACL是用于解决用户对文件身份不足问题的。 2）开启ACL查询acl是否开启： 12345678# dumpe2fs命令是查询指定分区详细文件系统信息的命令dumpe2fs -h &lt;根分区&gt;选项：  -h:    仅显示超级地中信息，而不显示磁盘块组的详细信息。  ... Default mount options:     user_xattr">
+<meta property="og:type" content="article">
+<meta property="og:title" content="权限管理">
+<meta property="og:url" content="http://example.com/2025/02/25/%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86/index.html">
+<meta property="og:site_name" content="Ben">
+<meta property="og:description" content="权限管理1. ACL权限1）ACL概述ACL是用于解决用户对文件身份不足问题的。 2）开启ACL查询acl是否开启： 12345678# dumpe2fs命令是查询指定分区详细文件系统信息的命令dumpe2fs -h &lt;根分区&gt;选项：  -h:    仅显示超级地中信息，而不显示磁盘块组的详细信息。  ... Default mount options:     user_xattr">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-02-25T05:04:53.000Z">
+<meta property="article:modified_time" content="2025-02-25T05:08:52.567Z">
+<meta property="article:author" content="Ben">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2025/02/25/%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>权限管理 | Ben</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Ben" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Ben</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">个人学习笔记</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/BenTech8/bentech8.github.io.git" class="github-corner" title="BenTech8 GitHub" aria-label="BenTech8 GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2025/02/25/%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Ben">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ben">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          权限管理
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2025-02-25 13:04:53 / 修改时间：13:08:52" itemprop="dateCreated datePublished" datetime="2025-02-25T13:04:53+08:00">2025-02-25</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="权限管理"><a href="#权限管理" class="headerlink" title="权限管理"></a>权限管理</h1><h2 id="1-ACL权限"><a href="#1-ACL权限" class="headerlink" title="1. ACL权限"></a>1. ACL权限</h2><h3 id="1）ACL概述"><a href="#1）ACL概述" class="headerlink" title="1）ACL概述"></a>1）ACL概述</h3><p>ACL是用于解决用户对文件身份不足问题的。</p>
+<h3 id="2）开启ACL"><a href="#2）开启ACL" class="headerlink" title="2）开启ACL"></a>2）开启ACL</h3><p>查询acl是否开启：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">dumpe2fs命令是查询指定分区详细文件系统信息的命令</span></span><br><span class="line">dumpe2fs -h &lt;根分区&gt;</span><br><span class="line">选项：</span><br><span class="line">  -h:    仅显示超级地中信息，而不显示磁盘块组的详细信息。</span><br><span class="line"> </span><br><span class="line"> ...</span><br><span class="line"> Default mount options:     user_xattr acl</span><br><span class="line"> ...</span><br></pre></td></tr></table></figure>
+
+<p>如果没有开启，手工开启分区的ACL权限：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">重新挂载根分区，并挂载加入acl权限</span></span><br><span class="line">mount -o remount,acl /</span><br></pre></td></tr></table></figure>
+
+<p>也可以通过修改&#x2F;etc&#x2F;fstab文件，永久开启ACL权限：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/fstab</span><br><span class="line">UUID=6f9a4f35-3b8f-425e-b8f3-4d46dbca87ad /               ext4       defaults.acl 0       1</span><br></pre></td></tr></table></figure>
+
+<p>验证目录ACL权限存在</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ls -ahl /</span><br><span class="line">drwxrwx---+   2 sc   tg         4096  2月 14 20:19 www/</span><br><span class="line"># “+”代表有ACL权限</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="3）ACL基本命令"><a href="#3）ACL基本命令" class="headerlink" title="3）ACL基本命令"></a>3）ACL基本命令</h3><p>a）查询文件的ACL权限</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">getfacl 文件名</span><br></pre></td></tr></table></figure>
+
+
+
+<p>b）设定ACL权限</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">setfacl [选项] 文件名</span><br><span class="line">选项：</span><br><span class="line">  -m    设定ACL权限</span><br><span class="line">  -b    删除ACL权限</span><br><span class="line">  -x    删除单个用户的ACL权限</span><br><span class="line">  -R    递归(只能赋予目录，且只对已经存在的文件生效)</span><br><span class="line"></span><br><span class="line">setfacl -m u:用户名:权限(1|2|4|5|7) 文件名</span><br><span class="line">setfacl -m g:组名:权限(1|2|4|5|7) 文件名</span><br><span class="line"></span><br><span class="line"># 赋予ACL默认权限。默认权限只能赋予目录，且只对以后新建的文件生效</span><br><span class="line">setfacl -m d:u:用户名|组名:权限(1|2|4|5|7) 目录</span><br></pre></td></tr></table></figure>
+
+<p>示例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># 给test目录赋予aa用户读写执行的ACL权限</span><br><span class="line">setfacl -m u:aa:rwx /test</span><br><span class="line"></span><br><span class="line"># 赋予递归ACL权限</span><br><span class="line">setfacl -m u:cc:rx -R soft/</span><br><span class="line"></span><br><span class="line"># ACL默认权限</span><br><span class="line">setfacl -m d:u:aa:rwx -R soft/</span><br></pre></td></tr></table></figure>
+
+<p>**注意：**ACL权限，一旦递归后，不可避免的出现权限溢出。因为x权限对目录来说相当于cd，而对文件是最大权限。所以ACL权限能不用则不用。</p>
+<h3 id="4）最大有效权限-mask"><a href="#4）最大有效权限-mask" class="headerlink" title="4）最大有效权限(mask)"></a>4）最大有效权限(mask)</h3><p>即最大ACL权限。设定用户或组ACL权限后，该用户或组最终权限是最大ACL权限(mask权限)与该用户或组权限逻辑与的结果的权限。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"># 设定mask权限为r-x,使用“m:权限”格式</span><br><span class="line">setfacl -m m:rx project/</span><br><span class="line"></span><br><span class="line"># 查询project/目录权限</span><br><span class="line"># file: project/</span><br><span class="line"># owner: root</span><br><span class="line"># group: tgroup</span><br><span class="line">user::rwx              #effective:r-x</span><br><span class="line">group::rwx             #effective:r-x</span><br><span class="line">mask::r-x</span><br><span class="line">other::---</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="5）删除ACL权限"><a href="#5）删除ACL权限" class="headerlink" title="5）删除ACL权限"></a>5）删除ACL权限</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># 删除指定用户和用户组的ACL权限</span><br><span class="line">setfacl -x u:st /project/</span><br><span class="line"></span><br><span class="line"># 删除文件的所有ACL权限</span><br><span class="line">setfacl -b /project/</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="2-sudo授权"><a href="#2-sudo授权" class="headerlink" title="2. sudo授权"></a>2. sudo授权</h2><p>给普通用户赋予部分管理员权限。</p>
+<p>在&#x2F;sbin&#x2F;和&#x2F;usr&#x2F;sbin&#x2F;目录下的命令只有超级用户才能使用。</p>
+<h3 id="1）root身份"><a href="#1）root身份" class="headerlink" title="1）root身份"></a>1）root身份</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># 执行visudo命令，赋予普通用户权限命令，命令执行后和vi一样使用</span><br><span class="line">visudo</span><br><span class="line"></span><br><span class="line">root     ALL=(ALL)                         ALL</span><br><span class="line">#用户名   被管理主机的地址=(可使用的身份)       授权命令(绝对路径)</span><br><span class="line"># %wheel        ALL=(ALL)                              ALL</span><br><span class="line">#%组名           被管理主机的地址=(可使用的身份)            授权命令(绝对路径)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>用户名&#x2F;组名：代表root给哪个用户或用户组赋予命令，注意组名前加“%”。</p>
+</li>
+<li><p>用户可以用指定的命令管理指定IP地址的服务器。如果写ALL，代表可以管理任务主机，如果写固定IP，代表用户可以管理指定的服务器。(这里的IP指定的是用户可以管理哪个IP地址的服务器，那么如果你是一台独立的服务器，这里写ALL和你服务器的IP地址，作用是一样的。而写入网段，只有对NIS服务这样用户和密码集中管理的服务器才有意义)。如果我们这里写本机的IP地址，不代表只允许本机的用户使用指定命令，而代表指定的用户可以从任何IP地址来管理当前服务器。</p>
+</li>
+<li><p>可使用身份：就是把来源用户切换成什么身份使用，(ALL)代表可以切换成任意身份。这个字段可以省略。</p>
+</li>
+<li><p>授权命令：代表root把什么命令授权给普通用户。默认是ALL，代表任何命令，这个当然不行，如果需要给哪个命令授权，写入命令名即可。不过需要注意一定要命令写成绝对路径。</p>
+</li>
+</ul>
+<p>【示例1】：授权用户user1可以重启服务器。</p>
+<p>则由root用户添加如下行：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# visudo</span><br><span class="line">user1         ALL=/sbin/shutdown -r now</span><br><span class="line"></span><br><span class="line"># 查看可用的授权</span><br><span class="line">[user1@localhost ~]$ sudo -l</span><br><span class="line"></span><br><span class="line"># 执行授权命令</span><br><span class="line">[user1@localhost ~]$ sudo /sbin/shutdown -r now</span><br></pre></td></tr></table></figure>
+
+
+
+<p>【示例2】：授权一个用户管理web服务器。</p>
+<p>首先要分析授权用户管理Apache至少要实现哪些基本授权：</p>
+<ul>
+<li>可以使用Apache管理脚本</li>
+<li>可以修改Apache配置文件</li>
+<li>可以更新网页内容</li>
+</ul>
+<p>假设Apache管理脚本程序为&#x2F;etc&#x2F;rc.d&#x2F;init.d&#x2F;httpd。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># visudo授权</span><br><span class="line">[root@loaclhost ~]# visudo</span><br><span class="line">user1      192.168.0.156=/etc/rc.d/init.d/httpd reload,/etc/rc.d/init.d/httpd configtest</span><br></pre></td></tr></table></figure>
+
+<p>授权用户user1可以连接192.168.0.156上的Apache服务器，通过Apache管理脚本重新读取配置文件让更改的设置生效(reload)和可以检测Apache配置文件语法错误(configtest)。</p>
+<p>为满足条件二：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# visudo</span><br><span class="line">user1      192.168.0.156=/usr/bin/vim /etc/httpd/conf/httpd.conf</span><br></pre></td></tr></table></figure>
+
+<p>授权用户user1可以用root身份使用vi编辑Apache配置文件。</p>
+<p>为满足条件三，假设网页存放目录为&#x2F;var&#x2F;www&#x2F;html，则只需要授权user1对此目录具有写权限或者索性更改目录所有者为user1即可。如果需要，还可以设置user1可以通过FTP等文件共享服务更新网页。</p>
+<p>【示例3】：授权aa用户可以添加其他普通用户。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# visudo</span><br><span class="line">aa    ALL=/usr/sbin/useradd</span><br><span class="line">aa    ALL=/usr/bin/passwd [A-Za-z]*, !/usr/bin/passwd &quot;&quot;, !/usr/bin/passwd root    # 不能改root用户密码</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="3-文件特殊权限"><a href="#3-文件特殊权限" class="headerlink" title="3.文件特殊权限"></a>3.文件特殊权限</h2><h3 id="1）SetUID"><a href="#1）SetUID" class="headerlink" title="1）SetUID"></a>1）SetUID</h3><p>a）SetUID概念</p>
+<p>SetUID的功能可以这样理解：</p>
+<ul>
+<li>只有可以执行的文件才能设定SUID权限</li>
+<li>命令执行者要对该程序拥有x（执行）权限</li>
+<li>命令执行者在执行该程序时获得该程序文件属主的身份(在执行程序的过程中灵魂附体为文件的属主)</li>
+<li>SetUID权限只在该程序执行过程中有效，也就是说身份改变只在程序执行过程中有效</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# ll /etc/passwd</span><br><span class="line">-rw-r--r-- 1 root root 3626  2月 15 11:38 /etc/passwd</span><br><span class="line"></span><br><span class="line">[root@localhost ~]# ll /etc/shadow</span><br><span class="line">-rw-r----- 1 root shadow 2092  2月 15 11:37 /etc/shadow</span><br><span class="line"></span><br><span class="line">[root@localhost ~]# ll /usr/bin/passwd</span><br><span class="line">-rwsr-xr-x 1 root root 64152  5月 30  2024 /usr/bin/passwd</span><br></pre></td></tr></table></figure>
+
+<p>&#x2F;usr&#x2F;bin&#x2F;passwd命令拥有特殊权限SetUID，也就是在属主的权限位的执行权限上是s。可以这样来理解它：当一个具有执行权限的文件设置SetUID权限后，用户执行这个文件时将以文件所有者的身份执行。&#x2F;usr&#x2F;bin&#x2F;passwd命令具有SetUID权限，所有者为root（Linux中的命令默认所有者都是root），也就是说当普通用户使用passwd更改自己密码的时候，那一瞬间突然灵魂附体了，实际是用passwd命令所有者root的身份在执行passwd命令，root当然可以将密码写入&#x2F;etc&#x2F;shadow文件，所以普通用户也可以修改&#x2F;etc&#x2F;shadow文件，命令执行完成后该身份也随之消失。如果取消SetUID权限，则普通用户就不能修改自己的密码了。</p>
+<p>b）设置SetUID权限</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># 设置SetUID权限</span><br><span class="line">[root@localhost ~]# chmod u+s /usr/bin/vim      # 极其危险，意味着把服务器送给别人了，别人可以打开、修改任何文件了</span><br><span class="line"></span><br><span class="line"># 查看SetUID权限</span><br><span class="line">[root@localhost ~]# ll /usr/bin/vim</span><br><span class="line">-rwsr-xr-x 1 root root 1847752 4月 5 2012 /usr/bin/vim </span><br></pre></td></tr></table></figure>
+
+
+
+<p>c）建议</p>
+<ul>
+<li>关键目录应严格控制写权限，比如“&#x2F;”、“&#x2F;usr”等；</li>
+<li>用户的密码设置要严格遵守密码三原则；</li>
+<li>对系统中默认应该具有SetUID权限的文件作一列表，定时检查有没有这之外的文件被设置了SetUID权限。</li>
+</ul>
+<p>d）检测SetUID的脚本</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/bash</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Author: ben (E-main: 326525276@qq.com)</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">搜索系统中所有拥有SUID和SGID的文件，并保存到临时目录中</span></span><br><span class="line">find / -perm -4000 -o -perm -2000 &gt; /tmp/setuid.check</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">做循环，每次循环取出临时文件中的文件名</span></span><br><span class="line">for i in $(cat /tmp/setuid.check)</span><br><span class="line">do</span><br><span class="line"><span class="meta prompt_">	# </span><span class="language-bash">比对这个文件名是否在模板文件中</span></span><br><span class="line">	grep $i /root/suid.list &gt; /dev/null</span><br><span class="line">	if [&quot;$?&quot; != &quot;0&quot;]</span><br><span class="line"><span class="meta prompt_">		# </span><span class="language-bash">如果在，不报错</span></span><br><span class="line">	then</span><br><span class="line"><span class="meta prompt_">		# </span><span class="language-bash">如果文件不在模板文件中，则报错，并把报错存在日志中</span></span><br><span class="line">		echo &quot;$i isn&#x27;t in listfile!&quot; &gt;&gt; /root/suid_log_$(date +%F)</span><br><span class="line">	fi</span><br><span class="line">done</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">删除临时文件</span></span><br><span class="line">rm -rf /tmp/setuid.check</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="2）SetGID"><a href="#2）SetGID" class="headerlink" title="2）SetGID"></a>2）SetGID</h3><p>SGID既可以针对文件生效，也可以针对目录生效。这和SUID明显不同。</p>
+<p>a）针对文件的作用</p>
+<p>针对文件，SGID的含义如下：</p>
+<ul>
+<li>只有可执行的文件才能设置SGID权限</li>
+<li>命令执行者要对该文件拥有x（执行）权限</li>
+<li>命令执行者在执行文件的时候，组身份升级为该文件的属组</li>
+<li>SetGID权限同样只在该文件执行过程中有效，也就是说组身份改变只在文件执行过程中有效</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# ll /var/lib/mlocate/mlocate.db</span><br><span class="line">-rw-r----- 1 root slocate 1838850 1月    20 04：29 /var/lib/mlocate/mlocate.db</span><br></pre></td></tr></table></figure>
+
+<p>属主权限是r、w，属组权限是r，其他人权限是0；</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# ll /usr/bin/locate</span><br><span class="line">-rwx--s--x. 1 root slocate 38464  8月 24 2010 /usr/bin/locate    # 所属组s代表SetGID权限</span><br></pre></td></tr></table></figure>
+
+<p>当普通用户user1执行locate命令时，会发生如下事情：</p>
+<ul>
+<li>&#x2F;usr&#x2F;bin&#x2F;locate是可执行二进制程序，可以赋予SGID</li>
+<li>执行用户user1对&#x2F;usr&#x2F;bin&#x2F;locate命令拥有执行权限</li>
+<li>执行&#x2F;usr&#x2F;bin&#x2F;locate命令时，组身份会升级为slocate组，而slocate组对&#x2F;var&#x2F;lib&#x2F;mlocate&#x2F;mlocate.db数据库拥有r权限，所以普通用户可以使用locate</li>
+</ul>
+<p>命令查询mlocate.db数据库</p>
+<ul>
+<li>命令结束，user1用户的组身份返回为user1组</li>
+</ul>
+<p>b）针对目录的作用</p>
+<p>如果SGID针对目录设置，含义如下：</p>
+<ul>
+<li>普通用户必须对此目录拥有r和x权限，才能进入此目录</li>
+<li>普通用户在此目录中的有效组会变成此目录的属组</li>
+<li>若普通用户对此目录拥有w权限时，新建的文件的默认属组就是这个目录的属组</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"># 进入临时目录</span><br><span class="line">[root@localhost ~]# cd /tmp</span><br><span class="line"># 建立测试目录</span><br><span class="line">[root@localhost tmp]# mkdir dtest</span><br><span class="line"># 给测试目录赋予SGID</span><br><span class="line">[root@localhost tmp]# chmod g+s dtest</span><br><span class="line"># 查询SGID是否生效</span><br><span class="line">[root@localhost tmp]# ll -d dtest/</span><br><span class="line">drwxr-sr-x 2 root root 4096 1月 20 06：04 dtest/</span><br><span class="line"># 给测试目录权限，让普通用户可以写</span><br><span class="line">[root@localhost tmp]# chmod 777 dtest/</span><br><span class="line"># 切换成普通用户user1</span><br><span class="line">[root@localhost tmp]# su - user1</span><br><span class="line"># 普通用户进入测试目录</span><br><span class="line">[user1@localhost ~]$ cd /tmp/dtest/</span><br><span class="line"># 普通用户建立abc文件</span><br><span class="line">[user1@localhost ~]$ touch abc</span><br><span class="line"># abc文件的默认属组是root, 说明SGID生效</span><br><span class="line">[user1@localhost ~]$ ll</span><br><span class="line">总用量 0</span><br><span class="line">-rw-rw-r-- 1 user1 root 0 1月 20 06：07 abc</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="3）Sticky-BIT"><a href="#3）Sticky-BIT" class="headerlink" title="3）Sticky BIT"></a>3）Sticky BIT</h3><p>Sticky BIT粘着位，也简称为SBIT，SBIT目前仅针对目录有效。</p>
+<p>SBIT作用如下：</p>
+<ul>
+<li>粘着位目录只对目录有效</li>
+<li>普通用户对该目录拥有w和x权限，即普通用户可以在此目录拥有写入权限</li>
+<li>如果没有粘着位，因为普通用户拥有w权限，所以可以删除此目录下所有文件，包括其他用户建立的文件，一旦赋予了粘着位，除了root可以删除所有文件，普通用户就算拥有w权限，也只能删除自己建立的文件，但是不能删除其他用户建立的文件。</li>
+</ul>
+<h3 id="4）设定文件特殊权限"><a href="#4）设定文件特殊权限" class="headerlink" title="4）设定文件特殊权限"></a>4）设定文件特殊权限</h3><p>特殊权限：</p>
+<ul>
+<li>4代表SUID</li>
+<li>2代表SGID</li>
+<li>1代表SBIT</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># 赋予SUID权限</span><br><span class="line">[root@localhost ~]# chmod 4755 ftest              # 或者chmod u+s ftest</span><br><span class="line"></span><br><span class="line"># 赋予SGID权限</span><br><span class="line">[root@localhost ~]# chmod 2755 ftest              # 或者chmod g+s ftest</span><br><span class="line"></span><br><span class="line"># 赋予SBIT权限</span><br><span class="line">[root@localhost ~]# mkdir dtest</span><br><span class="line">[root@localhost ~]# chmod 1755 dtest/             # 或者chmod o+t ftest</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="4-文件系统属性chattr权限"><a href="#4-文件系统属性chattr权限" class="headerlink" title="4. 文件系统属性chattr权限"></a>4. 文件系统属性chattr权限</h2><p>a）命令格式</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]chattr [+-=] [选项] 文件或目录名</span><br><span class="line">选项：</span><br><span class="line">  +：    增加权限</span><br><span class="line">  -：    删除权限</span><br><span class="line">  =：    等于某权限</span><br><span class="line">  i：    如果对文件设置i属性，那么不允许对文件进行删除、改名，也不能添加和修改数据；如果对目录设置i属性，那么只能修改目录下文件的数据，但不允许建立和          删除文件</span><br><span class="line">  a：    如果对文件设置a属性，那么只能在文件中增加数据，但是不能删除也不能修改数据；如果对目录设置a属性，那么只允许在目录中建立和修改文件，但是不允许          删除</span><br><span class="line">  e：    Linux中绝大多数的文件都默认拥有e属性。表示该文件是使用ext文件系统进行存储的，而且不能使用“chattr -e”命令取消e属性</span><br><span class="line">  </span><br></pre></td></tr></table></figure>
+
+<p>示例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"># 赋予文件i属性</span><br><span class="line">chattr +i abc</span><br><span class="line"></span><br><span class="line"># 取消文件i属性</span><br><span class="line">chattr -i abc</span><br><span class="line"></span><br><span class="line"># 赋予目录i属性</span><br><span class="line">chattr +i bcd/</span><br><span class="line"></span><br><span class="line"># 取消目录i属性</span><br><span class="line">chattr -i bcd/</span><br></pre></td></tr></table></figure>
+
+
+
+<p>b) 查看文件系统属性(lsattr)</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# lsattr 选项 文件名</span><br><span class="line">选项：</span><br><span class="line">  -a:    显示所有文件和目录</span><br><span class="line">  -d:    若目标是目录，仅列出目录本身的属性，而不是子文件</span><br></pre></td></tr></table></figure>
+
+
+
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/02/25/%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86/" rel="prev" title="用户管理">
+      <i class="fa fa-chevron-left"></i> 用户管理
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/02/25/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86/" rel="next" title="文件系统管理">
+      文件系统管理 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86"><span class="nav-number">1.</span> <span class="nav-text">权限管理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-ACL%E6%9D%83%E9%99%90"><span class="nav-number">1.1.</span> <span class="nav-text">1. ACL权限</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1%EF%BC%89ACL%E6%A6%82%E8%BF%B0"><span class="nav-number">1.1.1.</span> <span class="nav-text">1）ACL概述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2%EF%BC%89%E5%BC%80%E5%90%AFACL"><span class="nav-number">1.1.2.</span> <span class="nav-text">2）开启ACL</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3%EF%BC%89ACL%E5%9F%BA%E6%9C%AC%E5%91%BD%E4%BB%A4"><span class="nav-number">1.1.3.</span> <span class="nav-text">3）ACL基本命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4%EF%BC%89%E6%9C%80%E5%A4%A7%E6%9C%89%E6%95%88%E6%9D%83%E9%99%90-mask"><span class="nav-number">1.1.4.</span> <span class="nav-text">4）最大有效权限(mask)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5%EF%BC%89%E5%88%A0%E9%99%A4ACL%E6%9D%83%E9%99%90"><span class="nav-number">1.1.5.</span> <span class="nav-text">5）删除ACL权限</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-sudo%E6%8E%88%E6%9D%83"><span class="nav-number">1.2.</span> <span class="nav-text">2. sudo授权</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1%EF%BC%89root%E8%BA%AB%E4%BB%BD"><span class="nav-number">1.2.1.</span> <span class="nav-text">1）root身份</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E6%96%87%E4%BB%B6%E7%89%B9%E6%AE%8A%E6%9D%83%E9%99%90"><span class="nav-number">1.3.</span> <span class="nav-text">3.文件特殊权限</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1%EF%BC%89SetUID"><span class="nav-number">1.3.1.</span> <span class="nav-text">1）SetUID</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2%EF%BC%89SetGID"><span class="nav-number">1.3.2.</span> <span class="nav-text">2）SetGID</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3%EF%BC%89Sticky-BIT"><span class="nav-number">1.3.3.</span> <span class="nav-text">3）Sticky BIT</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4%EF%BC%89%E8%AE%BE%E5%AE%9A%E6%96%87%E4%BB%B6%E7%89%B9%E6%AE%8A%E6%9D%83%E9%99%90"><span class="nav-number">1.3.4.</span> <span class="nav-text">4）设定文件特殊权限</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E5%B1%9E%E6%80%A7chattr%E6%9D%83%E9%99%90"><span class="nav-number">1.4.</span> <span class="nav-text">4. 文件系统属性chattr权限</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Ben</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ben</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
