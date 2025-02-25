@@ -1,274 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>Shell基础</title>
-    <url>/2025/02/25/Shell%E5%9F%BA%E7%A1%80/</url>
-    <content><![CDATA[<h2 id="Shell概述"><a href="#Shell概述" class="headerlink" title="Shell概述"></a>Shell概述</h2><h3 id="Shell分类"><a href="#Shell分类" class="headerlink" title="Shell分类"></a>Shell分类</h3><table>
-<thead>
-<tr>
-<th>Shell类别</th>
-<th>易学性</th>
-<th>可移植性</th>
-<th>编辑性</th>
-<th>快捷性</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>Bourne Shell（sh）</td>
-<td>容易</td>
-<td>好</td>
-<td>较差</td>
-<td>较差</td>
-</tr>
-<tr>
-<td>Korn Shell（ksh）</td>
-<td>较难</td>
-<td>较好</td>
-<td>好</td>
-<td>较好</td>
-</tr>
-<tr>
-<td>Bourne Again（Bash）</td>
-<td>难</td>
-<td>较好</td>
-<td>好</td>
-<td>好</td>
-</tr>
-<tr>
-<td>POSIX Shell（psh）</td>
-<td>较难</td>
-<td>好</td>
-<td>好</td>
-<td>较好</td>
-</tr>
-<tr>
-<td>C Shell（csh）</td>
-<td>较难</td>
-<td>差</td>
-<td>较好</td>
-<td>较好</td>
-</tr>
-<tr>
-<td>TC Shell（tcsh）</td>
-<td>难</td>
-<td>差</td>
-<td>好</td>
-<td>好</td>
-</tr>
-</tbody></table>
-<p>Shell的两种主语法类型有Bourne和C，这两种语法彼此不兼容。Bourne家族主要包括sh、ksh、Bash、psh、zsh；C家族主要包括：csh、tcsh（Bash和zsh在不同程度上支持csh的语法）。</p>
-<p>可以通过&#x2F;etc&#x2F;shells文件来查询Linux支持的Shell：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# cat /etc/shells</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">/etc/shells: valid login shells</span></span><br><span class="line">/bin/sh</span><br><span class="line">/bin/bash</span><br><span class="line">/usr/bin/bash</span><br><span class="line">/bin/rbash</span><br><span class="line">/usr/bin/rbash</span><br><span class="line">/usr/bin/dash</span><br><span class="line">/usr/bin/sh</span><br></pre></td></tr></table></figure>
-
-<h3 id="Shell脚本的执行方式"><a href="#Shell脚本的执行方式" class="headerlink" title="Shell脚本的执行方式"></a>Shell脚本的执行方式</h3><p>a）echo命令</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# echo [选项] [输出内容]</span><br><span class="line">选项：</span><br><span class="line">  -e：    支持反斜线控制的字符转换（如下表）</span><br><span class="line">  -n：    取消输出后行末的换行符号(就是内容输出后不换行)</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# echo &quot;Mr. Ben is the most honest man!&quot;</span><br><span class="line">Mr. Ben is the most honest man!</span><br><span class="line"></span><br><span class="line">[root@localhost ~]# echo -n &quot;Mr. Ben is the most honest man!&quot;</span><br><span class="line">Mr. Ben is the most honest man![root@localhost ~]#</span><br></pre></td></tr></table></figure>
-
-<p>在echo命令中如果使用了”-e”选项，则可以支持控制字符。</p>
-<table>
-<thead>
-<tr>
-<th>控制字符</th>
-<th>作用</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>\\</td>
-<td>输出\本身</td>
-</tr>
-<tr>
-<td>\a</td>
-<td>输出警告音</td>
-</tr>
-<tr>
-<td>\b</td>
-<td>退格键，也就是向左删除键</td>
-</tr>
-<tr>
-<td>\c</td>
-<td>取消输出行末的换行符。和“-n”选项一致</td>
-</tr>
-<tr>
-<td>\e</td>
-<td>ESCAPE键</td>
-</tr>
-<tr>
-<td>\f</td>
-<td>换页符</td>
-</tr>
-<tr>
-<td>\n</td>
-<td>换行符</td>
-</tr>
-<tr>
-<td>\r</td>
-<td>回车键</td>
-</tr>
-<tr>
-<td>\t</td>
-<td>制表符，也就是Tab键</td>
-</tr>
-<tr>
-<td>\v</td>
-<td>垂直制表符</td>
-</tr>
-<tr>
-<td>\0nnn</td>
-<td>按照八进制ASCII码表输出字符。其中0为数字零，nnn是三位八进制数</td>
-</tr>
-<tr>
-<td>\xhh</td>
-<td>按照十六进制ASCII码表输出字符。其中hh是两位十六进制数</td>
-</tr>
-</tbody></table>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# echo -e &quot;\\ \a&quot;</span><br><span class="line">\</span><br><span class="line"># 这个输出会输出\，同时会在系统音响中输出一声提示音</span><br><span class="line"></span><br><span class="line">[root@localhost ~]# echo -e &quot;ab\bc&quot;</span><br><span class="line">ac</span><br><span class="line"></span><br><span class="line">[root@localhost ~]# echo -e &quot;a\tb\tc\nd\te\tf&quot;</span><br><span class="line">a    b    c</span><br><span class="line">d    e    f</span><br><span class="line"></span><br><span class="line"># 八进制输出</span><br><span class="line">[root@localhost ~]# echo -e &quot;\0141\t\0142\t\0143\n\0144\t\0145\t\0146&quot;</span><br><span class="line">a    b    c</span><br><span class="line">d    e    f</span><br><span class="line"></span><br><span class="line"># 十六进制</span><br><span class="line">[root@localhost ~]# echo -e &quot;\x61\t\x62\t\x63\n\x64\t\x65\t\x66&quot;</span><br><span class="line">a    b    c</span><br><span class="line">d    e    f</span><br><span class="line"></span><br><span class="line"># 按颜色输出</span><br><span class="line">[root@localhost ~]# echo -e &quot;\e[1;31m    abcd \e[0m&quot;</span><br><span class="line">    abcd</span><br></pre></td></tr></table></figure>
-
-<p>按颜色输出这个命令，“\e[1”是标准格式，代表颜色输出开始，”\e[0m”代表颜色输出结束，31m定义字体颜色是红色。echo能够识别的颜色：</p>
-<ul>
-<li>30m：黑色</li>
-<li>31m：红色</li>
-<li>32m：绿色</li>
-<li>33m：黄色</li>
-<li>34m：蓝色</li>
-<li>35m：洋红</li>
-<li>36m：青色</li>
-<li>37m：白色</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# echo -e &quot;\e[1;42m abcd \e[0m&quot;</span><br></pre></td></tr></table></figure>
-
-<p>这条命令会给abcd加一个绿色的背景。echo可以使用的背景颜色如下：</p>
-<ul>
-<li>40m：黑色</li>
-<li>41m：红色</li>
-<li>42m：绿色</li>
-<li>43m：黄色</li>
-<li>44m：蓝色</li>
-<li>45m：洋红</li>
-<li>46m：青色</li>
-<li>47m：白色</li>
-</ul>
-<p>b）Shell脚本的执行</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/bash</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">The first program</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Author: Ben（E-mail: 326525276@qq.com）</span></span><br><span class="line"></span><br><span class="line">echo -e &quot;Mr. Ben is the most honest man! &quot;</span><br></pre></td></tr></table></figure>
-
-<p>在Linux中脚本的执行主要有两种方法：</p>
-<ul>
-<li><p>赋予执行权限，直接运行（推荐）</p>
-<p>这种方法是最常用的Shell脚本运行方法，也最为直接简单。运行时可以使用绝对路径，也可以使用相对路径。</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">赋予执行权限</span></span><br><span class="line">[root@localhost sh]# chmod +x hello.sh</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">绝对路径执行</span></span><br><span class="line">[root@localhost sh]# /root/sh/hello.sh</span><br><span class="line">Mr. Ben is the most honest man!</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">相对路径执行</span></span><br><span class="line">[root@localhost sh]# ./hello.sh</span><br><span class="line">Mr. Ben is the most honest man!</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>通过Bash调用执行脚本</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost sh]# bash hello.sh</span><br><span class="line">Mr. Ben is the most honest man!</span><br></pre></td></tr></table></figure></li>
-</ul>
-<h2 id="Bash的基本功能"><a href="#Bash的基本功能" class="headerlink" title="Bash的基本功能"></a>Bash的基本功能</h2><h3 id="历史命令"><a href="#历史命令" class="headerlink" title="历史命令"></a>历史命令</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# history [选项] [历史命令保存文件]</span><br><span class="line">选项：</span><br><span class="line">  -c：    清空历史命令</span><br><span class="line">  -w：    把缓存中的历史命令写入历史命令保存文件。如果不手工指定历史命令保存文件，则放入默认历史命令保存文件~/.bash_history中</span><br></pre></td></tr></table></figure>
-
-<p>history命令查看的历史命令和<del>&#x2F;.bash_history文件中保存的历史命令是不同的。那是因为当前登录操作的命令并没有直接写入</del>&#x2F;.bash_history文件，而是保存在缓存当中的。需要等当前用户注销之后，缓存中的命令才会写入<del>&#x2F;.bash_history文件。如果需要把内存中的命令直接写入</del>&#x2F;.bash_history文件，而不等用户注销时再写入，就需要使用”-w”选项。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 把缓存中的历史命令直接写入~/.bash_history</span><br><span class="line">[root@localhost ~]# history -w</span><br><span class="line"></span><br><span class="line"># 清空历史命令</span><br><span class="line">[root@localhost ~]# history -c</span><br></pre></td></tr></table></figure>
-
-<h3 id="历史命令的调用"><a href="#历史命令的调用" class="headerlink" title="历史命令的调用"></a>历史命令的调用</h3><p>如果想要使用原先的历史命令有这样几种方法：</p>
-<ul>
-<li>使用上、下箭头调用以前的历史命令</li>
-<li>使用“!n”重复执行第n条历史命令</li>
-<li>使用”!!”重复执行上一条命令</li>
-<li>使用”!字串”重复执行最后一条以该字串开头的命令</li>
-<li>使用”!$”重复上一条命令的最后一个参数</li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">调用最后一条以<span class="built_in">cat</span>开头的命令</span></span><br><span class="line">[root@localhost ~]# !cat</span><br></pre></td></tr></table></figure>
-
-<h3 id="输入输出重定向"><a href="#输入输出重定向" class="headerlink" title="输入输出重定向"></a>输入输出重定向</h3><p>bash的标准输入输出</p>
-<table>
-<thead>
-<tr>
-<th>设备</th>
-<th>设备文件名</th>
-<th>文件描述符</th>
-<th>类型</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>键盘</td>
-<td>&#x2F;dev&#x2F;stdin</td>
-<td>0</td>
-<td>标准输入</td>
-</tr>
-<tr>
-<td>显示器</td>
-<td>&#x2F;dev&#x2F;stdout</td>
-<td>1</td>
-<td>标准输出</td>
-</tr>
-<tr>
-<td>显示器</td>
-<td>&#x2F;dev&#x2F;stderr</td>
-<td>2</td>
-<td>标准错误输出</td>
-</tr>
-</tbody></table>
-<p>输出重定向</p>
-<ul>
-<li><p>标准输出重定向：</p>
-<ul>
-<li>命令 &gt; 文件：以覆盖的方式，把命令的正确输出输出到指定的文件或设备当中。</li>
-<li>命令 &gt;&gt; 文件：以追加的方式，把命令的正确输出输出到指定的文件或设备当中。</li>
-</ul>
-</li>
-<li><p>标准错误输出重定向：</p>
-<ul>
-<li>错误命令 2&gt;文件：以覆盖的方式，把命令的错误输出输出到指定的文件或设备当中。</li>
-<li>错误命令 2&gt;&gt;文件：以追加的方式，把命令的错误输出输出到指定的文件或设备当中。</li>
-</ul>
-</li>
-<li><p>正确输出和错误输出同时保存：</p>
-<ul>
-<li>命令 &gt; 文件 2&gt;&amp;1：以覆盖的方式，把正确输出和错误输出都保存在同一个文件当中。</li>
-<li>命令 &gt;&gt; 文件 2&gt;&amp;1：以追加的方式，把正确输出和错误输出都保存在同一个文件当中。</li>
-<li>命令 &amp;&gt;文件：以覆盖的方式，把正确输出和错误输出都保存在同一个文件当中。</li>
-<li>命令 &amp;&gt;&gt;文件：以追加的方式，把正确输出和错误输出都保存在同一个文件当中。</li>
-<li>命令&gt;&gt;文件1 2&gt;&gt;文件2：把正确的输出追加到文件1中，把错误的输出追加到文件2中。</li>
-</ul>
-</li>
-</ul>
-<p>输入重定向</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# wc [选项] [文件名]</span><br><span class="line">选项：</span><br><span class="line">  -c    统计字节数</span><br><span class="line">  -w    统计单词数</span><br><span class="line">  -l    统计行数</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="多命令执行顺序"><a href="#多命令执行顺序" class="headerlink" title="多命令执行顺序"></a>多命令执行顺序</h3><table>
-<thead>
-<tr>
-<th>多命令执行符</th>
-<th>格式</th>
-<th>作用</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>；</td>
-<td>命令1 ; 命令2</td>
-<td>多个命令顺序执行，命令之间没有任何逻辑联系</td>
-</tr>
-<tr>
-<td>&amp;&amp;</td>
-<td>命令1 &amp;&amp; 命令2</td>
-<td>1）当命令1正确执行($?&#x3D;0)，则命令2才会执行。2）当命令1执行不正确，则命令2不会执行。</td>
-</tr>
-<tr>
-<td>||</td>
-<td>命令1 || 命令2</td>
-<td>1）当命令1执行不正确，则命令2才会执行。2）当命令1正确执行，则命令2不会执行。</td>
-</tr>
-</tbody></table>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# ls &amp;&amp; echo yes || echo no</span><br><span class="line">yes</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="管道符"><a href="#管道符" class="headerlink" title="管道符"></a>管道符</h3><p>a）行提取命令grep</p>
-<p>b）</p>
-]]></content>
-      <categories>
-        <category>Shell</category>
-      </categories>
-  </entry>
-  <entry>
     <title>Linux常用命令</title>
     <url>/2025/02/25/Linux%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</url>
     <content><![CDATA[<h1 id="Linux常用命令"><a href="#Linux常用命令" class="headerlink" title="Linux常用命令"></a>Linux常用命令</h1><h2 id="1-命令提示符"><a href="#1-命令提示符" class="headerlink" title="1. 命令提示符"></a>1. 命令提示符</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ben@ben-NBLK-WAX9X:~$</span><br></pre></td></tr></table></figure>
@@ -1094,6 +826,274 @@
       </categories>
   </entry>
   <entry>
+    <title>Shell基础</title>
+    <url>/2025/02/25/Shell%E5%9F%BA%E7%A1%80/</url>
+    <content><![CDATA[<h2 id="Shell概述"><a href="#Shell概述" class="headerlink" title="Shell概述"></a>Shell概述</h2><h3 id="Shell分类"><a href="#Shell分类" class="headerlink" title="Shell分类"></a>Shell分类</h3><table>
+<thead>
+<tr>
+<th>Shell类别</th>
+<th>易学性</th>
+<th>可移植性</th>
+<th>编辑性</th>
+<th>快捷性</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Bourne Shell（sh）</td>
+<td>容易</td>
+<td>好</td>
+<td>较差</td>
+<td>较差</td>
+</tr>
+<tr>
+<td>Korn Shell（ksh）</td>
+<td>较难</td>
+<td>较好</td>
+<td>好</td>
+<td>较好</td>
+</tr>
+<tr>
+<td>Bourne Again（Bash）</td>
+<td>难</td>
+<td>较好</td>
+<td>好</td>
+<td>好</td>
+</tr>
+<tr>
+<td>POSIX Shell（psh）</td>
+<td>较难</td>
+<td>好</td>
+<td>好</td>
+<td>较好</td>
+</tr>
+<tr>
+<td>C Shell（csh）</td>
+<td>较难</td>
+<td>差</td>
+<td>较好</td>
+<td>较好</td>
+</tr>
+<tr>
+<td>TC Shell（tcsh）</td>
+<td>难</td>
+<td>差</td>
+<td>好</td>
+<td>好</td>
+</tr>
+</tbody></table>
+<p>Shell的两种主语法类型有Bourne和C，这两种语法彼此不兼容。Bourne家族主要包括sh、ksh、Bash、psh、zsh；C家族主要包括：csh、tcsh（Bash和zsh在不同程度上支持csh的语法）。</p>
+<p>可以通过&#x2F;etc&#x2F;shells文件来查询Linux支持的Shell：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# cat /etc/shells</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">/etc/shells: valid login shells</span></span><br><span class="line">/bin/sh</span><br><span class="line">/bin/bash</span><br><span class="line">/usr/bin/bash</span><br><span class="line">/bin/rbash</span><br><span class="line">/usr/bin/rbash</span><br><span class="line">/usr/bin/dash</span><br><span class="line">/usr/bin/sh</span><br></pre></td></tr></table></figure>
+
+<h3 id="Shell脚本的执行方式"><a href="#Shell脚本的执行方式" class="headerlink" title="Shell脚本的执行方式"></a>Shell脚本的执行方式</h3><p>a）echo命令</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# echo [选项] [输出内容]</span><br><span class="line">选项：</span><br><span class="line">  -e：    支持反斜线控制的字符转换（如下表）</span><br><span class="line">  -n：    取消输出后行末的换行符号(就是内容输出后不换行)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# echo &quot;Mr. Ben is the most honest man!&quot;</span><br><span class="line">Mr. Ben is the most honest man!</span><br><span class="line"></span><br><span class="line">[root@localhost ~]# echo -n &quot;Mr. Ben is the most honest man!&quot;</span><br><span class="line">Mr. Ben is the most honest man![root@localhost ~]#</span><br></pre></td></tr></table></figure>
+
+<p>在echo命令中如果使用了”-e”选项，则可以支持控制字符。</p>
+<table>
+<thead>
+<tr>
+<th>控制字符</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>\\</td>
+<td>输出\本身</td>
+</tr>
+<tr>
+<td>\a</td>
+<td>输出警告音</td>
+</tr>
+<tr>
+<td>\b</td>
+<td>退格键，也就是向左删除键</td>
+</tr>
+<tr>
+<td>\c</td>
+<td>取消输出行末的换行符。和“-n”选项一致</td>
+</tr>
+<tr>
+<td>\e</td>
+<td>ESCAPE键</td>
+</tr>
+<tr>
+<td>\f</td>
+<td>换页符</td>
+</tr>
+<tr>
+<td>\n</td>
+<td>换行符</td>
+</tr>
+<tr>
+<td>\r</td>
+<td>回车键</td>
+</tr>
+<tr>
+<td>\t</td>
+<td>制表符，也就是Tab键</td>
+</tr>
+<tr>
+<td>\v</td>
+<td>垂直制表符</td>
+</tr>
+<tr>
+<td>\0nnn</td>
+<td>按照八进制ASCII码表输出字符。其中0为数字零，nnn是三位八进制数</td>
+</tr>
+<tr>
+<td>\xhh</td>
+<td>按照十六进制ASCII码表输出字符。其中hh是两位十六进制数</td>
+</tr>
+</tbody></table>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# echo -e &quot;\\ \a&quot;</span><br><span class="line">\</span><br><span class="line"># 这个输出会输出\，同时会在系统音响中输出一声提示音</span><br><span class="line"></span><br><span class="line">[root@localhost ~]# echo -e &quot;ab\bc&quot;</span><br><span class="line">ac</span><br><span class="line"></span><br><span class="line">[root@localhost ~]# echo -e &quot;a\tb\tc\nd\te\tf&quot;</span><br><span class="line">a    b    c</span><br><span class="line">d    e    f</span><br><span class="line"></span><br><span class="line"># 八进制输出</span><br><span class="line">[root@localhost ~]# echo -e &quot;\0141\t\0142\t\0143\n\0144\t\0145\t\0146&quot;</span><br><span class="line">a    b    c</span><br><span class="line">d    e    f</span><br><span class="line"></span><br><span class="line"># 十六进制</span><br><span class="line">[root@localhost ~]# echo -e &quot;\x61\t\x62\t\x63\n\x64\t\x65\t\x66&quot;</span><br><span class="line">a    b    c</span><br><span class="line">d    e    f</span><br><span class="line"></span><br><span class="line"># 按颜色输出</span><br><span class="line">[root@localhost ~]# echo -e &quot;\e[1;31m    abcd \e[0m&quot;</span><br><span class="line">    abcd</span><br></pre></td></tr></table></figure>
+
+<p>按颜色输出这个命令，“\e[1”是标准格式，代表颜色输出开始，”\e[0m”代表颜色输出结束，31m定义字体颜色是红色。echo能够识别的颜色：</p>
+<ul>
+<li>30m：黑色</li>
+<li>31m：红色</li>
+<li>32m：绿色</li>
+<li>33m：黄色</li>
+<li>34m：蓝色</li>
+<li>35m：洋红</li>
+<li>36m：青色</li>
+<li>37m：白色</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# echo -e &quot;\e[1;42m abcd \e[0m&quot;</span><br></pre></td></tr></table></figure>
+
+<p>这条命令会给abcd加一个绿色的背景。echo可以使用的背景颜色如下：</p>
+<ul>
+<li>40m：黑色</li>
+<li>41m：红色</li>
+<li>42m：绿色</li>
+<li>43m：黄色</li>
+<li>44m：蓝色</li>
+<li>45m：洋红</li>
+<li>46m：青色</li>
+<li>47m：白色</li>
+</ul>
+<p>b）Shell脚本的执行</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/bash</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">The first program</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Author: Ben（E-mail: 326525276@qq.com）</span></span><br><span class="line"></span><br><span class="line">echo -e &quot;Mr. Ben is the most honest man! &quot;</span><br></pre></td></tr></table></figure>
+
+<p>在Linux中脚本的执行主要有两种方法：</p>
+<ul>
+<li><p>赋予执行权限，直接运行（推荐）</p>
+<p>这种方法是最常用的Shell脚本运行方法，也最为直接简单。运行时可以使用绝对路径，也可以使用相对路径。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">赋予执行权限</span></span><br><span class="line">[root@localhost sh]# chmod +x hello.sh</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">绝对路径执行</span></span><br><span class="line">[root@localhost sh]# /root/sh/hello.sh</span><br><span class="line">Mr. Ben is the most honest man!</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">相对路径执行</span></span><br><span class="line">[root@localhost sh]# ./hello.sh</span><br><span class="line">Mr. Ben is the most honest man!</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>通过Bash调用执行脚本</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost sh]# bash hello.sh</span><br><span class="line">Mr. Ben is the most honest man!</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="Bash的基本功能"><a href="#Bash的基本功能" class="headerlink" title="Bash的基本功能"></a>Bash的基本功能</h2><h3 id="历史命令"><a href="#历史命令" class="headerlink" title="历史命令"></a>历史命令</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# history [选项] [历史命令保存文件]</span><br><span class="line">选项：</span><br><span class="line">  -c：    清空历史命令</span><br><span class="line">  -w：    把缓存中的历史命令写入历史命令保存文件。如果不手工指定历史命令保存文件，则放入默认历史命令保存文件~/.bash_history中</span><br></pre></td></tr></table></figure>
+
+<p>history命令查看的历史命令和<del>&#x2F;.bash_history文件中保存的历史命令是不同的。那是因为当前登录操作的命令并没有直接写入</del>&#x2F;.bash_history文件，而是保存在缓存当中的。需要等当前用户注销之后，缓存中的命令才会写入<del>&#x2F;.bash_history文件。如果需要把内存中的命令直接写入</del>&#x2F;.bash_history文件，而不等用户注销时再写入，就需要使用”-w”选项。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 把缓存中的历史命令直接写入~/.bash_history</span><br><span class="line">[root@localhost ~]# history -w</span><br><span class="line"></span><br><span class="line"># 清空历史命令</span><br><span class="line">[root@localhost ~]# history -c</span><br></pre></td></tr></table></figure>
+
+<h3 id="历史命令的调用"><a href="#历史命令的调用" class="headerlink" title="历史命令的调用"></a>历史命令的调用</h3><p>如果想要使用原先的历史命令有这样几种方法：</p>
+<ul>
+<li>使用上、下箭头调用以前的历史命令</li>
+<li>使用“!n”重复执行第n条历史命令</li>
+<li>使用”!!”重复执行上一条命令</li>
+<li>使用”!字串”重复执行最后一条以该字串开头的命令</li>
+<li>使用”!$”重复上一条命令的最后一个参数</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">调用最后一条以<span class="built_in">cat</span>开头的命令</span></span><br><span class="line">[root@localhost ~]# !cat</span><br></pre></td></tr></table></figure>
+
+<h3 id="输入输出重定向"><a href="#输入输出重定向" class="headerlink" title="输入输出重定向"></a>输入输出重定向</h3><p>bash的标准输入输出</p>
+<table>
+<thead>
+<tr>
+<th>设备</th>
+<th>设备文件名</th>
+<th>文件描述符</th>
+<th>类型</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>键盘</td>
+<td>&#x2F;dev&#x2F;stdin</td>
+<td>0</td>
+<td>标准输入</td>
+</tr>
+<tr>
+<td>显示器</td>
+<td>&#x2F;dev&#x2F;stdout</td>
+<td>1</td>
+<td>标准输出</td>
+</tr>
+<tr>
+<td>显示器</td>
+<td>&#x2F;dev&#x2F;stderr</td>
+<td>2</td>
+<td>标准错误输出</td>
+</tr>
+</tbody></table>
+<p>输出重定向</p>
+<ul>
+<li><p>标准输出重定向：</p>
+<ul>
+<li>命令 &gt; 文件：以覆盖的方式，把命令的正确输出输出到指定的文件或设备当中。</li>
+<li>命令 &gt;&gt; 文件：以追加的方式，把命令的正确输出输出到指定的文件或设备当中。</li>
+</ul>
+</li>
+<li><p>标准错误输出重定向：</p>
+<ul>
+<li>错误命令 2&gt;文件：以覆盖的方式，把命令的错误输出输出到指定的文件或设备当中。</li>
+<li>错误命令 2&gt;&gt;文件：以追加的方式，把命令的错误输出输出到指定的文件或设备当中。</li>
+</ul>
+</li>
+<li><p>正确输出和错误输出同时保存：</p>
+<ul>
+<li>命令 &gt; 文件 2&gt;&amp;1：以覆盖的方式，把正确输出和错误输出都保存在同一个文件当中。</li>
+<li>命令 &gt;&gt; 文件 2&gt;&amp;1：以追加的方式，把正确输出和错误输出都保存在同一个文件当中。</li>
+<li>命令 &amp;&gt;文件：以覆盖的方式，把正确输出和错误输出都保存在同一个文件当中。</li>
+<li>命令 &amp;&gt;&gt;文件：以追加的方式，把正确输出和错误输出都保存在同一个文件当中。</li>
+<li>命令&gt;&gt;文件1 2&gt;&gt;文件2：把正确的输出追加到文件1中，把错误的输出追加到文件2中。</li>
+</ul>
+</li>
+</ul>
+<p>输入重定向</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# wc [选项] [文件名]</span><br><span class="line">选项：</span><br><span class="line">  -c    统计字节数</span><br><span class="line">  -w    统计单词数</span><br><span class="line">  -l    统计行数</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="多命令执行顺序"><a href="#多命令执行顺序" class="headerlink" title="多命令执行顺序"></a>多命令执行顺序</h3><table>
+<thead>
+<tr>
+<th>多命令执行符</th>
+<th>格式</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>；</td>
+<td>命令1 ; 命令2</td>
+<td>多个命令顺序执行，命令之间没有任何逻辑联系</td>
+</tr>
+<tr>
+<td>&amp;&amp;</td>
+<td>命令1 &amp;&amp; 命令2</td>
+<td>1）当命令1正确执行($?&#x3D;0)，则命令2才会执行。2）当命令1执行不正确，则命令2不会执行。</td>
+</tr>
+<tr>
+<td>||</td>
+<td>命令1 || 命令2</td>
+<td>1）当命令1执行不正确，则命令2才会执行。2）当命令1正确执行，则命令2不会执行。</td>
+</tr>
+</tbody></table>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# ls &amp;&amp; echo yes || echo no</span><br><span class="line">yes</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="管道符"><a href="#管道符" class="headerlink" title="管道符"></a>管道符</h3><p>a）行提取命令grep</p>
+<p>b）</p>
+]]></content>
+      <categories>
+        <category>Shell</category>
+      </categories>
+  </entry>
+  <entry>
     <title>vim编辑器</title>
     <url>/2025/02/25/vim%E7%BC%96%E8%BE%91%E5%99%A8/</url>
     <content><![CDATA[<h1 id="vim编辑器"><a href="#vim编辑器" class="headerlink" title="vim编辑器"></a>vim编辑器</h1><p>vim是一个全屏幕纯文本编辑器，是vi编辑器的增强版。</p>
@@ -1427,713 +1427,6 @@
 <h3 id="4）多文件打开"><a href="#4）多文件打开" class="headerlink" title="4）多文件打开"></a>4）多文件打开</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># vim上下分屏同时打开两个文件</span><br><span class="line">vim -o 文件1 文件2</span><br><span class="line"></span><br><span class="line"># vim左右分屏同时打开两个文件</span><br><span class="line">vim -O 文件1 文件2</span><br></pre></td></tr></table></figure>
 
 <p>这样可以同时打开两个文件，方便操作。可以通过先按”ctrl+w”，再按方向键的方式在两个文件之间切换。</p>
-]]></content>
-      <categories>
-        <category>Linux</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>软件包安装</title>
-    <url>/2025/02/25/%E8%BD%AF%E4%BB%B6%E5%8C%85%E5%AE%89%E8%A3%85/</url>
-    <content><![CDATA[<h1 id="软件包安装"><a href="#软件包安装" class="headerlink" title="软件包安装"></a>软件包安装</h1><h2 id="1-软件包分类"><a href="#1-软件包分类" class="headerlink" title="1. 软件包分类"></a>1. 软件包分类</h2><ul>
-<li>源码包</li>
-<li>二进制包</li>
-</ul>
-<h2 id="2-源码包"><a href="#2-源码包" class="headerlink" title="2. 源码包"></a>2. 源码包</h2><h3 id="1）源码包优点"><a href="#1）源码包优点" class="headerlink" title="1）源码包优点"></a>1）源码包优点</h3><ul>
-<li>开源，如果有足够的能力，可以修改源码包。</li>
-<li>可以自由选择所需的功能</li>
-<li>软件是编译安装，所以更加适合自己的系统，更加稳定也效率更高</li>
-<li>卸载方便</li>
-</ul>
-<h3 id="2）源码包缺点"><a href="#2）源码包缺点" class="headerlink" title="2）源码包缺点"></a>2）源码包缺点</h3><ul>
-<li>安装过程步骤较多，尤其安装较大的软件集合时(如LAMP环境搭建)，容易出现拼写错误</li>
-<li>编译过程时间较长，安装比二进制安装时间长</li>
-<li>因为是编译安装，安装过程中一旦报错新手很难解决</li>
-</ul>
-<h2 id="3-二进制包"><a href="#3-二进制包" class="headerlink" title="3. 二进制包"></a>3. 二进制包</h2><p>Linux系列：Debian和RedHat。</p>
-<h3 id="1）二进制包分类"><a href="#1）二进制包分类" class="headerlink" title="1）二进制包分类"></a>1）二进制包分类</h3><p>a）DPKG包</p>
-<p>是由Debian Linux所开发出来的包管理机制，通过DPKG包，Debian Linux就可以进行软件包管理。主要应用在Debian和Ubuntu中。</p>
-<p>b）RPM包</p>
-<p>是由Red Hat公司所开发的包管理系统。功能强大，安装、升级、查询和卸载都非常简单和方便。目前很多Linux都在使用这种包管理方式，包括Fedora、CentOS、SuSE等。</p>
-<h3 id="2）RPM包特点"><a href="#2）RPM包特点" class="headerlink" title="2）RPM包特点"></a>2）RPM包特点</h3><p>RPM包优点：</p>
-<ul>
-<li>包管理系统简单，只通过几个命令就可以实现包的安装、升级、查询和卸载</li>
-<li>安装速度比源码包安装快的多</li>
-</ul>
-<p>RPM包缺点：</p>
-<ul>
-<li>经过编译，不再可以看到源代码</li>
-<li>功能选择不如源码包灵活</li>
-<li>依赖性。有时我们会发现需要安装软件包a时需要先安装b和c，而安装b时需要安装d和e。这时需要先安装d和e，再安装b和c，最后才能安装a包。</li>
-</ul>
-<h3 id="3）RPM包依赖"><a href="#3）RPM包依赖" class="headerlink" title="3）RPM包依赖"></a>3）RPM包依赖</h3><p>a）树形依赖</p>
-<p>a——&gt;b——&gt;c</p>
-<p>b）环形依赖</p>
-<p>a——&gt;b——&gt;c——&gt;a</p>
-<p>c）模块依赖</p>
-<p>什么是模块依赖？例如：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -ivh mysql-connector-odbc-5.2.5-7.el7.x86_64.rpm</span><br><span class="line">错误：依赖检测失败：</span><br><span class="line">    libodbc.so.2()(64bit) 被 mysql-connector-odbc-5.2.5-7.el7.x86_64 需要</span><br><span class="line">    libodbcinst.so.2()(64bit) 被 mysql-connector-odbc-5.2.5-7.el7.x86_64 需要</span><br></pre></td></tr></table></figure>
-
-<p>发现报错，需要安装”libodbc.so.2”函数库文件，这时会发现在光盘中根本找不到这个文件，那是因为函数库没有单独成包，是包含在某一个软件包中的，而如果知道在哪个软件包中，需要查询网站<a href="http://www.rpmfind.net./">www.rpmfind.net。</a></p>
-<h3 id="4）RPM包安装方法"><a href="#4）RPM包安装方法" class="headerlink" title="4）RPM包安装方法"></a>4）RPM包安装方法</h3><ul>
-<li>手工安装</li>
-<li>yum在线安装</li>
-</ul>
-<h2 id="4-软件包选择建议"><a href="#4-软件包选择建议" class="headerlink" title="4. 软件包选择建议"></a>4. 软件包选择建议</h2><ul>
-<li>源码包：如果软件包是给大量客户端提供访问，建议使用源码包安装，源码包效率更高(LAMP)。</li>
-<li>RPM包：如果软件包是给Linux底层使用，或只给少量客户访问，建议使用RPM包安装，因为RPM包简单。</li>
-</ul>
-<h2 id="5-RPM手工安装"><a href="#5-RPM手工安装" class="headerlink" title="5. RPM手工安装"></a>5. RPM手工安装</h2><p>rpm数据库路径：&#x2F;var&#x2F;lib&#x2F;rpm&#x2F;</p>
-<h3 id="1）RPM包命名规则"><a href="#1）RPM包命名规则" class="headerlink" title="1）RPM包命名规则"></a>1）RPM包命名规则</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">httpd-2.2.15-15.el6.centos.1.i686.rpm</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>httpd：软件包名</li>
-<li>2.2.15：软件版本</li>
-<li>15：软件发布的次数</li>
-<li>el6：软件发行商。el6是RedHat公司发布，适合RHEL6.x(Red Hat Enterprise Linux)和CentOS6.x下使用</li>
-<li>i686：适合的硬件平台。RPM包可以在不同的硬件平台安装，选择适合不同CPU的软件版本，可以最大化的发挥CPU性能，所以出现了所谓的i386（386以上计算机都可以安装）、i586（586以上的计算机都可以安装）、i686（奔腾II以上计算机都可以安装，目前所有的CPU都是奔腾II以上，所以这个软件版本居多）、x86_64（64位CPU可以安装）和noarch（没有硬件限制）等文件名了。</li>
-<li>rpm：rpm包的扩展名，我们说过Linux下文件不是靠扩展名区分文件类型，也就是Linux中扩展名没有任何意义。可是这里怎么又出现了扩展名呢？如果RPM包不用“rpm”作为扩展名，系统可以正确识别没有问题，可是管理员很难识别这是个什么样的软件。</li>
-</ul>
-<h3 id="2）RPM包手工命令安装"><a href="#2）RPM包手工命令安装" class="headerlink" title="2）RPM包手工命令安装"></a>2）RPM包手工命令安装</h3><p>a）默认安装位置</p>
-<table>
-<thead>
-<tr>
-<th>路径</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>&#x2F;etc&#x2F;</td>
-<td>配置文件安装目录</td>
-</tr>
-<tr>
-<td>&#x2F;usr&#x2F;bin&#x2F;</td>
-<td>可执行的命令安装目录</td>
-</tr>
-<tr>
-<td>&#x2F;usr&#x2F;lib&#x2F;</td>
-<td>程序所使用的函数库保存位置</td>
-</tr>
-<tr>
-<td>&#x2F;usr&#x2F;share&#x2F;doc&#x2F;</td>
-<td>基本的软件使用手册保存位置</td>
-</tr>
-<tr>
-<td>&#x2F;usr&#x2F;share&#x2F;man&#x2F;</td>
-<td>帮助文件保存位置</td>
-</tr>
-</tbody></table>
-<p>b）安装命令</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -ivh 包全名</span><br><span class="line">选项：</span><br><span class="line">  -i    install安装(install)</span><br><span class="line">  -v    显示更详细的信息(verbose)</span><br><span class="line">  -h    打印#显示安装进度(hash)</span><br></pre></td></tr></table></figure>
-
-<p>其他选项：</p>
-<ul>
-<li>–nodeps：不检测依赖性安装。安装软件时会检测依赖性，确定所需的底层软件是否安装。如果没有安装则会报错。如果我不管依赖性，想强行安装，可以使用这个选项。这样不检测依赖性安装的软件是不能使用的，所以不建议这样做。</li>
-<li>–replacefiles：替换文件安装。如果安装软件包，可是包中部分文件已经存在，那么正常安装时，会报错”某个文件已经存在”从而导致软件无法安装，使用这个选项可以忽视这个报错，而覆盖安装。</li>
-<li>–replacepkgs：替换软件包安装。如果软件包已经安装，此选项可以把软件包重复安装一遍。</li>
-<li>–force：强制安装。不管是否已经安装，都重新安装。就是–replacefiles和–replacepkgs的综合。</li>
-<li>–test：测试安装。不会实际安装，只是检测一下依赖性。</li>
-<li>–prefix：指定安装路径。为安装软件指定安装路径，而不使用默认安装路径。如果指定了安装路径，软件没有安装到系统默认路径中的话，系统会找不到这些安装的软件，需要进行手工配置才能被系统识别。所以rpm包我们一般都采用默认路径安装：1）默认安装位置是系统的习惯位置。2）RPM包管理系统是有卸载命令的(数据库记录安装位置)</li>
-</ul>
-<p>c）服务启动</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># service启动</span><br><span class="line">service 服务名 start|stop|restart|status</span><br><span class="line">参数：</span><br><span class="line">  start:    启动服务</span><br><span class="line">  stop:     停止服务</span><br><span class="line">  restart:  重启服务</span><br><span class="line">  status:   查看服务状态</span><br><span class="line">  </span><br><span class="line">  # 标准启动</span><br><span class="line">  /etc/init.d/服务名 start|stop|restart|status</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="3）RPM包升级"><a href="#3）RPM包升级" class="headerlink" title="3）RPM包升级"></a>3）RPM包升级</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -Uvh 包全名</span><br><span class="line">选项：</span><br><span class="line">  -U      升级安装，如果没有安装过，系统直接安装。如果安装过的版本较旧，则升级到新版本(upgrade)</span><br><span class="line"> </span><br><span class="line">rpm -Fvh 包全名</span><br><span class="line">选项：</span><br><span class="line">  -F      升级安装，如果没有安装过，则不会安装，必须安装有较旧版本，才能升级(freshen)</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="4）RPM包卸载"><a href="#4）RPM包卸载" class="headerlink" title="4）RPM包卸载"></a>4）RPM包卸载</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -e 包名</span><br><span class="line">选项：</span><br><span class="line">  --nodeps      不检查依赖性</span><br><span class="line">  -e            卸载</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="5）RPM包查询"><a href="#5）RPM包查询" class="headerlink" title="5）RPM包查询"></a>5）RPM包查询</h3><p>a）查询软件包是否安装</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -q 包名</span><br><span class="line">选项：</span><br><span class="line">  -q：查询(query)</span><br></pre></td></tr></table></figure>
-
-
-
-<p>b）查询系统中的所有安装软件包</p>
-<p>可以查询Linux系统中所有已经安装的软件包。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -qa</span><br><span class="line">选项：</span><br><span class="line">  -a：所有(all)</span><br></pre></td></tr></table></figure>
-
-<p>可以用管道符来查看所需内容</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -qa | grep 包名</span><br></pre></td></tr></table></figure>
-
-
-
-<p>c）查询软件包的详细信息</p>
-<p>可以查询已经安装的某个软件包的详细信息</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -qi 包名</span><br><span class="line">选项：</span><br><span class="line">  -i：查询软件信息(information)</span><br></pre></td></tr></table></figure>
-
-<p>也可以查询还没有安装的软件包的详细信息</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -qip 包全名</span><br><span class="line">选项：</span><br><span class="line">  -p：查询没有安装的软件包(package)</span><br></pre></td></tr></table></figure>
-
-
-
-<p>d）查询软件包中的文件列表</p>
-<p>可以查询已经安装的软件包中的文件列表和安装的完整目录</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -ql 包名</span><br><span class="line">选项：</span><br><span class="line">  -l：列出软件包中所有的文件列表和软件所安装的目录(list)</span><br></pre></td></tr></table></figure>
-
-<p>查询未安装的软件包中的文件列表和打算安装的位置</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -qlp 包全名</span><br><span class="line">选项：</span><br><span class="line">  -p：查询没有安装的软件包信息(package)</span><br></pre></td></tr></table></figure>
-
-
-
-<p>e）查询系统文件属于哪个RPM包</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -qf 系统文件名</span><br><span class="line">选项：</span><br><span class="line">  -f：查询系统文件属于哪个软件包(file)</span><br></pre></td></tr></table></figure>
-
-
-
-<p>f）查询软件包所依赖的软件包</p>
-<p>查询系统中和已经安装的软件包有依赖关系的软件包</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -qR 包名</span><br><span class="line">选项：</span><br><span class="line">  -R：查询软件包的依赖性(requires)</span><br></pre></td></tr></table></figure>
-
-<p>查询未安装的软件包的依赖包</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -qRp 包全名</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="6）验证"><a href="#6）验证" class="headerlink" title="6）验证"></a>6）验证</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">校验本机已经安装的所有软件包</span></span><br><span class="line">rpm -Va</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">校验指定RPM包中的文件(verify)</span></span><br><span class="line">rpm -V 已安装的名包</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">校验某个系统文件是否被修改</span></span><br><span class="line">rpm -Vf 系统文件名</span><br></pre></td></tr></table></figure>
-
-<p>示例：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -V httpd</span><br><span class="line">S.5....T.    c             /etc/httpd/conf/httpd.conf</span><br><span class="line">验证内容    文件类型          文件名</span><br></pre></td></tr></table></figure>
-
-<p>验证内容详情：</p>
-<ul>
-<li>S：文件大小是否改变</li>
-<li>M：文件的类型或文件的权限(rwx)是否被改变</li>
-<li>5：文件MD5校验和是否改变(可以看成文件内容是否改变)</li>
-<li>D：设备的主从代码是否改变</li>
-<li>L：文件路径是否改变</li>
-<li>U：文件的属主(所有者)是否改变</li>
-<li>G：文件的属组是否改变</li>
-<li>T：文件的修改时间是否改变</li>
-</ul>
-<p>文件类型：</p>
-<ul>
-<li>c：配置文件(config file)</li>
-<li>d：普通文档(documention)</li>
-<li>g：“鬼”文件(ghost file)，很少见，就是该文件不应该被这个RPM包包含 </li>
-<li>l：授权文件(license file)</li>
-<li>r：描述文件(readme)</li>
-</ul>
-<h3 id="7）数字证书"><a href="#7）数字证书" class="headerlink" title="7）数字证书"></a>7）数字证书</h3><p>前面的校验方法只能对已经安装的RPM包中的文件进行校验，但是如果RPM包本身就被动过手脚，那么校验就不能解决问题了，我们就必须使用数字证书验证了。</p>
-<p>数字证书特点：</p>
-<ul>
-<li>首先必须找到原厂的公钥文件，然后进行安装</li>
-<li>再安装RPM包时会提取RPM包中的证书信息，然后和本机安装的原厂证书进行验证</li>
-<li>如果验证通过，则允许安装；如果验证不通过，则不允许安装并警告</li>
-</ul>
-<p> a）数字证书导入</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm --import 数字证书文件</span><br><span class="line">选项：</span><br><span class="line">  --import：导入数字证书</span><br></pre></td></tr></table></figure>
-
-
-
-<p>b）查询系统中安装好的数字证书</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -qa | grep gpg-pubkey</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="8）RPM包中文件的提取"><a href="#8）RPM包中文件的提取" class="headerlink" title="8）RPM包中文件的提取"></a>8）RPM包中文件的提取</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm2cpio 包全名 | cpio -idv . 文件的绝对路径</span><br></pre></td></tr></table></figure>
-
-<p>rpm2cpio：将rpm包转换为cpio格式的命令。</p>
-<p>cpio：是一个标准工具，它用于创建软件档案文件和从档案文件中提取文件。</p>
-<h2 id="6-RPM包在线安装-yum"><a href="#6-RPM包在线安装-yum" class="headerlink" title="6. RPM包在线安装(yum)"></a>6. RPM包在线安装(yum)</h2><h3 id="1）yum源文件解析"><a href="#1）yum源文件解析" class="headerlink" title="1）yum源文件解析"></a>1）yum源文件解析</h3><p>yum源配置文件保存在&#x2F;etc&#x2F;yum.repos.d&#x2F;目录中，文件的扩展名一定是”*.repo”。也就是说，yum源配置文件只要扩展名是”*.repo”就会生效。</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">ls /etc/yum.repos.d/</span><br><span class="line">CentOS-Base.repo    CentOS-Debuginfo.repo    CentOS-fasttrack.repo    CentOS-Media.repo    CentOS-Vault.repo</span><br></pre></td></tr></table></figure>
-
-<p>这个目录中有5个yum源配置文件，默认情况下CentOS-Base.repo文件生效。</p>
-<p>CentOS-Base.repo中有5个yum源容器，以base容器解释其内容详情：</p>
-<ul>
-<li>[base]：容器名称，一定要放在[]中。</li>
-<li>name：容器说明，可以自己随便写。</li>
-<li>mirrorlist：镜像站点，这个可以注释掉。</li>
-<li>baseurl：yum源服务器的地址。默认是CentOS官方的yum源服务器，是可以使用的。如果觉得慢，可以改成国内yum源地址。</li>
-<li>enabled：此容器是否生效，如果不写或写成enabled&#x3D;1则表示此容器生效，写成enabled&#x3D;0则表示此容器不生效。</li>
-<li>gpgcheck：如果为1则表示RPM的数字证书生效，如果为0则表示RPM的数字证书不生效。</li>
-<li>gpgkey：数字证书的公钥文件保存位置，不用修改。</li>
-</ul>
-<h3 id="2）搭建本地光盘yum源"><a href="#2）搭建本地光盘yum源" class="headerlink" title="2）搭建本地光盘yum源"></a>2）搭建本地光盘yum源</h3><p>a）放入CentOS安装光盘，并挂载光盘到指定位置。</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">创建cdrom目录，作为光盘的挂载点</span></span><br><span class="line">mkdir /mnt/cdrom</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">挂载光盘到/mnt/cdrom</span></span><br><span class="line">mount /dev/cdrom /mnt/cdrom/</span><br></pre></td></tr></table></figure>
-
-<p>b）修改其他几个yum源配置文件的扩展名，让它们失效，因为只有扩展名是”*.repo”的文件才能作为yum源配置文件。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">cd /etc/yum.repo.d</span><br><span class="line">mv CentOS-Base.repo CentOS-Base.repo.bak</span><br></pre></td></tr></table></figure>
-
-<p>c）修改光盘yum源配置文件CentOS-Media.repo</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">vim CentOS-Media.repo</span><br><span class="line">[c6-media]</span><br><span class="line">name=CentOS-$releasever - Media</span><br><span class="line">baseurl=file:///mnt/cdrom/</span><br><span class="line">gpgcheck=1</span><br><span class="line">enabled=1   # 让配置生效</span><br><span class="line">gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-6</span><br></pre></td></tr></table></figure>
-
-<p>d）查看是否生效</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查询yum源所有可安装的软件包列表</span></span><br><span class="line">yum list</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="3）yum命令"><a href="#3）yum命令" class="headerlink" title="3）yum命令"></a>3）yum命令</h3><p>a）查询</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查询yum所有安装包</span></span><br><span class="line">yum list</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查询yum源服务器中是否包含某个软件包</span></span><br><span class="line">yum list 包名</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">搜索yum源服务器上所有和关键字相关的软件包</span></span><br><span class="line">yum search 关键字</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查询指定软件包的信息</span></span><br><span class="line">yum info samba</span><br></pre></td></tr></table></figure>
-
-<p>yum search搜索可以用于确定某个软件在哪个相关包当中。</p>
-<p>b）安装</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">yum -y install 包名</span><br><span class="line">选项：</span><br><span class="line">  install：    安装</span><br><span class="line">  -y：         自动回答yes。如果不加-y，那么每个安装的软件都需要手工回答yes</span><br></pre></td></tr></table></figure>
-
-
-
-<p>c）升级</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">yum -y update 包名</span><br><span class="line">选项：</span><br><span class="line">  update:    升级</span><br><span class="line">  -y：       自动回答yes</span><br><span class="line"><span class="meta prompt_">  </span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">升级本机所有软件包（包括内核，不常用）</span></span><br><span class="line">yum -y update</span><br></pre></td></tr></table></figure>
-
-
-
-<p>d）卸载</p>
-<p>除非你确定卸载的软件的依赖包不会对系统产生影响，否则不要执行yum的卸载，因为很有可能在卸载软件包的同时卸载的依赖包也是重要的系统文件，这就可能导致系统崩溃。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">yum remove 包名</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="4）yum组管理命令"><a href="#4）yum组管理命令" class="headerlink" title="4）yum组管理命令"></a>4）yum组管理命令</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">列出所有可用的软件组列表</span></span><br><span class="line">yum grouplist</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">列出软件组中包含的软件</span></span><br><span class="line">yum groupinfo 软件组名</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">安装指定软件组</span></span><br><span class="line">yum groupinstall 软件组名</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">卸载指定软件组</span></span><br><span class="line">yum groupremove 软件组名</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="7-源码包安装"><a href="#7-源码包安装" class="headerlink" title="7.源码包安装"></a>7.源码包安装</h2><h3 id="1）注意事项"><a href="#1）注意事项" class="headerlink" title="1）注意事项"></a>1）注意事项</h3><p>a）源码包是从哪里来的？</p>
-<p>源码包是通过官方网站下载的，如果需要使用，是需要单独下载的。</p>
-<p>b）是否可以在系统中既安装rpm包的Apache，又安装源码包的Apache？</p>
-<p>可以，因为两种安装方法安装的Apache，安装位置是不一样的：</p>
-<ul>
-<li>源码包必须指定安装位置(源码包没有安装数据库，没有删除命令)</li>
-<li>RPM包不建议指定安装位置，建议安装在默认位置(RPM包安装的服务有标准卸载命令，不怕文件到处安装)</li>
-</ul>
-<h3 id="2）安装过程"><a href="#2）安装过程" class="headerlink" title="2）安装过程"></a>2）安装过程</h3><p>a）下载软件包</p>
-<p>b）解压缩</p>
-<p>c）进入解压目录</p>
-<p>d）.&#x2F;configure（编译前准备）</p>
-<p>这一步主要有三个作用：</p>
-<ul>
-<li>在安装之前需要检测系统环境是否符合安装要求。</li>
-<li>定义需要的功能选项。”.&#x2F;configure”支持的功能选项较多，可以执行“.&#x2F;configure –help”命令查询其支持的功能，一般都会通过”.&#x2F;configure –prefix&#x3D;安装路径”来指定安装路径。</li>
-<li>把系统环境的检测结果和定义好的功能选项写入Makefile文件，后续的编译和安装需要依赖这个文件的内容。</li>
-</ul>
-<p>需要注意的是，configure不是系统命令，而是源码包软件自带的一个脚本程序，所以必须采用“.&#x2F;configure”方式执行。</p>
-<p>e）make（编译）</p>
-<p>make会调用gcc编译器，并读取Makefile文件中的信息进行系统软件编译。编译的目的就是把源码程序转变为能被Linux识别的可执行文件，这些可执行文件保存在当前目录下。编译过程较为耗时，需要有足够的耐心。</p>
-<p>f）make clean（清空编译内容，非必需步骤）</p>
-<p>如果在”.&#x2F;configure”或“make”编译中报错，那么我们在重新执行命令前一定要记得执行make clean命令，它会清空Makefile文件或编译产生的“.o”文件。</p>
-<p>g）make install（编译安装）</p>
-<p>这才是真正的安装过程，一般会写清楚程序的安装位置。如果忘记指定安装目录，则可以把这个命令的执行过程保存下来，以备将来删除使用。</p>
-<h3 id="3）删除"><a href="#3）删除" class="headerlink" title="3）删除"></a>3）删除</h3><p>源码包没有删除命令，如果需要删除，直接删除安装目录即可。</p>
-<h3 id="4）打入补丁"><a href="#4）打入补丁" class="headerlink" title="4）打入补丁"></a>4）打入补丁</h3><p>a）补丁的生成</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 比较old和new文件的不同</span><br><span class="line">diff 选项 old new</span><br><span class="line">选项：</span><br><span class="line">  -a    将任何文档当做文本文档处理</span><br><span class="line">  -b    忽略空格造成的不同</span><br><span class="line">  -B    忽略空白行造成的不同</span><br><span class="line">  -I    忽略大小写造成的不同</span><br><span class="line">  -N    当比较两个目录时，如果某个文件只在一个目录中，则另一个目录中视作空文件。</span><br><span class="line">  -r    当比较目录时，递归比较子目录</span><br><span class="line">  -u    使用统一的输出格式</span><br></pre></td></tr></table></figure>
-
-<p>比较两个文件的不同，并生成补丁文件”txt.patch”：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 比较两个文件的不同，同时生成txt.patch补丁文件</span><br><span class="line">diff -Naur /root/test/old.txt /root/test/new.txt &gt; txt.patch</span><br></pre></td></tr></table></figure>
-
-
-
-<p>b）打入补丁</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 按照补丁文件进行更新</span><br><span class="line">patch -pn &lt; 补丁文件</span><br><span class="line">选项：</span><br><span class="line">  -pn    n为数字。代表按照补丁文件中的路径，指定更新文件的位置。</span><br></pre></td></tr></table></figure>
-
-<p>“-pn”不好理解，补丁文件是要打入旧文件的，但是你当前所在的目录和补丁文件中的记录是不一定匹配的，所以就需要”-pn”来同步两个目录。</p>
-<p>比如我当前在“&#x2F;root&#x2F;test”目录下，补丁文件中记录的文件目录是为“&#x2F;root&#x2F;test&#x2F;old.txt”。这时如果写入“p1”，那么补丁文件就会打入”&#x2F;root&#x2F;test&#x2F;root&#x2F;test&#x2F;old.txt”。如果写入的是“p2”，那么补丁文件就会打入”&#x2F;root&#x2F;test&#x2F;test&#x2F;old.txt”。如果写入的是“p3”，那么补丁文件就会打入”&#x2F;root&#x2F;test&#x2F;old.txt”。即n表示删除补丁文件中记录的文件目录的路径。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">patch -p3 &lt; txt.patch</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="8-脚本安装程序"><a href="#8-脚本安装程序" class="headerlink" title="8. 脚本安装程序"></a>8. 脚本安装程序</h2><p>以Webmin安装为例。</p>
-<p>a）下载webmin软件，地址：<a href="http://sourceforge.net/projects/webadmin/files/webmin/">http://sourceforge.net/projects/webadmin/files/webmin/</a></p>
-<p>b）解压软件</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">tar -zxvf webmin-1.610.tar.gz</span><br></pre></td></tr></table></figure>
-
-<p>c）进入解压目录</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">cd webmin-1.610</span><br></pre></td></tr></table></figure>
-
-<p>d）执行安装程序setup.sh，并指定功能选项。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">./setup.sh</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>Linux</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>用户管理</title>
-    <url>/2025/02/25/%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86/</url>
-    <content><![CDATA[<h1 id="用户管理"><a href="#用户管理" class="headerlink" title="用户管理"></a>用户管理</h1><h2 id="1-用户相关文件"><a href="#1-用户相关文件" class="headerlink" title="1. 用户相关文件"></a>1. 用户相关文件</h2><h3 id="1）用户信息文件"><a href="#1）用户信息文件" class="headerlink" title="1）用户信息文件"></a>1）用户信息文件</h3><p>&#x2F;etc&#x2F;passwd</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">root:x:0:0:root:/root:/bin/bash</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p>第一列：用户名</p>
-</li>
-<li><p>第二列：密码位</p>
-<p>x为密码标志位，代表用户有密码，用户密码放置在&#x2F;etc&#x2F;shadow文件中。</p>
-</li>
-<li><p>第三列：用户ID</p>
-<ul>
-<li>0：超级用户UID，如果用户UID为0，代表这个账号是管理员账号。那Linux中如何把普通用户升级为管理员呢？就是把其他用户的UID修改为0就可以了。不过不建议建立多个管理员账号。</li>
-<li>1-499：系统用户(伪用户)UID，这些UID账号是系统保留给系统用户的UID，也就是说UID是1-499范围内的用户是不能登录系统的，而是用来运行系统或服务的，其中1-99是系统保留的账号，系统自动创建。100-499是预留给用户创建系统账号的。</li>
-<li>500-65535：普通用户UID。建立的普通用户UID从500开始，最大到65535。这些用户足够使用了，但是如果不够也不用害怕，2.6.x内核以后的Linux系统用户UID已经可以支持2的32次方了。</li>
-</ul>
-</li>
-<li><p>第四列：组ID（GID）</p>
-<p>添加用户时，如果不指定用户所属的初始组，那么会建立和用户名相同的组。</p>
-</li>
-<li><p>第五列：用户说明</p>
-</li>
-<li><p>第六列：用户家目录（~）</p>
-</li>
-<li><p>第七列：登录shell（标准是&#x2F;bin&#x2F;bash）</p>
-</li>
-</ul>
-<h3 id="2）影子文件"><a href="#2）影子文件" class="headerlink" title="2）影子文件"></a>2）影子文件</h3><p>&#x2F;etc&#x2F;shadow</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">root:$6$jvGI3Z2PqL/TT4lT$q1lVTdba3dRsmWsEJVHzTqAHOSlb3qvM/hL7wKTQCo5148xfMiT0mnq1zQ7n7wCZu/QEdtP/57BVko4X6U4in0:18929:0:99999:7:::</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p>第一列：用户名</p>
-</li>
-<li><p>第二列：加密密码</p>
-<p>我们也可以在密码前人为的加入“!”或“*”改变加密值让密码暂时失效，使这个用户无法登录，达到暂时禁止用户登录的效果。</p>
-<p>所有伪用户的密码都是”!!”或“*”，代表没有密码是不能登录的。当然新创建的用户如果不设定密码，它的密码项也是”!!”，代表这个用户没有密码，不能登录。</p>
-</li>
-<li><p>第三列：密码最近更改时间（day），1970年1月1日作为标准时间</p>
-<p>时间戳转日期</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">date -d &quot;1970-01-01 18929 days&quot;</span><br><span class="line">2021年 10月 29日 星期五 00:00:00 CST</span><br></pre></td></tr></table></figure>
-
-<p>日期转时间戳</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">echo $(($(date --date=&quot;2021/10/29&quot; +%s)/86400+1))</span><br><span class="line">18929</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>第四列：两次密码的修改间隔时间（和第3个字段相比）</p>
-</li>
-<li><p>第五列：密码有效期(和第3个字段相比)</p>
-</li>
-<li><p>第六列：密码修改到期前警告天数(和第5个字段相比)</p>
-</li>
-<li><p>第七列：密码过期后的宽限天数(和第5个字段相比)</p>
-</li>
-<li><p>第八列：密码失效时间</p>
-<p>这里同样要写时间戳，也就是用1970年1月1日进行时间换算，如果超过了失效时间，就算密码没有过期，用户也就失效无法使用了。</p>
-</li>
-<li><p>第九列：保留</p>
-</li>
-</ul>
-<h3 id="3）组信息文件"><a href="#3）组信息文件" class="headerlink" title="3）组信息文件"></a>3）组信息文件</h3><p>&#x2F;etc&#x2F;group</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">root:x:0:</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>第一列：组名</li>
-<li>第二列：组密码位</li>
-<li>第三列：GID</li>
-<li>第四列：此组中支持的其他用户，附加组是此组的用户<ul>
-<li>初始组：每个用户初始组只能有一个，一般都是和用户名相同的组作为初始组。</li>
-<li>附加组：每个用户可以属于多个附加组。要把用户加入组，都是加入附加组。</li>
-</ul>
-</li>
-</ul>
-<h3 id="4）组密码文件-不建议使用"><a href="#4）组密码文件-不建议使用" class="headerlink" title="4）组密码文件(不建议使用)"></a>4）组密码文件(不建议使用)</h3><p>&#x2F;etc&#x2F;gshadow</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">root:*::</span><br></pre></td></tr></table></figure>
-
-<p>如果给用户组设定了组管理员，并给该用户组设定了组密码，组密码就保存在这个文件当中。组管理员就可以利用这个密码管理这个用户组了。</p>
-<h3 id="5）用户家目录"><a href="#5）用户家目录" class="headerlink" title="5）用户家目录"></a>5）用户家目录</h3><h3 id="6）用户邮箱目录"><a href="#6）用户邮箱目录" class="headerlink" title="6）用户邮箱目录"></a>6）用户邮箱目录</h3><p>这个邮箱在&#x2F;var&#x2F;spool&#x2F;mail目录当中，例如lamp用户的邮箱就是&#x2F;var&#x2F;spool&#x2F;mail&#x2F;lamp文件</p>
-<h3 id="7）用户模板目录"><a href="#7）用户模板目录" class="headerlink" title="7）用户模板目录"></a>7）用户模板目录</h3><p>&#x2F;etc&#x2F;skel&#x2F;</p>
-<p>用户家目录初始化时的模板目录。</p>
-<h2 id="2-用户管理命令"><a href="#2-用户管理命令" class="headerlink" title="2.用户管理命令"></a>2.用户管理命令</h2><h3 id="1）添加用户"><a href="#1）添加用户" class="headerlink" title="1）添加用户"></a>1）添加用户</h3><p>a）手工删除用户</p>
-<p>手工删除用户试验：手工删除，如果可以正常建立用户，证明用户删除干净。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 创建用户，就是写入这6个文件</span><br><span class="line">/etc/passwd</span><br><span class="line">/etc/shadow</span><br><span class="line">/etc/group</span><br><span class="line">/etc/gshadow</span><br><span class="line">/home/user1</span><br><span class="line">/var/spool/mail/user1</span><br></pre></td></tr></table></figure>
-
-
-
-<p>b）useradd命令</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">useradd 选项 用户名</span><br><span class="line">选项：</span><br><span class="line">  -u：UID   指定UID</span><br><span class="line">  -g：组名   指定初始组，不要手工指定</span><br><span class="line">  -G：组名   指定附加组，把用户加入组，使用附加组</span><br><span class="line">  -c：说明   添加说明</span><br><span class="line">  -d：目录   手工指定家目录，目录不需要事先建立</span><br><span class="line">  -s：shell  /bin/bash</span><br><span class="line">  -m：创建家目录</span><br></pre></td></tr></table></figure>
-
-
-
-<p>c）useradd默认值</p>
-<p>useradd添加用户时参考的默认值文件主要有两个：</p>
-<ul>
-<li><p>&#x2F;etc&#x2F;default&#x2F;useradd</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># useradd defaults file</span><br><span class="line">GROUP=100</span><br><span class="line">HOME=/home</span><br><span class="line">INACTIVE=-1</span><br><span class="line">EXPIRE=</span><br><span class="line">SHELL=/bin/bash</span><br><span class="line">SKEL=/etc/skel</span><br><span class="line">CREATE_MAIL_SPOOL=yes</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p>GROUP&#x3D;100</p>
-<p>这个选项是建立用户的默认组，也就是说添加每个用户时，用户的初始组就是GID为100的这个用户组。</p>
-</li>
-<li><p>HOME&#x3D;&#x2F;home</p>
-<p>这个选项是用户的家目录的默认位置，所以所有的新建用户的家目录默认都在&#x2F;home&#x2F;下。</p>
-</li>
-<li><p>INACTIVE&#x3D;-1</p>
-<p>这个选项就是密码过期后的宽限天数，也就是&#x2F;etc&#x2F;shadow文件的第七个字段。如果是天数，比如10代表密码过期后10天后失效；如果是0，代表密码过期后立即失效；如果是-1，则代表密码永远不会失效。这是默认值是-1，所以所有新建立的用户密码都不会失效。</p>
-</li>
-<li><p>EXPIRE&#x3D;</p>
-<p>这个选项是密码失效时间，也就是&#x2F;etc&#x2F;shadow文件的第八个字段，也就是说用户到达这个日期后就会直接失效。当然这里也是使用时间戳来表示日期的。默认是空，所以所有新建用户没有失效时间。永久有效。</p>
-</li>
-<li><p>SHELL&#x3D;&#x2F;bin&#x2F;bash</p>
-<p>这个选项是用户的默认shell。&#x2F;bin&#x2F;bash是Linux的标志shell，所以所有新建立的用户默认都具备shell赋予的权限。</p>
-</li>
-<li><p>SKEL&#x3D;&#x2F;etc&#x2F;skel</p>
-<p>这个选项就是定义用户的模板目录的位置，&#x2F;etc&#x2F;skel&#x2F;目录中的文件都会复制到新建用户的家目录当中。</p>
-</li>
-<li><p>CREATE_MAIL_SPOOL&#x3D;yes</p>
-<p>这个选项定义是否给新建用户建立邮箱，默认是创建，也就是说所有的新建用户系统都会新建一个邮箱，放在&#x2F;var&#x2F;spool&#x2F;mail&#x2F;下，和用户名相同。</p>
-</li>
-</ul>
-</li>
-<li><p>&#x2F;etc&#x2F;login.defs</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">MAIL_DIR        /var/spool/mail</span><br><span class="line"></span><br><span class="line">PASS_MAX_DAYS   99999</span><br><span class="line">PASS_MIN_DYAS   0</span><br><span class="line">PASS_MIN_LEN    5</span><br><span class="line">PASS_WARN_AGE   7</span><br><span class="line"></span><br><span class="line">UID_MIN         500</span><br><span class="line">UID_MAX         60000</span><br><span class="line"></span><br><span class="line">GID_MIN         500</span><br><span class="line">GID_MAX         60000</span><br><span class="line"></span><br><span class="line">CREATE_HOME     yes</span><br><span class="line"></span><br><span class="line">UMASK           077</span><br><span class="line"></span><br><span class="line">USERGROUPS_ENAB yes</span><br><span class="line"></span><br><span class="line">ENCRYPT_METHOD  SHA512</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p>MAIL_DIR          &#x2F;var&#x2F;spool&#x2F;mail</p>
-<p>这行指定了新建用户的默认邮箱位置。比如lamp用户的邮箱就是&#x2F;var&#x2F;spool&#x2F;mail&#x2F;lamp。</p>
-</li>
-<li><p>PASS_MAX_DAYS    99999</p>
-<p>这行指定的是密码的有效期，也就是&#x2F;etc&#x2F;shadow文件的第五个字段。代表多少天之后必须修改密码，默认值是99999</p>
-</li>
-<li><p>PASS_MIN_DAYS    0</p>
-<p>这行指定是两次密码的修改间隔时间，也就是&#x2F;etc&#x2F;shadow文件的第四个字段。代表第一次修改密码之后，几天后才能再次修改密码，默认值是0</p>
-</li>
-<li><p>PASS_MIN_LEN    5</p>
-<p>这行代表密码的最小长度，默认不小于5位，但是我们现在用户登录时验证已经被PAM模块取代，所以这个选项并不生效。</p>
-</li>
-<li><p>PASS_WARN_AGE    7</p>
-<p>这行代表密码修改到期前的警告天数。也就是&#x2F;etc&#x2F;shadow文件的第六个字段。代表密码到底有效期前多少天开始进行警告提醒，默认值是7天。</p>
-</li>
-<li><p>UID_MIN|UID_MAX</p>
-<p>这两行指定了UID的最小值和最大值之间的范围。</p>
-</li>
-<li><p>GID_MIN|GID_MAX</p>
-<p>这两行指定了GID的最小值和最大值之间的范围。</p>
-</li>
-<li><p>CREATE_HOME    yes</p>
-<p>这行指定建立用户时是否自动建立用户的家目录，默认是建立。</p>
-</li>
-<li><p>UMASK    077</p>
-<p>这行指定的是建立的用户家目录的默认权限，因为umask值是077，所以新建的用户家目录的权限是700。</p>
-</li>
-<li><p>USERGROUPS_ENAB    yes</p>
-<p>这行指定的是使用命令userdel删除用户时，是否删除用户的初始组，默认是删除。</p>
-</li>
-<li><p>ENCRYPT_METHOD    SHA512</p>
-<p>这行指定Linux用户的密码使用SHA512散列模式加密，这是新的密码加密模式，原先的Linux只能用DES或MD5方式加密。</p>
-</li>
-</ul>
-</li>
-</ul>
-<h3 id="2）设定密码"><a href="#2）设定密码" class="headerlink" title="2）设定密码"></a>2）设定密码</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">passwd [选项] 用户名</span><br><span class="line">选项：</span><br><span class="line">  -l:         暂时锁定用户。仅root用户可用（lock）</span><br><span class="line">  -u:         解锁用户。仅root用户可用（unlock）</span><br><span class="line">  --stdin:    可以将通过管道符输出的数据作为用户的密码。主要在批量添加用户时使用</span><br></pre></td></tr></table></figure>
-
-<p>示例：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 修改当前用户的密码</span><br><span class="line">passwd</span><br><span class="line"></span><br><span class="line"># 使用字符串作为密码</span><br><span class="line">echo &quot;123&quot; | passwd --stdin lamp</span><br><span class="line"></span><br><span class="line"># 把密码修改日期归零(shadow第3个字段，0代表1970年1月1日)。这样用户一登录就要修改密码。</span><br><span class="line">chage -d 0 lamp</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="3）用户信息修改"><a href="#3）用户信息修改" class="headerlink" title="3）用户信息修改"></a>3）用户信息修改</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">usermod [选项] 用户名</span><br><span class="line">选项：</span><br><span class="line">  -u UID:        修改用户的UID</span><br><span class="line">  -d 家目录：     修改用户的家目录。家目录必须写绝对路径</span><br><span class="line">  -c 用户说明:    修改用户的说明信息，就是/etc/passwd文件的第五个字段</span><br><span class="line">  -g 组名：       修改用户的初始组，就是/etc/passwd文件的第四个字段</span><br><span class="line">  -G 组名：       修改用户的附加组，其实就是把用户加入其他用户组</span><br><span class="line">  -s shell:      修改用户的登录Shell。默认是/bin/bash</span><br><span class="line">  -e 日期：       修改用户的失效日期，格式为&quot;YYYY-MM-DD&quot;。也就是/etc/shadow文件的第八个字段</span><br><span class="line">  -L:            临时锁定用户(Lock)</span><br><span class="line">  -U:            解锁用户(Unlock)</span><br></pre></td></tr></table></figure>
-
-<p>usermod也可以修改用户名，但不建议这么做，这样及其容易把管理员自己稿晕。建议删除旧用户，再建立新用户。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 修改用户名</span><br><span class="line">usermod -l 新名 旧名</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="4）删除用户"><a href="#4）删除用户" class="headerlink" title="4）删除用户"></a>4）删除用户</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">userdel [-r] 用户名</span><br><span class="line">选项：</span><br><span class="line">  -r:    在删除用户的同时删除用户的家目录</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="5）切换用户身份"><a href="#5）切换用户身份" class="headerlink" title="5）切换用户身份"></a>5）切换用户身份</h3><p>su命令可以切换成不同的用户身份。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">su [选项] 用户名</span><br><span class="line">选项：</span><br><span class="line">  -:          选项只使用“-”代表连带用户的环境变量一起切换</span><br><span class="line">  -c 命令:    仅执行一次命令，而不切换用户身份</span><br></pre></td></tr></table></figure>
-
-<p>“-”不能省略，它代表切换用户身份时，用户的环境变量也要切换成新用户的环境变量。</p>
-<h2 id="3-组管理命令"><a href="#3-组管理命令" class="headerlink" title="3. 组管理命令"></a>3. 组管理命令</h2><h3 id="1）添加用户组"><a href="#1）添加用户组" class="headerlink" title="1）添加用户组"></a>1）添加用户组</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">groupadd [选项] 组名</span><br><span class="line">选项：</span><br><span class="line">  -g GID:    指定组ID</span><br></pre></td></tr></table></figure>
-
-<p>示例：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 添加group1组</span><br><span class="line">groupadd group1</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="2）删除用户组"><a href="#2）删除用户组" class="headerlink" title="2）删除用户组"></a>2）删除用户组</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">groupdel 组名</span><br></pre></td></tr></table></figure>
-
-<p>不过要注意，要删除的组不能是其他用户的初始组，也就是说这个组中没有初始用户才可以删除。如果组中有附加用户，则删除组时不受影响。</p>
-<h3 id="3）把用户添加进组或从组中删除"><a href="#3）把用户添加进组或从组中删除" class="headerlink" title="3）把用户添加进组或从组中删除"></a>3）把用户添加进组或从组中删除</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">gpasswd [选项] 组名</span><br><span class="line">选项：</span><br><span class="line">  -a 用户名：    把用户加入组</span><br><span class="line">  -d 用户名：    把用户从组中删除</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 添加test组</span><br><span class="line">groupadd test</span><br><span class="line"></span><br><span class="line"># 把test1用户加入test组</span><br><span class="line">gpasswd -a test1 test</span><br><span class="line"></span><br><span class="line"># 把用户test1从test组中删除</span><br><span class="line">gpasswd -d test1 test</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="4）改变有效组"><a href="#4）改变有效组" class="headerlink" title="4）改变有效组"></a>4）改变有效组</h3><p>每个用户可以属于一个初始组（用户是这个组的初始用户），也可以属于多个附加组（用户是这个组的附加用户）。既然用户可以属于这么多用户组，那么用户在创建文件后，默认生效的组身份是哪个呢？当然是初始用户组的组身份。因为初始组是用户一旦登录就直接获得的组身份。也就是说，用户在创建文件后，文件的属组就是用户的初始组，因为用户的有效组默认是初始组。使用newgrp可以切换用户的有效组。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">newgrp 组名</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="5-组权限实验"><a href="#5-组权限实验" class="headerlink" title="5. 组权限实验"></a>5. 组权限实验</h3><p>根目录下创建个www目录，属主为teacher, 学生st1，st2可以往这个目录提交作业。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 创建www目录</span><br><span class="line">mkdir /www</span><br><span class="line"></span><br><span class="line"># 创建teacher用户</span><br><span class="line">useradd -m teacher</span><br><span class="line"></span><br><span class="line"># 设置teacher用户密码</span><br><span class="line">passwd teacher</span><br><span class="line"></span><br><span class="line"># 创建st1,st2用户并设置密码</span><br><span class="line">useradd -m st1</span><br><span class="line">useradd -m st2</span><br><span class="line"></span><br><span class="line"># 创建tg组</span><br><span class="line">groupadd tg</span><br><span class="line"></span><br><span class="line"># 将st1, st2加入tg组</span><br><span class="line">gpasswd -a st1 tg</span><br><span class="line">gpasswd -a st2 tg</span><br><span class="line"></span><br><span class="line"># 设置www目录属主和属组</span><br><span class="line">chown teacher:tg /www/</span><br><span class="line"></span><br><span class="line"># 设置www目录权限</span><br><span class="line">chmod 770 /www/</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>Linux</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>权限管理</title>
-    <url>/2025/02/25/%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86/</url>
-    <content><![CDATA[<h1 id="权限管理"><a href="#权限管理" class="headerlink" title="权限管理"></a>权限管理</h1><h2 id="1-ACL权限"><a href="#1-ACL权限" class="headerlink" title="1. ACL权限"></a>1. ACL权限</h2><h3 id="1）ACL概述"><a href="#1）ACL概述" class="headerlink" title="1）ACL概述"></a>1）ACL概述</h3><p>ACL是用于解决用户对文件身份不足问题的。</p>
-<h3 id="2）开启ACL"><a href="#2）开启ACL" class="headerlink" title="2）开启ACL"></a>2）开启ACL</h3><p>查询acl是否开启：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">dumpe2fs命令是查询指定分区详细文件系统信息的命令</span></span><br><span class="line">dumpe2fs -h &lt;根分区&gt;</span><br><span class="line">选项：</span><br><span class="line">  -h:    仅显示超级地中信息，而不显示磁盘块组的详细信息。</span><br><span class="line"> </span><br><span class="line"> ...</span><br><span class="line"> Default mount options:     user_xattr acl</span><br><span class="line"> ...</span><br></pre></td></tr></table></figure>
-
-<p>如果没有开启，手工开启分区的ACL权限：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">重新挂载根分区，并挂载加入acl权限</span></span><br><span class="line">mount -o remount,acl /</span><br></pre></td></tr></table></figure>
-
-<p>也可以通过修改&#x2F;etc&#x2F;fstab文件，永久开启ACL权限：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">vim /etc/fstab</span><br><span class="line">UUID=6f9a4f35-3b8f-425e-b8f3-4d46dbca87ad /               ext4       defaults.acl 0       1</span><br></pre></td></tr></table></figure>
-
-<p>验证目录ACL权限存在</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ls -ahl /</span><br><span class="line">drwxrwx---+   2 sc   tg         4096  2月 14 20:19 www/</span><br><span class="line"># “+”代表有ACL权限</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="3）ACL基本命令"><a href="#3）ACL基本命令" class="headerlink" title="3）ACL基本命令"></a>3）ACL基本命令</h3><p>a）查询文件的ACL权限</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">getfacl 文件名</span><br></pre></td></tr></table></figure>
-
-
-
-<p>b）设定ACL权限</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">setfacl [选项] 文件名</span><br><span class="line">选项：</span><br><span class="line">  -m    设定ACL权限</span><br><span class="line">  -b    删除ACL权限</span><br><span class="line">  -x    删除单个用户的ACL权限</span><br><span class="line">  -R    递归(只能赋予目录，且只对已经存在的文件生效)</span><br><span class="line"></span><br><span class="line">setfacl -m u:用户名:权限(1|2|4|5|7) 文件名</span><br><span class="line">setfacl -m g:组名:权限(1|2|4|5|7) 文件名</span><br><span class="line"></span><br><span class="line"># 赋予ACL默认权限。默认权限只能赋予目录，且只对以后新建的文件生效</span><br><span class="line">setfacl -m d:u:用户名|组名:权限(1|2|4|5|7) 目录</span><br></pre></td></tr></table></figure>
-
-<p>示例：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 给test目录赋予aa用户读写执行的ACL权限</span><br><span class="line">setfacl -m u:aa:rwx /test</span><br><span class="line"></span><br><span class="line"># 赋予递归ACL权限</span><br><span class="line">setfacl -m u:cc:rx -R soft/</span><br><span class="line"></span><br><span class="line"># ACL默认权限</span><br><span class="line">setfacl -m d:u:aa:rwx -R soft/</span><br></pre></td></tr></table></figure>
-
-<p>**注意：**ACL权限，一旦递归后，不可避免的出现权限溢出。因为x权限对目录来说相当于cd，而对文件是最大权限。所以ACL权限能不用则不用。</p>
-<h3 id="4）最大有效权限-mask"><a href="#4）最大有效权限-mask" class="headerlink" title="4）最大有效权限(mask)"></a>4）最大有效权限(mask)</h3><p>即最大ACL权限。设定用户或组ACL权限后，该用户或组最终权限是最大ACL权限(mask权限)与该用户或组权限逻辑与的结果的权限。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 设定mask权限为r-x,使用“m:权限”格式</span><br><span class="line">setfacl -m m:rx project/</span><br><span class="line"></span><br><span class="line"># 查询project/目录权限</span><br><span class="line"># file: project/</span><br><span class="line"># owner: root</span><br><span class="line"># group: tgroup</span><br><span class="line">user::rwx              #effective:r-x</span><br><span class="line">group::rwx             #effective:r-x</span><br><span class="line">mask::r-x</span><br><span class="line">other::---</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="5）删除ACL权限"><a href="#5）删除ACL权限" class="headerlink" title="5）删除ACL权限"></a>5）删除ACL权限</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 删除指定用户和用户组的ACL权限</span><br><span class="line">setfacl -x u:st /project/</span><br><span class="line"></span><br><span class="line"># 删除文件的所有ACL权限</span><br><span class="line">setfacl -b /project/</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="2-sudo授权"><a href="#2-sudo授权" class="headerlink" title="2. sudo授权"></a>2. sudo授权</h2><p>给普通用户赋予部分管理员权限。</p>
-<p>在&#x2F;sbin&#x2F;和&#x2F;usr&#x2F;sbin&#x2F;目录下的命令只有超级用户才能使用。</p>
-<h3 id="1）root身份"><a href="#1）root身份" class="headerlink" title="1）root身份"></a>1）root身份</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 执行visudo命令，赋予普通用户权限命令，命令执行后和vi一样使用</span><br><span class="line">visudo</span><br><span class="line"></span><br><span class="line">root     ALL=(ALL)                         ALL</span><br><span class="line">#用户名   被管理主机的地址=(可使用的身份)       授权命令(绝对路径)</span><br><span class="line"># %wheel        ALL=(ALL)                              ALL</span><br><span class="line">#%组名           被管理主机的地址=(可使用的身份)            授权命令(绝对路径)</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p>用户名&#x2F;组名：代表root给哪个用户或用户组赋予命令，注意组名前加“%”。</p>
-</li>
-<li><p>用户可以用指定的命令管理指定IP地址的服务器。如果写ALL，代表可以管理任务主机，如果写固定IP，代表用户可以管理指定的服务器。(这里的IP指定的是用户可以管理哪个IP地址的服务器，那么如果你是一台独立的服务器，这里写ALL和你服务器的IP地址，作用是一样的。而写入网段，只有对NIS服务这样用户和密码集中管理的服务器才有意义)。如果我们这里写本机的IP地址，不代表只允许本机的用户使用指定命令，而代表指定的用户可以从任何IP地址来管理当前服务器。</p>
-</li>
-<li><p>可使用身份：就是把来源用户切换成什么身份使用，(ALL)代表可以切换成任意身份。这个字段可以省略。</p>
-</li>
-<li><p>授权命令：代表root把什么命令授权给普通用户。默认是ALL，代表任何命令，这个当然不行，如果需要给哪个命令授权，写入命令名即可。不过需要注意一定要命令写成绝对路径。</p>
-</li>
-</ul>
-<p>【示例1】：授权用户user1可以重启服务器。</p>
-<p>则由root用户添加如下行：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# visudo</span><br><span class="line">user1         ALL=/sbin/shutdown -r now</span><br><span class="line"></span><br><span class="line"># 查看可用的授权</span><br><span class="line">[user1@localhost ~]$ sudo -l</span><br><span class="line"></span><br><span class="line"># 执行授权命令</span><br><span class="line">[user1@localhost ~]$ sudo /sbin/shutdown -r now</span><br></pre></td></tr></table></figure>
-
-
-
-<p>【示例2】：授权一个用户管理web服务器。</p>
-<p>首先要分析授权用户管理Apache至少要实现哪些基本授权：</p>
-<ul>
-<li>可以使用Apache管理脚本</li>
-<li>可以修改Apache配置文件</li>
-<li>可以更新网页内容</li>
-</ul>
-<p>假设Apache管理脚本程序为&#x2F;etc&#x2F;rc.d&#x2F;init.d&#x2F;httpd。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># visudo授权</span><br><span class="line">[root@loaclhost ~]# visudo</span><br><span class="line">user1      192.168.0.156=/etc/rc.d/init.d/httpd reload,/etc/rc.d/init.d/httpd configtest</span><br></pre></td></tr></table></figure>
-
-<p>授权用户user1可以连接192.168.0.156上的Apache服务器，通过Apache管理脚本重新读取配置文件让更改的设置生效(reload)和可以检测Apache配置文件语法错误(configtest)。</p>
-<p>为满足条件二：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# visudo</span><br><span class="line">user1      192.168.0.156=/usr/bin/vim /etc/httpd/conf/httpd.conf</span><br></pre></td></tr></table></figure>
-
-<p>授权用户user1可以用root身份使用vi编辑Apache配置文件。</p>
-<p>为满足条件三，假设网页存放目录为&#x2F;var&#x2F;www&#x2F;html，则只需要授权user1对此目录具有写权限或者索性更改目录所有者为user1即可。如果需要，还可以设置user1可以通过FTP等文件共享服务更新网页。</p>
-<p>【示例3】：授权aa用户可以添加其他普通用户。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# visudo</span><br><span class="line">aa    ALL=/usr/sbin/useradd</span><br><span class="line">aa    ALL=/usr/bin/passwd [A-Za-z]*, !/usr/bin/passwd &quot;&quot;, !/usr/bin/passwd root    # 不能改root用户密码</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="3-文件特殊权限"><a href="#3-文件特殊权限" class="headerlink" title="3.文件特殊权限"></a>3.文件特殊权限</h2><h3 id="1）SetUID"><a href="#1）SetUID" class="headerlink" title="1）SetUID"></a>1）SetUID</h3><p>a）SetUID概念</p>
-<p>SetUID的功能可以这样理解：</p>
-<ul>
-<li>只有可以执行的文件才能设定SUID权限</li>
-<li>命令执行者要对该程序拥有x（执行）权限</li>
-<li>命令执行者在执行该程序时获得该程序文件属主的身份(在执行程序的过程中灵魂附体为文件的属主)</li>
-<li>SetUID权限只在该程序执行过程中有效，也就是说身份改变只在程序执行过程中有效</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# ll /etc/passwd</span><br><span class="line">-rw-r--r-- 1 root root 3626  2月 15 11:38 /etc/passwd</span><br><span class="line"></span><br><span class="line">[root@localhost ~]# ll /etc/shadow</span><br><span class="line">-rw-r----- 1 root shadow 2092  2月 15 11:37 /etc/shadow</span><br><span class="line"></span><br><span class="line">[root@localhost ~]# ll /usr/bin/passwd</span><br><span class="line">-rwsr-xr-x 1 root root 64152  5月 30  2024 /usr/bin/passwd</span><br></pre></td></tr></table></figure>
-
-<p>&#x2F;usr&#x2F;bin&#x2F;passwd命令拥有特殊权限SetUID，也就是在属主的权限位的执行权限上是s。可以这样来理解它：当一个具有执行权限的文件设置SetUID权限后，用户执行这个文件时将以文件所有者的身份执行。&#x2F;usr&#x2F;bin&#x2F;passwd命令具有SetUID权限，所有者为root（Linux中的命令默认所有者都是root），也就是说当普通用户使用passwd更改自己密码的时候，那一瞬间突然灵魂附体了，实际是用passwd命令所有者root的身份在执行passwd命令，root当然可以将密码写入&#x2F;etc&#x2F;shadow文件，所以普通用户也可以修改&#x2F;etc&#x2F;shadow文件，命令执行完成后该身份也随之消失。如果取消SetUID权限，则普通用户就不能修改自己的密码了。</p>
-<p>b）设置SetUID权限</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 设置SetUID权限</span><br><span class="line">[root@localhost ~]# chmod u+s /usr/bin/vim      # 极其危险，意味着把服务器送给别人了，别人可以打开、修改任何文件了</span><br><span class="line"></span><br><span class="line"># 查看SetUID权限</span><br><span class="line">[root@localhost ~]# ll /usr/bin/vim</span><br><span class="line">-rwsr-xr-x 1 root root 1847752 4月 5 2012 /usr/bin/vim </span><br></pre></td></tr></table></figure>
-
-
-
-<p>c）建议</p>
-<ul>
-<li>关键目录应严格控制写权限，比如“&#x2F;”、“&#x2F;usr”等；</li>
-<li>用户的密码设置要严格遵守密码三原则；</li>
-<li>对系统中默认应该具有SetUID权限的文件作一列表，定时检查有没有这之外的文件被设置了SetUID权限。</li>
-</ul>
-<p>d）检测SetUID的脚本</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/bash</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Author: ben (E-main: 326525276@qq.com)</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">搜索系统中所有拥有SUID和SGID的文件，并保存到临时目录中</span></span><br><span class="line">find / -perm -4000 -o -perm -2000 &gt; /tmp/setuid.check</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">做循环，每次循环取出临时文件中的文件名</span></span><br><span class="line">for i in $(cat /tmp/setuid.check)</span><br><span class="line">do</span><br><span class="line"><span class="meta prompt_">	# </span><span class="language-bash">比对这个文件名是否在模板文件中</span></span><br><span class="line">	grep $i /root/suid.list &gt; /dev/null</span><br><span class="line">	if [&quot;$?&quot; != &quot;0&quot;]</span><br><span class="line"><span class="meta prompt_">		# </span><span class="language-bash">如果在，不报错</span></span><br><span class="line">	then</span><br><span class="line"><span class="meta prompt_">		# </span><span class="language-bash">如果文件不在模板文件中，则报错，并把报错存在日志中</span></span><br><span class="line">		echo &quot;$i isn&#x27;t in listfile!&quot; &gt;&gt; /root/suid_log_$(date +%F)</span><br><span class="line">	fi</span><br><span class="line">done</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">删除临时文件</span></span><br><span class="line">rm -rf /tmp/setuid.check</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="2）SetGID"><a href="#2）SetGID" class="headerlink" title="2）SetGID"></a>2）SetGID</h3><p>SGID既可以针对文件生效，也可以针对目录生效。这和SUID明显不同。</p>
-<p>a）针对文件的作用</p>
-<p>针对文件，SGID的含义如下：</p>
-<ul>
-<li>只有可执行的文件才能设置SGID权限</li>
-<li>命令执行者要对该文件拥有x（执行）权限</li>
-<li>命令执行者在执行文件的时候，组身份升级为该文件的属组</li>
-<li>SetGID权限同样只在该文件执行过程中有效，也就是说组身份改变只在文件执行过程中有效</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# ll /var/lib/mlocate/mlocate.db</span><br><span class="line">-rw-r----- 1 root slocate 1838850 1月    20 04：29 /var/lib/mlocate/mlocate.db</span><br></pre></td></tr></table></figure>
-
-<p>属主权限是r、w，属组权限是r，其他人权限是0；</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# ll /usr/bin/locate</span><br><span class="line">-rwx--s--x. 1 root slocate 38464  8月 24 2010 /usr/bin/locate    # 所属组s代表SetGID权限</span><br></pre></td></tr></table></figure>
-
-<p>当普通用户user1执行locate命令时，会发生如下事情：</p>
-<ul>
-<li>&#x2F;usr&#x2F;bin&#x2F;locate是可执行二进制程序，可以赋予SGID</li>
-<li>执行用户user1对&#x2F;usr&#x2F;bin&#x2F;locate命令拥有执行权限</li>
-<li>执行&#x2F;usr&#x2F;bin&#x2F;locate命令时，组身份会升级为slocate组，而slocate组对&#x2F;var&#x2F;lib&#x2F;mlocate&#x2F;mlocate.db数据库拥有r权限，所以普通用户可以使用locate</li>
-</ul>
-<p>命令查询mlocate.db数据库</p>
-<ul>
-<li>命令结束，user1用户的组身份返回为user1组</li>
-</ul>
-<p>b）针对目录的作用</p>
-<p>如果SGID针对目录设置，含义如下：</p>
-<ul>
-<li>普通用户必须对此目录拥有r和x权限，才能进入此目录</li>
-<li>普通用户在此目录中的有效组会变成此目录的属组</li>
-<li>若普通用户对此目录拥有w权限时，新建的文件的默认属组就是这个目录的属组</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 进入临时目录</span><br><span class="line">[root@localhost ~]# cd /tmp</span><br><span class="line"># 建立测试目录</span><br><span class="line">[root@localhost tmp]# mkdir dtest</span><br><span class="line"># 给测试目录赋予SGID</span><br><span class="line">[root@localhost tmp]# chmod g+s dtest</span><br><span class="line"># 查询SGID是否生效</span><br><span class="line">[root@localhost tmp]# ll -d dtest/</span><br><span class="line">drwxr-sr-x 2 root root 4096 1月 20 06：04 dtest/</span><br><span class="line"># 给测试目录权限，让普通用户可以写</span><br><span class="line">[root@localhost tmp]# chmod 777 dtest/</span><br><span class="line"># 切换成普通用户user1</span><br><span class="line">[root@localhost tmp]# su - user1</span><br><span class="line"># 普通用户进入测试目录</span><br><span class="line">[user1@localhost ~]$ cd /tmp/dtest/</span><br><span class="line"># 普通用户建立abc文件</span><br><span class="line">[user1@localhost ~]$ touch abc</span><br><span class="line"># abc文件的默认属组是root, 说明SGID生效</span><br><span class="line">[user1@localhost ~]$ ll</span><br><span class="line">总用量 0</span><br><span class="line">-rw-rw-r-- 1 user1 root 0 1月 20 06：07 abc</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="3）Sticky-BIT"><a href="#3）Sticky-BIT" class="headerlink" title="3）Sticky BIT"></a>3）Sticky BIT</h3><p>Sticky BIT粘着位，也简称为SBIT，SBIT目前仅针对目录有效。</p>
-<p>SBIT作用如下：</p>
-<ul>
-<li>粘着位目录只对目录有效</li>
-<li>普通用户对该目录拥有w和x权限，即普通用户可以在此目录拥有写入权限</li>
-<li>如果没有粘着位，因为普通用户拥有w权限，所以可以删除此目录下所有文件，包括其他用户建立的文件，一旦赋予了粘着位，除了root可以删除所有文件，普通用户就算拥有w权限，也只能删除自己建立的文件，但是不能删除其他用户建立的文件。</li>
-</ul>
-<h3 id="4）设定文件特殊权限"><a href="#4）设定文件特殊权限" class="headerlink" title="4）设定文件特殊权限"></a>4）设定文件特殊权限</h3><p>特殊权限：</p>
-<ul>
-<li>4代表SUID</li>
-<li>2代表SGID</li>
-<li>1代表SBIT</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 赋予SUID权限</span><br><span class="line">[root@localhost ~]# chmod 4755 ftest              # 或者chmod u+s ftest</span><br><span class="line"></span><br><span class="line"># 赋予SGID权限</span><br><span class="line">[root@localhost ~]# chmod 2755 ftest              # 或者chmod g+s ftest</span><br><span class="line"></span><br><span class="line"># 赋予SBIT权限</span><br><span class="line">[root@localhost ~]# mkdir dtest</span><br><span class="line">[root@localhost ~]# chmod 1755 dtest/             # 或者chmod o+t ftest</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="4-文件系统属性chattr权限"><a href="#4-文件系统属性chattr权限" class="headerlink" title="4. 文件系统属性chattr权限"></a>4. 文件系统属性chattr权限</h2><p>a）命令格式</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]chattr [+-=] [选项] 文件或目录名</span><br><span class="line">选项：</span><br><span class="line">  +：    增加权限</span><br><span class="line">  -：    删除权限</span><br><span class="line">  =：    等于某权限</span><br><span class="line">  i：    如果对文件设置i属性，那么不允许对文件进行删除、改名，也不能添加和修改数据；如果对目录设置i属性，那么只能修改目录下文件的数据，但不允许建立和          删除文件</span><br><span class="line">  a：    如果对文件设置a属性，那么只能在文件中增加数据，但是不能删除也不能修改数据；如果对目录设置a属性，那么只允许在目录中建立和修改文件，但是不允许          删除</span><br><span class="line">  e：    Linux中绝大多数的文件都默认拥有e属性。表示该文件是使用ext文件系统进行存储的，而且不能使用“chattr -e”命令取消e属性</span><br><span class="line">  </span><br></pre></td></tr></table></figure>
-
-<p>示例：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 赋予文件i属性</span><br><span class="line">chattr +i abc</span><br><span class="line"></span><br><span class="line"># 取消文件i属性</span><br><span class="line">chattr -i abc</span><br><span class="line"></span><br><span class="line"># 赋予目录i属性</span><br><span class="line">chattr +i bcd/</span><br><span class="line"></span><br><span class="line"># 取消目录i属性</span><br><span class="line">chattr -i bcd/</span><br></pre></td></tr></table></figure>
-
-
-
-<p>b) 查看文件系统属性(lsattr)</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# lsattr 选项 文件名</span><br><span class="line">选项：</span><br><span class="line">  -a:    显示所有文件和目录</span><br><span class="line">  -d:    若目标是目录，仅列出目录本身的属性，而不是子文件</span><br></pre></td></tr></table></figure>
-
-
-
 ]]></content>
       <categories>
         <category>Linux</category>
@@ -2527,6 +1820,713 @@
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# vim /etc/fstab</span><br><span class="line">...</span><br><span class="line">/dev/sdb1      swap      swap      defaults      0      0</span><br></pre></td></tr></table></figure>
 
 <p>也可以使用uuid。</p>
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>权限管理</title>
+    <url>/2025/02/25/%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86/</url>
+    <content><![CDATA[<h1 id="权限管理"><a href="#权限管理" class="headerlink" title="权限管理"></a>权限管理</h1><h2 id="1-ACL权限"><a href="#1-ACL权限" class="headerlink" title="1. ACL权限"></a>1. ACL权限</h2><h3 id="1）ACL概述"><a href="#1）ACL概述" class="headerlink" title="1）ACL概述"></a>1）ACL概述</h3><p>ACL是用于解决用户对文件身份不足问题的。</p>
+<h3 id="2）开启ACL"><a href="#2）开启ACL" class="headerlink" title="2）开启ACL"></a>2）开启ACL</h3><p>查询acl是否开启：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">dumpe2fs命令是查询指定分区详细文件系统信息的命令</span></span><br><span class="line">dumpe2fs -h &lt;根分区&gt;</span><br><span class="line">选项：</span><br><span class="line">  -h:    仅显示超级地中信息，而不显示磁盘块组的详细信息。</span><br><span class="line"> </span><br><span class="line"> ...</span><br><span class="line"> Default mount options:     user_xattr acl</span><br><span class="line"> ...</span><br></pre></td></tr></table></figure>
+
+<p>如果没有开启，手工开启分区的ACL权限：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">重新挂载根分区，并挂载加入acl权限</span></span><br><span class="line">mount -o remount,acl /</span><br></pre></td></tr></table></figure>
+
+<p>也可以通过修改&#x2F;etc&#x2F;fstab文件，永久开启ACL权限：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">vim /etc/fstab</span><br><span class="line">UUID=6f9a4f35-3b8f-425e-b8f3-4d46dbca87ad /               ext4       defaults.acl 0       1</span><br></pre></td></tr></table></figure>
+
+<p>验证目录ACL权限存在</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ls -ahl /</span><br><span class="line">drwxrwx---+   2 sc   tg         4096  2月 14 20:19 www/</span><br><span class="line"># “+”代表有ACL权限</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="3）ACL基本命令"><a href="#3）ACL基本命令" class="headerlink" title="3）ACL基本命令"></a>3）ACL基本命令</h3><p>a）查询文件的ACL权限</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">getfacl 文件名</span><br></pre></td></tr></table></figure>
+
+
+
+<p>b）设定ACL权限</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">setfacl [选项] 文件名</span><br><span class="line">选项：</span><br><span class="line">  -m    设定ACL权限</span><br><span class="line">  -b    删除ACL权限</span><br><span class="line">  -x    删除单个用户的ACL权限</span><br><span class="line">  -R    递归(只能赋予目录，且只对已经存在的文件生效)</span><br><span class="line"></span><br><span class="line">setfacl -m u:用户名:权限(1|2|4|5|7) 文件名</span><br><span class="line">setfacl -m g:组名:权限(1|2|4|5|7) 文件名</span><br><span class="line"></span><br><span class="line"># 赋予ACL默认权限。默认权限只能赋予目录，且只对以后新建的文件生效</span><br><span class="line">setfacl -m d:u:用户名|组名:权限(1|2|4|5|7) 目录</span><br></pre></td></tr></table></figure>
+
+<p>示例：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 给test目录赋予aa用户读写执行的ACL权限</span><br><span class="line">setfacl -m u:aa:rwx /test</span><br><span class="line"></span><br><span class="line"># 赋予递归ACL权限</span><br><span class="line">setfacl -m u:cc:rx -R soft/</span><br><span class="line"></span><br><span class="line"># ACL默认权限</span><br><span class="line">setfacl -m d:u:aa:rwx -R soft/</span><br></pre></td></tr></table></figure>
+
+<p>**注意：**ACL权限，一旦递归后，不可避免的出现权限溢出。因为x权限对目录来说相当于cd，而对文件是最大权限。所以ACL权限能不用则不用。</p>
+<h3 id="4）最大有效权限-mask"><a href="#4）最大有效权限-mask" class="headerlink" title="4）最大有效权限(mask)"></a>4）最大有效权限(mask)</h3><p>即最大ACL权限。设定用户或组ACL权限后，该用户或组最终权限是最大ACL权限(mask权限)与该用户或组权限逻辑与的结果的权限。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 设定mask权限为r-x,使用“m:权限”格式</span><br><span class="line">setfacl -m m:rx project/</span><br><span class="line"></span><br><span class="line"># 查询project/目录权限</span><br><span class="line"># file: project/</span><br><span class="line"># owner: root</span><br><span class="line"># group: tgroup</span><br><span class="line">user::rwx              #effective:r-x</span><br><span class="line">group::rwx             #effective:r-x</span><br><span class="line">mask::r-x</span><br><span class="line">other::---</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="5）删除ACL权限"><a href="#5）删除ACL权限" class="headerlink" title="5）删除ACL权限"></a>5）删除ACL权限</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 删除指定用户和用户组的ACL权限</span><br><span class="line">setfacl -x u:st /project/</span><br><span class="line"></span><br><span class="line"># 删除文件的所有ACL权限</span><br><span class="line">setfacl -b /project/</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="2-sudo授权"><a href="#2-sudo授权" class="headerlink" title="2. sudo授权"></a>2. sudo授权</h2><p>给普通用户赋予部分管理员权限。</p>
+<p>在&#x2F;sbin&#x2F;和&#x2F;usr&#x2F;sbin&#x2F;目录下的命令只有超级用户才能使用。</p>
+<h3 id="1）root身份"><a href="#1）root身份" class="headerlink" title="1）root身份"></a>1）root身份</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 执行visudo命令，赋予普通用户权限命令，命令执行后和vi一样使用</span><br><span class="line">visudo</span><br><span class="line"></span><br><span class="line">root     ALL=(ALL)                         ALL</span><br><span class="line">#用户名   被管理主机的地址=(可使用的身份)       授权命令(绝对路径)</span><br><span class="line"># %wheel        ALL=(ALL)                              ALL</span><br><span class="line">#%组名           被管理主机的地址=(可使用的身份)            授权命令(绝对路径)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>用户名&#x2F;组名：代表root给哪个用户或用户组赋予命令，注意组名前加“%”。</p>
+</li>
+<li><p>用户可以用指定的命令管理指定IP地址的服务器。如果写ALL，代表可以管理任务主机，如果写固定IP，代表用户可以管理指定的服务器。(这里的IP指定的是用户可以管理哪个IP地址的服务器，那么如果你是一台独立的服务器，这里写ALL和你服务器的IP地址，作用是一样的。而写入网段，只有对NIS服务这样用户和密码集中管理的服务器才有意义)。如果我们这里写本机的IP地址，不代表只允许本机的用户使用指定命令，而代表指定的用户可以从任何IP地址来管理当前服务器。</p>
+</li>
+<li><p>可使用身份：就是把来源用户切换成什么身份使用，(ALL)代表可以切换成任意身份。这个字段可以省略。</p>
+</li>
+<li><p>授权命令：代表root把什么命令授权给普通用户。默认是ALL，代表任何命令，这个当然不行，如果需要给哪个命令授权，写入命令名即可。不过需要注意一定要命令写成绝对路径。</p>
+</li>
+</ul>
+<p>【示例1】：授权用户user1可以重启服务器。</p>
+<p>则由root用户添加如下行：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# visudo</span><br><span class="line">user1         ALL=/sbin/shutdown -r now</span><br><span class="line"></span><br><span class="line"># 查看可用的授权</span><br><span class="line">[user1@localhost ~]$ sudo -l</span><br><span class="line"></span><br><span class="line"># 执行授权命令</span><br><span class="line">[user1@localhost ~]$ sudo /sbin/shutdown -r now</span><br></pre></td></tr></table></figure>
+
+
+
+<p>【示例2】：授权一个用户管理web服务器。</p>
+<p>首先要分析授权用户管理Apache至少要实现哪些基本授权：</p>
+<ul>
+<li>可以使用Apache管理脚本</li>
+<li>可以修改Apache配置文件</li>
+<li>可以更新网页内容</li>
+</ul>
+<p>假设Apache管理脚本程序为&#x2F;etc&#x2F;rc.d&#x2F;init.d&#x2F;httpd。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># visudo授权</span><br><span class="line">[root@loaclhost ~]# visudo</span><br><span class="line">user1      192.168.0.156=/etc/rc.d/init.d/httpd reload,/etc/rc.d/init.d/httpd configtest</span><br></pre></td></tr></table></figure>
+
+<p>授权用户user1可以连接192.168.0.156上的Apache服务器，通过Apache管理脚本重新读取配置文件让更改的设置生效(reload)和可以检测Apache配置文件语法错误(configtest)。</p>
+<p>为满足条件二：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# visudo</span><br><span class="line">user1      192.168.0.156=/usr/bin/vim /etc/httpd/conf/httpd.conf</span><br></pre></td></tr></table></figure>
+
+<p>授权用户user1可以用root身份使用vi编辑Apache配置文件。</p>
+<p>为满足条件三，假设网页存放目录为&#x2F;var&#x2F;www&#x2F;html，则只需要授权user1对此目录具有写权限或者索性更改目录所有者为user1即可。如果需要，还可以设置user1可以通过FTP等文件共享服务更新网页。</p>
+<p>【示例3】：授权aa用户可以添加其他普通用户。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# visudo</span><br><span class="line">aa    ALL=/usr/sbin/useradd</span><br><span class="line">aa    ALL=/usr/bin/passwd [A-Za-z]*, !/usr/bin/passwd &quot;&quot;, !/usr/bin/passwd root    # 不能改root用户密码</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="3-文件特殊权限"><a href="#3-文件特殊权限" class="headerlink" title="3.文件特殊权限"></a>3.文件特殊权限</h2><h3 id="1）SetUID"><a href="#1）SetUID" class="headerlink" title="1）SetUID"></a>1）SetUID</h3><p>a）SetUID概念</p>
+<p>SetUID的功能可以这样理解：</p>
+<ul>
+<li>只有可以执行的文件才能设定SUID权限</li>
+<li>命令执行者要对该程序拥有x（执行）权限</li>
+<li>命令执行者在执行该程序时获得该程序文件属主的身份(在执行程序的过程中灵魂附体为文件的属主)</li>
+<li>SetUID权限只在该程序执行过程中有效，也就是说身份改变只在程序执行过程中有效</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# ll /etc/passwd</span><br><span class="line">-rw-r--r-- 1 root root 3626  2月 15 11:38 /etc/passwd</span><br><span class="line"></span><br><span class="line">[root@localhost ~]# ll /etc/shadow</span><br><span class="line">-rw-r----- 1 root shadow 2092  2月 15 11:37 /etc/shadow</span><br><span class="line"></span><br><span class="line">[root@localhost ~]# ll /usr/bin/passwd</span><br><span class="line">-rwsr-xr-x 1 root root 64152  5月 30  2024 /usr/bin/passwd</span><br></pre></td></tr></table></figure>
+
+<p>&#x2F;usr&#x2F;bin&#x2F;passwd命令拥有特殊权限SetUID，也就是在属主的权限位的执行权限上是s。可以这样来理解它：当一个具有执行权限的文件设置SetUID权限后，用户执行这个文件时将以文件所有者的身份执行。&#x2F;usr&#x2F;bin&#x2F;passwd命令具有SetUID权限，所有者为root（Linux中的命令默认所有者都是root），也就是说当普通用户使用passwd更改自己密码的时候，那一瞬间突然灵魂附体了，实际是用passwd命令所有者root的身份在执行passwd命令，root当然可以将密码写入&#x2F;etc&#x2F;shadow文件，所以普通用户也可以修改&#x2F;etc&#x2F;shadow文件，命令执行完成后该身份也随之消失。如果取消SetUID权限，则普通用户就不能修改自己的密码了。</p>
+<p>b）设置SetUID权限</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 设置SetUID权限</span><br><span class="line">[root@localhost ~]# chmod u+s /usr/bin/vim      # 极其危险，意味着把服务器送给别人了，别人可以打开、修改任何文件了</span><br><span class="line"></span><br><span class="line"># 查看SetUID权限</span><br><span class="line">[root@localhost ~]# ll /usr/bin/vim</span><br><span class="line">-rwsr-xr-x 1 root root 1847752 4月 5 2012 /usr/bin/vim </span><br></pre></td></tr></table></figure>
+
+
+
+<p>c）建议</p>
+<ul>
+<li>关键目录应严格控制写权限，比如“&#x2F;”、“&#x2F;usr”等；</li>
+<li>用户的密码设置要严格遵守密码三原则；</li>
+<li>对系统中默认应该具有SetUID权限的文件作一列表，定时检查有没有这之外的文件被设置了SetUID权限。</li>
+</ul>
+<p>d）检测SetUID的脚本</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/bash</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Author: ben (E-main: 326525276@qq.com)</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">搜索系统中所有拥有SUID和SGID的文件，并保存到临时目录中</span></span><br><span class="line">find / -perm -4000 -o -perm -2000 &gt; /tmp/setuid.check</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">做循环，每次循环取出临时文件中的文件名</span></span><br><span class="line">for i in $(cat /tmp/setuid.check)</span><br><span class="line">do</span><br><span class="line"><span class="meta prompt_">	# </span><span class="language-bash">比对这个文件名是否在模板文件中</span></span><br><span class="line">	grep $i /root/suid.list &gt; /dev/null</span><br><span class="line">	if [&quot;$?&quot; != &quot;0&quot;]</span><br><span class="line"><span class="meta prompt_">		# </span><span class="language-bash">如果在，不报错</span></span><br><span class="line">	then</span><br><span class="line"><span class="meta prompt_">		# </span><span class="language-bash">如果文件不在模板文件中，则报错，并把报错存在日志中</span></span><br><span class="line">		echo &quot;$i isn&#x27;t in listfile!&quot; &gt;&gt; /root/suid_log_$(date +%F)</span><br><span class="line">	fi</span><br><span class="line">done</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">删除临时文件</span></span><br><span class="line">rm -rf /tmp/setuid.check</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="2）SetGID"><a href="#2）SetGID" class="headerlink" title="2）SetGID"></a>2）SetGID</h3><p>SGID既可以针对文件生效，也可以针对目录生效。这和SUID明显不同。</p>
+<p>a）针对文件的作用</p>
+<p>针对文件，SGID的含义如下：</p>
+<ul>
+<li>只有可执行的文件才能设置SGID权限</li>
+<li>命令执行者要对该文件拥有x（执行）权限</li>
+<li>命令执行者在执行文件的时候，组身份升级为该文件的属组</li>
+<li>SetGID权限同样只在该文件执行过程中有效，也就是说组身份改变只在文件执行过程中有效</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# ll /var/lib/mlocate/mlocate.db</span><br><span class="line">-rw-r----- 1 root slocate 1838850 1月    20 04：29 /var/lib/mlocate/mlocate.db</span><br></pre></td></tr></table></figure>
+
+<p>属主权限是r、w，属组权限是r，其他人权限是0；</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# ll /usr/bin/locate</span><br><span class="line">-rwx--s--x. 1 root slocate 38464  8月 24 2010 /usr/bin/locate    # 所属组s代表SetGID权限</span><br></pre></td></tr></table></figure>
+
+<p>当普通用户user1执行locate命令时，会发生如下事情：</p>
+<ul>
+<li>&#x2F;usr&#x2F;bin&#x2F;locate是可执行二进制程序，可以赋予SGID</li>
+<li>执行用户user1对&#x2F;usr&#x2F;bin&#x2F;locate命令拥有执行权限</li>
+<li>执行&#x2F;usr&#x2F;bin&#x2F;locate命令时，组身份会升级为slocate组，而slocate组对&#x2F;var&#x2F;lib&#x2F;mlocate&#x2F;mlocate.db数据库拥有r权限，所以普通用户可以使用locate</li>
+</ul>
+<p>命令查询mlocate.db数据库</p>
+<ul>
+<li>命令结束，user1用户的组身份返回为user1组</li>
+</ul>
+<p>b）针对目录的作用</p>
+<p>如果SGID针对目录设置，含义如下：</p>
+<ul>
+<li>普通用户必须对此目录拥有r和x权限，才能进入此目录</li>
+<li>普通用户在此目录中的有效组会变成此目录的属组</li>
+<li>若普通用户对此目录拥有w权限时，新建的文件的默认属组就是这个目录的属组</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 进入临时目录</span><br><span class="line">[root@localhost ~]# cd /tmp</span><br><span class="line"># 建立测试目录</span><br><span class="line">[root@localhost tmp]# mkdir dtest</span><br><span class="line"># 给测试目录赋予SGID</span><br><span class="line">[root@localhost tmp]# chmod g+s dtest</span><br><span class="line"># 查询SGID是否生效</span><br><span class="line">[root@localhost tmp]# ll -d dtest/</span><br><span class="line">drwxr-sr-x 2 root root 4096 1月 20 06：04 dtest/</span><br><span class="line"># 给测试目录权限，让普通用户可以写</span><br><span class="line">[root@localhost tmp]# chmod 777 dtest/</span><br><span class="line"># 切换成普通用户user1</span><br><span class="line">[root@localhost tmp]# su - user1</span><br><span class="line"># 普通用户进入测试目录</span><br><span class="line">[user1@localhost ~]$ cd /tmp/dtest/</span><br><span class="line"># 普通用户建立abc文件</span><br><span class="line">[user1@localhost ~]$ touch abc</span><br><span class="line"># abc文件的默认属组是root, 说明SGID生效</span><br><span class="line">[user1@localhost ~]$ ll</span><br><span class="line">总用量 0</span><br><span class="line">-rw-rw-r-- 1 user1 root 0 1月 20 06：07 abc</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="3）Sticky-BIT"><a href="#3）Sticky-BIT" class="headerlink" title="3）Sticky BIT"></a>3）Sticky BIT</h3><p>Sticky BIT粘着位，也简称为SBIT，SBIT目前仅针对目录有效。</p>
+<p>SBIT作用如下：</p>
+<ul>
+<li>粘着位目录只对目录有效</li>
+<li>普通用户对该目录拥有w和x权限，即普通用户可以在此目录拥有写入权限</li>
+<li>如果没有粘着位，因为普通用户拥有w权限，所以可以删除此目录下所有文件，包括其他用户建立的文件，一旦赋予了粘着位，除了root可以删除所有文件，普通用户就算拥有w权限，也只能删除自己建立的文件，但是不能删除其他用户建立的文件。</li>
+</ul>
+<h3 id="4）设定文件特殊权限"><a href="#4）设定文件特殊权限" class="headerlink" title="4）设定文件特殊权限"></a>4）设定文件特殊权限</h3><p>特殊权限：</p>
+<ul>
+<li>4代表SUID</li>
+<li>2代表SGID</li>
+<li>1代表SBIT</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 赋予SUID权限</span><br><span class="line">[root@localhost ~]# chmod 4755 ftest              # 或者chmod u+s ftest</span><br><span class="line"></span><br><span class="line"># 赋予SGID权限</span><br><span class="line">[root@localhost ~]# chmod 2755 ftest              # 或者chmod g+s ftest</span><br><span class="line"></span><br><span class="line"># 赋予SBIT权限</span><br><span class="line">[root@localhost ~]# mkdir dtest</span><br><span class="line">[root@localhost ~]# chmod 1755 dtest/             # 或者chmod o+t ftest</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="4-文件系统属性chattr权限"><a href="#4-文件系统属性chattr权限" class="headerlink" title="4. 文件系统属性chattr权限"></a>4. 文件系统属性chattr权限</h2><p>a）命令格式</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]chattr [+-=] [选项] 文件或目录名</span><br><span class="line">选项：</span><br><span class="line">  +：    增加权限</span><br><span class="line">  -：    删除权限</span><br><span class="line">  =：    等于某权限</span><br><span class="line">  i：    如果对文件设置i属性，那么不允许对文件进行删除、改名，也不能添加和修改数据；如果对目录设置i属性，那么只能修改目录下文件的数据，但不允许建立和          删除文件</span><br><span class="line">  a：    如果对文件设置a属性，那么只能在文件中增加数据，但是不能删除也不能修改数据；如果对目录设置a属性，那么只允许在目录中建立和修改文件，但是不允许          删除</span><br><span class="line">  e：    Linux中绝大多数的文件都默认拥有e属性。表示该文件是使用ext文件系统进行存储的，而且不能使用“chattr -e”命令取消e属性</span><br><span class="line">  </span><br></pre></td></tr></table></figure>
+
+<p>示例：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 赋予文件i属性</span><br><span class="line">chattr +i abc</span><br><span class="line"></span><br><span class="line"># 取消文件i属性</span><br><span class="line">chattr -i abc</span><br><span class="line"></span><br><span class="line"># 赋予目录i属性</span><br><span class="line">chattr +i bcd/</span><br><span class="line"></span><br><span class="line"># 取消目录i属性</span><br><span class="line">chattr -i bcd/</span><br></pre></td></tr></table></figure>
+
+
+
+<p>b) 查看文件系统属性(lsattr)</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# lsattr 选项 文件名</span><br><span class="line">选项：</span><br><span class="line">  -a:    显示所有文件和目录</span><br><span class="line">  -d:    若目标是目录，仅列出目录本身的属性，而不是子文件</span><br></pre></td></tr></table></figure>
+
+
+
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>用户管理</title>
+    <url>/2025/02/25/%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86/</url>
+    <content><![CDATA[<h1 id="用户管理"><a href="#用户管理" class="headerlink" title="用户管理"></a>用户管理</h1><h2 id="1-用户相关文件"><a href="#1-用户相关文件" class="headerlink" title="1. 用户相关文件"></a>1. 用户相关文件</h2><h3 id="1）用户信息文件"><a href="#1）用户信息文件" class="headerlink" title="1）用户信息文件"></a>1）用户信息文件</h3><p>&#x2F;etc&#x2F;passwd</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">root:x:0:0:root:/root:/bin/bash</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>第一列：用户名</p>
+</li>
+<li><p>第二列：密码位</p>
+<p>x为密码标志位，代表用户有密码，用户密码放置在&#x2F;etc&#x2F;shadow文件中。</p>
+</li>
+<li><p>第三列：用户ID</p>
+<ul>
+<li>0：超级用户UID，如果用户UID为0，代表这个账号是管理员账号。那Linux中如何把普通用户升级为管理员呢？就是把其他用户的UID修改为0就可以了。不过不建议建立多个管理员账号。</li>
+<li>1-499：系统用户(伪用户)UID，这些UID账号是系统保留给系统用户的UID，也就是说UID是1-499范围内的用户是不能登录系统的，而是用来运行系统或服务的，其中1-99是系统保留的账号，系统自动创建。100-499是预留给用户创建系统账号的。</li>
+<li>500-65535：普通用户UID。建立的普通用户UID从500开始，最大到65535。这些用户足够使用了，但是如果不够也不用害怕，2.6.x内核以后的Linux系统用户UID已经可以支持2的32次方了。</li>
+</ul>
+</li>
+<li><p>第四列：组ID（GID）</p>
+<p>添加用户时，如果不指定用户所属的初始组，那么会建立和用户名相同的组。</p>
+</li>
+<li><p>第五列：用户说明</p>
+</li>
+<li><p>第六列：用户家目录（~）</p>
+</li>
+<li><p>第七列：登录shell（标准是&#x2F;bin&#x2F;bash）</p>
+</li>
+</ul>
+<h3 id="2）影子文件"><a href="#2）影子文件" class="headerlink" title="2）影子文件"></a>2）影子文件</h3><p>&#x2F;etc&#x2F;shadow</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">root:$6$jvGI3Z2PqL/TT4lT$q1lVTdba3dRsmWsEJVHzTqAHOSlb3qvM/hL7wKTQCo5148xfMiT0mnq1zQ7n7wCZu/QEdtP/57BVko4X6U4in0:18929:0:99999:7:::</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>第一列：用户名</p>
+</li>
+<li><p>第二列：加密密码</p>
+<p>我们也可以在密码前人为的加入“!”或“*”改变加密值让密码暂时失效，使这个用户无法登录，达到暂时禁止用户登录的效果。</p>
+<p>所有伪用户的密码都是”!!”或“*”，代表没有密码是不能登录的。当然新创建的用户如果不设定密码，它的密码项也是”!!”，代表这个用户没有密码，不能登录。</p>
+</li>
+<li><p>第三列：密码最近更改时间（day），1970年1月1日作为标准时间</p>
+<p>时间戳转日期</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">date -d &quot;1970-01-01 18929 days&quot;</span><br><span class="line">2021年 10月 29日 星期五 00:00:00 CST</span><br></pre></td></tr></table></figure>
+
+<p>日期转时间戳</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">echo $(($(date --date=&quot;2021/10/29&quot; +%s)/86400+1))</span><br><span class="line">18929</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>第四列：两次密码的修改间隔时间（和第3个字段相比）</p>
+</li>
+<li><p>第五列：密码有效期(和第3个字段相比)</p>
+</li>
+<li><p>第六列：密码修改到期前警告天数(和第5个字段相比)</p>
+</li>
+<li><p>第七列：密码过期后的宽限天数(和第5个字段相比)</p>
+</li>
+<li><p>第八列：密码失效时间</p>
+<p>这里同样要写时间戳，也就是用1970年1月1日进行时间换算，如果超过了失效时间，就算密码没有过期，用户也就失效无法使用了。</p>
+</li>
+<li><p>第九列：保留</p>
+</li>
+</ul>
+<h3 id="3）组信息文件"><a href="#3）组信息文件" class="headerlink" title="3）组信息文件"></a>3）组信息文件</h3><p>&#x2F;etc&#x2F;group</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">root:x:0:</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>第一列：组名</li>
+<li>第二列：组密码位</li>
+<li>第三列：GID</li>
+<li>第四列：此组中支持的其他用户，附加组是此组的用户<ul>
+<li>初始组：每个用户初始组只能有一个，一般都是和用户名相同的组作为初始组。</li>
+<li>附加组：每个用户可以属于多个附加组。要把用户加入组，都是加入附加组。</li>
+</ul>
+</li>
+</ul>
+<h3 id="4）组密码文件-不建议使用"><a href="#4）组密码文件-不建议使用" class="headerlink" title="4）组密码文件(不建议使用)"></a>4）组密码文件(不建议使用)</h3><p>&#x2F;etc&#x2F;gshadow</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">root:*::</span><br></pre></td></tr></table></figure>
+
+<p>如果给用户组设定了组管理员，并给该用户组设定了组密码，组密码就保存在这个文件当中。组管理员就可以利用这个密码管理这个用户组了。</p>
+<h3 id="5）用户家目录"><a href="#5）用户家目录" class="headerlink" title="5）用户家目录"></a>5）用户家目录</h3><h3 id="6）用户邮箱目录"><a href="#6）用户邮箱目录" class="headerlink" title="6）用户邮箱目录"></a>6）用户邮箱目录</h3><p>这个邮箱在&#x2F;var&#x2F;spool&#x2F;mail目录当中，例如lamp用户的邮箱就是&#x2F;var&#x2F;spool&#x2F;mail&#x2F;lamp文件</p>
+<h3 id="7）用户模板目录"><a href="#7）用户模板目录" class="headerlink" title="7）用户模板目录"></a>7）用户模板目录</h3><p>&#x2F;etc&#x2F;skel&#x2F;</p>
+<p>用户家目录初始化时的模板目录。</p>
+<h2 id="2-用户管理命令"><a href="#2-用户管理命令" class="headerlink" title="2.用户管理命令"></a>2.用户管理命令</h2><h3 id="1）添加用户"><a href="#1）添加用户" class="headerlink" title="1）添加用户"></a>1）添加用户</h3><p>a）手工删除用户</p>
+<p>手工删除用户试验：手工删除，如果可以正常建立用户，证明用户删除干净。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 创建用户，就是写入这6个文件</span><br><span class="line">/etc/passwd</span><br><span class="line">/etc/shadow</span><br><span class="line">/etc/group</span><br><span class="line">/etc/gshadow</span><br><span class="line">/home/user1</span><br><span class="line">/var/spool/mail/user1</span><br></pre></td></tr></table></figure>
+
+
+
+<p>b）useradd命令</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">useradd 选项 用户名</span><br><span class="line">选项：</span><br><span class="line">  -u：UID   指定UID</span><br><span class="line">  -g：组名   指定初始组，不要手工指定</span><br><span class="line">  -G：组名   指定附加组，把用户加入组，使用附加组</span><br><span class="line">  -c：说明   添加说明</span><br><span class="line">  -d：目录   手工指定家目录，目录不需要事先建立</span><br><span class="line">  -s：shell  /bin/bash</span><br><span class="line">  -m：创建家目录</span><br></pre></td></tr></table></figure>
+
+
+
+<p>c）useradd默认值</p>
+<p>useradd添加用户时参考的默认值文件主要有两个：</p>
+<ul>
+<li><p>&#x2F;etc&#x2F;default&#x2F;useradd</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># useradd defaults file</span><br><span class="line">GROUP=100</span><br><span class="line">HOME=/home</span><br><span class="line">INACTIVE=-1</span><br><span class="line">EXPIRE=</span><br><span class="line">SHELL=/bin/bash</span><br><span class="line">SKEL=/etc/skel</span><br><span class="line">CREATE_MAIL_SPOOL=yes</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>GROUP&#x3D;100</p>
+<p>这个选项是建立用户的默认组，也就是说添加每个用户时，用户的初始组就是GID为100的这个用户组。</p>
+</li>
+<li><p>HOME&#x3D;&#x2F;home</p>
+<p>这个选项是用户的家目录的默认位置，所以所有的新建用户的家目录默认都在&#x2F;home&#x2F;下。</p>
+</li>
+<li><p>INACTIVE&#x3D;-1</p>
+<p>这个选项就是密码过期后的宽限天数，也就是&#x2F;etc&#x2F;shadow文件的第七个字段。如果是天数，比如10代表密码过期后10天后失效；如果是0，代表密码过期后立即失效；如果是-1，则代表密码永远不会失效。这是默认值是-1，所以所有新建立的用户密码都不会失效。</p>
+</li>
+<li><p>EXPIRE&#x3D;</p>
+<p>这个选项是密码失效时间，也就是&#x2F;etc&#x2F;shadow文件的第八个字段，也就是说用户到达这个日期后就会直接失效。当然这里也是使用时间戳来表示日期的。默认是空，所以所有新建用户没有失效时间。永久有效。</p>
+</li>
+<li><p>SHELL&#x3D;&#x2F;bin&#x2F;bash</p>
+<p>这个选项是用户的默认shell。&#x2F;bin&#x2F;bash是Linux的标志shell，所以所有新建立的用户默认都具备shell赋予的权限。</p>
+</li>
+<li><p>SKEL&#x3D;&#x2F;etc&#x2F;skel</p>
+<p>这个选项就是定义用户的模板目录的位置，&#x2F;etc&#x2F;skel&#x2F;目录中的文件都会复制到新建用户的家目录当中。</p>
+</li>
+<li><p>CREATE_MAIL_SPOOL&#x3D;yes</p>
+<p>这个选项定义是否给新建用户建立邮箱，默认是创建，也就是说所有的新建用户系统都会新建一个邮箱，放在&#x2F;var&#x2F;spool&#x2F;mail&#x2F;下，和用户名相同。</p>
+</li>
+</ul>
+</li>
+<li><p>&#x2F;etc&#x2F;login.defs</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">MAIL_DIR        /var/spool/mail</span><br><span class="line"></span><br><span class="line">PASS_MAX_DAYS   99999</span><br><span class="line">PASS_MIN_DYAS   0</span><br><span class="line">PASS_MIN_LEN    5</span><br><span class="line">PASS_WARN_AGE   7</span><br><span class="line"></span><br><span class="line">UID_MIN         500</span><br><span class="line">UID_MAX         60000</span><br><span class="line"></span><br><span class="line">GID_MIN         500</span><br><span class="line">GID_MAX         60000</span><br><span class="line"></span><br><span class="line">CREATE_HOME     yes</span><br><span class="line"></span><br><span class="line">UMASK           077</span><br><span class="line"></span><br><span class="line">USERGROUPS_ENAB yes</span><br><span class="line"></span><br><span class="line">ENCRYPT_METHOD  SHA512</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>MAIL_DIR          &#x2F;var&#x2F;spool&#x2F;mail</p>
+<p>这行指定了新建用户的默认邮箱位置。比如lamp用户的邮箱就是&#x2F;var&#x2F;spool&#x2F;mail&#x2F;lamp。</p>
+</li>
+<li><p>PASS_MAX_DAYS    99999</p>
+<p>这行指定的是密码的有效期，也就是&#x2F;etc&#x2F;shadow文件的第五个字段。代表多少天之后必须修改密码，默认值是99999</p>
+</li>
+<li><p>PASS_MIN_DAYS    0</p>
+<p>这行指定是两次密码的修改间隔时间，也就是&#x2F;etc&#x2F;shadow文件的第四个字段。代表第一次修改密码之后，几天后才能再次修改密码，默认值是0</p>
+</li>
+<li><p>PASS_MIN_LEN    5</p>
+<p>这行代表密码的最小长度，默认不小于5位，但是我们现在用户登录时验证已经被PAM模块取代，所以这个选项并不生效。</p>
+</li>
+<li><p>PASS_WARN_AGE    7</p>
+<p>这行代表密码修改到期前的警告天数。也就是&#x2F;etc&#x2F;shadow文件的第六个字段。代表密码到底有效期前多少天开始进行警告提醒，默认值是7天。</p>
+</li>
+<li><p>UID_MIN|UID_MAX</p>
+<p>这两行指定了UID的最小值和最大值之间的范围。</p>
+</li>
+<li><p>GID_MIN|GID_MAX</p>
+<p>这两行指定了GID的最小值和最大值之间的范围。</p>
+</li>
+<li><p>CREATE_HOME    yes</p>
+<p>这行指定建立用户时是否自动建立用户的家目录，默认是建立。</p>
+</li>
+<li><p>UMASK    077</p>
+<p>这行指定的是建立的用户家目录的默认权限，因为umask值是077，所以新建的用户家目录的权限是700。</p>
+</li>
+<li><p>USERGROUPS_ENAB    yes</p>
+<p>这行指定的是使用命令userdel删除用户时，是否删除用户的初始组，默认是删除。</p>
+</li>
+<li><p>ENCRYPT_METHOD    SHA512</p>
+<p>这行指定Linux用户的密码使用SHA512散列模式加密，这是新的密码加密模式，原先的Linux只能用DES或MD5方式加密。</p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="2）设定密码"><a href="#2）设定密码" class="headerlink" title="2）设定密码"></a>2）设定密码</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">passwd [选项] 用户名</span><br><span class="line">选项：</span><br><span class="line">  -l:         暂时锁定用户。仅root用户可用（lock）</span><br><span class="line">  -u:         解锁用户。仅root用户可用（unlock）</span><br><span class="line">  --stdin:    可以将通过管道符输出的数据作为用户的密码。主要在批量添加用户时使用</span><br></pre></td></tr></table></figure>
+
+<p>示例：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 修改当前用户的密码</span><br><span class="line">passwd</span><br><span class="line"></span><br><span class="line"># 使用字符串作为密码</span><br><span class="line">echo &quot;123&quot; | passwd --stdin lamp</span><br><span class="line"></span><br><span class="line"># 把密码修改日期归零(shadow第3个字段，0代表1970年1月1日)。这样用户一登录就要修改密码。</span><br><span class="line">chage -d 0 lamp</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="3）用户信息修改"><a href="#3）用户信息修改" class="headerlink" title="3）用户信息修改"></a>3）用户信息修改</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">usermod [选项] 用户名</span><br><span class="line">选项：</span><br><span class="line">  -u UID:        修改用户的UID</span><br><span class="line">  -d 家目录：     修改用户的家目录。家目录必须写绝对路径</span><br><span class="line">  -c 用户说明:    修改用户的说明信息，就是/etc/passwd文件的第五个字段</span><br><span class="line">  -g 组名：       修改用户的初始组，就是/etc/passwd文件的第四个字段</span><br><span class="line">  -G 组名：       修改用户的附加组，其实就是把用户加入其他用户组</span><br><span class="line">  -s shell:      修改用户的登录Shell。默认是/bin/bash</span><br><span class="line">  -e 日期：       修改用户的失效日期，格式为&quot;YYYY-MM-DD&quot;。也就是/etc/shadow文件的第八个字段</span><br><span class="line">  -L:            临时锁定用户(Lock)</span><br><span class="line">  -U:            解锁用户(Unlock)</span><br></pre></td></tr></table></figure>
+
+<p>usermod也可以修改用户名，但不建议这么做，这样及其容易把管理员自己稿晕。建议删除旧用户，再建立新用户。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 修改用户名</span><br><span class="line">usermod -l 新名 旧名</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="4）删除用户"><a href="#4）删除用户" class="headerlink" title="4）删除用户"></a>4）删除用户</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">userdel [-r] 用户名</span><br><span class="line">选项：</span><br><span class="line">  -r:    在删除用户的同时删除用户的家目录</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="5）切换用户身份"><a href="#5）切换用户身份" class="headerlink" title="5）切换用户身份"></a>5）切换用户身份</h3><p>su命令可以切换成不同的用户身份。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">su [选项] 用户名</span><br><span class="line">选项：</span><br><span class="line">  -:          选项只使用“-”代表连带用户的环境变量一起切换</span><br><span class="line">  -c 命令:    仅执行一次命令，而不切换用户身份</span><br></pre></td></tr></table></figure>
+
+<p>“-”不能省略，它代表切换用户身份时，用户的环境变量也要切换成新用户的环境变量。</p>
+<h2 id="3-组管理命令"><a href="#3-组管理命令" class="headerlink" title="3. 组管理命令"></a>3. 组管理命令</h2><h3 id="1）添加用户组"><a href="#1）添加用户组" class="headerlink" title="1）添加用户组"></a>1）添加用户组</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">groupadd [选项] 组名</span><br><span class="line">选项：</span><br><span class="line">  -g GID:    指定组ID</span><br></pre></td></tr></table></figure>
+
+<p>示例：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 添加group1组</span><br><span class="line">groupadd group1</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="2）删除用户组"><a href="#2）删除用户组" class="headerlink" title="2）删除用户组"></a>2）删除用户组</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">groupdel 组名</span><br></pre></td></tr></table></figure>
+
+<p>不过要注意，要删除的组不能是其他用户的初始组，也就是说这个组中没有初始用户才可以删除。如果组中有附加用户，则删除组时不受影响。</p>
+<h3 id="3）把用户添加进组或从组中删除"><a href="#3）把用户添加进组或从组中删除" class="headerlink" title="3）把用户添加进组或从组中删除"></a>3）把用户添加进组或从组中删除</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">gpasswd [选项] 组名</span><br><span class="line">选项：</span><br><span class="line">  -a 用户名：    把用户加入组</span><br><span class="line">  -d 用户名：    把用户从组中删除</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 添加test组</span><br><span class="line">groupadd test</span><br><span class="line"></span><br><span class="line"># 把test1用户加入test组</span><br><span class="line">gpasswd -a test1 test</span><br><span class="line"></span><br><span class="line"># 把用户test1从test组中删除</span><br><span class="line">gpasswd -d test1 test</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="4）改变有效组"><a href="#4）改变有效组" class="headerlink" title="4）改变有效组"></a>4）改变有效组</h3><p>每个用户可以属于一个初始组（用户是这个组的初始用户），也可以属于多个附加组（用户是这个组的附加用户）。既然用户可以属于这么多用户组，那么用户在创建文件后，默认生效的组身份是哪个呢？当然是初始用户组的组身份。因为初始组是用户一旦登录就直接获得的组身份。也就是说，用户在创建文件后，文件的属组就是用户的初始组，因为用户的有效组默认是初始组。使用newgrp可以切换用户的有效组。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">newgrp 组名</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="5-组权限实验"><a href="#5-组权限实验" class="headerlink" title="5. 组权限实验"></a>5. 组权限实验</h3><p>根目录下创建个www目录，属主为teacher, 学生st1，st2可以往这个目录提交作业。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 创建www目录</span><br><span class="line">mkdir /www</span><br><span class="line"></span><br><span class="line"># 创建teacher用户</span><br><span class="line">useradd -m teacher</span><br><span class="line"></span><br><span class="line"># 设置teacher用户密码</span><br><span class="line">passwd teacher</span><br><span class="line"></span><br><span class="line"># 创建st1,st2用户并设置密码</span><br><span class="line">useradd -m st1</span><br><span class="line">useradd -m st2</span><br><span class="line"></span><br><span class="line"># 创建tg组</span><br><span class="line">groupadd tg</span><br><span class="line"></span><br><span class="line"># 将st1, st2加入tg组</span><br><span class="line">gpasswd -a st1 tg</span><br><span class="line">gpasswd -a st2 tg</span><br><span class="line"></span><br><span class="line"># 设置www目录属主和属组</span><br><span class="line">chown teacher:tg /www/</span><br><span class="line"></span><br><span class="line"># 设置www目录权限</span><br><span class="line">chmod 770 /www/</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>软件包安装</title>
+    <url>/2025/02/25/%E8%BD%AF%E4%BB%B6%E5%8C%85%E5%AE%89%E8%A3%85/</url>
+    <content><![CDATA[<h1 id="软件包安装"><a href="#软件包安装" class="headerlink" title="软件包安装"></a>软件包安装</h1><h2 id="1-软件包分类"><a href="#1-软件包分类" class="headerlink" title="1. 软件包分类"></a>1. 软件包分类</h2><ul>
+<li>源码包</li>
+<li>二进制包</li>
+</ul>
+<h2 id="2-源码包"><a href="#2-源码包" class="headerlink" title="2. 源码包"></a>2. 源码包</h2><h3 id="1）源码包优点"><a href="#1）源码包优点" class="headerlink" title="1）源码包优点"></a>1）源码包优点</h3><ul>
+<li>开源，如果有足够的能力，可以修改源码包。</li>
+<li>可以自由选择所需的功能</li>
+<li>软件是编译安装，所以更加适合自己的系统，更加稳定也效率更高</li>
+<li>卸载方便</li>
+</ul>
+<h3 id="2）源码包缺点"><a href="#2）源码包缺点" class="headerlink" title="2）源码包缺点"></a>2）源码包缺点</h3><ul>
+<li>安装过程步骤较多，尤其安装较大的软件集合时(如LAMP环境搭建)，容易出现拼写错误</li>
+<li>编译过程时间较长，安装比二进制安装时间长</li>
+<li>因为是编译安装，安装过程中一旦报错新手很难解决</li>
+</ul>
+<h2 id="3-二进制包"><a href="#3-二进制包" class="headerlink" title="3. 二进制包"></a>3. 二进制包</h2><p>Linux系列：Debian和RedHat。</p>
+<h3 id="1）二进制包分类"><a href="#1）二进制包分类" class="headerlink" title="1）二进制包分类"></a>1）二进制包分类</h3><p>a）DPKG包</p>
+<p>是由Debian Linux所开发出来的包管理机制，通过DPKG包，Debian Linux就可以进行软件包管理。主要应用在Debian和Ubuntu中。</p>
+<p>b）RPM包</p>
+<p>是由Red Hat公司所开发的包管理系统。功能强大，安装、升级、查询和卸载都非常简单和方便。目前很多Linux都在使用这种包管理方式，包括Fedora、CentOS、SuSE等。</p>
+<h3 id="2）RPM包特点"><a href="#2）RPM包特点" class="headerlink" title="2）RPM包特点"></a>2）RPM包特点</h3><p>RPM包优点：</p>
+<ul>
+<li>包管理系统简单，只通过几个命令就可以实现包的安装、升级、查询和卸载</li>
+<li>安装速度比源码包安装快的多</li>
+</ul>
+<p>RPM包缺点：</p>
+<ul>
+<li>经过编译，不再可以看到源代码</li>
+<li>功能选择不如源码包灵活</li>
+<li>依赖性。有时我们会发现需要安装软件包a时需要先安装b和c，而安装b时需要安装d和e。这时需要先安装d和e，再安装b和c，最后才能安装a包。</li>
+</ul>
+<h3 id="3）RPM包依赖"><a href="#3）RPM包依赖" class="headerlink" title="3）RPM包依赖"></a>3）RPM包依赖</h3><p>a）树形依赖</p>
+<p>a——&gt;b——&gt;c</p>
+<p>b）环形依赖</p>
+<p>a——&gt;b——&gt;c——&gt;a</p>
+<p>c）模块依赖</p>
+<p>什么是模块依赖？例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -ivh mysql-connector-odbc-5.2.5-7.el7.x86_64.rpm</span><br><span class="line">错误：依赖检测失败：</span><br><span class="line">    libodbc.so.2()(64bit) 被 mysql-connector-odbc-5.2.5-7.el7.x86_64 需要</span><br><span class="line">    libodbcinst.so.2()(64bit) 被 mysql-connector-odbc-5.2.5-7.el7.x86_64 需要</span><br></pre></td></tr></table></figure>
+
+<p>发现报错，需要安装”libodbc.so.2”函数库文件，这时会发现在光盘中根本找不到这个文件，那是因为函数库没有单独成包，是包含在某一个软件包中的，而如果知道在哪个软件包中，需要查询网站<a href="http://www.rpmfind.net./">www.rpmfind.net。</a></p>
+<h3 id="4）RPM包安装方法"><a href="#4）RPM包安装方法" class="headerlink" title="4）RPM包安装方法"></a>4）RPM包安装方法</h3><ul>
+<li>手工安装</li>
+<li>yum在线安装</li>
+</ul>
+<h2 id="4-软件包选择建议"><a href="#4-软件包选择建议" class="headerlink" title="4. 软件包选择建议"></a>4. 软件包选择建议</h2><ul>
+<li>源码包：如果软件包是给大量客户端提供访问，建议使用源码包安装，源码包效率更高(LAMP)。</li>
+<li>RPM包：如果软件包是给Linux底层使用，或只给少量客户访问，建议使用RPM包安装，因为RPM包简单。</li>
+</ul>
+<h2 id="5-RPM手工安装"><a href="#5-RPM手工安装" class="headerlink" title="5. RPM手工安装"></a>5. RPM手工安装</h2><p>rpm数据库路径：&#x2F;var&#x2F;lib&#x2F;rpm&#x2F;</p>
+<h3 id="1）RPM包命名规则"><a href="#1）RPM包命名规则" class="headerlink" title="1）RPM包命名规则"></a>1）RPM包命名规则</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">httpd-2.2.15-15.el6.centos.1.i686.rpm</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>httpd：软件包名</li>
+<li>2.2.15：软件版本</li>
+<li>15：软件发布的次数</li>
+<li>el6：软件发行商。el6是RedHat公司发布，适合RHEL6.x(Red Hat Enterprise Linux)和CentOS6.x下使用</li>
+<li>i686：适合的硬件平台。RPM包可以在不同的硬件平台安装，选择适合不同CPU的软件版本，可以最大化的发挥CPU性能，所以出现了所谓的i386（386以上计算机都可以安装）、i586（586以上的计算机都可以安装）、i686（奔腾II以上计算机都可以安装，目前所有的CPU都是奔腾II以上，所以这个软件版本居多）、x86_64（64位CPU可以安装）和noarch（没有硬件限制）等文件名了。</li>
+<li>rpm：rpm包的扩展名，我们说过Linux下文件不是靠扩展名区分文件类型，也就是Linux中扩展名没有任何意义。可是这里怎么又出现了扩展名呢？如果RPM包不用“rpm”作为扩展名，系统可以正确识别没有问题，可是管理员很难识别这是个什么样的软件。</li>
+</ul>
+<h3 id="2）RPM包手工命令安装"><a href="#2）RPM包手工命令安装" class="headerlink" title="2）RPM包手工命令安装"></a>2）RPM包手工命令安装</h3><p>a）默认安装位置</p>
+<table>
+<thead>
+<tr>
+<th>路径</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>&#x2F;etc&#x2F;</td>
+<td>配置文件安装目录</td>
+</tr>
+<tr>
+<td>&#x2F;usr&#x2F;bin&#x2F;</td>
+<td>可执行的命令安装目录</td>
+</tr>
+<tr>
+<td>&#x2F;usr&#x2F;lib&#x2F;</td>
+<td>程序所使用的函数库保存位置</td>
+</tr>
+<tr>
+<td>&#x2F;usr&#x2F;share&#x2F;doc&#x2F;</td>
+<td>基本的软件使用手册保存位置</td>
+</tr>
+<tr>
+<td>&#x2F;usr&#x2F;share&#x2F;man&#x2F;</td>
+<td>帮助文件保存位置</td>
+</tr>
+</tbody></table>
+<p>b）安装命令</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -ivh 包全名</span><br><span class="line">选项：</span><br><span class="line">  -i    install安装(install)</span><br><span class="line">  -v    显示更详细的信息(verbose)</span><br><span class="line">  -h    打印#显示安装进度(hash)</span><br></pre></td></tr></table></figure>
+
+<p>其他选项：</p>
+<ul>
+<li>–nodeps：不检测依赖性安装。安装软件时会检测依赖性，确定所需的底层软件是否安装。如果没有安装则会报错。如果我不管依赖性，想强行安装，可以使用这个选项。这样不检测依赖性安装的软件是不能使用的，所以不建议这样做。</li>
+<li>–replacefiles：替换文件安装。如果安装软件包，可是包中部分文件已经存在，那么正常安装时，会报错”某个文件已经存在”从而导致软件无法安装，使用这个选项可以忽视这个报错，而覆盖安装。</li>
+<li>–replacepkgs：替换软件包安装。如果软件包已经安装，此选项可以把软件包重复安装一遍。</li>
+<li>–force：强制安装。不管是否已经安装，都重新安装。就是–replacefiles和–replacepkgs的综合。</li>
+<li>–test：测试安装。不会实际安装，只是检测一下依赖性。</li>
+<li>–prefix：指定安装路径。为安装软件指定安装路径，而不使用默认安装路径。如果指定了安装路径，软件没有安装到系统默认路径中的话，系统会找不到这些安装的软件，需要进行手工配置才能被系统识别。所以rpm包我们一般都采用默认路径安装：1）默认安装位置是系统的习惯位置。2）RPM包管理系统是有卸载命令的(数据库记录安装位置)</li>
+</ul>
+<p>c）服务启动</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># service启动</span><br><span class="line">service 服务名 start|stop|restart|status</span><br><span class="line">参数：</span><br><span class="line">  start:    启动服务</span><br><span class="line">  stop:     停止服务</span><br><span class="line">  restart:  重启服务</span><br><span class="line">  status:   查看服务状态</span><br><span class="line">  </span><br><span class="line">  # 标准启动</span><br><span class="line">  /etc/init.d/服务名 start|stop|restart|status</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="3）RPM包升级"><a href="#3）RPM包升级" class="headerlink" title="3）RPM包升级"></a>3）RPM包升级</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -Uvh 包全名</span><br><span class="line">选项：</span><br><span class="line">  -U      升级安装，如果没有安装过，系统直接安装。如果安装过的版本较旧，则升级到新版本(upgrade)</span><br><span class="line"> </span><br><span class="line">rpm -Fvh 包全名</span><br><span class="line">选项：</span><br><span class="line">  -F      升级安装，如果没有安装过，则不会安装，必须安装有较旧版本，才能升级(freshen)</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="4）RPM包卸载"><a href="#4）RPM包卸载" class="headerlink" title="4）RPM包卸载"></a>4）RPM包卸载</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -e 包名</span><br><span class="line">选项：</span><br><span class="line">  --nodeps      不检查依赖性</span><br><span class="line">  -e            卸载</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="5）RPM包查询"><a href="#5）RPM包查询" class="headerlink" title="5）RPM包查询"></a>5）RPM包查询</h3><p>a）查询软件包是否安装</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -q 包名</span><br><span class="line">选项：</span><br><span class="line">  -q：查询(query)</span><br></pre></td></tr></table></figure>
+
+
+
+<p>b）查询系统中的所有安装软件包</p>
+<p>可以查询Linux系统中所有已经安装的软件包。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -qa</span><br><span class="line">选项：</span><br><span class="line">  -a：所有(all)</span><br></pre></td></tr></table></figure>
+
+<p>可以用管道符来查看所需内容</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -qa | grep 包名</span><br></pre></td></tr></table></figure>
+
+
+
+<p>c）查询软件包的详细信息</p>
+<p>可以查询已经安装的某个软件包的详细信息</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -qi 包名</span><br><span class="line">选项：</span><br><span class="line">  -i：查询软件信息(information)</span><br></pre></td></tr></table></figure>
+
+<p>也可以查询还没有安装的软件包的详细信息</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -qip 包全名</span><br><span class="line">选项：</span><br><span class="line">  -p：查询没有安装的软件包(package)</span><br></pre></td></tr></table></figure>
+
+
+
+<p>d）查询软件包中的文件列表</p>
+<p>可以查询已经安装的软件包中的文件列表和安装的完整目录</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -ql 包名</span><br><span class="line">选项：</span><br><span class="line">  -l：列出软件包中所有的文件列表和软件所安装的目录(list)</span><br></pre></td></tr></table></figure>
+
+<p>查询未安装的软件包中的文件列表和打算安装的位置</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -qlp 包全名</span><br><span class="line">选项：</span><br><span class="line">  -p：查询没有安装的软件包信息(package)</span><br></pre></td></tr></table></figure>
+
+
+
+<p>e）查询系统文件属于哪个RPM包</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -qf 系统文件名</span><br><span class="line">选项：</span><br><span class="line">  -f：查询系统文件属于哪个软件包(file)</span><br></pre></td></tr></table></figure>
+
+
+
+<p>f）查询软件包所依赖的软件包</p>
+<p>查询系统中和已经安装的软件包有依赖关系的软件包</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -qR 包名</span><br><span class="line">选项：</span><br><span class="line">  -R：查询软件包的依赖性(requires)</span><br></pre></td></tr></table></figure>
+
+<p>查询未安装的软件包的依赖包</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -qRp 包全名</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="6）验证"><a href="#6）验证" class="headerlink" title="6）验证"></a>6）验证</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">校验本机已经安装的所有软件包</span></span><br><span class="line">rpm -Va</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">校验指定RPM包中的文件(verify)</span></span><br><span class="line">rpm -V 已安装的名包</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">校验某个系统文件是否被修改</span></span><br><span class="line">rpm -Vf 系统文件名</span><br></pre></td></tr></table></figure>
+
+<p>示例：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -V httpd</span><br><span class="line">S.5....T.    c             /etc/httpd/conf/httpd.conf</span><br><span class="line">验证内容    文件类型          文件名</span><br></pre></td></tr></table></figure>
+
+<p>验证内容详情：</p>
+<ul>
+<li>S：文件大小是否改变</li>
+<li>M：文件的类型或文件的权限(rwx)是否被改变</li>
+<li>5：文件MD5校验和是否改变(可以看成文件内容是否改变)</li>
+<li>D：设备的主从代码是否改变</li>
+<li>L：文件路径是否改变</li>
+<li>U：文件的属主(所有者)是否改变</li>
+<li>G：文件的属组是否改变</li>
+<li>T：文件的修改时间是否改变</li>
+</ul>
+<p>文件类型：</p>
+<ul>
+<li>c：配置文件(config file)</li>
+<li>d：普通文档(documention)</li>
+<li>g：“鬼”文件(ghost file)，很少见，就是该文件不应该被这个RPM包包含 </li>
+<li>l：授权文件(license file)</li>
+<li>r：描述文件(readme)</li>
+</ul>
+<h3 id="7）数字证书"><a href="#7）数字证书" class="headerlink" title="7）数字证书"></a>7）数字证书</h3><p>前面的校验方法只能对已经安装的RPM包中的文件进行校验，但是如果RPM包本身就被动过手脚，那么校验就不能解决问题了，我们就必须使用数字证书验证了。</p>
+<p>数字证书特点：</p>
+<ul>
+<li>首先必须找到原厂的公钥文件，然后进行安装</li>
+<li>再安装RPM包时会提取RPM包中的证书信息，然后和本机安装的原厂证书进行验证</li>
+<li>如果验证通过，则允许安装；如果验证不通过，则不允许安装并警告</li>
+</ul>
+<p> a）数字证书导入</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm --import 数字证书文件</span><br><span class="line">选项：</span><br><span class="line">  --import：导入数字证书</span><br></pre></td></tr></table></figure>
+
+
+
+<p>b）查询系统中安装好的数字证书</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -qa | grep gpg-pubkey</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="8）RPM包中文件的提取"><a href="#8）RPM包中文件的提取" class="headerlink" title="8）RPM包中文件的提取"></a>8）RPM包中文件的提取</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm2cpio 包全名 | cpio -idv . 文件的绝对路径</span><br></pre></td></tr></table></figure>
+
+<p>rpm2cpio：将rpm包转换为cpio格式的命令。</p>
+<p>cpio：是一个标准工具，它用于创建软件档案文件和从档案文件中提取文件。</p>
+<h2 id="6-RPM包在线安装-yum"><a href="#6-RPM包在线安装-yum" class="headerlink" title="6. RPM包在线安装(yum)"></a>6. RPM包在线安装(yum)</h2><h3 id="1）yum源文件解析"><a href="#1）yum源文件解析" class="headerlink" title="1）yum源文件解析"></a>1）yum源文件解析</h3><p>yum源配置文件保存在&#x2F;etc&#x2F;yum.repos.d&#x2F;目录中，文件的扩展名一定是”*.repo”。也就是说，yum源配置文件只要扩展名是”*.repo”就会生效。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">ls /etc/yum.repos.d/</span><br><span class="line">CentOS-Base.repo    CentOS-Debuginfo.repo    CentOS-fasttrack.repo    CentOS-Media.repo    CentOS-Vault.repo</span><br></pre></td></tr></table></figure>
+
+<p>这个目录中有5个yum源配置文件，默认情况下CentOS-Base.repo文件生效。</p>
+<p>CentOS-Base.repo中有5个yum源容器，以base容器解释其内容详情：</p>
+<ul>
+<li>[base]：容器名称，一定要放在[]中。</li>
+<li>name：容器说明，可以自己随便写。</li>
+<li>mirrorlist：镜像站点，这个可以注释掉。</li>
+<li>baseurl：yum源服务器的地址。默认是CentOS官方的yum源服务器，是可以使用的。如果觉得慢，可以改成国内yum源地址。</li>
+<li>enabled：此容器是否生效，如果不写或写成enabled&#x3D;1则表示此容器生效，写成enabled&#x3D;0则表示此容器不生效。</li>
+<li>gpgcheck：如果为1则表示RPM的数字证书生效，如果为0则表示RPM的数字证书不生效。</li>
+<li>gpgkey：数字证书的公钥文件保存位置，不用修改。</li>
+</ul>
+<h3 id="2）搭建本地光盘yum源"><a href="#2）搭建本地光盘yum源" class="headerlink" title="2）搭建本地光盘yum源"></a>2）搭建本地光盘yum源</h3><p>a）放入CentOS安装光盘，并挂载光盘到指定位置。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">创建cdrom目录，作为光盘的挂载点</span></span><br><span class="line">mkdir /mnt/cdrom</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">挂载光盘到/mnt/cdrom</span></span><br><span class="line">mount /dev/cdrom /mnt/cdrom/</span><br></pre></td></tr></table></figure>
+
+<p>b）修改其他几个yum源配置文件的扩展名，让它们失效，因为只有扩展名是”*.repo”的文件才能作为yum源配置文件。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">cd /etc/yum.repo.d</span><br><span class="line">mv CentOS-Base.repo CentOS-Base.repo.bak</span><br></pre></td></tr></table></figure>
+
+<p>c）修改光盘yum源配置文件CentOS-Media.repo</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">vim CentOS-Media.repo</span><br><span class="line">[c6-media]</span><br><span class="line">name=CentOS-$releasever - Media</span><br><span class="line">baseurl=file:///mnt/cdrom/</span><br><span class="line">gpgcheck=1</span><br><span class="line">enabled=1   # 让配置生效</span><br><span class="line">gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-6</span><br></pre></td></tr></table></figure>
+
+<p>d）查看是否生效</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查询yum源所有可安装的软件包列表</span></span><br><span class="line">yum list</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="3）yum命令"><a href="#3）yum命令" class="headerlink" title="3）yum命令"></a>3）yum命令</h3><p>a）查询</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查询yum所有安装包</span></span><br><span class="line">yum list</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查询yum源服务器中是否包含某个软件包</span></span><br><span class="line">yum list 包名</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">搜索yum源服务器上所有和关键字相关的软件包</span></span><br><span class="line">yum search 关键字</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查询指定软件包的信息</span></span><br><span class="line">yum info samba</span><br></pre></td></tr></table></figure>
+
+<p>yum search搜索可以用于确定某个软件在哪个相关包当中。</p>
+<p>b）安装</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">yum -y install 包名</span><br><span class="line">选项：</span><br><span class="line">  install：    安装</span><br><span class="line">  -y：         自动回答yes。如果不加-y，那么每个安装的软件都需要手工回答yes</span><br></pre></td></tr></table></figure>
+
+
+
+<p>c）升级</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">yum -y update 包名</span><br><span class="line">选项：</span><br><span class="line">  update:    升级</span><br><span class="line">  -y：       自动回答yes</span><br><span class="line"><span class="meta prompt_">  </span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">升级本机所有软件包（包括内核，不常用）</span></span><br><span class="line">yum -y update</span><br></pre></td></tr></table></figure>
+
+
+
+<p>d）卸载</p>
+<p>除非你确定卸载的软件的依赖包不会对系统产生影响，否则不要执行yum的卸载，因为很有可能在卸载软件包的同时卸载的依赖包也是重要的系统文件，这就可能导致系统崩溃。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">yum remove 包名</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="4）yum组管理命令"><a href="#4）yum组管理命令" class="headerlink" title="4）yum组管理命令"></a>4）yum组管理命令</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">列出所有可用的软件组列表</span></span><br><span class="line">yum grouplist</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">列出软件组中包含的软件</span></span><br><span class="line">yum groupinfo 软件组名</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">安装指定软件组</span></span><br><span class="line">yum groupinstall 软件组名</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">卸载指定软件组</span></span><br><span class="line">yum groupremove 软件组名</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="7-源码包安装"><a href="#7-源码包安装" class="headerlink" title="7.源码包安装"></a>7.源码包安装</h2><h3 id="1）注意事项"><a href="#1）注意事项" class="headerlink" title="1）注意事项"></a>1）注意事项</h3><p>a）源码包是从哪里来的？</p>
+<p>源码包是通过官方网站下载的，如果需要使用，是需要单独下载的。</p>
+<p>b）是否可以在系统中既安装rpm包的Apache，又安装源码包的Apache？</p>
+<p>可以，因为两种安装方法安装的Apache，安装位置是不一样的：</p>
+<ul>
+<li>源码包必须指定安装位置(源码包没有安装数据库，没有删除命令)</li>
+<li>RPM包不建议指定安装位置，建议安装在默认位置(RPM包安装的服务有标准卸载命令，不怕文件到处安装)</li>
+</ul>
+<h3 id="2）安装过程"><a href="#2）安装过程" class="headerlink" title="2）安装过程"></a>2）安装过程</h3><p>a）下载软件包</p>
+<p>b）解压缩</p>
+<p>c）进入解压目录</p>
+<p>d）.&#x2F;configure（编译前准备）</p>
+<p>这一步主要有三个作用：</p>
+<ul>
+<li>在安装之前需要检测系统环境是否符合安装要求。</li>
+<li>定义需要的功能选项。”.&#x2F;configure”支持的功能选项较多，可以执行“.&#x2F;configure –help”命令查询其支持的功能，一般都会通过”.&#x2F;configure –prefix&#x3D;安装路径”来指定安装路径。</li>
+<li>把系统环境的检测结果和定义好的功能选项写入Makefile文件，后续的编译和安装需要依赖这个文件的内容。</li>
+</ul>
+<p>需要注意的是，configure不是系统命令，而是源码包软件自带的一个脚本程序，所以必须采用“.&#x2F;configure”方式执行。</p>
+<p>e）make（编译）</p>
+<p>make会调用gcc编译器，并读取Makefile文件中的信息进行系统软件编译。编译的目的就是把源码程序转变为能被Linux识别的可执行文件，这些可执行文件保存在当前目录下。编译过程较为耗时，需要有足够的耐心。</p>
+<p>f）make clean（清空编译内容，非必需步骤）</p>
+<p>如果在”.&#x2F;configure”或“make”编译中报错，那么我们在重新执行命令前一定要记得执行make clean命令，它会清空Makefile文件或编译产生的“.o”文件。</p>
+<p>g）make install（编译安装）</p>
+<p>这才是真正的安装过程，一般会写清楚程序的安装位置。如果忘记指定安装目录，则可以把这个命令的执行过程保存下来，以备将来删除使用。</p>
+<h3 id="3）删除"><a href="#3）删除" class="headerlink" title="3）删除"></a>3）删除</h3><p>源码包没有删除命令，如果需要删除，直接删除安装目录即可。</p>
+<h3 id="4）打入补丁"><a href="#4）打入补丁" class="headerlink" title="4）打入补丁"></a>4）打入补丁</h3><p>a）补丁的生成</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 比较old和new文件的不同</span><br><span class="line">diff 选项 old new</span><br><span class="line">选项：</span><br><span class="line">  -a    将任何文档当做文本文档处理</span><br><span class="line">  -b    忽略空格造成的不同</span><br><span class="line">  -B    忽略空白行造成的不同</span><br><span class="line">  -I    忽略大小写造成的不同</span><br><span class="line">  -N    当比较两个目录时，如果某个文件只在一个目录中，则另一个目录中视作空文件。</span><br><span class="line">  -r    当比较目录时，递归比较子目录</span><br><span class="line">  -u    使用统一的输出格式</span><br></pre></td></tr></table></figure>
+
+<p>比较两个文件的不同，并生成补丁文件”txt.patch”：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 比较两个文件的不同，同时生成txt.patch补丁文件</span><br><span class="line">diff -Naur /root/test/old.txt /root/test/new.txt &gt; txt.patch</span><br></pre></td></tr></table></figure>
+
+
+
+<p>b）打入补丁</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 按照补丁文件进行更新</span><br><span class="line">patch -pn &lt; 补丁文件</span><br><span class="line">选项：</span><br><span class="line">  -pn    n为数字。代表按照补丁文件中的路径，指定更新文件的位置。</span><br></pre></td></tr></table></figure>
+
+<p>“-pn”不好理解，补丁文件是要打入旧文件的，但是你当前所在的目录和补丁文件中的记录是不一定匹配的，所以就需要”-pn”来同步两个目录。</p>
+<p>比如我当前在“&#x2F;root&#x2F;test”目录下，补丁文件中记录的文件目录是为“&#x2F;root&#x2F;test&#x2F;old.txt”。这时如果写入“p1”，那么补丁文件就会打入”&#x2F;root&#x2F;test&#x2F;root&#x2F;test&#x2F;old.txt”。如果写入的是“p2”，那么补丁文件就会打入”&#x2F;root&#x2F;test&#x2F;test&#x2F;old.txt”。如果写入的是“p3”，那么补丁文件就会打入”&#x2F;root&#x2F;test&#x2F;old.txt”。即n表示删除补丁文件中记录的文件目录的路径。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">patch -p3 &lt; txt.patch</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="8-脚本安装程序"><a href="#8-脚本安装程序" class="headerlink" title="8. 脚本安装程序"></a>8. 脚本安装程序</h2><p>以Webmin安装为例。</p>
+<p>a）下载webmin软件，地址：<a href="http://sourceforge.net/projects/webadmin/files/webmin/">http://sourceforge.net/projects/webadmin/files/webmin/</a></p>
+<p>b）解压软件</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">tar -zxvf webmin-1.610.tar.gz</span><br></pre></td></tr></table></figure>
+
+<p>c）进入解压目录</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">cd webmin-1.610</span><br></pre></td></tr></table></figure>
+
+<p>d）执行安装程序setup.sh，并指定功能选项。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">./setup.sh</span><br></pre></td></tr></table></figure>
+
 ]]></content>
       <categories>
         <category>Linux</category>
