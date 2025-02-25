@@ -3,7 +3,60 @@
   <entry>
     <title>Shell基础</title>
     <url>/2025/02/25/Shell%E5%9F%BA%E7%A1%80/</url>
-    <content><![CDATA[<p>Shell的两种主语法类型有Bourne和C，这两种语法彼此不兼容。Bourne家族主要包括sh、ksh、Bash、psh、zsh；C家族主要包括：csh、tcsh（Bash和zsh在不同程度上支持csh的语法）。</p>
+    <content><![CDATA[<h2 id="Shell概述"><a href="#Shell概述" class="headerlink" title="Shell概述"></a>Shell概述</h2><h3 id="Shell分类"><a href="#Shell分类" class="headerlink" title="Shell分类"></a>Shell分类</h3><table>
+<thead>
+<tr>
+<th>Shell类别</th>
+<th>易学性</th>
+<th>可移植性</th>
+<th>编辑性</th>
+<th>快捷性</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Bourne Shell（sh）</td>
+<td>容易</td>
+<td>好</td>
+<td>较差</td>
+<td>较差</td>
+</tr>
+<tr>
+<td>Korn Shell（ksh）</td>
+<td>较难</td>
+<td>较好</td>
+<td>好</td>
+<td>较好</td>
+</tr>
+<tr>
+<td>Bourne Again（Bash）</td>
+<td>难</td>
+<td>较好</td>
+<td>好</td>
+<td>好</td>
+</tr>
+<tr>
+<td>POSIX Shell（psh）</td>
+<td>较难</td>
+<td>好</td>
+<td>好</td>
+<td>较好</td>
+</tr>
+<tr>
+<td>C Shell（csh）</td>
+<td>较难</td>
+<td>差</td>
+<td>较好</td>
+<td>较好</td>
+</tr>
+<tr>
+<td>TC Shell（tcsh）</td>
+<td>难</td>
+<td>差</td>
+<td>好</td>
+<td>好</td>
+</tr>
+</tbody></table>
+<p>Shell的两种主语法类型有Bourne和C，这两种语法彼此不兼容。Bourne家族主要包括sh、ksh、Bash、psh、zsh；C家族主要包括：csh、tcsh（Bash和zsh在不同程度上支持csh的语法）。</p>
 <p>可以通过&#x2F;etc&#x2F;shells文件来查询Linux支持的Shell：</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# cat /etc/shells</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">/etc/shells: valid login shells</span></span><br><span class="line">/bin/sh</span><br><span class="line">/bin/bash</span><br><span class="line">/usr/bin/bash</span><br><span class="line">/bin/rbash</span><br><span class="line">/usr/bin/rbash</span><br><span class="line">/usr/bin/dash</span><br><span class="line">/usr/bin/sh</span><br></pre></td></tr></table></figure>
 
