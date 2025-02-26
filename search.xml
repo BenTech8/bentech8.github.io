@@ -1295,7 +1295,123 @@
 
 
 <p>系统默认环境变量</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# env</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# env</span><br><span class="line">SHELL=/bin/bash                                                # 当前的shell</span><br><span class="line">SESSION_MANAGER=local/ben-NBLK-WAX9X:@/tmp/.ICE-unix/4024,unix/ben-NBLK-WAX9X:/tmp/.ICE-unix/4024</span><br><span class="line">QT_ACCESSIBILITY=1</span><br><span class="line">COLORTERM=truecolor</span><br><span class="line">XDG_CONFIG_DIRS=/etc/xdg/xdg-ubuntu:/etc/xdg</span><br><span class="line">XDG_SESSION_PATH=/org/freedesktop/DisplayManager/Session0</span><br><span class="line">XDG_MENU_PREFIX=gnome-</span><br><span class="line">GNOME_DESKTOP_SESSION_ID=this-is-deprecated</span><br><span class="line">GTK_IM_MODULE=fcitx</span><br><span class="line">LANGUAGE=zh_CN:zh:en_US:en</span><br><span class="line">LC_ADDRESS=zh_CN.UTF-8</span><br><span class="line">GNOME_SHELL_SESSION_MODE=ubuntu</span><br><span class="line">LC_NAME=zh_CN.UTF-8</span><br><span class="line">SSH_AUTH_SOCK=/run/user/1000/keyring/ssh</span><br><span class="line">MEMORY_PRESSURE_WRITE=c29tZSAyMDAwMDAgMjAwMDAwMAA=</span><br><span class="line">HOMEBREW_PREFIX=/home/linuxbrew/.linuxbrew</span><br><span class="line">XMODIFIERS=@im=fcitx</span><br><span class="line">DESKTOP_SESSION=ubuntu</span><br><span class="line">LC_MONETARY=zh_CN.UTF-8</span><br><span class="line">GTK_MODULES=gail:atk-bridge</span><br><span class="line">PWD=/home/ben/work/个人/githubPage</span><br><span class="line">LOGNAME=ben</span><br><span class="line">XDG_SESSION_DESKTOP=ubuntu</span><br><span class="line">XDG_SESSION_TYPE=x11</span><br><span class="line">MANPATH=/home/linuxbrew/.linuxbrew/share/man:</span><br><span class="line">GPG_AGENT_INFO=/run/user/1000/gnupg/S.gpg-agent:0:1</span><br><span class="line">SYSTEMD_EXEC_PID=4060</span><br><span class="line">XAUTHORITY=/home/ben/.Xauthority</span><br><span class="line">XDG_GREETER_DATA_DIR=/var/lib/lightdm-data/ben</span><br><span class="line">GDM_LANG=zh_CN</span><br><span class="line">HOME=/home/ben                                                    # 当前登录用户的家目录</span><br><span class="line">IM_CONFIG_PHASE=1</span><br><span class="line">LC_PAPER=zh_CN.UTF-8</span><br><span class="line">LANG=zh_CN.UTF-8                                                  # 语系</span><br><span class="line">LS_COLORS=rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=00:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.avif=01;35:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:*~=00;90:*#=00;90:*.bak=00;90:*.crdownload=00;90:*.dpkg-dist=00;90:*.dpkg-new=00;90:*.dpkg-old=00;90:*.dpkg-tmp=00;90:*.old=00;90:*.orig=00;90:*.part=00;90:*.rej=00;90:*.rpmnew=00;90:*.rpmorig=00;90:*.rpmsave=00;90:*.swp=00;90:*.tmp=00;90:*.ucf-dist=00;90:*.ucf-new=00;90:*.ucf-old=00;90:          # 定义颜色显示</span><br><span class="line">XDG_CURRENT_DESKTOP=ubuntu:GNOME</span><br><span class="line">MEMORY_PRESSURE_WATCH=/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/session.slice/org.gnome.Shell@x11.service/memory.pressure</span><br><span class="line">VTE_VERSION=7600</span><br><span class="line">XDG_SEAT_PATH=/org/freedesktop/DisplayManager/Seat0</span><br><span class="line">GNOME_TERMINAL_SCREEN=/org/gnome/Terminal/screen/e46b9f29_027f_412a_aa8b_f9404dd3bc96</span><br><span class="line">QTWEBENGINE_DICTIONARIES_PATH=/usr/share/hunspell-bdic/</span><br><span class="line">CLUTTER_IM_MODULE=fcitx</span><br><span class="line">INFOPATH=/home/linuxbrew/.linuxbrew/share/info:</span><br><span class="line">SDL_IM_MODULE=fcitx</span><br><span class="line">LESSCLOSE=/usr/bin/lesspipe %s %s</span><br><span class="line">XDG_SESSION_CLASS=user</span><br><span class="line">TERM=xterm-256color                                                     # 终端环境</span><br><span class="line">LC_IDENTIFICATION=zh_CN.UTF-8</span><br><span class="line">LESSOPEN=| /usr/bin/lesspipe %s</span><br><span class="line">USER=ben                                                                # 当前登录的用户</span><br><span class="line">HOMEBREW_CELLAR=/home/linuxbrew/.linuxbrew/Cellar</span><br><span class="line">GNOME_TERMINAL_SERVICE=:1.10145</span><br><span class="line">DISPLAY=:0</span><br><span class="line">SHLVL=1</span><br><span class="line">GSM_SKIP_SSH_AGENT_WORKAROUND=true</span><br><span class="line">LC_TELEPHONE=zh_CN.UTF-8</span><br><span class="line">QT_IM_MODULE=fcitx</span><br><span class="line">HOMEBREW_REPOSITORY=/home/linuxbrew/.linuxbrew/Homebrew</span><br><span class="line">LC_MEASUREMENT=zh_CN.UTF-8</span><br><span class="line">XDG_RUNTIME_DIR=/run/user/1000</span><br><span class="line">DEBUGINFOD_URLS=https://debuginfod.ubuntu.com </span><br><span class="line">LC_TIME=zh_CN.UTF-8</span><br><span class="line">GTK3_MODULES=xapp-gtk3-module</span><br><span class="line">XDG_DATA_DIRS=/usr/share/ubuntu:/usr/share/gnome:/usr/local/share:/usr/share:/var/lib/snapd/desktop</span><br><span class="line">PATH=/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:/home/ben/.local/bin:/home/ben/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/usr/local/go/bin    # 系统查找命令的路径</span><br><span class="line">GDMSESSION=ubuntu</span><br><span class="line">DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus</span><br><span class="line">LC_NUMERIC=zh_CN.UTF-8</span><br><span class="line">_=/usr/bin/env</span><br><span class="line">OLDPWD=/home/ben/work/个人/githubPage/themes/next</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="Bash操作接口相关的变量"><a href="#Bash操作接口相关的变量" class="headerlink" title="Bash操作接口相关的变量"></a>Bash操作接口相关的变量</h4><p>Bash操作接口相关的变量对我们的Bash操作终端起到了重要的作用。这些变量只能用set命令查看。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# set</span><br><span class="line">BASH=/usr/bin/bash                       # Bash的位置</span><br><span class="line">BASH_VERSINFO=([0]=&quot;5&quot; [1]=&quot;2&quot; [2]=&quot;21&quot; [3]=&quot;1&quot; [4]=&quot;release&quot; [5]=&quot;x86_64-pc-linux-gnu&quot;)    # Bash的版本</span><br><span class="line">BASH_VERSION=&#x27;5.2.21(1)-release&#x27;         # bash的版本</span><br><span class="line">HISTFILE=/home/ben/.bash_history         # 历史命令保存文件</span><br><span class="line">HISTFILESIZE=2000                        # 在文件当中记录的历史命令最大条数</span><br><span class="line">HISTSIZE=1000                            # 在缓存中记录的历史命令最大条数</span><br><span class="line">LANG=zh_CN.UTF-8                         # 语系环境</span><br><span class="line">MACHTYPE=x86_64-pc-linux-gnu             # 软件类型是i386兼容类型</span><br><span class="line">MAILCHECK=60                             # 每60s去扫描新邮件</span><br><span class="line">PPID=557258                              # 父shell的PID</span><br><span class="line">PS1=&#x27;\[\e]0;\u@\h: \w\a\]$&#123;debian_chroot:+($debian_chroot)&#125;\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ &#x27;                                              # 命令提示符</span><br><span class="line">PS2=&#x27;&gt; &#x27;                                 # 如果命令一行没有输入完成，第二行命令的提示符</span><br><span class="line">UID=1000                                 # 当前用户的UID</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="PATH变量"><a href="#PATH变量" class="headerlink" title="PATH变量"></a>PATH变量</h4><p>系统查找命令的路径</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查询PATH环境变量的值</span></span><br><span class="line">[root@localhost ~]# echo $PATH</span><br><span class="line">/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:/home/ben/.local/bin:/home/ben/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/usr/local/go/bin</span><br></pre></td></tr></table></figure>
+
+<p>PATH变量的值是用“：”分割的路径，这些路径就是系统查找命令的路径。也就是说当我们输入了一个程序名，如果没有写入路径，系统就会到PATH变量定义的路径中去寻找是否可以执行的程序，如果找到则执行，否则会报“命令没有发现”的错误。</p>
+<p>我们把自己的脚本拷贝到PATH变量定义的路径中，自己写的脚本也可以不输入路径而直接运行。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">拷贝hello.sh到/bin目录</span></span><br><span class="line">[root@localhost ~]# cp /root/sh/hello.sh /bin/</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">运行hello.sh</span></span><br><span class="line">[root@localhost ~]# hello.sh</span><br><span class="line">Mr. Ben is the most honest man.</span><br></pre></td></tr></table></figure>
+
+<p>我们也可以修改PATH变量的值，而不把程序脚本复制到&#x2F;bin&#x2F;目录中。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">在变量PATH的后面，加入/root/sh目录</span></span><br><span class="line">[root@localhost ~]# PATH=&quot;$PATH&quot;:/root/sh</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查询PATH的值</span></span><br><span class="line">[root@localhost ~]# echo $PATH</span><br><span class="line">/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:/home/ben/.local/bin:/home/ben/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/usr/local/go/bin:/root/sh</span><br></pre></td></tr></table></figure>
+
+<p>这样定义的PATH变量只是临时生效，一旦重启或注销就会消失，如果想要永久生效，需要写入环境变量配置文件。</p>
+<h4 id="PS1变量"><a href="#PS1变量" class="headerlink" title="PS1变量"></a>PS1变量</h4><p>命令提示符设置。</p>
+<p>PS1是用来定义命令行的提示符的，可以安装我们自己的需求来定义自己喜欢的提示符。PS1可以支持以下这些选项：</p>
+<ul>
+<li>\d：显示日期，格式为”星期 月 日”</li>
+<li>\H：显示完整的主机名，如默认主机名”localhost.localdomain”</li>
+<li>\h：显示简写主机名。如默认主机名”localhost”</li>
+<li>\t：显示24小时制时间，格式为”HH:MM:SS”</li>
+<li>\T：显示12小时制时间，格式为”HH:MM:SS”</li>
+<li>\A：显示24小时制时间，格式为“HH:MM”</li>
+<li>@：显示12小时制时间，格式为”HH:MM am&#x2F;pm”</li>
+<li>\u：显示当前用户名</li>
+<li>\v：显示Bash的版本信息</li>
+<li>\w：显示当前所在目录的完整名称</li>
+<li>\W：显示当前所在目录的最后一个目录</li>
+<li>\#：执行的第几个命令</li>
+<li>\$：提示符。如果是root用户会显示提示符为“#”， 如果是普通用户会显示提示符为“$”</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# echo $PS1</span><br><span class="line">\[\e]0;\u@\h: \w\a\]$&#123;debian_chroot:+($debian_chroot)&#125;\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$</span><br></pre></td></tr></table></figure>
+
+<p>在PS1变量中，如果是可以解释的符号，如”\u”、“\h”等，则显示这个符号的作用，如果是不能解释的符号，如”@”或“空格”，则原符号输出。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 修改提示符</span><br><span class="line">[root@localhost ~]# PS1=&#x27;\[\u@\t \w\]\$&#x27;</span><br></pre></td></tr></table></figure>
+
+<p>PS1变量的值要用单引号包含，否则设置不生效。PS1变量可以自由定制，不过说实话一个提示符已经使用习惯了，还是用默认的吧。</p>
+<h4 id="LANG语系变量"><a href="#LANG语系变量" class="headerlink" title="LANG语系变量"></a>LANG语系变量</h4><p>LANG变量定义了Linux系统的主语系环境。这个变量的默认值是：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# echo $LANG</span><br><span class="line">zh_CN.UTF-8</span><br></pre></td></tr></table></figure>
+
+<p>这是因为Linux安装时，选择的是中文安装，所以默认的主语系变量是“zh_CN.UTF-8”。</p>
+<p>那么Linux到底支持多少语系呢？可以使用以下命令查询：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# locale -a | more</span><br><span class="line">C</span><br><span class="line">C.utf8</span><br><span class="line">en_AG</span><br><span class="line">en_AG.utf8</span><br><span class="line">en_AU.utf8</span><br><span class="line">en_BW.utf8</span><br><span class="line">en_CA.utf8</span><br><span class="line">en_DK.utf8</span><br><span class="line">en_GB.utf8</span><br><span class="line">en_HK.utf8</span><br><span class="line">en_IE.utf8</span><br><span class="line">en_IL</span><br><span class="line">en_IL.utf8</span><br><span class="line">en_IN</span><br><span class="line">en_IN.utf8</span><br><span class="line">en_NG</span><br><span class="line">en_NG.utf8</span><br><span class="line">en_NZ.utf8</span><br><span class="line">en_PH.utf8</span><br><span class="line">en_SG.utf8</span><br><span class="line">en_US.utf8</span><br><span class="line">en_ZA.utf8</span><br><span class="line">en_ZM</span><br><span class="line">en_ZM.utf8</span><br><span class="line">en_ZW.utf8</span><br><span class="line">POSIX</span><br><span class="line">zh_CN.utf8</span><br><span class="line">zh_SG.utf8</span><br></pre></td></tr></table></figure>
+
+<p>当前系统是什么语系呢？</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# locale</span><br><span class="line">LANG=zh_CN.UTF-8</span><br><span class="line">LANGUAGE=zh_CN:zh:en_US:en</span><br><span class="line">LC_CTYPE=&quot;zh_CN.UTF-8&quot;</span><br><span class="line">LC_NUMERIC=zh_CN.UTF-8</span><br><span class="line">LC_TIME=zh_CN.UTF-8</span><br><span class="line">LC_COLLATE=&quot;zh_CN.UTF-8&quot;</span><br><span class="line">LC_MONETARY=zh_CN.UTF-8</span><br><span class="line">LC_MESSAGES=&quot;zh_CN.UTF-8&quot;</span><br><span class="line">LC_PAPER=zh_CN.UTF-8</span><br><span class="line">LC_NAME=zh_CN.UTF-8</span><br><span class="line">LC_ADDRESS=zh_CN.UTF-8</span><br><span class="line">LC_TELEPHONE=zh_CN.UTF-8</span><br><span class="line">LC_MEASUREMENT=zh_CN.UTF-8</span><br><span class="line">LC_IDENTIFICATION=zh_CN.UTF-8</span><br><span class="line">LC_ALL=</span><br></pre></td></tr></table></figure>
+
+<p>系统默认语系查看</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# cat /etc/sysconfig/i18n</span><br><span class="line">LANG=&quot;zh_CN.UTF-8&quot;</span><br></pre></td></tr></table></figure>
+
+<p>默认语系是下次重启之后系统所使用的语系，而当前系统语系是当前系统使用的语系。如果系统重启，会从默认语系配置文件&#x2F;etc&#x2F;sysconfig&#x2F;i18n中读出语系，然后赋予变量LANG让这个语系生效。</p>
+<p>关于Linux支持中文的问题。是不是只要定义了语系为中文语系，如zh_CN.UTF-8就可以正确显示中文呢？这个要分情况，如果我们在图形界面中，或者是使用远程连接工具(如secureCRT)，只要正确设置了语系，那么是可以正确显示中文的。当然远程工具也要配置正确的语系环境。如果是纯字符界面(本地终端tty1-tty6)是不能显示中文的，因为Linux的纯字符界面是不能显示中文这么复杂的编码的。如果非要在纯字符界面显示中文，那么只能安装中文插件，如zhcon等。</p>
+<h4 id="位置参数变量"><a href="#位置参数变量" class="headerlink" title="位置参数变量"></a>位置参数变量</h4><table>
+<thead>
+<tr>
+<th>位置参数变量</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>$n</td>
+<td>n为数字，$0代表命令本身，$1-9代表第一到第九个参数，十以上的参数需要用大括号包含，如${10}</td>
+</tr>
+<tr>
+<td>$*</td>
+<td>这个变量代表命令行中所有的参数，$*把所有的参数看成一个整本</td>
+</tr>
+<tr>
+<td>$@</td>
+<td>这个变量也代表命令行中所有的参数，不过$@把每个参数区分对待</td>
+</tr>
+<tr>
+<td>$#</td>
+<td>这个变量代表命令行中所有参数的个数</td>
+</tr>
+</tbody></table>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/bash</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Author：Ben（E-mail：17620170099@163.com）</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">给num1变量赋值是第一个参数</span></span><br><span class="line">num1=$1</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">给num2变量赋值是第二个参数</span></span><br><span class="line">num2=$2</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">求和</span></span><br><span class="line">sum=$(( $num1 + $num2 ))</span><br><span class="line">echo $sum</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/bash</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Author：Ben（E-mail：17620170099@163.com）</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">打印所有位置参数个数</span></span><br><span class="line">echo &quot;A total of $# parameters&quot;</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">打印所有位置参数值</span></span><br><span class="line">for i in &quot;$*&quot;</span><br><span class="line">    do</span><br><span class="line">        echo &quot;The parameters is: $i&quot;</span><br><span class="line">    done</span><br><span class="line">x=1</span><br><span class="line">for y in &quot;$@&quot;</span><br><span class="line">    do</span><br><span class="line">        echo &quot;The parameter$x is: $y&quot;</span><br><span class="line">        x=$(( $x + 1 ))</span><br><span class="line">    done</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="预定义变量"><a href="#预定义变量" class="headerlink" title="预定义变量"></a>预定义变量</h4><table>
+<thead>
+<tr>
+<th>预定义变量</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>$?</td>
+<td>最后一次执行的命令的返回状态。如果这个变量的值为0，证明上一个命令正确执行；如果这个变量的值为非0(具体是哪个数，由命令自己来决定)，则证明上一个命令执行不正确了。</td>
+</tr>
+<tr>
+<td>$$</td>
+<td>当前进程的进程号(PID)</td>
+</tr>
+<tr>
+<td>$!</td>
+<td>后台运行的最后一个进程的进程号(PID)</td>
+</tr>
+</tbody></table>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">ben@ben-NBLK-WAX9X:~/test$ls</span><br><span class="line">12  nginx-test  nginx-test.zip</span><br><span class="line">ben@ben-NBLK-WAX9X:~/test$echo $?</span><br><span class="line">0</span><br><span class="line">ben@ben-NBLK-WAX9X:~/test$ls install.log</span><br><span class="line">ls: 无法访问 &#x27;install.log&#x27;: 没有那个文件或目录</span><br><span class="line">ben@ben-NBLK-WAX9X:~/test$echo $?</span><br><span class="line">2</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/bash</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Author: Ben（E-mail: 17620170099@163.com）</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">输出当前进程的PID，这个PID就是这个脚本执行时，生成的进程的PID</span></span><br><span class="line">echo &quot;The current process is $$&quot;</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">在/root目录下查找hello.sh文件，&amp;是把命令放入后台执行</span></span><br><span class="line">find /root -name hello.sh &amp;</span><br><span class="line">echo &quot;The last on Daemon process is $!&quot;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="接收键盘输入"><a href="#接收键盘输入" class="headerlink" title="接收键盘输入"></a>接收键盘输入</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# read [选项] [变量名]</span><br><span class="line">选项：</span><br><span class="line">  -p &quot;提示信息&quot;:    在等待read输入时，输出提示信息</span><br><span class="line">  -t 秒数:          read命令会一直等待用户输入，使用此选项可以指定等待时间</span><br><span class="line">  -n 字符数:        read命令只接受指定的字符数，就会执行</span><br><span class="line">  -s:              隐藏输入的数据，适用于机密信息的输入</span><br><span class="line">变量名：变量名可以自定义，如果不指定变量名，会把输入保存入默认变量REPLY。如果只提供了一个变量名，则整个输入行赋予该变量。如果提供了一个以上的变量名，则输入行分为若干字，一个接一个地赋予各个变量，而命令行上的最后一个变量取得剩余的所有字</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#!/bin/bash</span><br><span class="line"># Author: Ben（E-mail: 17620170099@163.com）</span><br><span class="line"></span><br><span class="line">read -t 30 -p &quot;Please input your name: &quot; name</span><br><span class="line">echo &quot;Name is $name&quot;</span><br><span class="line"></span><br><span class="line">read -s -t 30 -p &quot;Please enter your age: &quot; age</span><br><span class="line"># 调整输出格式</span><br><span class="line">echo -e &quot;\n&quot;</span><br><span class="line">echo &quot;Age is $age&quot;</span><br><span class="line"></span><br><span class="line">read -n 1 -t 30 -p &quot;Please select your gender[M/F]: &quot; gender</span><br><span class="line">echo -e &quot;\n&quot;</span><br><span class="line">echo &quot;Sex is $gender&quot;</span><br></pre></td></tr></table></figure>
 
 
 
