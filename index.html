@@ -160,6 +160,387 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://bentech8.github.io/2025/02/27/Shell%E7%BC%96%E7%A8%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Ben">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ben">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/02/27/Shell%E7%BC%96%E7%A8%8B/" class="post-title-link" itemprop="url">Shell编程</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2025-02-27 11:12:53 / 修改时间：18:18:36" itemprop="dateCreated datePublished" datetime="2025-02-27T11:12:53+08:00">2025-02-27</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Shell/" itemprop="url" rel="index"><span itemprop="name">Shell</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="Shell编程"><a href="#Shell编程" class="headerlink" title="Shell编程"></a>Shell编程</h2><h3 id="正则表达式"><a href="#正则表达式" class="headerlink" title="正则表达式"></a>正则表达式</h3><h4 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h4><p>正则表达式用来在文件中匹配符合条件的字符串，通配符用来匹配符合条件的文件名。其实这种区别只在Shell当中适用，因为用来文件当中搜索字符串的命令如grep、awk、sed等命令可以支持正则表达式，而在系统当中搜索文件的命令如ls、find、cp这些命令不支持正则表达式，所以只能使用Shell自己的通配符来进行匹配了。</p>
+<h4 id="基础正则表达式"><a href="#基础正则表达式" class="headerlink" title="基础正则表达式"></a>基础正则表达式</h4><table>
+<thead>
+<tr>
+<th>元字符</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>*</td>
+<td>前一个字符匹配0次或任意多次</td>
+</tr>
+<tr>
+<td>.</td>
+<td>匹配除了换行符外任意一个字符</td>
+</tr>
+<tr>
+<td>^</td>
+<td>匹配行首。例如^hello会匹配以hello开头的行</td>
+</tr>
+<tr>
+<td>$</td>
+<td>匹配行尾。例如hello$会匹配以hello结尾的行</td>
+</tr>
+<tr>
+<td>[]</td>
+<td>匹配中括号中指定的任意一个字符，只匹配一个字符。例如[aoeiu]匹配任意一个元音字母</td>
+</tr>
+<tr>
+<td>[^]</td>
+<td>匹配除中括号的字符以外的任意一个字符。例如[^0-9]匹配任意一位非数字字符</td>
+</tr>
+<tr>
+<td>\</td>
+<td>转义符。用于取消特殊符号的转义</td>
+</tr>
+<tr>
+<td>\{n\}</td>
+<td>表示其前面的字符恰好出现n次。例如[0-9]\{4\}匹配4位数字</td>
+</tr>
+<tr>
+<td>\{n, \}</td>
+<td>表示其前面的字符出现不小于n次。例如[0-9]\{2, \}表示两位及以上的数字</td>
+</tr>
+<tr>
+<td>\{n,m\}</td>
+<td>表示其前面的字符至少出现n次，最多出现m次。例如[a-z]\{6,8\}匹配6到8位的小写字母。</td>
+</tr>
+</tbody></table>
+<p>练习文件建立：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# vim test_rule.txt</span><br><span class="line">Mr. Li Ming said:</span><br><span class="line">he was the most honest man.</span><br><span class="line">123despise him.</span><br><span class="line">But since Mr. Zhang San came,</span><br><span class="line">he never saaaid thos words.</span><br><span class="line">5555nice!</span><br><span class="line">because, actuaaaally,</span><br><span class="line">M. Zhang San is the most honest man</span><br><span class="line">Later, Mr. Li Ming soid his hot body.</span><br></pre></td></tr></table></figure>
+
+<p>“a*”前一个字符匹配0次，或任意多次</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# grep &quot;a*&quot; test_rule.txt</span><br><span class="line">Mr. Li Ming said:</span><br><span class="line">he was the most honest man.</span><br><span class="line">123despise him.</span><br><span class="line">But since Mr. Zhang San came,</span><br><span class="line">he never saaaid thos words.</span><br><span class="line">5555nice!</span><br><span class="line">because, actuaaaally,</span><br><span class="line">M. Zhang San is the most honest man</span><br><span class="line">Later, Mr. Li Ming soid his hot body.</span><br></pre></td></tr></table></figure>
+
+<p>“aa*”代表这行字符串最少要有一个a</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# grep &quot;aa*&quot; test_rule.txt</span><br><span class="line">Mr. Li Ming said:</span><br><span class="line">he was the most honest man.</span><br><span class="line">But since Mr. Zhang San came,</span><br><span class="line">he never saaaid thos words.</span><br><span class="line">because, actuaaaally,</span><br><span class="line">M. Zhang San is the most honest man</span><br><span class="line">Later, Mr. Li Ming soid his hot body.</span><br></pre></td></tr></table></figure>
+
+<p>“.”匹配除了换行符外任意一个字符，只能匹配一个字符，这个字符可以是任意字符</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# grep &quot;s..d&quot; test_rule.txt</span><br><span class="line">Mr. Li Ming said:</span><br><span class="line">Later, Mr. Li Ming soid his hot body.</span><br><span class="line"></span><br><span class="line">[root@localhost ~]# grep &quot;s.*d&quot; test_rule.txt</span><br><span class="line">Mr. Li Ming said:</span><br><span class="line">he never saaaid thos words.</span><br><span class="line">Later, Mr. Li Ming soid his hot body.</span><br></pre></td></tr></table></figure>
+
+<p>“^”代表匹配行首，比如“^M”会匹配以大写“M”开头的行</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# grep &quot;^M&quot; test_rule.txt</span><br><span class="line">Mr. Li Ming said:</span><br><span class="line">M. Zhang San is the most honest man</span><br></pre></td></tr></table></figure>
+
+<p>“$”代表匹配行尾，比如“n$”会匹配以小写“n”结尾的行</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# grep &quot;n$&quot; test_rule.txt</span><br><span class="line">M. Zhang San is the most honest man</span><br></pre></td></tr></table></figure>
+
+<p>“^$”则会匹配空白行</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# grep &quot;^$&quot; test_rule.txt</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>“[]”会匹配中括号中指定任意一个字符，注意只能匹配一个字符。比如[ao]会匹配a或o</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# grep &quot;s[ao]id&quot; test_rule.txt</span><br><span class="line">Mr. Li Ming said:</span><br><span class="line">Later, Mr. Li Ming soid his hot body.</span><br></pre></td></tr></table></figure>
+
+<p>“[^]”匹配除中括号的字符以外的任意一个字符</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# grep &quot;^[^a-z]&quot; test_rule.txt</span><br><span class="line">Mr. Li Ming said:</span><br><span class="line">123despise him.</span><br><span class="line">But since Mr. Zhang San came,</span><br><span class="line">5555nice!</span><br><span class="line">M. Zhang San is the most honest man</span><br><span class="line">Later, Mr. Li Ming soid his hot body.</span><br></pre></td></tr></table></figure>
+
+<p>“\“转义符</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# grep &quot;\.$&quot; test_rule.txt</span><br><span class="line">he was the most honest man.</span><br><span class="line">123despise him.</span><br><span class="line">he never saaaid thos words.</span><br><span class="line">Later, Mr. Li Ming soid his hot body.</span><br></pre></td></tr></table></figure>
+
+<p>“\{n\}”表示其前面的字符恰好出现n次</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# grep &quot;a\&#123;3\&#125;&quot; test_rule.txt</span><br><span class="line">he never saaaid thos words.</span><br><span class="line">because, actuaaaally,</span><br></pre></td></tr></table></figure>
+
+<p>“\{n,\}”会匹配前面的字符出现最少n次。比如“^[0-9]\{3, \}[a-z]”这个正则就能匹配最少用连续三个数字开头的字符串</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# grep &quot;^[0-9]\&#123;3,\&#125;[a-z]&quot; test_rule.txt</span><br><span class="line">123despise him.</span><br><span class="line">5555nice!</span><br></pre></td></tr></table></figure>
+
+<p>“\{n,m\}”匹配其前面的字符至少出现n次，最多出现m次</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# grep &quot;sa\&#123;1,3\&#125;i&quot; test_rule.txt</span><br><span class="line">Mr. Li Ming said:</span><br><span class="line">he never saaaid thos words.</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="扩展正则表达式"><a href="#扩展正则表达式" class="headerlink" title="扩展正则表达式"></a>扩展正则表达式</h4><p>在正则表达式中应该还可以支持一些元字符，比如“+”、“?”、“|”、“()”。其实Linux是支持这些元字符的，只是grep命令默认不支持而已。如果想要支持这些元字符，必须使用egrep命令或grep -E选项，所以我们又把这些元字符称作扩展元字符。</p>
+<p>如果查询grep的帮助，对egrep的说明就是和grep -E选项一样的命令，所以我们可以把这两个命令当做别名来对待。</p>
+<table>
+<thead>
+<tr>
+<th>扩展元字符</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>+</td>
+<td>前一个字符匹配1次或任意多次。如“go+gle”会匹配“gogle”、“google”或“gooogle”等。</td>
+</tr>
+<tr>
+<td>?</td>
+<td>前一个字符匹配0次或1次。如”colou?r”可以匹配“colour”或“color”。</td>
+</tr>
+<tr>
+<td>|</td>
+<td>匹配两个或多个分支的选择。如”was|his”会匹配既包含“was”的行，也匹配包含”his”的行。</td>
+</tr>
+<tr>
+<td>()</td>
+<td>匹配其整体为一个字符，即模式单元。可以理解为由多个单字符组成的大字符。如“(dog)+”会匹配“dog”、“dogdog”、“dogdogdog”等。因为被()包含的字符会当成一个整体。</td>
+</tr>
+</tbody></table>
+<h3 id="字符截取和替换命令"><a href="#字符截取和替换命令" class="headerlink" title="字符截取和替换命令"></a>字符截取和替换命令</h3><h4 id="cut"><a href="#cut" class="headerlink" title="cut"></a>cut</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# cut [选项] 文件名</span><br><span class="line">选项：</span><br><span class="line">  -f 列号：         提取第几列</span><br><span class="line">  -d 分隔号：       按照指定分隔符分割列</span><br><span class="line">  -c 字符范围：      不依赖分隔符来区分列，而是通过字符范围(行首为0)来进行字段提取。“n-”表示从第n个字符到行尾；&quot;n-m&quot;表示从第n个字符到第m个字符；&quot;-                     m&quot;表示从第1个字符到第m个字符。</span><br></pre></td></tr></table></figure>
+
+<p>cut命令的默认分隔符是制表符，也就是“tab”键。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# vim test.txt</span><br><span class="line">ID      Name    Gender  Mark</span><br><span class="line">1       Liming  M       86</span><br><span class="line">2       Sc      M       90</span><br><span class="line">3       Tg      M       83</span><br></pre></td></tr></table></figure>
+
+<p>提取第二列：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# cut -f 2 test.txt</span><br><span class="line">Name</span><br><span class="line">Liming</span><br><span class="line">Sc</span><br><span class="line">Tg</span><br></pre></td></tr></table></figure>
+
+<p>提取多列：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# cut -f 2,3 test.txt</span><br><span class="line">Name	Gender</span><br><span class="line">Liming	M</span><br><span class="line">Sc	M</span><br><span class="line">Tg	M</span><br></pre></td></tr></table></figure>
+
+<p>按照字符进行提取：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# cut -c 8- test.txt        # &quot;8-&quot;代表提取所有行的第8个字符到结尾</span><br><span class="line">	Gender	Mark</span><br><span class="line">g	M	86</span><br><span class="line">90</span><br><span class="line">83</span><br></pre></td></tr></table></figure>
+
+<p>以“:”作为分隔符提取：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# cut -d &quot;:&quot; -f 1,3 /etc/passwd</span><br><span class="line">root:0</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="awk"><a href="#awk" class="headerlink" title="awk"></a>awk</h4><p>a）printf格式化输出</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# printf &#x27;输出类型输出格式&#x27; 输出内容</span><br><span class="line">输出类型：</span><br><span class="line">  %ns:        输出字符串。n是数字指代输出几个字符</span><br><span class="line">  %ni:        输出整数。n是数字指代输出几个数字</span><br><span class="line">  %m.nf:      输出浮点数。m和n是数字，指代输出的整数位和小数位数。如%8.2f代表共输出8位数，其中2位是小数，6位是整数。</span><br><span class="line">输出格式：</span><br><span class="line">  \a：         输出警告声音</span><br><span class="line">  \b：         输出退格键，也就是Backspace键</span><br><span class="line">  \f：         清除屏幕</span><br><span class="line">  \n:          换行</span><br><span class="line">  \r:          回车，也就是Enter键</span><br><span class="line">  \t:          水平输出退格键，也就是Tab键</span><br><span class="line">  \v:          垂直输出退格键，也就是Tab键</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# vim test.txt</span><br><span class="line">ID      Name    PHP     Linux   MySQL   Average </span><br><span class="line">1       Liming  82      95      86      87.66</span><br><span class="line">2       Sc      74      96      87      85.66</span><br><span class="line">3       Tg      99      83      93      91.66</span><br></pre></td></tr></table></figure>
+
+<p>使用printf输出test.txt文件的内容：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# printf &#x27;%s&#x27; $(cat test.txt)</span><br><span class="line">IDNamePHPLinuxMySQLAverage1Liming82958687.662Sc74968785.663Tg99839391.66[root@localhost ~]#</span><br></pre></td></tr></table></figure>
+
+<p>如果不指定输出格式，则会把所有输出内容连在一起输出。其实文本的输出本身就是这样的，cat等文本输出命令之所以可以按照格式漂亮的输出，那是因为cat命令已经设定了输出格式。为了用printf输出合理的格式，可以这样做：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">注意在<span class="built_in">printf</span>命令的单引号中，只能识别格式输出符号，而手工输入的空格是无效的</span></span><br><span class="line">[root@localhost ~]# printf &#x27;%s\t %s\t %s\t %s\t %s\t %s\t \n&#x27; $(cat test.txt)</span><br><span class="line">ID	 Name	 PHP	 Linux	 MySQL	 Average	 </span><br><span class="line">1	 Liming	 82	 95	 86	 87.66	 </span><br><span class="line">2	 Sc	 74	 96	 87	 85.66	 </span><br><span class="line">3	 Tg	 99	 83	 93	 91.66</span><br></pre></td></tr></table></figure>
+
+<p>如果不想把成绩当成字符串输出，而是按照整形和浮点型输出，则要这样：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# printf &#x27;%s\t %s\t %i\t %i\t %i\t %8.2f\t \n&#x27; $(cat test.txt | grep -v Name)</span><br><span class="line">1	 Liming	 82	 95	 86	    87.66	 </span><br><span class="line">2	 Sc	 74	 96	 87	    85.66	 </span><br><span class="line">3	 Tg	 99	 83	 93	    91.66</span><br></pre></td></tr></table></figure>
+
+
+
+<p>b）awk基本使用</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# awk &#x27;条件1&#123;动作1&#125; 条件2&#123;动作2&#125;...&#x27; 文件名</span><br><span class="line">条件(Pattern)：</span><br><span class="line">    一般使用关系表达式作为条件。这些关系表达式非常多。如：</span><br><span class="line">    x &gt; 10    判断变量x是否大于10</span><br><span class="line">    x == y    判断变是x是否等于变量y</span><br><span class="line">    A`B       判断字符串A中是否包含能匹配B表达式的子字符串</span><br><span class="line">    A!`B      判断字符串A中是否不包含能匹配B表达式的子字符串</span><br><span class="line">动作(Action)：</span><br><span class="line">    格式化输出</span><br><span class="line">    流程控制语句</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">输出第二列和第六列</span></span><br><span class="line">[root@localhost ~]# awk &#x27;&#123;printf $2 &quot;\t&quot; $6 &quot;\n&quot;&#125;&#x27; test.txt</span><br><span class="line">Name	Average</span><br><span class="line">Liming	87.66</span><br><span class="line">Sc	85.66</span><br><span class="line">Tg	91.66</span><br></pre></td></tr></table></figure>
+
+
+
+<p>c）awk的条件</p>
+<table>
+<thead>
+<tr>
+<th>条件的类型</th>
+<th>条件</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>awk保留字</td>
+<td>BEGIN</td>
+<td>在awk程序一开始时，尚未读取任何数据之前执行。BEGIN后的动作只在程序开始时执行一次。</td>
+</tr>
+<tr>
+<td></td>
+<td>END</td>
+<td>在awk程序处理完所有数据，即将结束时执行。END后的动作只在程序结束时执行一次</td>
+</tr>
+<tr>
+<td>关系运算符</td>
+<td>&gt;</td>
+<td>大于</td>
+</tr>
+<tr>
+<td></td>
+<td>&lt;</td>
+<td>小于</td>
+</tr>
+<tr>
+<td></td>
+<td>&gt;&#x3D;</td>
+<td>大于等于</td>
+</tr>
+<tr>
+<td></td>
+<td>&lt;&#x3D;</td>
+<td>小于等于</td>
+</tr>
+<tr>
+<td></td>
+<td>&#x3D;&#x3D;</td>
+<td>等于。用于判断两个值是否相等，如果是给变量赋值，请使用“&#x3D;”号</td>
+</tr>
+<tr>
+<td></td>
+<td>!&#x3D;</td>
+<td>不等于</td>
+</tr>
+<tr>
+<td></td>
+<td>A~B</td>
+<td>判断字符串A中是否包含能匹配B表达式的子字符串</td>
+</tr>
+<tr>
+<td></td>
+<td>A!~B</td>
+<td>判断字符串B中是否不包含能匹配B表达式的子字符串</td>
+</tr>
+<tr>
+<td>正则表达式</td>
+<td>&#x2F;正则&#x2F;</td>
+<td>如果在“&#x2F;&#x2F;”中可以写入字符，也可以支持正则表达式</td>
+</tr>
+</tbody></table>
+<ul>
+<li><p>BEGIN</p>
+<p>BEGIN是awk的保留字，是一种特殊的条件类型。BEGIN的执行时机是“在awk程序一开始时，尚未读取任何数据之前执行”。一旦BEGIN后的动作执行一次，当awk开始从文件中读入数据，BEGIN的条件就不再成立，所以BEGIN定义的动作只能被执行一次。例如：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">awk命令只要检测不到完整的单引号不会执行，所以这个命令的换行不用加入<span class="string">&quot;\&quot;</span></span></span><br><span class="line">[root@localhost ~]# awk &#x27;BEGIN&#123;printf &quot;This is a transcript \n&quot;&#125; </span><br><span class="line">&#123;printf $2 &quot;\t&quot; $6 &quot;\n&quot;&#125;&#x27; test.txt</span><br><span class="line">This is a transcript </span><br><span class="line">Name	Average</span><br><span class="line">Liming	87.66</span><br><span class="line">Sc	85.66</span><br><span class="line">Tg	91.66</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>END</p>
+<p>END也是awk保留字，不过刚好和BEGIN相反。END是在awk程序处理完所有数据，即将结束时执行。END后的动作只在程序结束时执行一次。例如：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# awk &#x27;END&#123;printf &quot;The END \n&quot;&#125; &#123;printf $2 &quot;\t&quot; $6 &quot;\n&quot;&#125;&#x27; test.txt</span><br><span class="line">Name	Average</span><br><span class="line">Liming	87.66</span><br><span class="line">Sc	85.66</span><br><span class="line">Tg	91.66</span><br><span class="line">The END</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>关系运算符</p>
+<p>查看平均成绩大于等于87分的学员是谁：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# cat test.txt | grep -v Name | awk &#x27;$6 &gt;= 87&#123;printf $2 &quot;\n&quot;&#125;&#x27;</span><br><span class="line">Liming</span><br><span class="line">Tg</span><br></pre></td></tr></table></figure>
+
+<p>加入条件之后，只有条件成立动作才会执行，如果条件不满足，则运作不运行。通过这个实验，大家可以发现，虽然awk是列提取命令，但是也要按行来读入的。这个命令的执行过程是这样的：</p>
+<p>1）如果有BEGIN条件，则先执行BEGIN定义的动作</p>
+<p>2）如果没有BEGIN条件，则读入第一行，把第一行的数据依次赋予$0、$1、$2等变量。其中$0代表此行的整体数据，$1代表第一字段，$2代表第二字段。</p>
+<p>3）依据条件类型判断动作是否执行。如果条件符合，则执行动作，否则读入下一行数据。如果没有条件，则每行都执行动作。</p>
+<p>4）读入下一行数据，重复执行以上步骤。</p>
+<p>查看Sc用户的平均成绩：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# cat test.txt | grep -v Name | awk &#x27;$2 ~ &quot;Sc&quot;&#123;printf $6 &quot;\n&quot;&#125;&#x27;</span><br><span class="line">85.66</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>正则表达式</p>
+<p>如果想让awk识别字符串，必须使用“&#x2F;&#x2F;”包含，例如：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">打印LiMing的成绩</span></span><br><span class="line">[root@localhost ~]# awk &#x27;/Liming/ &#123;print&#125;&#x27; test.txt </span><br><span class="line">1	Liming	82	95	86	87.66</span><br></pre></td></tr></table></figure>
+
+<p>当使用df命令查看分区使用情况时，如果只想看真正的系统分区的使用状况，而不想查看光盘和临时分区的使用状况，则可以：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# df -h | awk &#x27;/sda[0-9]/ &#123;printf $1 &quot;\t&quot; $5 &quot;\n&quot;&#125;&#x27;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>4）awk内置变量</p>
+<table>
+<thead>
+<tr>
+<th>awk内置变量</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>$0</td>
+<td>代表目前awk所读入的整行数据。我们已知awk是一行一行读入数据的，$0就代表当前读入行的整行数据。</td>
+</tr>
+<tr>
+<td>$n</td>
+<td>代表目前读入行的第n个字段。</td>
+</tr>
+<tr>
+<td>NF</td>
+<td>当前行拥有的字段(列)总数。</td>
+</tr>
+<tr>
+<td>NR</td>
+<td>当前awk所处理的行，是总数据的第几行。</td>
+</tr>
+<tr>
+<td>FS</td>
+<td>用户定义分隔符。awk的默认分隔符是任何空格，如果想要使用其他分隔符(如”：”)，就需要FS变量定义。</td>
+</tr>
+<tr>
+<td>ARGC</td>
+<td>命令行参数个数。</td>
+</tr>
+<tr>
+<td>ARGV</td>
+<td>命令行参数数组。</td>
+</tr>
+<tr>
+<td>FNR</td>
+<td>当前文件中的当前记录数(对输入文件起始为1)。</td>
+</tr>
+<tr>
+<td>OFMT</td>
+<td>数值的输出格式(默认为%.6g)。</td>
+</tr>
+<tr>
+<td>OFS</td>
+<td>输出字段的分隔符(默认为空格)。</td>
+</tr>
+<tr>
+<td>ORS</td>
+<td>输出记录分隔符(默认为换行符)。</td>
+</tr>
+<tr>
+<td>RS</td>
+<td>输入记录分隔符(默认为换行符)。</td>
+</tr>
+</tbody></table>
+<p>查询可以登录的用户的用户名和UID：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# cat /etc/passwd | grep &quot;/bin/bash&quot; | awk &#x27;BEGIN &#123;FS=&quot;:&quot;&#125; &#123;printf $1 &quot;\t&quot; $3 &quot;\n&quot;&#125;&#x27;</span><br><span class="line">root	0</span><br><span class="line">ben	1000</span><br><span class="line"></span><br><span class="line">[root@localhost ~]# cat /etc/passwd | grep &quot;/bin/bash&quot; | awk &#x27;BEGIN &#123;FS=&quot;:&quot;&#125; &#123;printf $1 &quot;\t&quot; $3 &quot;\t 行号:&quot; NR &quot;\t 字段数: &quot; NF &quot;\n&quot;&#125;&#x27;</span><br><span class="line">root	0	 行号:1	 字段数: 7</span><br><span class="line">ben	1000	 行号:2	 字段数: 7</span><br></pre></td></tr></table></figure>
+
+<p>查看sshd这个伪用户的相关信息：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# cat /etc/passwd | awk &#x27;BEGIN &#123;FS=&quot;:&quot;&#125; $1==&quot;sshd&quot; &#123;printf $1 &quot;\t&quot; $3 &quot;\t 行号：&quot; NR &quot;\t 字段数：&quot; NF &quot;\n&quot;&#125;&#x27;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://bentech8.github.io/2025/02/25/%E9%AB%98%E7%BA%A7%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -3065,7 +3446,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-02-26 20:10:07" itemprop="dateModified" datetime="2025-02-26T20:10:07+08:00">2025-02-26</time>
+                <time title="修改时间：2025-02-26 22:50:07" itemprop="dateModified" datetime="2025-02-26T22:50:07+08:00">2025-02-26</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -4078,7 +4459,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-count">9</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
