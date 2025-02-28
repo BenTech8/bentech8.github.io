@@ -2328,6 +2328,14 @@
       </categories>
   </entry>
   <entry>
+    <title>terraform</title>
+    <url>/2025/02/28/terraform/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>terraform</category>
+      </categories>
+  </entry>
+  <entry>
     <title>vim编辑器</title>
     <url>/2025/02/25/vim%E7%BC%96%E8%BE%91%E5%99%A8/</url>
     <content><![CDATA[<h1 id="vim编辑器"><a href="#vim编辑器" class="headerlink" title="vim编辑器"></a>vim编辑器</h1><p>vim是一个全屏幕纯文本编辑器，是vi编辑器的增强版。</p>

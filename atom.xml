@@ -6,7 +6,7 @@
   <link href="https://bentech8.github.io/atom.xml" rel="self"/>
   
   <link href="https://bentech8.github.io/"/>
-  <updated>2025-02-28T12:15:28.428Z</updated>
+  <updated>2025-02-28T12:44:04.605Z</updated>
   <id>https://bentech8.github.io/</id>
   
   <author>
@@ -15,6 +15,21 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>terraform</title>
+    <link href="https://bentech8.github.io/2025/02/28/terraform/"/>
+    <id>https://bentech8.github.io/2025/02/28/terraform/</id>
+    <published>2025-02-28T12:43:31.000Z</published>
+    <updated>2025-02-28T12:44:04.605Z</updated>
+    
+    
+    
+    
+    <category term="terraform" scheme="https://bentech8.github.io/categories/terraform/"/>
+    
+    
+  </entry>
   
   <entry>
     <title>Shell编程</title>
