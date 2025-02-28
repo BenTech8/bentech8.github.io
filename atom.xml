@@ -6,7 +6,7 @@
   <link href="https://bentech8.github.io/atom.xml" rel="self"/>
   
   <link href="https://bentech8.github.io/"/>
-  <updated>2025-02-28T12:44:04.605Z</updated>
+  <updated>2025-02-28T12:53:59.041Z</updated>
   <id>https://bentech8.github.io/</id>
   
   <author>
@@ -17,12 +17,19 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>terraform</title>
-    <link href="https://bentech8.github.io/2025/02/28/terraform/"/>
-    <id>https://bentech8.github.io/2025/02/28/terraform/</id>
-    <published>2025-02-28T12:43:31.000Z</published>
-    <updated>2025-02-28T12:44:04.605Z</updated>
+    <title>Terraform</title>
+    <link href="https://bentech8.github.io/2025/02/28/Terraform/"/>
+    <id>https://bentech8.github.io/2025/02/28/Terraform/</id>
+    <published>2025-02-28T12:48:38.000Z</published>
+    <updated>2025-02-28T12:53:59.041Z</updated>
     
+    <content type="html"><![CDATA[<h2 id="Terraform工作流程"><a href="#Terraform工作流程" class="headerlink" title="Terraform工作流程"></a>Terraform工作流程</h2><p>Terraform是一个基础设施即代码(IaC)工具，通过以下几个步骤来管理基础设施：</p><ul><li><p>配置文件（.tf文件）</p></li><li><p>初始化（terraform init）</p></li><li><p>生成执行计划（terraform plan）</p></li><li><p>应用变更（terraform apply）</p></li><li><p>状态管理</p></li><li><p>变更管理</p></li><li><p>销毁资源（terraform destory）</p><p>当不再需要某些资源时，用户可以运行terraform destory命令，Terraform会删除所有配置文件中定义的资源，确保清理工作整洁。</p></li></ul>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;Terraform工作流程&quot;&gt;&lt;a href=&quot;#Terraform工作流程&quot; class=&quot;headerlink&quot; title=&quot;Terraform工作流程&quot;&gt;&lt;/a&gt;Terraform工作流程&lt;/h2&gt;&lt;p&gt;Terraform是一个基础设施即代码(IaC)工具</summary>
+      
     
     
     

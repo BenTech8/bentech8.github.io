@@ -2328,9 +2328,27 @@
       </categories>
   </entry>
   <entry>
-    <title>terraform</title>
-    <url>/2025/02/28/terraform/</url>
-    <content><![CDATA[]]></content>
+    <title>Terraform</title>
+    <url>/2025/02/28/Terraform/</url>
+    <content><![CDATA[<h2 id="Terraform工作流程"><a href="#Terraform工作流程" class="headerlink" title="Terraform工作流程"></a>Terraform工作流程</h2><p>Terraform是一个基础设施即代码(IaC)工具，通过以下几个步骤来管理基础设施：</p>
+<ul>
+<li><p>配置文件（.tf文件）</p>
+</li>
+<li><p>初始化（terraform init）</p>
+</li>
+<li><p>生成执行计划（terraform plan）</p>
+</li>
+<li><p>应用变更（terraform apply）</p>
+</li>
+<li><p>状态管理</p>
+</li>
+<li><p>变更管理</p>
+</li>
+<li><p>销毁资源（terraform destory）</p>
+<p>当不再需要某些资源时，用户可以运行terraform destory命令，Terraform会删除所有配置文件中定义的资源，确保清理工作整洁。</p>
+</li>
+</ul>
+]]></content>
       <categories>
         <category>terraform</category>
       </categories>
