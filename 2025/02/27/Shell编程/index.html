@@ -28,7 +28,7 @@
 <meta property="og:description" content="Shell编程正则表达式概述正则表达式用来在文件中匹配符合条件的字符串，通配符用来匹配符合条件的文件名。其实这种区别只在Shell当中适用，因为用来文件当中搜索字符串的命令如grep、awk、sed等命令可以支持正则表达式，而在系统当中搜索文件的命令如ls、find、cp这些命令不支持正则表达式，所以只能使用Shell自己的通配符来进行匹配了。 基础正则表达式   元字符 作用    * 前一个字">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-02-27T03:12:53.000Z">
-<meta property="article:modified_time" content="2025-02-28T08:58:26.689Z">
+<meta property="article:modified_time" content="2025-02-28T12:13:14.051Z">
 <meta property="article:author" content="Ben">
 <meta name="twitter:card" content="summary">
 
@@ -195,7 +195,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-02-28 16:58:26" itemprop="dateModified" datetime="2025-02-28T16:58:26+08:00">2025-02-28</time>
+                <time title="修改时间：2025-02-28 20:13:14" itemprop="dateModified" datetime="2025-02-28T20:13:14+08:00">2025-02-28</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -631,6 +631,170 @@
 <p>“-e”选项可以同时执行多个sed动作：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# sed -e &#x27;s/Liming//g;s/Tg//g&#x27; test.txt</span><br><span class="line">ID      Name    PHP     Linux   MySQL   Average </span><br><span class="line">1         82      95      86      87.66</span><br><span class="line">2       Sc      74      96      87      85.66</span><br><span class="line">3             99      83      93      91.66</span><br></pre></td></tr></table></figure></li>
 </ul>
+<h3 id="字符处理命令"><a href="#字符处理命令" class="headerlink" title="字符处理命令"></a>字符处理命令</h3><h4 id="sort"><a href="#sort" class="headerlink" title="sort"></a>sort</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# sort [选项] 文件名</span><br><span class="line">选项：</span><br><span class="line">  -f:        忽略大小写</span><br><span class="line">  -b:        忽略每行前面的空白部分</span><br><span class="line">  -n:        以数值型进行排序，默认使用字符串型排序</span><br><span class="line">  -r:        反向排序</span><br><span class="line">  -u:        删除重复行。就是uniq命令</span><br><span class="line">  -t:        指定分隔符，默认分隔符是制表符</span><br><span class="line">  -k n[,m]:  按照指定的字段范围排序。从第n字段开始，m字段结束(默认到行尾)</span><br></pre></td></tr></table></figure>
+
+<p>sort命令默认是用每行开头第一个字符来进行排序的：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# sort /etc/passwd</span><br><span class="line">_apt:x:105:65534::/nonexistent:/usr/sbin/nologin</span><br><span class="line">avahi-autoipd:x:109:116:Avahi autoip daemon,,,:/var/lib/avahi-autoipd:/usr/sbin/nologin</span><br><span class="line">avahi:x:115:121:Avahi mDNS daemon,,,:/var/run/avahi-daemon:/usr/sbin/nologin</span><br><span class="line">backup:x:34:34:backup:/var/backups:/usr/sbin/nologin</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<p>反向排序：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# sort -r /etc/passwd</span><br><span class="line">www-data:x:33:33:www-data:/var/www:/usr/sbin/nologin</span><br><span class="line">whoopsie:x:120:125::/nonexistent:/bin/false</span><br><span class="line">uuidd:x:107:114::/run/uuidd:/usr/sbin/nologin</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<p>如果想要指定排序的字段，需要先使用“-t”选项指定分隔符，并使用“-k”选项指定字段号。例如按照UID字段排序&#x2F;etc&#x2F;passwd文件：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# sort -n -t &quot;:&quot; -k 3,3 /etc/passwd</span><br><span class="line">root:x:0:0:root:/root:/bin/bash</span><br><span class="line">daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin</span><br><span class="line">bin:x:2:2:bin:/bin:/usr/sbin/nologin</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<p>当然“-k”选项可以直接使用“-k 3”，代表从第三字段到行尾排序（第一个字符先排序，如果一致，第二个字符再排序，直到行尾）。</p>
+<h4 id="uniq"><a href="#uniq" class="headerlink" title="uniq"></a>uniq</h4><p>uniq命令是用来取消重复行的命令，其实和”sort -u”选项是一样的。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# uniq [选项] 文件名</span><br><span class="line">选项：</span><br><span class="line">  -i:        忽略大小写</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="wc"><a href="#wc" class="headerlink" title="wc"></a>wc</h4><p>统计命令。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# wc [选项] 文件名</span><br><span class="line">选项：</span><br><span class="line">  -l:        只统计行数</span><br><span class="line">  -w:        只统计单词数</span><br><span class="line">  -m:        只统计字符数</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="条件判断"><a href="#条件判断" class="headerlink" title="条件判断"></a>条件判断</h3><h4 id="按照文件类型进行判断"><a href="#按照文件类型进行判断" class="headerlink" title="按照文件类型进行判断"></a>按照文件类型进行判断</h4><table>
+<thead>
+<tr>
+<th>测试选项</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-b 文件</td>
+<td>判断该文件是否存在，并且是否为块设备文件（是块设备文件为真）</td>
+</tr>
+<tr>
+<td>-c 文件</td>
+<td>判断该文件是否存在，并且是否为字符设备文件（是字符设备文件为真）</td>
+</tr>
+<tr>
+<td>-d 文件</td>
+<td>判断该文件是否存在，并且是否为目录文件（是目录为真）</td>
+</tr>
+<tr>
+<td>-e 文件</td>
+<td>判断该文件是否存在（存在为真）</td>
+</tr>
+<tr>
+<td>-f 文件</td>
+<td>判断该文件是否存在，并且是否为普通文件（是普通文件为真）</td>
+</tr>
+<tr>
+<td>-L 文件</td>
+<td>判断该文件是否存在，并且是否为符号链接文件（是符号链接文件为真）</td>
+</tr>
+<tr>
+<td>-p 文件</td>
+<td>判断该文件是否存在，并且是否为管道文件（是管道文件为真）</td>
+</tr>
+<tr>
+<td>-s 文件</td>
+<td>判断该文件是否存在，并且是否为非空（非空为真）</td>
+</tr>
+<tr>
+<td>-S 文件</td>
+<td>判断该文件是否存在，并且是否为套接字文件（是套接字文件为真）</td>
+</tr>
+</tbody></table>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# [ -e /root/sh/ ]</span><br><span class="line">[root@localhost ~]# echo $?</span><br><span class="line">0        # 判断结果为0，/root/sh/目录是存在的</span><br><span class="line"></span><br><span class="line">[root@localhost ~]# [ -e /root/test/ ]</span><br><span class="line">[root@localhost ~]# echo $?</span><br><span class="line">1        # 判断结果为0，/root/test/目录是不存在的</span><br><span class="line"></span><br><span class="line">[root@localhost ~]# [ -d /root/sh ] &amp;&amp; echo &quot;yes&quot; || echo &quot;no&quot;</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">第一个判断命令如果正确执行，则打印<span class="string">&quot;yes&quot;</span>，否则打印<span class="string">&quot;no&quot;</span></span></span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="按照文件权限进行判断"><a href="#按照文件权限进行判断" class="headerlink" title="按照文件权限进行判断"></a>按照文件权限进行判断</h4><table>
+<thead>
+<tr>
+<th>测试选项</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-r 文件</td>
+<td>判断该文件是否存在，并且是否该文件拥有读权限（有读权限为真）</td>
+</tr>
+<tr>
+<td>-w 文件</td>
+<td>判断该文件是否存在，并且是否该文件拥有写权限（有写权限为真）</td>
+</tr>
+<tr>
+<td>-x 文件</td>
+<td>判断该文件是否存在，并且是否该文件拥有执行权限（有执行权限为真）</td>
+</tr>
+<tr>
+<td>-u 文件</td>
+<td>判断该文件是否存在，并且是否该文件拥有SUID权限（有SUID权限为真）</td>
+</tr>
+<tr>
+<td>-g 文件</td>
+<td>判断该文件是否存在，并且是否该文件拥有SGID权限（有SGID权限为真）</td>
+</tr>
+<tr>
+<td>-k 文件</td>
+<td>判断该文件是否存在，并且是否该文件拥有SBIT权限（有SBIT权限为真）</td>
+</tr>
+</tbody></table>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# ll test.txt</span><br><span class="line">-rw-rw-r-- 1 ben ben 187  2月 28 02:09 test.txt</span><br><span class="line">[root@localhost ~]# [ -w test.txt ] &amp;&amp; echo &quot;yes&quot; || echo &quot;no&quot;</span><br><span class="line">yes</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="两个文件之间进行比较"><a href="#两个文件之间进行比较" class="headerlink" title="两个文件之间进行比较"></a>两个文件之间进行比较</h4><table>
+<thead>
+<tr>
+<th>测试选项</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>文件1 -nt 文件2</td>
+<td>判断文件1的修改时间是否比文件2的新（如果新则为真）</td>
+</tr>
+<tr>
+<td>文件1 -ot 文件2</td>
+<td>判断文件1的修改时间是否比文件2的旧（如果旧则为真）</td>
+</tr>
+<tr>
+<td>文件1 -ef 文件2</td>
+<td>判断文件1是否和文件2的Inode号一致，可以理解为两个文件是否为同一个文件。这个判断用于判断硬链接是很好的方法</td>
+</tr>
+</tbody></table>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">创建个硬链接</span></span><br><span class="line">[root@localhost ~]# ln /tmp/test.txt /tmp/stu.txt</span><br><span class="line">[root@localhost ~]# [ /tmp/test.txt -ef /tmp/stu.txt ] &amp;&amp; echo &quot;yes&quot; || echo &quot;no&quot;</span><br><span class="line">yes</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="两个整数之间比较"><a href="#两个整数之间比较" class="headerlink" title="两个整数之间比较"></a>两个整数之间比较</h4><table>
+<thead>
+<tr>
+<th>测试选项</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>整数1 -eq 整数2</td>
+<td>判断整数1是否和整数2相等（相等为真）</td>
+</tr>
+<tr>
+<td>整数1 -ne 整数2</td>
+<td>判断整数1是否和整数2不相等（不相等为真）</td>
+</tr>
+<tr>
+<td>整数1 -gt 整数2</td>
+<td>判断整数1是否大于整数2（大于为真）</td>
+</tr>
+<tr>
+<td>整数1 -lt 整数2</td>
+<td>判断整数1是否小于整数2（小于为真）</td>
+</tr>
+<tr>
+<td>整数1 -ge 整数2</td>
+<td>判断整数1是否大于等于整数2（大于等于为真）</td>
+</tr>
+<tr>
+<td>整数1 -le 整数2</td>
+<td>判断整数1是否小于等于整数2（小于等于为真）</td>
+</tr>
+</tbody></table>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# [ 23 -ge 22 ] &amp;&amp; echo &quot;yes&quot; || echo &quot;no&quot;</span><br><span class="line">yes</span><br><span class="line">[root@localhost ~]# [ 23 -le 22 ] &amp;&amp; echo &quot;yes&quot; || echo &quot;no&quot;</span><br><span class="line">no</span><br></pre></td></tr></table></figure>
+
 
     </div>
 
@@ -708,7 +872,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Shell%E7%BC%96%E7%A8%8B"><span class="nav-number">1.</span> <span class="nav-text">Shell编程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F"><span class="nav-number">1.1.</span> <span class="nav-text">正则表达式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A6%82%E8%BF%B0"><span class="nav-number">1.1.1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F"><span class="nav-number">1.1.2.</span> <span class="nav-text">基础正则表达式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%89%A9%E5%B1%95%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F"><span class="nav-number">1.1.3.</span> <span class="nav-text">扩展正则表达式</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%97%E7%AC%A6%E6%88%AA%E5%8F%96%E5%92%8C%E6%9B%BF%E6%8D%A2%E5%91%BD%E4%BB%A4"><span class="nav-number">1.2.</span> <span class="nav-text">字符截取和替换命令</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#cut"><span class="nav-number">1.2.1.</span> <span class="nav-text">cut</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#awk"><span class="nav-number">1.2.2.</span> <span class="nav-text">awk</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#sed"><span class="nav-number">1.2.3.</span> <span class="nav-text">sed</span></a></li></ol></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Shell%E7%BC%96%E7%A8%8B"><span class="nav-number">1.</span> <span class="nav-text">Shell编程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F"><span class="nav-number">1.1.</span> <span class="nav-text">正则表达式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A6%82%E8%BF%B0"><span class="nav-number">1.1.1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F"><span class="nav-number">1.1.2.</span> <span class="nav-text">基础正则表达式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%89%A9%E5%B1%95%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F"><span class="nav-number">1.1.3.</span> <span class="nav-text">扩展正则表达式</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%97%E7%AC%A6%E6%88%AA%E5%8F%96%E5%92%8C%E6%9B%BF%E6%8D%A2%E5%91%BD%E4%BB%A4"><span class="nav-number">1.2.</span> <span class="nav-text">字符截取和替换命令</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#cut"><span class="nav-number">1.2.1.</span> <span class="nav-text">cut</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#awk"><span class="nav-number">1.2.2.</span> <span class="nav-text">awk</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#sed"><span class="nav-number">1.2.3.</span> <span class="nav-text">sed</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%97%E7%AC%A6%E5%A4%84%E7%90%86%E5%91%BD%E4%BB%A4"><span class="nav-number">1.3.</span> <span class="nav-text">字符处理命令</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#sort"><span class="nav-number">1.3.1.</span> <span class="nav-text">sort</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#uniq"><span class="nav-number">1.3.2.</span> <span class="nav-text">uniq</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#wc"><span class="nav-number">1.3.3.</span> <span class="nav-text">wc</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9D%A1%E4%BB%B6%E5%88%A4%E6%96%AD"><span class="nav-number">1.4.</span> <span class="nav-text">条件判断</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8C%89%E7%85%A7%E6%96%87%E4%BB%B6%E7%B1%BB%E5%9E%8B%E8%BF%9B%E8%A1%8C%E5%88%A4%E6%96%AD"><span class="nav-number">1.4.1.</span> <span class="nav-text">按照文件类型进行判断</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8C%89%E7%85%A7%E6%96%87%E4%BB%B6%E6%9D%83%E9%99%90%E8%BF%9B%E8%A1%8C%E5%88%A4%E6%96%AD"><span class="nav-number">1.4.2.</span> <span class="nav-text">按照文件权限进行判断</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%A4%E4%B8%AA%E6%96%87%E4%BB%B6%E4%B9%8B%E9%97%B4%E8%BF%9B%E8%A1%8C%E6%AF%94%E8%BE%83"><span class="nav-number">1.4.3.</span> <span class="nav-text">两个文件之间进行比较</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%A4%E4%B8%AA%E6%95%B4%E6%95%B0%E4%B9%8B%E9%97%B4%E6%AF%94%E8%BE%83"><span class="nav-number">1.4.4.</span> <span class="nav-text">两个整数之间比较</span></a></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
