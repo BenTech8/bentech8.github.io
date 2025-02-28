@@ -191,7 +191,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-02-28 15:55:29" itemprop="dateModified" datetime="2025-02-28T15:55:29+08:00">2025-02-28</time>
+                <time title="修改时间：2025-02-28 16:58:26" itemprop="dateModified" datetime="2025-02-28T16:58:26+08:00">2025-02-28</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -571,6 +571,62 @@
 <p>然后可以使用”-f”选项来调用这个脚本：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# awk -f pass.awk /etc/passwd</span><br><span class="line">root	0</span><br><span class="line">daemon	1</span><br><span class="line">bin	2</span><br><span class="line">sys	3</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
 
+
+
+<h4 id="sed"><a href="#sed" class="headerlink" title="sed"></a>sed</h4><p>sed主要是用来将数据进行选取、替换、删除和新增的命令。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# sed [选项] &#x27;[动作]&#x27; 文件名</span><br><span class="line">选项：</span><br><span class="line">  -n:              一般sed命令会把所有数据都输出到屏幕，如果加入此选择，则只会把经过sed命令处理的行输出到屏幕。</span><br><span class="line">  -e:              允许对输入数据应用多条sed命令编辑。</span><br><span class="line">  -f 脚本文件名:    从sed脚本中读入sed操作。和awk命令的-f非常类似。</span><br><span class="line">  -r:              在sed中支持扩展正则表达式。</span><br><span class="line">  -i:              用sed的修改结果直接修改读取数据的文件，而不是由屏幕输出</span><br><span class="line">动作：</span><br><span class="line">  a \n:             追加，在当前行后添加一行或多行。添加多行时，除最后一行外，每行末尾需要用&quot;\&quot;代表数据未完结。</span><br><span class="line">  c \n:             行替换，用c后面的字符串替换原数据行，替换多行时，除最后一行外，每行末尾需用&quot;\&quot;代表数据未完结。</span><br><span class="line">  i \n:             插入，在当前行前插入一行或多行。插入多行时，除最后一行外，每行末尾需要用&quot;\&quot;代表数据未完结。</span><br><span class="line">  d:               删除，删除指定的行。</span><br><span class="line">  p:               打印，输出指定的行。</span><br><span class="line">  s:               字串替换，用一个字符串替换另外一个字符串。格式为&quot;行范围 s/旧字串/新字串/g&quot;（和vim中的替换格式类似）</span><br></pre></td></tr></table></figure>
+
+<p>对sed命令要注意，sed所做的修改并不会直接改变文件的内容(如果是用管道符接收的命令的输出，这种情况连文件都没有)，而是把修改结果只显示到屏幕上，除非使用“-i”选项才会直接修改文件。</p>
+<ul>
+<li><p>行数据操作</p>
+<p>【查看】</p>
+<p>查看test.txt的第二行：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# sed &#x27;2p&#x27; test.txt</span><br><span class="line">ID      Name    PHP     Linux   MySQL   Average </span><br><span class="line">1       Liming  82      95      86      87.66</span><br><span class="line">1       Liming  82      95      86      87.66</span><br><span class="line">2       Sc      74      96      87      85.66</span><br><span class="line">3       Tg      99      83      93      91.66</span><br></pre></td></tr></table></figure>
+
+<p>“p”命令确实输出了第二行数据，但是sed命令还会把所有数据都输出一次。如果想指定输出某行数据，需要”-n”选项的帮助：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# sed -n &#x27;2p&#x27; test.txt</span><br><span class="line">1       Liming  82      95      86      87.66</span><br></pre></td></tr></table></figure>
+
+
+
+<p>【删除】</p>
+<p>删除第二行到第四行的数据</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# sed &#x27;2,4d&#x27; test.txt</span><br><span class="line">ID      Name    PHP     Linux   MySQL   Average</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">文件本身并没有修改</span></span><br><span class="line">[root@localhost ~]# cat test.txt</span><br><span class="line">ID      Name    PHP     Linux   MySQL   Average </span><br><span class="line">1       Liming  82      95      86      87.66</span><br><span class="line">2       Sc      74      96      87      85.66</span><br><span class="line">3       Tg      99      83      93      91.66</span><br></pre></td></tr></table></figure>
+
+
+
+<p>【追加】</p>
+<p>“a“会在指定行后面追加入数据：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# sed &#x27;2a hello&#x27; test.txt</span><br><span class="line">ID      Name    PHP     Linux   MySQL   Average </span><br><span class="line">1       Liming  82      95      86      87.66</span><br><span class="line">hello</span><br><span class="line">2       Sc      74      96      87      85.66</span><br><span class="line">3       Tg      99      83      93      91.66</span><br></pre></td></tr></table></figure>
+
+
+
+<p>【插入】</p>
+<p>“i”会在指定行前面插入数据:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# sed &#x27;2i hello\nworld&#x27; test.txt</span><br><span class="line">ID      Name    PHP     Linux   MySQL   Average </span><br><span class="line">hello</span><br><span class="line">world</span><br><span class="line">1       Liming  82      95      86      87.66</span><br><span class="line">2       Sc      74      96      87      85.66</span><br><span class="line">3       Tg      99      83      93      91.66</span><br><span class="line"></span><br><span class="line">[root@localhost ~]# sed -n &#x27;2i hello\nworld&#x27; test.txt</span><br><span class="line">hello</span><br><span class="line">world</span><br></pre></td></tr></table></figure>
+
+
+
+<p>【替换】</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# sed &#x27;2c No such person&#x27; test.txt</span><br><span class="line">ID      Name    PHP     Linux   MySQL   Average </span><br><span class="line">No such person</span><br><span class="line">2       Sc      74      96      87      85.66</span><br><span class="line">3       Tg      99      83      93      91.66</span><br><span class="line"></span><br><span class="line">[root@localhost ~]# cat test.txt | sed &#x27;2c No sucn person&#x27;</span><br><span class="line">ID      Name    PHP     Linux   MySQL   Average </span><br><span class="line">No sucn person</span><br><span class="line">2       Sc      74      96      87      85.66</span><br><span class="line">3       Tg      99      83      93      91.66</span><br></pre></td></tr></table></figure>
+
+<p>sed命令默认情况下是不会修改文件内容的，如果确定需要让sed命令直接处理文件的内容，可以使用”-i”选项。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# sed -i &#x27;2c No such person&#x27; test.txt</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>字符串替换</p>
+<p>“c”动作是进行整行替换的，如果仅仅想替换行中的部分数据，就要使用“s”动作：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# sed &#x27;s/旧字串/新字串/g&#x27; 文件名</span><br></pre></td></tr></table></figure>
+
+<p>在第三行中，把74替换成99：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# sed &#x27;3s/74/99/g&#x27; test.txt</span><br><span class="line">ID      Name    PHP     Linux   MySQL   Average </span><br><span class="line">1       Liming  82      95      86      87.66</span><br><span class="line">2       Sc      99      96      87      85.66</span><br><span class="line">3       Tg      99      83      93      91.66</span><br></pre></td></tr></table></figure>
+
+<p>把第四行注释掉：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# sed &#x27;4s/^/#/g&#x27; test.txt</span><br><span class="line">ID      Name    PHP     Linux   MySQL   Average </span><br><span class="line">1       Liming  82      95      86      87.66</span><br><span class="line">2       Sc      74      96      87      85.66</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">3       Tg      99      83      93      91.66</span></span><br></pre></td></tr></table></figure>
+
+<p>“-e”选项可以同时执行多个sed动作：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# sed -e &#x27;s/Liming//g;s/Tg//g&#x27; test.txt</span><br><span class="line">ID      Name    PHP     Linux   MySQL   Average </span><br><span class="line">1         82      95      86      87.66</span><br><span class="line">2       Sc      74      96      87      85.66</span><br><span class="line">3             99      83      93      91.66</span><br></pre></td></tr></table></figure></li>
+</ul>
 
       
     </div>
