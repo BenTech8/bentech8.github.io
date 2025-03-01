@@ -680,6 +680,13 @@
 <li>quit：退出，并把已经操作过的邮件进行保存。比如移除已删除邮件、保存已阅读邮件等。</li>
 <li>exit：退出，但是不保存任何操作。</li>
 </ul>
+<h3 id="8）nmap"><a href="#8）nmap" class="headerlink" title="8）nmap"></a>8）nmap</h3><p>端口扫描命令。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# nmap -sT 域名或IP</span><br><span class="line">选项：</span><br><span class="line">  -s        扫描</span><br><span class="line">  -T        扫描所有开启的TCP端口</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# nmap -sT 127.0.0.1</span><br><span class="line">Starting Nmap 7.94SVN ( https://nmap.org ) at 2025-03-01 15:55 CST</span><br><span class="line">Nmap scan report for localhost (127.0.0.1)</span><br><span class="line">Host is up (0.00027s latency).</span><br><span class="line">Not shown: 995 closed tcp ports (conn-refused)</span><br><span class="line">PORT     STATE SERVICE</span><br><span class="line">25/tcp   open  smtp</span><br><span class="line">631/tcp  open  ipp</span><br><span class="line">1090/tcp open  ff-fms</span><br><span class="line">4000/tcp open  remoteanything</span><br><span class="line">9090/tcp open  zeus-admin</span><br><span class="line"></span><br><span class="line">Nmap done: 1 IP address (1 host up) scanned in 0.09 seconds</span><br></pre></td></tr></table></figure>
+
+
+
 <h2 id="11-痕迹命令"><a href="#11-痕迹命令" class="headerlink" title="11. 痕迹命令"></a>11. 痕迹命令</h2><p>系统中有一些重要的痕迹日志文件，如&#x2F;var&#x2F;log&#x2F;wtmp、&#x2F;var&#x2F;run&#x2F;utmp、&#x2F;var&#x2F;log&#x2F;btmp、&#x2F;var&#x2F;log&#x2F;lastlog等日志文件，如果你用vim打开这些文件，你会发现这些文件是二进制乱码。这是由于这些日志中保存的是系统的重要登录痕迹，包括某个用户何时登录了系统，何时退出了系统，错误登录等重要的系统信息。这些信息要是可以通过vim打开，就能编辑，这样痕迹信息就不准确，所以这些重要的痕迹日志，只能通过对应的命令来进行查看。</p>
 <h3 id="1）w"><a href="#1）w" class="headerlink" title="1）w"></a>1）w</h3><p>w命令是显示系统中正在登录的用户信息的命令，这个命令查看的痕迹日志是&#x2F;var&#x2F;run&#x2F;utmp。</p>
 <p>【功能描述】：显示登录用户，和他正在做什么。</p>
@@ -2322,7 +2329,95 @@
 </tbody></table>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# [ 23 -ge 22 ] &amp;&amp; echo &quot;yes&quot; || echo &quot;no&quot;</span><br><span class="line">yes</span><br><span class="line">[root@localhost ~]# [ 23 -le 22 ] &amp;&amp; echo &quot;yes&quot; || echo &quot;no&quot;</span><br><span class="line">no</span><br></pre></td></tr></table></figure>
 
-]]></content>
+
+
+<h4 id="字符串的判断"><a href="#字符串的判断" class="headerlink" title="字符串的判断"></a>字符串的判断</h4><table>
+<thead>
+<tr>
+<th>测试选项</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-z 字符串</td>
+<td>判断字符串是否为空（为空返回真）</td>
+</tr>
+<tr>
+<td>-n 字符串</td>
+<td>判断字符串是否为非空（非空返回真）</td>
+</tr>
+<tr>
+<td>字符串1 &#x3D;&#x3D; 字符串2</td>
+<td>判断字符串1是否和字符串2相等（相等返回真）</td>
+</tr>
+<tr>
+<td>字符串1 !&#x3D; 字符串2</td>
+<td>判断字符串1 是否和字符串2不相等（不相等返回真）</td>
+</tr>
+</tbody></table>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">给name赋值</span></span><br><span class="line">[root@localhost ~]# name=ben</span><br><span class="line">[root@localhost ~]# [ -z &quot;$name&quot; ] &amp;&amp; echo &quot;yes&quot; || echo &quot;no&quot;</span><br><span class="line">no</span><br><span class="line"></span><br><span class="line">[root@localhost ~]# aa=11</span><br><span class="line">[root@localhost ~]# bb=22</span><br><span class="line">[root@localhost ~]# [ &quot;$aa&quot; == &quot;$bb&quot; ] &amp;&amp; echo &quot;yes&quot; || echo &quot;no&quot;</span><br><span class="line">no</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="多重条件判断"><a href="#多重条件判断" class="headerlink" title="多重条件判断"></a>多重条件判断</h4><table>
+<thead>
+<tr>
+<th>测试选项</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>判断1 -a 判断2</td>
+<td>逻辑与，判断1和判断2都成立，最终的结果为真</td>
+</tr>
+<tr>
+<td>判断1 -o 判断2</td>
+<td>逻辑或，判断1和判断2有一个成立，最终的结果就为真</td>
+</tr>
+<tr>
+<td>! 判断</td>
+<td>逻辑非，使原始的判断式取反</td>
+</tr>
+</tbody></table>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# aa=11</span><br><span class="line">[root@localhost ~]# [ -n &quot;$aa&quot; -a &quot;$aa&quot; -gt 23 ] &amp;&amp; echo &quot;yes&quot; || echo &quot;no&quot;</span><br><span class="line">no</span><br><span class="line">[root@localhost ~]# [ ! -n &quot;$aa&quot; ] &amp;&amp; echo &quot;yes&quot; || echo &quot;no&quot;</span><br><span class="line">no</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意：</strong>“!”和“-n”之间必须加入空格，否则会报错的。</p>
+<h3 id="流程控制"><a href="#流程控制" class="headerlink" title="流程控制"></a>流程控制</h3><h4 id="if条件判断"><a href="#if条件判断" class="headerlink" title="if条件判断"></a>if条件判断</h4><p>a）单分支if条件语句</p>
+<p>单分支条件语句最为简单，就是只有一个判断条件，如果符合条件则执行某个程序，否则什么事情都不做。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">if [ 条件判断式 ];then</span><br><span class="line">	程序</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
+
+<p>单分支条件语句需要注意几个点：</p>
+<ul>
+<li><p>if语句使用fi结尾，和一般语言使用大括号结尾不同。</p>
+</li>
+<li><p>[ 条件判断式 ]就是使用test命令判断，所以中括号和条件判断式之间必须有空格。</p>
+</li>
+<li><p>then后面跟符合条件之后执行的程序，可以放在[]之后，用“;”分割。也可以换行写入，就不需要“;”了。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">if [ 条件判断式 ]</span><br><span class="line">	then</span><br><span class="line">		程序</span><br><span class="line">fi</span><br></pre></td></tr></table></figure></li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/bash</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Author: Ben（Email: 17620170099@163.com）</span></span><br><span class="line"></span><br><span class="line">rate=$(df -h | grep &quot;/dev/sda3&quot; | awk &#x27;&#123;print $5&#125;&#x27; | cut -d &quot;%&quot; -f1)</span><br><span class="line">if [ $rate -ge 80 ];then</span><br><span class="line">	echo &quot;Warning! /dev/sda3 is full!!&quot;</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
+
+
+
+<p>b）双分支if条件语句</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">if [ 条件判断式 ]；then</span><br><span class="line">	条件成立时，执行的程序</span><br><span class="line">else</span><br><span class="line">	条件不成立时，执行的另一个程序</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/bash</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Author: Ben（Email: 17620170099@163.com）</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">同步系统时间</span></span><br><span class="line">ntpdate asia.pool.ntp.org &amp;&gt;/dev/null</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">把当前系统时间按照<span class="string">&quot;年月日&quot;</span>格式赋予变量<span class="built_in">date</span></span></span><br><span class="line">date=$(date +%y%m%d)</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">统计mysql数据库的大小，并把大小赋予size变量</span></span><br><span class="line">size=$(du -sh /var/lib/mysql)</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">判断备份目录是否存在，是否为目录</span></span><br><span class="line">if [ -d  /tmp/dbak ];then</span><br><span class="line"><span class="meta prompt_">	# </span><span class="language-bash">把当前日期写入临时文件</span></span><br><span class="line">	echo &quot;Date: $date!&quot; &gt; /tmp/dbbak/dbinfo.txt</span><br><span class="line"><span class="meta prompt_">	# </span><span class="language-bash">把数据库大小写入临时文件</span></span><br><span class="line">	echo &quot;Date size: $size&quot; &gt;&gt; /tmp/dbbak/dbinfo.txt</span><br><span class="line"><span class="meta prompt_">	# </span><span class="language-bash">进入备份目录</span></span><br><span class="line">	cd /tmp/dbbak</span><br><span class="line"><span class="meta prompt_">	# </span><span class="language-bash">打包压缩数据库与临时文件，把所有输出丢入垃圾箱</span></span><br><span class="line">	tar -zcf mysql-lib-$date.tar.gz /var/lib/mysql dbinfo.txt &amp;&gt;/dev/null</span><br><span class="line"><span class="meta prompt_">	# </span><span class="language-bash">删除临时文件</span></span><br><span class="line">	rm -rf /tmp/dbbak/dbinfo.txt</span><br><span class="line">else</span><br><span class="line"><span class="meta prompt_">	# </span><span class="language-bash">如果判断为假，则建立备份目录</span></span><br><span class="line">	mkdir /tmp/dbbak</span><br><span class="line"><span class="meta prompt_">	# </span><span class="language-bash">把当前日期写入临时文件</span></span><br><span class="line">	echo &quot;Date: $date!&quot; &gt; /tmp/dbbak/dbinfo.txt</span><br><span class="line"><span class="meta prompt_">	# </span><span class="language-bash">把数据库大小写入临时文件</span></span><br><span class="line">	echo &quot;Date size: $size&quot; &gt;&gt; /tmp/dbbak/dbinfo.txt</span><br><span class="line"><span class="meta prompt_">	# </span><span class="language-bash">进入备份目录</span></span><br><span class="line">	cd /tmp/dbbak</span><br><span class="line"><span class="meta prompt_">	# </span><span class="language-bash">打包压缩数据库与临时文件，把所有输出丢入垃圾箱</span></span><br><span class="line">	tar -zcf mysql-lib-$date.tar.gz /var/lib/mysql dbinfo.txt &amp;&gt;/dev/null</span><br><span class="line"><span class="meta prompt_">	# </span><span class="language-bash">删除临时文件</span></span><br><span class="line">	rm -rf /tmp/dbbak/dbinfo.txt</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
+
+<p>在工作中，服务器上的服务经常会宕机。如果我们对服务器监控不好，就会造成服务器中服务宕机了，而管理员却不知道的情况，这时我们可以写一个脚本来监听本机的服务，如果服务停止或宕机了，可以自动重启这些服务。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/bash</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Author: Ben（Email: 17620170099@163.com）</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">使用nmap命令扫描服务器，并截取apache服务的状态，赋予变量port</span></span><br><span class="line">port=$(nmap -sT 192.168.4.210 | grep tcp | grep http | awk &#x27;&#123;print $2&#125;&#x27;)</span><br><span class="line">if [ &quot;$port&quot; == &quot;open&quot; ];then</span><br><span class="line"><span class="meta prompt_">	# </span><span class="language-bash">则证明apache正常启动，在正常日志中写入一句话即可</span></span><br><span class="line">	echo &quot;$(date) httpd is ok!&quot; &gt;&gt; /tmp/autostart-acc.log</span><br><span class="line">else</span><br><span class="line"><span class="meta prompt_">	# </span><span class="language-bash">否则证明apache没有启动，自动启动apache</span></span><br><span class="line">	/etc/rc.d/init.d/httpd start &amp;&gt;/dev/null</span><br><span class="line"><span class="meta prompt_">	# </span><span class="language-bash">并在错误日志中记录自动启动apache的时间</span></span><br><span class="line">	echo &quot;$(date) restart httpd!!&quot; &gt;&gt; /tmp/autostart-err.log</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
+
+
+
+<p>c）多分支if条件语句</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">if [ 条件判断式1 ];then</span><br><span class="line">	当条件判断式1成立时，执行程序1</span><br><span class="line">elif [ 条件判断式2 ];then</span><br><span class="line">	当条件判断式2成立时，执行程序2</span><br><span class="line">else</span><br><span class="line">	当所有条件都不成立时，最后执行此程序</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
+
+<p>判断用户输入的是什么文件：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">！/bin/bash</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Author: Ben（Email:17620170099@163.com）</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">接收键盘的输入，并赋予变量file</span></span><br><span class="line">read -p &quot;Please input a filename: &quot; file</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">判断file变量是否为空</span></span><br><span class="line">if [ -z &quot;$file&quot; ];then</span><br><span class="line">	echo &quot;Error,please input a filename&quot;</span><br><span class="line"><span class="meta prompt_">	# </span><span class="language-bash">退出程序，并返回1</span></span><br><span class="line">	exit 1</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">判断file的值是否存在</span></span><br><span class="line">elif [ ! -e &quot;$file&quot; ];then</span><br><span class="line">	echo &quot;Your input is not a file!&quot;</span><br><span class="line"><span class="meta prompt_">	# </span><span class="language-bash">退出程序，并返回2</span></span><br><span class="line">	exit 2</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">判断file的值是否为普通文件</span></span><br><span class="line">elif [ -f &quot;$file&quot; ];then</span><br><span class="line">	echo &quot;$file is a regulare file!&quot;</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">判断file的值是否为目录文件</span></span><br><span class="line">elif [ -d &quot;$file&quot; ];then</span><br><span class="line">	echo &quot;$file is a directory!&quot;</span><br><span class="line">else</span><br><span class="line">	echo &quot;$file is an other file!&quot;</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="多分支case条件语句"><a href="#多分支case条件语句" class="headerlink" title="多分支case条件语句"></a>多分支case条件语句</h4>]]></content>
       <categories>
         <category>Shell</category>
       </categories>
