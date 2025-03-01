@@ -2417,7 +2417,97 @@
 
 
 
-<h4 id="多分支case条件语句"><a href="#多分支case条件语句" class="headerlink" title="多分支case条件语句"></a>多分支case条件语句</h4>]]></content>
+<h4 id="多分支case条件语句"><a href="#多分支case条件语句" class="headerlink" title="多分支case条件语句"></a>多分支case条件语句</h4><p>case语句和if…elif…else语句一样都是多分支条件语句，不过和if多分支条件语句不同的是，case语句只能判断一种条件关系，而if语句可以判断多种条件关系。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">case $变量名 in</span><br><span class="line">	&quot;值1&quot;)</span><br><span class="line">		如果变量的值等于值1，则执行程序1</span><br><span class="line">		;;</span><br><span class="line">	&quot;值2&quot;)</span><br><span class="line">		如果变量的值等于值2，则执行程序2</span><br><span class="line">		;;</span><br><span class="line">	...</span><br><span class="line">	*)</span><br><span class="line">		如果变量的值都不是以上的值，则执行此程序</span><br><span class="line">		;;</span><br><span class="line">esac	</span><br></pre></td></tr></table></figure>
+
+<p>这个语句需要注意以下内容：</p>
+<ul>
+<li><p>case语句，会取出变量中的值，然后与语句体中的值逐一比较。如果数值符合，则执行对应的程序，如果数值不符，则依次比较下一个值。如果所有的值都不符合，则执行“*)”（“*”代表所有其他值）中的程序。</p>
+</li>
+<li><p>case语句以“case”开头，以“esac”结尾。</p>
+</li>
+<li><p>每个分支程序之后要通过“;;”双分号结尾，代表该程序段结束。</p>
+</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/bash</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Author: Ben（E-mail: 17620170099@163.com）</span></span><br><span class="line"></span><br><span class="line">read -p &quot;Please choose yes/no: &quot; -t 30 cho</span><br><span class="line">case $cho in </span><br><span class="line">	&quot;yes&quot;)</span><br><span class="line">		echo &quot;Your choose is yes!&quot;</span><br><span class="line">		;;</span><br><span class="line">	&quot;no&quot;)</span><br><span class="line">		echo &quot;Your choose is no!&quot;</span><br><span class="line">		;;</span><br><span class="line">	*)</span><br><span class="line">		echo &quot;Your choose is error!&quot;</span><br><span class="line">		;;</span><br><span class="line">esac</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="for循环"><a href="#for循环" class="headerlink" title="for循环"></a>for循环</h4><p>for循环是固定循环，也就是在循环时已经知道需要进行几次循环，有时也把for循环称为计数循环。</p>
+<p>语法一：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">for 变量 in 值1 值2 值3...</span><br><span class="line">	do</span><br><span class="line">		程序</span><br><span class="line">	done</span><br></pre></td></tr></table></figure>
+
+<p>这种语法中for循环的次数，取决于in后面值的个数（空格分隔），有几个值就循环几次，并且每次循环都把值赋予变量。</p>
+<p>打印时间：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/bash</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Author: Ben（E-mail: 17620170099@163.com）</span></span><br><span class="line"></span><br><span class="line">for time in morning noon afternoon evening</span><br><span class="line">	do</span><br><span class="line">		echo &quot;This time is $time&quot;</span><br><span class="line">	done</span><br></pre></td></tr></table></figure>
+
+<p>批量解压缩脚本：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/bash</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Author:Ben（E-mail: 17620170099@163.com）</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">进入压缩目录</span></span><br><span class="line">cd /lamp</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">把所有tar.gz结尾的文件的文件覆盖到ls.log临时文件中</span></span><br><span class="line">ls *.tar.gz &gt; ls.log</span><br><span class="line">for i in $(cat ls.log)</span><br><span class="line">	do</span><br><span class="line"><span class="meta prompt_">		# </span><span class="language-bash">解压缩</span></span><br><span class="line">		tar -zxf $i &amp;&gt;/dev/null</span><br><span class="line">	done</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">删除临时文件ls.log</span></span><br><span class="line">rm -rf /lamp/ls.log</span><br></pre></td></tr></table></figure>
+
+
+
+<p>语法二：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">for (( 初始值;循环控制条件;变量变化 ))</span><br><span class="line">	do</span><br><span class="line">		程序</span><br><span class="line">	done</span><br></pre></td></tr></table></figure>
+
+<p>这种语法需要注意：</p>
+<ul>
+<li>初始值：在循环开始时，需要给某个变量赋予初始值，如i&#x3D;1;</li>
+<li>循环控制条件：用于指定变量循环的次数，如i&lt;&#x3D;100，则只要i的值小于等于100，循环就会继续;</li>
+<li>变量变化：每次循环之后，变量该如何变化，如i&#x3D;i+1。代表每次循环之后，变量i的值都加1。</li>
+</ul>
+<p>从1加到100：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/bash</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Author:Ben（E-mail: 17620170099@163.com）</span></span><br><span class="line"></span><br><span class="line">s=0</span><br><span class="line">for (( i=1;i&lt;=100;i=i+1 ))</span><br><span class="line">	do</span><br><span class="line">		s=$(( $s+$i ))</span><br><span class="line">	done</span><br><span class="line">echo &quot;The sum of 1+2+...+100 is : $s&quot;</span><br></pre></td></tr></table></figure>
+
+<p>批量添加指定数量的用户：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/bash</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Author:Ben（E-mail: 17620170099@163.com）</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">让用户输入用户名，把输入保存入变量name</span></span><br><span class="line">read -p &quot;Please input user name: &quot; -t 30 name</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">让用户输入添加用户的数量，把输入保存入变量num</span></span><br><span class="line">read -p &quot;Please input the number of users: &quot; -t num</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">让用户输入初始密码，把输入保存入变量pass</span></span><br><span class="line">read -p &quot;Please input the password of users: &quot; -t pass</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">判断三个变量不为空</span></span><br><span class="line">if [ ! -z &quot;$name&quot; -a ! -z &quot;$num&quot; -a ! -z &quot;#pass&quot; ];then</span><br><span class="line"><span class="meta prompt_">	# </span><span class="language-bash">判断变量num的值是否为数字</span></span><br><span class="line">	y=$(echo $num | sed &#x27;s/[0-9]//g&#x27;)</span><br><span class="line">	if [ -z &quot;$y&quot; ];then</span><br><span class="line">		for (( i=1;i&lt;=$num;i=i+1 ))</span><br><span class="line">			do</span><br><span class="line">				# 添加用户</span><br><span class="line">				/usr/sbin/useradd $name$i &amp;&gt;/dev/null</span><br><span class="line">				# 修改用户密码</span><br><span class="line">				echo $pass | /usr/bin/passwd --stdin $name$i &amp;&gt;/dev/null</span><br><span class="line">			done</span><br><span class="line">	fi</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
+
+<p>批量删除用户：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/bash</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Author:Ben（E-mail: 17620170099@163.com）</span></span><br><span class="line"></span><br><span class="line">user=$(cat /etc/passwd | grep &quot;/bin/bash&quot; | grep -v &quot;root&quot; | cut -d &quot;:&quot; -f 1)</span><br><span class="line">for i in $user</span><br><span class="line">	do</span><br><span class="line">		userdel -r $i</span><br><span class="line">	done</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="while循环"><a href="#while循环" class="headerlink" title="while循环"></a>while循环</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">while [ 条件判断式 ]</span><br><span class="line">	do</span><br><span class="line">		程序</span><br><span class="line">	done</span><br></pre></td></tr></table></figure>
+
+<p>对while循环来讲，只要条件判断式成立，循环就会一直继续，直到条件判断式不成立，循环才会停止。</p>
+<p>从1加到100：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/bash</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Author:Ben（E-mail:17620170099@163.com）</span></span><br><span class="line"></span><br><span class="line">i=1</span><br><span class="line">s=0</span><br><span class="line">while [ $i -le 100 ]</span><br><span class="line">	do</span><br><span class="line">		s=$(( $s+$i ))</span><br><span class="line">		i=$(( $i+ 1 ))</span><br><span class="line">	done</span><br><span class="line">echo &quot;The sum is: $s&quot;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="until循环"><a href="#until循环" class="headerlink" title="until循环"></a>until循环</h4><p>until循环和while循环相反，until循环时只要条件判断式不成立则进行循环，并执行循环程序。一旦循环条件成立，则终止循环。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">until [ 条件判断式 ]</span><br><span class="line">	do</span><br><span class="line">		程序</span><br><span class="line">	done</span><br></pre></td></tr></table></figure>
+
+<p>从1加到100：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/bash</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Author:Ben（E-mail:17620170099@163.com）</span></span><br><span class="line"></span><br><span class="line">i=1</span><br><span class="line">s=0</span><br><span class="line">until [ $i -gt 100 ]</span><br><span class="line">	do</span><br><span class="line">		s=$(( $s+$i ))</span><br><span class="line">		i=$(( $i+1 ))</span><br><span class="line">	done</span><br><span class="line">echo &quot;The sum is: $s&quot;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">function 函数名（）&#123;</span><br><span class="line">	程序</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/bash</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Author:Ben（E-mail:17620170099@163.com）</span></span><br><span class="line"></span><br><span class="line">function sum () &#123;</span><br><span class="line">	s=0</span><br><span class="line">	for (( i=0;i&lt;=$1;i=i+1 ))</span><br><span class="line">		do</span><br><span class="line">			s=$(( $i+$s ))</span><br><span class="line">		done</span><br><span class="line">	echo &quot;The sum of 1+2+3+...+$l is: $s&quot;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">read -p &quot;Please input a number: &quot; -t 30 num</span><br><span class="line">y=$(echo $num | sed &#x27;s/[0-9]//g&#x27;)</span><br><span class="line"></span><br><span class="line">if [ -z $y ];then</span><br><span class="line">	sum $num</span><br><span class="line">else</span><br><span class="line">	echo &quot;Error!! Please input a number!&quot;</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="特殊流程控制语名"><a href="#特殊流程控制语名" class="headerlink" title="特殊流程控制语名"></a>特殊流程控制语名</h4><p>a）exit语句</p>
+<p>系统是有exit命令的，用于退出当前用户的登录状态。可是在shell脚本中，exit语句是用来退出当前脚本的。也就是说，在Shell脚本中，只要碰到了exit语句，后续的程序就不再执行，而是直接退出脚本。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">exit [返回值]</span><br></pre></td></tr></table></figure>
+
+<p>如果exit命令之后定义了返回值，那么这个脚本执行之后的返回值就是我们自己定义的返回值。可以通过$?这个变量来查看返回值。如果exit之后没有定义返回值，脚本执行之后的返回值是执行exit语句之前，最后执行的一条命令的返回值。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/bash</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Author:Ben（E-mail: 17620170099@163.com）</span></span><br><span class="line"></span><br><span class="line">read -p &quot;Please input a number: &quot; -t 30 num</span><br><span class="line"></span><br><span class="line">y=$(echo $num | sed &quot;s/[0-9]//g&quot;)</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">判断变量num的值如果不为空，则输出报错信息，并且退出脚本，退出返回值为18</span></span><br><span class="line">[ -n &quot;$y&quot; ] &amp;&amp; echo &quot;Error! Please input a number!&quot; &amp;&amp; exit 18</span><br><span class="line"></span><br><span class="line">echo &quot;The number is: $num&quot;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>b）break语句</p>
+<p>当程序执行到break语句时，会结束整个当前循环。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/bash</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Author:Ben（E-mail: 17620170099@163.com）</span></span><br><span class="line"></span><br><span class="line">for (( i=1;i&lt;=10;i=i+1 ))</span><br><span class="line">	do</span><br><span class="line">		if [ $i -eq 4 ];then</span><br><span class="line">			break</span><br><span class="line">		fi</span><br><span class="line">		echo $i</span><br><span class="line">	done</span><br></pre></td></tr></table></figure>
+
+
+
+<p>c）continue语句</p>
+<p>continue也是结束流程控制的语句。continue语句只会结束单次当前循环。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/bash</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Author:Ben（E-mail:17620170099@163.com）</span></span><br><span class="line"></span><br><span class="line">for (( i=1;i&lt;=10;i=i+1 ))</span><br><span class="line">	do</span><br><span class="line">		if [ $i -eq 4 ];then</span><br><span class="line">			continue</span><br><span class="line">		fi</span><br><span class="line">		echo $i</span><br><span class="line">	done</span><br></pre></td></tr></table></figure>
+
+]]></content>
       <categories>
         <category>Shell</category>
       </categories>
