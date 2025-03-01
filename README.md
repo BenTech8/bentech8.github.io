@@ -60,4 +60,4 @@
 
 12. 公网访问博客地址
 
-    地址：http://{username}.github.io
+    地址：https://{username}.github.io
