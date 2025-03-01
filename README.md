@@ -35,7 +35,7 @@
 
 7. github仓库创建一个名为{username}.github.io的仓库。
 
-8. 本机电脑安装hexo-deployer-git插件。
+8. 本地电脑安装hexo-deployer-git插件。
 
    ```
    npm install hexo-deployer-git --save
@@ -58,3 +58,6 @@
     hexo deploy
     ```
 
+12. 公网访问博客地址
+
+    地址：http://{username}.github.io
