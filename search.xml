@@ -2884,6 +2884,209 @@
       </categories>
   </entry>
   <entry>
+    <title>启动引导与修复</title>
+    <url>/2025/03/04/%E5%90%AF%E5%8A%A8%E5%BC%95%E5%AF%BC%E4%B8%8E%E4%BF%AE%E5%A4%8D/</url>
+    <content><![CDATA[<h2 id="启动引导与修复"><a href="#启动引导与修复" class="headerlink" title="启动引导与修复"></a>启动引导与修复</h2><h3 id="系统运行级别"><a href="#系统运行级别" class="headerlink" title="系统运行级别"></a>系统运行级别</h3><h4 id="运行级别"><a href="#运行级别" class="headerlink" title="运行级别"></a>运行级别</h4><p>Linux默认有7个运行级别</p>
+<table>
+<thead>
+<tr>
+<th>运行级别</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td>关机</td>
+</tr>
+<tr>
+<td>1</td>
+<td>单用户模式，可以想象为windows的安全模式，主要用于系统修复</td>
+</tr>
+<tr>
+<td>2</td>
+<td>不完全的命令行模式，不含NFS服务</td>
+</tr>
+<tr>
+<td>3</td>
+<td>完全的命令行模式，就是标准字符界面</td>
+</tr>
+<tr>
+<td>4</td>
+<td>系统保留</td>
+</tr>
+<tr>
+<td>5</td>
+<td>图形模式</td>
+</tr>
+<tr>
+<td>6</td>
+<td>重启动</td>
+</tr>
+</tbody></table>
+<p>在Linux系统中可以使用runlevel命令来查看系统的运行级别：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# runlevel</span><br><span class="line">N 5</span><br></pre></td></tr></table></figure>
+
+<p>在这个命令的结果中，”N 5”中的N代表进入这个级别前，上一个级别是什么，5代表当前级别。”N”就是None的意思，也就是说系统是开机直接进入的5运行级别，没有上一个运行级别。那如果是从图形界面切换到字符界面的话，再查看运行级别，应该是：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# runlevel</span><br><span class="line">5 3</span><br></pre></td></tr></table></figure>
+
+<p>使用init命令可以手工改变当前的运行级别：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">进入图形界面，当然要已经安装了图形界面才可以</span></span><br><span class="line">[root@localhost ~]# init 5</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">关机</span></span><br><span class="line">[root@localhost ~]# init 0</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">重启</span></span><br><span class="line">[root@localhost ~]# init 6</span><br></pre></td></tr></table></figure>
+
+<p>不过要注意使用init命令关机和重启并不是太安全，容易造成数据丢失。所以推荐还是使用shutdown命令进行关机和重启。</p>
+<h4 id="系统默认运行级别"><a href="#系统默认运行级别" class="headerlink" title="系统默认运行级别"></a>系统默认运行级别</h4><p>&#x2F;etc&#x2F;init&#x2F;rcS.conf配置文件调用&#x2F;etc&#x2F;inittab配置文件的目的就是为了确定系统的默认运行级别。也就是系统一开机后会进入那个运行级别。</p>
+<p>注意这里的默认运行级别只能写成3或5，其的级别要不就是关机重启，要不就是保留或单用户，都不能作为系统默认运行级别。</p>
+<h4 id="etc-rc-d-rc-local文件"><a href="#etc-rc-d-rc-local文件" class="headerlink" title="&#x2F;etc&#x2F;rc.d&#x2F;rc.local文件"></a>&#x2F;etc&#x2F;rc.d&#x2F;rc.local文件</h4><p>这个配置文件会在用户登录之前读取，这个文件中写入什么命令，在每次系统启动时都会执行一次。也就是说，如果有任何需要在系统启动就运行的工作，只需要写入&#x2F;etc&#x2F;rc.d&#x2F;rc.local这个配置文件即可。</p>
+<h3 id="启动引导程序-Boot-Loader"><a href="#启动引导程序-Boot-Loader" class="headerlink" title="启动引导程序(Boot Loader)"></a>启动引导程序(Boot Loader)</h3><p>早期的Lilo引导程序已经不是很常见了，grub相比有很多优势，主要有：</p>
+<ul>
+<li>支持更多的文件系统；</li>
+<li>grub的主程序可以直接在文件系统中查找内核文件；</li>
+<li>在系统启动时，可以利用grub的交互界面编辑和修改启动选项；</li>
+<li>可以动态的修改grub的配置文件，这样在修改配置文件之后不需要重新安装grub，而只需要重新启动就可以生效了。</li>
+</ul>
+<p>a）&#x2F;boot&#x2F;grub目录</p>
+<p>grub的作用有以下几个：</p>
+<ul>
+<li>加载操作系统的内核。</li>
+<li>拥有一个可以让用户选择的菜单，来选择到底启动哪个系统。</li>
+<li>还可以调用其他的启动引导程序，来实现多系统引导。</li>
+</ul>
+<p>grub的配置文件主要是放置在&#x2F;boot&#x2F;grub&#x2F;目录中的。其实这个目录中主要就是grub的配置文件和各种文件系统的stage1.5文件。不过grub的配置文件有两个&#x2F;boot&#x2F;grub&#x2F;grub.conf和&#x2F;boot&#x2F;grub&#x2F;menu.lst，这两个配置文件是软链接，所以修改哪一个都可以，个人习惯改grub.conf。</p>
+<p>b）grub的配置文件</p>
+<p>在grub中分区的表示方法</p>
+<table>
+<thead>
+<tr>
+<th>硬盘</th>
+<th>分区</th>
+<th>Linux中设备文件名</th>
+<th>grub中设备文件名</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>第一块SCSI硬盘</td>
+<td>第一个主分区</td>
+<td>&#x2F;dev&#x2F;sda1</td>
+<td>hd(0,0)</td>
+</tr>
+<tr>
+<td></td>
+<td>第二个主分区</td>
+<td>&#x2F;dev&#x2F;sda2</td>
+<td>hd(0,1)</td>
+</tr>
+<tr>
+<td></td>
+<td>扩展分区</td>
+<td>&#x2F;dev&#x2F;sda3</td>
+<td>hd(0,2)</td>
+</tr>
+<tr>
+<td></td>
+<td>第一个逻辑分区</td>
+<td>&#x2F;dev&#x2F;sda5</td>
+<td>hd(0,4)</td>
+</tr>
+<tr>
+<td>第二块SCSI硬盘</td>
+<td>第一个主分区</td>
+<td>&#x2F;dev&#x2F;sdb1</td>
+<td>hd(1,0)</td>
+</tr>
+<tr>
+<td></td>
+<td>第二个主分区</td>
+<td>&#x2F;dev&#x2F;sdb2</td>
+<td>hd(1,1)</td>
+</tr>
+<tr>
+<td></td>
+<td>扩展分区</td>
+<td>&#x2F;dev&#x2F;sdb3</td>
+<td>hd(1,2)</td>
+</tr>
+<tr>
+<td></td>
+<td>第一个逻辑分区</td>
+<td>&#x2F;dev&#x2F;sdb5</td>
+<td>hd(1,4)</td>
+</tr>
+</tbody></table>
+<p>grub的配置文件</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# vim /boot/grub/grub.conf</span><br><span class="line">default=0</span><br><span class="line">timeout-5</span><br><span class="line">splashimage=(hd0,0)/grub/splash.xmp.gz</span><br><span class="line">hiddenmenu</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">以上为grub整体设置</span></span><br><span class="line">...</span><br><span class="line">title Centos6 (2.6.32-279.el6.i686)</span><br><span class="line">		root (hd0,0)</span><br><span class="line">		kernel				/vmlinuz-2.6.32-279.el6.i686			ro		root=UUID=b9a7a1a8-767f-4a87-8a2b-a535edb362c9 rd_NO_LUKS	KEYBOARDTYPE=pc	KEYTABLE=us rd_NO_MD crashkernel=auto LANG=zh_CN.UTF-8 rd_NO_LVM rd_NO_DM rhgb quiet</span><br><span class="line">		initrd	/initramfs-2.6.32-279.el6.i686.img</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>default&#x3D;0</p>
+<p>默认启动第一个系统。也就是如蛤在等待时间结束后，用户没有选择进入哪一个系统，那么系统会默认进入第一个系统。如果有多系统并存，那么每个系统都会有自己的titile字段，如果想要默认进入第二个系统，可以设为default&#x3D;1。</p>
+</li>
+<li><p>timeout&#x3D;5</p>
+<p>等待时间，默认是5秒。也就是进入系统时，如果5秒内用户没有按下任意键，那么系统会进入default字段定义的系统。当然可以手工修改这个等待时间，如果timeout&#x3D;0则不会等待直接进入系统，timeout&#x3D;-1则是一直等待用户输入，而不会自动进入系统。</p>
+</li>
+<li><p>splashimage&#x3D;(hd0,0)&#x2F;grub&#x2F;splash.xpm.gz</p>
+<p>这里是指定grub启动时的背景图像文件的保存位置。hd(0,0)代表第一个硬盘的第一个分区。</p>
+</li>
+<li><p>hiddenmenu</p>
+<p>隐藏菜单。启动时默认只能看到读秒，而不能看到菜单，如果想要看到菜单需要按任意键。如果注释了这句话，那么启动时就能直接看到菜单了。</p>
+</li>
+</ul>
+<p>Centos系统的启动配置：</p>
+<ul>
+<li><p>title Centos (2.6.32-279.el6.i686)</p>
+<p>title就是标题的意思，也就是说在title后面写入的是什么，那么系统启动时在grub的启动菜单中看到的就是什么。</p>
+</li>
+<li><p>root (hd0,0)</p>
+<p>是指启动程序的保存分区。这个root并不是管理员。在我的系统中，&#x2F;boot分区是独立划分的，而且设备文件名为&#x2F;dev&#x2F;sda1，所以在grub中，就被描述为hd（0,0）。</p>
+</li>
+<li><p>kernel				&#x2F;vmlinuz-2.6.32-279.el6.i686			ro		root&#x3D;UUID&#x3D;b9a7a1a8-767f-4a87-8a2b-a535edb362c9 rd_NO_LUKS	KEYBOARDTYPE&#x3D;pc	KEYTABLE&#x3D;us rd_NO_MD crashkernel&#x3D;auto LANG&#x3D;zh_CN.UTF-8 rd_NO_LVM rd_NO_DM rhgb quiet</p>
+<ul>
+<li><p>&#x2F;vmlinuz-2.6.32-279.el6.i686</p>
+<p>指定了内核文件的位置，这里的&#x2F;是指&#x2F;boot分区。</p>
+</li>
+<li><p>ro</p>
+<p>启动时以只读方式挂载根文件系统，这是为了不让启动过程影响磁盘内的文件系统。</p>
+</li>
+<li><p>root&#x3D;UUID&#x3D;b9a7a1a8-767f-4a87-8a2b-a535edb362c9 rd_NO_LUKS</p>
+<p>指定根文件系统所在位置。</p>
+</li>
+<li><p>rd_NO_LUKS</p>
+<p>禁用LUKS，LUKS用于给磁盘加密。</p>
+</li>
+<li><p>rd_NO_MD</p>
+<p>禁用软RAID</p>
+</li>
+<li><p>rd_NO_DM</p>
+<p>禁用硬RAID</p>
+</li>
+<li><p>rd_NO_LVM</p>
+<p>禁用LVM。以上禁用都只是在启动过程中禁用，是为加速系统启动的。</p>
+</li>
+<li><p>KEYBOARDTYPE&#x3D;pc    KEYTABLE&#x3D;us</p>
+<p>键盘类型</p>
+</li>
+<li><p>crashkernel&#x3D;auto</p>
+<p>自动为crashkernel预留内存</p>
+</li>
+<li><p>LANG&#x3D;zh_CN.UTF-8</p>
+<p>语言环境</p>
+</li>
+<li><p>rhgb</p>
+<p>（redhat graphics boot）用图片来代替启动过程中的文字信息。启动完成之后可以使用dmesg命令来查看这些文字信息。</p>
+</li>
+<li><p>quiet</p>
+<p>隐藏启动信息，只显示重要信息。</p>
+</li>
+<li><p>initrd    &#x2F;initramfs-2.6.32-279.el6.i686.img</p>
+<p>指定了initramfs内存文件系统镜像文件的所在位置。</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>grub加密</p>
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+  </entry>
+  <entry>
     <title>文件系统管理</title>
     <url>/2025/02/25/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86/</url>
     <content><![CDATA[<h1 id="文件系统管理"><a href="#文件系统管理" class="headerlink" title="文件系统管理"></a>文件系统管理</h1><h2 id="1-硬盘结构"><a href="#1-硬盘结构" class="headerlink" title="1. 硬盘结构"></a>1. 硬盘结构</h2><h3 id="1）硬盘的逻辑结构"><a href="#1）硬盘的逻辑结构" class="headerlink" title="1）硬盘的逻辑结构"></a>1）硬盘的逻辑结构</h3><p>每个扇区的大小是固定的，为512Byte。扇区也是磁盘的最小存储单位。</p>
