@@ -160,6 +160,404 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://bentech8.github.io/2025/02/25/vim%E7%BC%96%E8%BE%91%E5%99%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Ben">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ben">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/02/25/vim%E7%BC%96%E8%BE%91%E5%99%A8/" class="post-title-link" itemprop="url">vim编辑器</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2025-02-25 13:01:43 / 修改时间：13:02:50" itemprop="dateCreated datePublished" datetime="2025-02-25T13:01:43+08:00">2025-02-25</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="vim编辑器"><a href="#vim编辑器" class="headerlink" title="vim编辑器"></a>vim编辑器</h1><p>vim是一个全屏幕纯文本编辑器，是vi编辑器的增强版。</p>
+<p>可以利用别名让输入vi命令的时候，实际上执行vim编辑器，如：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">定义别名</span></span><br><span class="line">alias vi=&#x27;vim&#x27;</span><br></pre></td></tr></table></figure>
+
+<p>这样定义的别名是临时生效，如果需要永久生效，需要放入环境变量配置文件(~&#x2F;.bashrc)。</p>
+<h2 id="1-vim工作模式"><a href="#1-vim工作模式" class="headerlink" title="1. vim工作模式"></a>1. vim工作模式</h2><h3 id="1）命令模式"><a href="#1）命令模式" class="headerlink" title="1）命令模式"></a>1）命令模式</h3><p>主要使用快捷键的模式。</p>
+<p>命令模式想要进入输入模式，可以使用以下方式：</p>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>a</td>
+<td>在光标所在字符后插入</td>
+</tr>
+<tr>
+<td>A</td>
+<td>在光标所在行尾插入</td>
+</tr>
+<tr>
+<td>i</td>
+<td>在光标所在字符前插入</td>
+</tr>
+<tr>
+<td>I</td>
+<td>在光标所在行行首插入</td>
+</tr>
+<tr>
+<td>o</td>
+<td>在光标下插入新行</td>
+</tr>
+<tr>
+<td>O</td>
+<td>在光标上插入新行</td>
+</tr>
+<tr>
+<td>ZZ</td>
+<td>保存退出</td>
+</tr>
+</tbody></table>
+<h3 id="2）输入模式"><a href="#2）输入模式" class="headerlink" title="2）输入模式"></a>2）输入模式</h3><p>主要用于文本编辑，和记事本类似，输入数据就好。</p>
+<h3 id="3）编辑模式-末行模式"><a href="#3）编辑模式-末行模式" class="headerlink" title="3）编辑模式(末行模式)"></a>3）编辑模式(末行模式)</h3><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>:w</td>
+<td>保存不退出</td>
+</tr>
+<tr>
+<td>:w 新文件名</td>
+<td>把文件另存为新文件</td>
+</tr>
+<tr>
+<td>:q</td>
+<td>不保存退出</td>
+</tr>
+<tr>
+<td>:wq</td>
+<td>保存退出</td>
+</tr>
+<tr>
+<td>:!</td>
+<td>强制</td>
+</tr>
+<tr>
+<td>:q!</td>
+<td>强制不保存退出，用于修改文件之后，不保存数据退出</td>
+</tr>
+<tr>
+<td>:wq!</td>
+<td>强制保存退出，当文件的所有者或者root用户，对文件没有写权限的时候，强制写入数据使用</td>
+</tr>
+</tbody></table>
+<h2 id="2-命令模式操作"><a href="#2-命令模式操作" class="headerlink" title="2. 命令模式操作"></a>2. 命令模式操作</h2><h3 id="1）移动光标"><a href="#1）移动光标" class="headerlink" title="1）移动光标"></a>1）移动光标</h3><table>
+<thead>
+<tr>
+<th>功能</th>
+<th>快捷键</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>上下左右移动光标</td>
+<td>上、下、左、右方向键或者k、j、h、l</td>
+</tr>
+<tr>
+<td>移动到文件头</td>
+<td>gg</td>
+</tr>
+<tr>
+<td>移动到文件尾</td>
+<td>G或者shift+g</td>
+</tr>
+<tr>
+<td>移动到行首</td>
+<td>^</td>
+</tr>
+<tr>
+<td>移动到行尾</td>
+<td>$</td>
+</tr>
+<tr>
+<td>移动到指定行</td>
+<td>:n(这里n是数字，准备移动到第几行，就用哪个数字</td>
+</tr>
+</tbody></table>
+<h3 id="2）删除或剪切"><a href="#2）删除或剪切" class="headerlink" title="2）删除或剪切"></a>2）删除或剪切</h3><table>
+<thead>
+<tr>
+<th>功能</th>
+<th>快捷键</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>删除单个字母</td>
+<td>x</td>
+</tr>
+<tr>
+<td>删除n个字母</td>
+<td>nx</td>
+</tr>
+<tr>
+<td>删除单行</td>
+<td>dd</td>
+</tr>
+<tr>
+<td>删除多行</td>
+<td>ndd</td>
+</tr>
+<tr>
+<td>删除指定范围的行</td>
+<td>:n1,n2d</td>
+</tr>
+<tr>
+<td>粘贴到光标后</td>
+<td>p</td>
+</tr>
+<tr>
+<td>粘贴到光标前</td>
+<td>P(大)</td>
+</tr>
+<tr>
+<td>从光标所在行删除到文件尾</td>
+<td>dG</td>
+</tr>
+</tbody></table>
+<p>删除整行或多行，这是比较常用的删除方法，这里的dd快捷键既是删除，也是剪切。删除内容放入了剪切板，如果不粘贴就是剪切。</p>
+<h3 id="3）复制"><a href="#3）复制" class="headerlink" title="3）复制"></a>3）复制</h3><table>
+<thead>
+<tr>
+<th>功能</th>
+<th>快捷键</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>复制单行</td>
+<td>yy</td>
+</tr>
+<tr>
+<td>复制多行</td>
+<td>nyy</td>
+</tr>
+</tbody></table>
+<h3 id="4）撤销"><a href="#4）撤销" class="headerlink" title="4）撤销"></a>4）撤销</h3><table>
+<thead>
+<tr>
+<th>功能</th>
+<th>快捷键</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>撤销</td>
+<td>u</td>
+</tr>
+<tr>
+<td>反撤销</td>
+<td>ctrl+r</td>
+</tr>
+</tbody></table>
+<p>u键能一直撤销到文件打开时的状态，类似Windows下ctrl+z键的作用。</p>
+<p>ctrl+z能一直反撤销到最后一次操作状态，类似Windows下ctrl+y键的作用。</p>
+<h3 id="5）vim配置文件"><a href="#5）vim配置文件" class="headerlink" title="5）vim配置文件"></a>5）vim配置文件</h3><p>这些末行模式参数设置，多数需要在vim中才能生效。</p>
+<table>
+<thead>
+<tr>
+<th>设置参数</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>:set nu</td>
+<td>显示行号</td>
+</tr>
+<tr>
+<td>:set nonu</td>
+<td>取消行号</td>
+</tr>
+<tr>
+<td>:syntax on</td>
+<td>依据语法显示相关的颜色帮助</td>
+</tr>
+<tr>
+<td>:syntax off</td>
+<td>不显示语法相关的颜色帮助</td>
+</tr>
+<tr>
+<td>:set hlsearch</td>
+<td>设置将查找的字符串高亮显示，默认是set hlsearch高亮显示</td>
+</tr>
+<tr>
+<td>:set nohlsearch</td>
+<td>取消将查找的字符串高亮显示</td>
+</tr>
+<tr>
+<td>:set ruler</td>
+<td>设置显示右下角的状态栏</td>
+</tr>
+<tr>
+<td>:set noruler</td>
+<td>取消显示右下角的状态栏</td>
+</tr>
+<tr>
+<td>:set showmode</td>
+<td>设置在左下角显示如“–INSERT–”之类的状态栏，默认是set showmode显示</td>
+</tr>
+<tr>
+<td>:set noshowmode</td>
+<td>取消在左下角显示如”–INSERT–”之类的状态栏</td>
+</tr>
+<tr>
+<td>:set list</td>
+<td>设置显示隐藏字符(Tab键用”I”表示，回车符用“$”表示)</td>
+</tr>
+<tr>
+<td>:set nolist</td>
+<td>设置不显示隐藏字符，默认是nolist</td>
+</tr>
+<tr>
+<td>:set all</td>
+<td>查看所有设置参数</td>
+</tr>
+</tbody></table>
+<p>大家会发现，这些设置参数都只是临时生效，一旦关闭文件再打开，又需要重新输入。如果想要永久生效，需要手工建立vim的配置文件”~&#x2F;.vimrc”，把你需要的参数写入配置文件就永久生效了。</p>
+<p>Windows下回车符在Linux中是用“^M$”符号显示，而不是”$”符。这样会导致Windows下编辑的程序脚本，无法在Linux中执行。这时可以通过命令”dos2unix”，把Windows格式转为Linux格式，当然反过来”unix2dos”命令就是把Linux格式转为Windows格式。这两个命令默认没有安装，需要手工安装才能使用。</p>
+<h3 id="6）查找"><a href="#6）查找" class="headerlink" title="6）查找"></a>6）查找</h3><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>&#x2F;查找内容</td>
+<td>从光标所在行向下查找</td>
+</tr>
+<tr>
+<td>?查找内容</td>
+<td>从光标所在行向上查找</td>
+</tr>
+<tr>
+<td>n</td>
+<td>下一个</td>
+</tr>
+<tr>
+<td>N</td>
+<td>上一个</td>
+</tr>
+</tbody></table>
+<h3 id="7）替换"><a href="#7）替换" class="headerlink" title="7）替换"></a>7）替换</h3><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>r</td>
+<td>替换光标所在处的字符</td>
+</tr>
+<tr>
+<td>R</td>
+<td>从光标所在处开始替换字符，按ESC结束</td>
+</tr>
+<tr>
+<td>:1,10s&#x2F;old&#x2F;new&#x2F;g</td>
+<td>替换1到10行的所有old为new</td>
+</tr>
+<tr>
+<td>:%s&#x2F;old&#x2F;new&#x2F;g</td>
+<td>替换整个文件的old为new</td>
+</tr>
+</tbody></table>
+<p>示例</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"># 在shell中“#”开头是注释，批量注释1到10行</span><br><span class="line">:1,10s/^/#/g</span><br><span class="line"></span><br><span class="line"># 取消注释</span><br><span class="line">:1,10s/^#//g</span><br><span class="line"></span><br><span class="line"># 批量添加“//”注释</span><br><span class="line">:1,10s/^/\/\//g</span><br><span class="line"></span><br><span class="line"># 取消注释</span><br><span class="line">:1,10s/^\/\///g</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="3-vim使用技巧"><a href="#3-vim使用技巧" class="headerlink" title="3. vim使用技巧"></a>3. vim使用技巧</h2><h3 id="1）在vim中导入其他文件内容或命令结果"><a href="#1）在vim中导入其他文件内容或命令结果" class="headerlink" title="1）在vim中导入其他文件内容或命令结果"></a>1）在vim中导入其他文件内容或命令结果</h3><p>a）导入其他文件内容</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 把文件内容导入光标下一行</span><br><span class="line">:r 文件名            </span><br></pre></td></tr></table></figure>
+
+<p>可以把其他文件的内容导入到光标下一行位置。</p>
+<p>b）在vim中执行系统命令</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 在vim中执行系统命令</span><br><span class="line">:!命令</span><br></pre></td></tr></table></figure>
+
+<p>这里只是在vim中执行系统命令，但并不把系统命令的结果写入到文件中，主要用于在文件编辑中，查看系统信息如时间。</p>
+<p>c）导入命令结果</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 在vim中执行系统命令，并把命令结果导入光标下一行</span><br><span class="line">:r !命令</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="2）设定快捷键"><a href="#2）设定快捷键" class="headerlink" title="2）设定快捷键"></a>2）设定快捷键</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 自定义快捷键</span><br><span class="line">:map 快捷键 快捷键执行的命令</span><br></pre></td></tr></table></figure>
+
+<p>示例</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># 按ctrl+p时，在行首加入注释</span><br><span class="line">:map ^P I#&lt;ESC&gt;</span><br><span class="line"></span><br><span class="line"># 按ctrl+b时，删除行首第一个字母</span><br><span class="line">:map ^B ^x</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意</strong>：^P快捷键不能手工输入，需要执行ctrl+V+P来定义，或ctrl+v，然后ctrl+p。</p>
+<h3 id="3）字符替换"><a href="#3）字符替换" class="headerlink" title="3）字符替换"></a>3）字符替换</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 字符替换</span><br><span class="line">:ab 源字符 替换为字符</span><br></pre></td></tr></table></figure>
+
+<p>在vim编辑中，有时候需要频繁输入某一长字符串(比如邮箱)，这时使用字符串替换，能增加输入效率。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 当碰到“mymail”时，转变为邮箱</span><br><span class="line">:ab mymail ben@163.com</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意：</strong>“源字符”不应设置的太短，否则有可能影响输入。</p>
+<h3 id="4）多文件打开"><a href="#4）多文件打开" class="headerlink" title="4）多文件打开"></a>4）多文件打开</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># vim上下分屏同时打开两个文件</span><br><span class="line">vim -o 文件1 文件2</span><br><span class="line"></span><br><span class="line"># vim左右分屏同时打开两个文件</span><br><span class="line">vim -O 文件1 文件2</span><br></pre></td></tr></table></figure>
+
+<p>这样可以同时打开两个文件，方便操作。可以通过先按”ctrl+w”，再按方向键的方式在两个文件之间切换。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://bentech8.github.io/2025/02/25/Linux%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2104,7 +2502,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">12</span>
+          <span class="site-state-item-count">13</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
