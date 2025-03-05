@@ -28,7 +28,7 @@
 <meta property="og:description" content="启动引导与修复系统运行级别运行级别Linux默认有7个运行级别    运行级别 含义    0 关机   1 单用户模式，可以想象为windows的安全模式，主要用于系统修复   2 不完全的命令行模式，不含NFS服务   3 完全的命令行模式，就是标准字符界面   4 系统保留   5 图形模式   6 重启动   在Linux系统中可以使用runlevel命令来查看系统的运行级别： 12[ro">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-03-04T07:32:41.000Z">
-<meta property="article:modified_time" content="2025-03-04T09:27:59.110Z">
+<meta property="article:modified_time" content="2025-03-05T07:28:51.339Z">
 <meta property="article:author" content="Ben">
 <meta name="twitter:card" content="summary">
 
@@ -187,10 +187,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2025-03-04 15:32:41 / 修改时间：17:27:59" itemprop="dateCreated datePublished" datetime="2025-03-04T15:32:41+08:00">2025-03-04</time>
+              <time title="创建时间：2025-03-04 15:32:41" itemprop="dateCreated datePublished" datetime="2025-03-04T15:32:41+08:00">2025-03-04</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-03-05 15:28:51" itemprop="dateModified" datetime="2025-03-05T15:28:51+08:00">2025-03-05</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -338,7 +344,7 @@
 </tr>
 </tbody></table>
 <p>grub的配置文件</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# vim /boot/grub/grub.conf</span><br><span class="line">default=0</span><br><span class="line">timeout-5</span><br><span class="line">splashimage=(hd0,0)/grub/splash.xmp.gz</span><br><span class="line">hiddenmenu</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">以上为grub整体设置</span></span><br><span class="line">...</span><br><span class="line">title Centos6 (2.6.32-279.el6.i686)</span><br><span class="line">		root (hd0,0)</span><br><span class="line">		kernel				/vmlinuz-2.6.32-279.el6.i686			ro		root=UUID=b9a7a1a8-767f-4a87-8a2b-a535edb362c9 rd_NO_LUKS	KEYBOARDTYPE=pc	KEYTABLE=us rd_NO_MD crashkernel=auto LANG=zh_CN.UTF-8 rd_NO_LVM rd_NO_DM rhgb quiet</span><br><span class="line">		initrd	/initramfs-2.6.32-279.el6.i686.img</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# vim /boot/grub/grub.conf</span><br><span class="line">default=0</span><br><span class="line">timeout-5</span><br><span class="line">splashimage=(hd0,0)/grub/splash.xmp.gz</span><br><span class="line">hiddenmenu</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">以上为grub整体设置</span></span><br><span class="line">title Centos6 (2.6.32-279.el6.i686)</span><br><span class="line">		root (hd0,0)</span><br><span class="line">		kernel				/vmlinuz-2.6.32-279.el6.i686			ro		root=UUID=b9a7a1a8-767f-4a87-8a2b-a535edb362c9 rd_NO_LUKS	KEYBOARDTYPE=pc	KEYTABLE=us rd_NO_MD crashkernel=auto LANG=zh_CN.UTF-8 rd_NO_LVM rd_NO_DM rhgb quiet</span><br><span class="line">		initrd	/initramfs-2.6.32-279.el6.i686.img</span><br></pre></td></tr></table></figure>
 
 <ul>
 <li><p>default&#x3D;0</p>
@@ -407,6 +413,33 @@
 </li>
 </ul>
 <p>grub加密</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# grub-mkpasswd-pbkdf2</span><br><span class="line">输入密码： </span><br><span class="line">重新输入口令： </span><br><span class="line">您的密码的 PBKDF2 哈希为 grub.pbkdf2.sha512.10000.E71038F43B0B8C0F0EE05B6BA49AA7D8EB87EB3D4293A9A0A97DD81FBC773BBCB8A268A833245C687C8D6C6F352A4E5E0C77C1BC78A956C7FBBB0B8DAC1F0BC8.3CF79D7B2F0F6BEC4BF54D0D7D8A7F9B9B5CC2BE1609BFC33ADB08EC0372276B555D051AAD5ECA95B92E92CAC12FC0BCFD574A50E69ABA74A1BA214A729EBC80</span><br></pre></td></tr></table></figure>
+
+<p>这样就可以生成加密密码字串，这个字串是采用md5加密的，就是你的密码经md5编码之后的。</p>
+<p>grub菜单整体加密</p>
+<p>如果只是加密单个启动菜单，grub的编辑模式是不能锁定的，还是可以按“e”键进入编辑模式。而且进入编辑模式后，是可以删除password字段的，再按“b”（boot启动）键就可以不用密码直接进入系统。这时就需要给grub菜单整体加密了，整体加密后，如果想进入grub编辑界面必须输入正确的密码。加密方法其实只是把password字段换个位置而已。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# vim /boot/grub/grub.conf</span><br><span class="line">default=0</span><br><span class="line">timeout=5</span><br><span class="line">password --md5 grub.pbkdf2.sha512.10000.E71038F43B0B8C0F0EE05B6BA49AA7D8EB87EB3D4293A9A0A97DD81FBC773BBCB8A268A833245C687C8D6C6F352A4E5E0C77C1BC78A956C7FBBB0B8DAC1F0BC8.3CF79D7B2F0F6BEC4BF54D0D7D8A7F9B9B5CC2BE1609BFC33ADB08EC0372276B555D051AAD5ECA95B92E92CAC12FC0BCFD574A50E69ABA74A1BA214A729EBC80</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<p>但是这样加密，启动CentOS时，是不需要密码就能正常启动的。如果需要grub整体加密，又需要系统启动时输入正确的密码时，则需：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# vim /boot/grub/grub.conf</span><br><span class="line">default=0</span><br><span class="line">timeout-5</span><br><span class="line">password --md5 grub.pbkdf2.sha512.10000.E71038F43B0B8C0F0EE05B6BA49AA7D8EB87EB3D4293A9A0A97DD81FBC773BBCB8A268A833245C687C8D6C6F352A4E5E0C77C1BC78A956C7FBBB0B8DAC1F0BC8.3CF79D7B2F0F6BEC4BF54D0D7D8A7F9B9B5CC2BE1609BFC33ADB08EC0372276B555D051AAD5ECA95B92E92CAC12FC0BCFD574A50E69ABA74A1BA214A729EBC80</span><br><span class="line">splashimage=(hd0,0)/grub/splash.xmp.gz</span><br><span class="line">hiddenmenu</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">以上为grub整体设置</span></span><br><span class="line">title Centos6 (2.6.32-279.el6.i686)</span><br><span class="line">		lock</span><br><span class="line">		...</span><br></pre></td></tr></table></figure>
+
+<p>在title字段加入lock。代表锁死，如果不输入正确的grub密码也不能启动。</p>
+<h3 id="系统修复模式"><a href="#系统修复模式" class="headerlink" title="系统修复模式"></a>系统修复模式</h3><h4 id="单用户模式"><a href="#单用户模式" class="headerlink" title="单用户模式"></a>单用户模式</h4><p>Linux的单用户模式有些类似Windows的安全模式，只启动最少的程序用于系统修复。在单用户模式(运行级别为1)中，Linux引导进入根shell，网络被禁用，只有少数进程运行。单用户模式可以用来修改文件系统损坏、还原配置文件、移动用户数据等。</p>
+<p>a）进入单用户模式</p>
+<p>开机进入引导界面，按“e”进入。</p>
+<p>b）单用户模式常见的错误修复</p>
+<ul>
+<li><p>遗忘root密码</p>
+<p>进入单用户模式最大的特点就是不需要输入用户名和密码就能登录。既然已经登录了单用户模式，那么直接给root用户设定新密码即可。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost /]# passwd root</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>修改系统默认运行级别</p>
+<p>如果把系统的默认运行级别修改错误，比如改为了0或6，系统就不能正常启动了。这时也可以利用单用户模式进行修复，只要直接修改默认运行级别配置文件&#x2F;etc&#x2F;inittab，把系统默认运行级别修改回来即可。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# vim /etc/inittab</span><br><span class="line">id:3:initdefault:</span><br></pre></td></tr></table></figure>
+
+<p>绝大多数系统错误都可以通过单用户模式进行修复，理论上是只要能够进入单用户模式，那么系统错误就可以被单用户模式修复。当然意判断系统到底是哪里出现了问题，是需要不断地经验积累。</p>
+</li>
+</ul>
 
     </div>
 
@@ -484,7 +517,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8%E5%BC%95%E5%AF%BC%E4%B8%8E%E4%BF%AE%E5%A4%8D"><span class="nav-number">1.</span> <span class="nav-text">启动引导与修复</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E8%BF%90%E8%A1%8C%E7%BA%A7%E5%88%AB"><span class="nav-number">1.1.</span> <span class="nav-text">系统运行级别</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C%E7%BA%A7%E5%88%AB"><span class="nav-number">1.1.1.</span> <span class="nav-text">运行级别</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E9%BB%98%E8%AE%A4%E8%BF%90%E8%A1%8C%E7%BA%A7%E5%88%AB"><span class="nav-number">1.1.2.</span> <span class="nav-text">系统默认运行级别</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#etc-rc-d-rc-local%E6%96%87%E4%BB%B6"><span class="nav-number">1.1.3.</span> <span class="nav-text">&#x2F;etc&#x2F;rc.d&#x2F;rc.local文件</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8%E5%BC%95%E5%AF%BC%E7%A8%8B%E5%BA%8F-Boot-Loader"><span class="nav-number">1.2.</span> <span class="nav-text">启动引导程序(Boot Loader)</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8%E5%BC%95%E5%AF%BC%E4%B8%8E%E4%BF%AE%E5%A4%8D"><span class="nav-number">1.</span> <span class="nav-text">启动引导与修复</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E8%BF%90%E8%A1%8C%E7%BA%A7%E5%88%AB"><span class="nav-number">1.1.</span> <span class="nav-text">系统运行级别</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C%E7%BA%A7%E5%88%AB"><span class="nav-number">1.1.1.</span> <span class="nav-text">运行级别</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E9%BB%98%E8%AE%A4%E8%BF%90%E8%A1%8C%E7%BA%A7%E5%88%AB"><span class="nav-number">1.1.2.</span> <span class="nav-text">系统默认运行级别</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#etc-rc-d-rc-local%E6%96%87%E4%BB%B6"><span class="nav-number">1.1.3.</span> <span class="nav-text">&#x2F;etc&#x2F;rc.d&#x2F;rc.local文件</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8%E5%BC%95%E5%AF%BC%E7%A8%8B%E5%BA%8F-Boot-Loader"><span class="nav-number">1.2.</span> <span class="nav-text">启动引导程序(Boot Loader)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E4%BF%AE%E5%A4%8D%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.3.</span> <span class="nav-text">系统修复模式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8D%95%E7%94%A8%E6%88%B7%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.3.1.</span> <span class="nav-text">单用户模式</span></a></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
