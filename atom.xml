@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
   <title>Ben</title>
   
-  <subtitle>个人学习笔记</subtitle>
+  <subtitle>个人学习笔记&#92;nE-mail:17620170099@163.com</subtitle>
   <link href="https://bentech8.github.io/atom.xml" rel="self"/>
   
   <link href="https://bentech8.github.io/"/>
