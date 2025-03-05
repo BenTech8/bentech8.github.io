@@ -2886,7 +2886,7 @@
   <entry>
     <title>启动引导与修复</title>
     <url>/2025/03/04/%E5%90%AF%E5%8A%A8%E5%BC%95%E5%AF%BC%E4%B8%8E%E4%BF%AE%E5%A4%8D/</url>
-    <content><![CDATA[<h2 id="启动引导与修复"><a href="#启动引导与修复" class="headerlink" title="启动引导与修复"></a>启动引导与修复</h2><h3 id="系统运行级别"><a href="#系统运行级别" class="headerlink" title="系统运行级别"></a>系统运行级别</h3><h4 id="运行级别"><a href="#运行级别" class="headerlink" title="运行级别"></a>运行级别</h4><p>Linux默认有7个运行级别</p>
+    <content><![CDATA[<h2 id="系统运行级别"><a href="#系统运行级别" class="headerlink" title="系统运行级别"></a>系统运行级别</h2><h3 id="运行级别"><a href="#运行级别" class="headerlink" title="运行级别"></a>运行级别</h3><p>Linux默认有7个运行级别</p>
 <table>
 <thead>
 <tr>
@@ -2933,10 +2933,10 @@
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">进入图形界面，当然要已经安装了图形界面才可以</span></span><br><span class="line">[root@localhost ~]# init 5</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">关机</span></span><br><span class="line">[root@localhost ~]# init 0</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">重启</span></span><br><span class="line">[root@localhost ~]# init 6</span><br></pre></td></tr></table></figure>
 
 <p>不过要注意使用init命令关机和重启并不是太安全，容易造成数据丢失。所以推荐还是使用shutdown命令进行关机和重启。</p>
-<h4 id="系统默认运行级别"><a href="#系统默认运行级别" class="headerlink" title="系统默认运行级别"></a>系统默认运行级别</h4><p>&#x2F;etc&#x2F;init&#x2F;rcS.conf配置文件调用&#x2F;etc&#x2F;inittab配置文件的目的就是为了确定系统的默认运行级别。也就是系统一开机后会进入那个运行级别。</p>
+<h3 id="系统默认运行级别"><a href="#系统默认运行级别" class="headerlink" title="系统默认运行级别"></a>系统默认运行级别</h3><p>&#x2F;etc&#x2F;init&#x2F;rcS.conf配置文件调用&#x2F;etc&#x2F;inittab配置文件的目的就是为了确定系统的默认运行级别。也就是系统一开机后会进入那个运行级别。</p>
 <p>注意这里的默认运行级别只能写成3或5，其的级别要不就是关机重启，要不就是保留或单用户，都不能作为系统默认运行级别。</p>
-<h4 id="etc-rc-d-rc-local文件"><a href="#etc-rc-d-rc-local文件" class="headerlink" title="&#x2F;etc&#x2F;rc.d&#x2F;rc.local文件"></a>&#x2F;etc&#x2F;rc.d&#x2F;rc.local文件</h4><p>这个配置文件会在用户登录之前读取，这个文件中写入什么命令，在每次系统启动时都会执行一次。也就是说，如果有任何需要在系统启动就运行的工作，只需要写入&#x2F;etc&#x2F;rc.d&#x2F;rc.local这个配置文件即可。</p>
-<h3 id="启动引导程序-Boot-Loader"><a href="#启动引导程序-Boot-Loader" class="headerlink" title="启动引导程序(Boot Loader)"></a>启动引导程序(Boot Loader)</h3><p>早期的Lilo引导程序已经不是很常见了，grub相比有很多优势，主要有：</p>
+<h3 id="etc-rc-d-rc-local文件"><a href="#etc-rc-d-rc-local文件" class="headerlink" title="&#x2F;etc&#x2F;rc.d&#x2F;rc.local文件"></a>&#x2F;etc&#x2F;rc.d&#x2F;rc.local文件</h3><p>这个配置文件会在用户登录之前读取，这个文件中写入什么命令，在每次系统启动时都会执行一次。也就是说，如果有任何需要在系统启动就运行的工作，只需要写入&#x2F;etc&#x2F;rc.d&#x2F;rc.local这个配置文件即可。</p>
+<h2 id="启动引导程序-Boot-Loader"><a href="#启动引导程序-Boot-Loader" class="headerlink" title="启动引导程序(Boot Loader)"></a>启动引导程序(Boot Loader)</h2><p>早期的Lilo引导程序已经不是很常见了，grub相比有很多优势，主要有：</p>
 <ul>
 <li>支持更多的文件系统；</li>
 <li>grub的主程序可以直接在文件系统中查找内核文件；</li>
@@ -3092,7 +3092,7 @@
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# vim /boot/grub/grub.conf</span><br><span class="line">default=0</span><br><span class="line">timeout-5</span><br><span class="line">password --md5 grub.pbkdf2.sha512.10000.E71038F43B0B8C0F0EE05B6BA49AA7D8EB87EB3D4293A9A0A97DD81FBC773BBCB8A268A833245C687C8D6C6F352A4E5E0C77C1BC78A956C7FBBB0B8DAC1F0BC8.3CF79D7B2F0F6BEC4BF54D0D7D8A7F9B9B5CC2BE1609BFC33ADB08EC0372276B555D051AAD5ECA95B92E92CAC12FC0BCFD574A50E69ABA74A1BA214A729EBC80</span><br><span class="line">splashimage=(hd0,0)/grub/splash.xmp.gz</span><br><span class="line">hiddenmenu</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">以上为grub整体设置</span></span><br><span class="line">title Centos6 (2.6.32-279.el6.i686)</span><br><span class="line">		lock</span><br><span class="line">		...</span><br></pre></td></tr></table></figure>
 
 <p>在title字段加入lock。代表锁死，如果不输入正确的grub密码也不能启动。</p>
-<h3 id="系统修复模式"><a href="#系统修复模式" class="headerlink" title="系统修复模式"></a>系统修复模式</h3><h4 id="单用户模式"><a href="#单用户模式" class="headerlink" title="单用户模式"></a>单用户模式</h4><p>Linux的单用户模式有些类似Windows的安全模式，只启动最少的程序用于系统修复。在单用户模式(运行级别为1)中，Linux引导进入根shell，网络被禁用，只有少数进程运行。单用户模式可以用来修改文件系统损坏、还原配置文件、移动用户数据等。</p>
+<h2 id="系统修复模式"><a href="#系统修复模式" class="headerlink" title="系统修复模式"></a>系统修复模式</h2><h3 id="单用户模式"><a href="#单用户模式" class="headerlink" title="单用户模式"></a>单用户模式</h3><p>Linux的单用户模式有些类似Windows的安全模式，只启动最少的程序用于系统修复。在单用户模式(运行级别为1)中，Linux引导进入根shell，网络被禁用，只有少数进程运行。单用户模式可以用来修改文件系统损坏、还原配置文件、移动用户数据等。</p>
 <p>a）进入单用户模式</p>
 <p>开机进入引导界面，按“e”进入。</p>
 <p>b）单用户模式常见的错误修复</p>
@@ -3501,6 +3501,426 @@
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# vim /etc/fstab</span><br><span class="line">...</span><br><span class="line">/dev/sdb1      swap      swap      defaults      0      0</span><br></pre></td></tr></table></figure>
 
 <p>也可以使用uuid。</p>
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>服务管理</title>
+    <url>/2025/03/05/%E6%9C%8D%E5%8A%A1%E7%AE%A1%E7%90%86/</url>
+    <content><![CDATA[<h2 id="服务的简介与分类"><a href="#服务的简介与分类" class="headerlink" title="服务的简介与分类"></a>服务的简介与分类</h2><h3 id="服务的分类"><a href="#服务的分类" class="headerlink" title="服务的分类"></a>服务的分类</h3><p>Linux服务：</p>
+<ul>
+<li><p>RPM包默认安装的服务</p>
+<ul>
+<li><p>独立的服务</p>
+<p>就是独立启动的意思，这类型的服务可以自行启动，而不用依赖其他的管理服务。不依赖其他管理服务，那么当客户端请求访问时，独立的服务响应请求更迅速。Linux中目前大多数服务都是独立的服务，比如apache服务，FTP服务，Samba服务等。</p>
+</li>
+<li><p>基于xinetd服务</p>
+<p>这种服务就不能独立启动了，而是要依靠管理服务来调用这种服务。这个负责管理的服务就是xinetd服务，xinetd服务是系统的超级守护进程。xinetd服务的作用就是管理不能独立启动的服务，当有客户端请求时，先请求xinetd服务，由xinetd服务云唤醒相对应的服务。当客户端请求结束后，被唤醒的服务会关闭并释放资源。这样做的好处是只需要持续启动xinetd服务，而其他基于xinetd的服务只有在需要时才启动，不会占用过多的服务器资源。但是这种服务由于在有客户端靖求时才会被唤醒，所以响应时间相对较慢。</p>
+</li>
+</ul>
+</li>
+<li><p>源码包安装的服务</p>
+</li>
+</ul>
+<h3 id="查询已经安装的服务"><a href="#查询已经安装的服务" class="headerlink" title="查询已经安装的服务"></a>查询已经安装的服务</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# chkconfig --list [服务名]</span><br><span class="line">选项：</span><br><span class="line">  --list: 列出所有RPM默认安装服务的自启动状态</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="RPM包默认安装的服务管理"><a href="#RPM包默认安装的服务管理" class="headerlink" title="RPM包默认安装的服务管理"></a>RPM包默认安装的服务管理</h2><h3 id="独立服务管理"><a href="#独立服务管理" class="headerlink" title="独立服务管理"></a>独立服务管理</h3><h4 id="独立服务的启动管理"><a href="#独立服务的启动管理" class="headerlink" title="独立服务的启动管理"></a>独立服务的启动管理</h4><ul>
+<li><p>使用&#x2F;etc&#x2F;init.d&#x2F;目录中的启动脚本启动服务</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# /etc/init.d/httpd start</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用service命令来启动独立的服务</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# service [独立服务名] start|stop|restart|...</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="独立服务的自启动管理"><a href="#独立服务的自启动管理" class="headerlink" title="独立服务的自启动管理"></a>独立服务的自启动管理</h4><ul>
+<li><p>使用chkconfig服务自启动管理命令</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# chkconfig [--level 运行级别] [独立服务名] [on|off]</span><br><span class="line">选项：</span><br><span class="line">  --level:    设定在哪个运行级别中开机自启动(on)，或是关闭自启动(off)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# chkconfig --level 2345 httpd on</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>修改&#x2F;etc&#x2F;rc.d&#x2F;rc.local文件，设置服务自启动</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# vim /etc/rc.d/rc.local</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/bash</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"></span></span><br><span class="line"><span class="language-bash"><span class="comment"># This script will be executed *after* all the other init scripts.</span></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">You can put your own initialization stuff <span class="keyword">in</span> here <span class="keyword">if</span> you don<span class="string">&#x27;t</span></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash"><span class="string">want to do the full Sys V style init stuff.</span></span></span><br><span class="line"></span><br><span class="line">touch /var/lock/subsys/local</span><br><span class="line">/etc/rc.d/init.d/httpd start</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用ntsysv命令管理自启动</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# ntsysv [--level 运行级别]</span><br><span class="line">选项：</span><br><span class="line">  --level 运行级别:  可以指定设定自启动的运行级别</span><br></pre></td></tr></table></figure>
+
+<p>这个命令的操作是这样的：</p>
+<ul>
+<li>上下键：在不同服务之间移动</li>
+<li>空格键：选定或取消服务的自启动，就是在服务之前是否打入“*”</li>
+<li>tab键：在不同项目间切换</li>
+<li>F1键：显示服务的说明</li>
+</ul>
+</li>
+</ul>
+<h3 id="基于xinetd服务的管理"><a href="#基于xinetd服务的管理" class="headerlink" title="基于xinetd服务的管理"></a>基于xinetd服务的管理</h3><h4 id="基于xinetd服务的启动"><a href="#基于xinetd服务的启动" class="headerlink" title="基于xinetd服务的启动"></a>基于xinetd服务的启动</h4><p>以telnet服务为例，telnet服务是用来进行系统远程管理的，端口是23。不过需要注意的是telnet的远程管理数据在网络中是明文传输，非常不安全。在生产服务器上不建议启动telnet服务。在生产服务器上，远程管理使用的是ssh协议，ssh是加密的，更加安全。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# vim /etc/xinetd.d/telnet</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">default: on</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">description: The telnet server serves telnet sessions: it uses \</span></span><br><span class="line"><span class="language-bash"><span class="comment">#       unencrypted username/password pairs for authentication.</span></span></span><br><span class="line">service telnet                                     # 服务的名称为telnet</span><br><span class="line">&#123;</span><br><span class="line">	flags				= REUSE                    # 标志为REUSE，设定TCP/IP socket可重用</span><br><span class="line">	socket_type         = stream                   # 使用TCP协议数据包</span><br><span class="line">	wait				= no					   # 允许多个连接同时连接</span><br><span class="line">	user				= root					   # 启动服务的用户为root</span><br><span class="line">	server				= /usr/sbin/in.telnetd     # 服务的启动程序</span><br><span class="line">	log_on_failure		+= USERID                  # 登录失败后，记录用户的ID</span><br><span class="line">	disable				= yes					   # 服务不启动</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# vim /etc/xinetd.d/telnet</span><br><span class="line">service telnet</span><br><span class="line">&#123;</span><br><span class="line">	...</span><br><span class="line">	disable				= no</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">[root@localhost ~]# service xinetd restart</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="基于xinetd服务的自启动"><a href="#基于xinetd服务的自启动" class="headerlink" title="基于xinetd服务的自启动"></a>基于xinetd服务的自启动</h4><ul>
+<li><p>使用chkconfig命令管理自启动</p>
+</li>
+<li><p>使用ntsysv命令管理自启动</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# chkconfig 服务名 on|off</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="源码包安装的服务管理"><a href="#源码包安装的服务管理" class="headerlink" title="源码包安装的服务管理"></a>源码包安装的服务管理</h2><h3 id="源码包服务的启动管理"><a href="#源码包服务的启动管理" class="headerlink" title="源码包服务的启动管理"></a>源码包服务的启动管理</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# /usr/local/apache2/bin/apachectl start|stop|restart|...</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="源码包服务的自启动管理"><a href="#源码包服务的自启动管理" class="headerlink" title="源码包服务的自启动管理"></a>源码包服务的自启动管理</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# vim /etc/rc.d/rc.local</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/bash</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"></span></span><br><span class="line"><span class="language-bash"><span class="comment"># This script will be executed *after* all the other init scripts.</span></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">You can put your own initialization stuff <span class="keyword">in</span> here <span class="keyword">if</span> you don<span class="string">&#x27;t</span></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash"><span class="string">want to do the full Sys V style init stuff.</span></span></span><br><span class="line"></span><br><span class="line">touch /var/lock/subsys/local</span><br><span class="line">/usr/local/apache2/bin/apachectl start</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="Linux中常见服务的作用"><a href="#Linux中常见服务的作用" class="headerlink" title="Linux中常见服务的作用"></a>Linux中常见服务的作用</h2><table>
+<thead>
+<tr>
+<th>服务名称</th>
+<th>功能简介</th>
+<th>建议</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>acpid</td>
+<td>电源管理接口。如果是笔记本用户建立开启，可以监听内核层的相关电源事件</td>
+<td>on</td>
+</tr>
+<tr>
+<td>anacron</td>
+<td>系统的定时任务程序。cron的一个子系统，如果定时任务错过了执行时间，可以通过anacron继续唤醒执行。</td>
+<td>off</td>
+</tr>
+<tr>
+<td>alsasound</td>
+<td>Alsa声卡驱动。如果使用alsa声卡，开启</td>
+<td>off</td>
+</tr>
+<tr>
+<td>apmd</td>
+<td>电源管理模块。如果支持acpid，就不需要apmd，可以关闭</td>
+<td>off</td>
+</tr>
+<tr>
+<td>atd</td>
+<td>指定系统在特定时间执行某个任务，只能执行一次。如果需要则开启，但我们一般使用crond来进行循环定时任务。</td>
+<td>off</td>
+</tr>
+<tr>
+<td>auditd</td>
+<td>审核子系统。如果开启了此服务，SELinux的审核信息会写入&#x2F;var&#x2F;log&#x2F;audit&#x2F;audit.log文件，如果不开启，审核信息会记录在syslog中</td>
+<td>on</td>
+</tr>
+<tr>
+<td>autofs</td>
+<td>让服务器可以自动挂载网络中的其他服务器的共享数据，一般用来自动挂载NFS服务。如果没有NFS服务建立关闭</td>
+<td>off</td>
+</tr>
+<tr>
+<td>avahi-daemon</td>
+<td>Avahi是zeroconf协议的实现。它可以在没有DNS服务的局域网里发现基于zeroconf协议的设备和服务。除非有兼容设备或使用zeroconf协议，否则关闭</td>
+<td>off</td>
+</tr>
+<tr>
+<td>bluetooth</td>
+<td>蓝牙设备支持。一般不会在服务器上启用蓝牙设备。</td>
+<td>off</td>
+</tr>
+<tr>
+<td>capi</td>
+<td>仅对使用ISND设备的用户有用。</td>
+<td>off</td>
+</tr>
+<tr>
+<td>chargen-dgram</td>
+<td>使用UDP协议的chargen server。主要功能是提供类似远程打字的功能。</td>
+<td>off</td>
+</tr>
+<tr>
+<td>chargen-stream</td>
+<td>同上</td>
+<td>off</td>
+</tr>
+<tr>
+<td>cpuspeed</td>
+<td>可以用来调整CPU的频率。当闲置时可以自动降低CPU频率来节省电量</td>
+<td>on</td>
+</tr>
+<tr>
+<td>crond</td>
+<td>系统的定时任务，一般的Linux服务器都需要定时任务帮助系统维护</td>
+<td>on</td>
+</tr>
+<tr>
+<td>cvs</td>
+<td>一个版本控制系统</td>
+<td>off</td>
+</tr>
+<tr>
+<td>daytime-dgram</td>
+<td>daytime使用TCP协议的Daytime守护进程，该协议为客户机实现从远程服务器获取日期和时间的功能。</td>
+<td>off</td>
+</tr>
+<tr>
+<td>daytime-stream</td>
+<td>同上</td>
+<td>off</td>
+</tr>
+<tr>
+<td>dovecot</td>
+<td>邮件服务中POP3&#x2F;IMAP服务的守护进程。主要用来接收信件，如果启动了邮件服务则开启，否则关闭</td>
+<td>off</td>
+</tr>
+<tr>
+<td>echo-dgram</td>
+<td>服务器回显客户服务的进程。</td>
+<td>off</td>
+</tr>
+<tr>
+<td>echo-stream</td>
+<td>同上。</td>
+<td>off</td>
+</tr>
+<tr>
+<td>firstboot</td>
+<td>系统安装完成之后，有个欢迎界面，需要对系统进程初始设定，就是这个进程的作用。既然不是第一次启动，可以关闭</td>
+<td>off</td>
+</tr>
+<tr>
+<td>gpm</td>
+<td>在字符终端(tty1-tty6)中可以使用鼠标复制和粘贴。就是这个服务的功能。</td>
+<td>on</td>
+</tr>
+<tr>
+<td>haldaemon</td>
+<td>检测盒支持USB设备。如果是服务器可以关闭，个人建议关闭</td>
+<td>off</td>
+</tr>
+<tr>
+<td>hidd</td>
+<td>蓝牙鼠标、键盘等蓝牙设备检测。必须启动bluetooth服务。</td>
+<td>off</td>
+</tr>
+<tr>
+<td>hplip</td>
+<td>HP打印机支持，如果没有HP打印机则关闭</td>
+<td>off</td>
+</tr>
+<tr>
+<td>httpd</td>
+<td>apache服务的守护进程。如果需要启动apache，则开启</td>
+<td>on</td>
+</tr>
+<tr>
+<td>ip6tables</td>
+<td>IPv6防火墙，目前IPv6协议并没有使用，可以关闭</td>
+<td>off</td>
+</tr>
+<tr>
+<td>iptables</td>
+<td>防火墙功能，Linux中防火墙是内核支持功能，这是服务器的主要防护手段，必须开启</td>
+<td>on</td>
+</tr>
+<tr>
+<td>irda</td>
+<td>IrDA提供红外线设备(笔记本、PDA’s，手机，计算器等等)间的通讯支持。</td>
+<td>off</td>
+</tr>
+<tr>
+<td>irqbalance</td>
+<td>支持多核处理器，让CPU可以自动分配系统中断(IRQ)，提高系统性能。</td>
+<td>on</td>
+</tr>
+<tr>
+<td>isdn</td>
+<td>使用ISDN设备连接网络。目前主流的联网方式是光纤接入和ADSL，ISDN已经非常少见</td>
+<td>off</td>
+</tr>
+<tr>
+<td>kudzu</td>
+<td>该服务可以在开机时进行硬件检测，并会调用相关的设置软件。</td>
+<td>off</td>
+</tr>
+<tr>
+<td>lvm2-monitor</td>
+<td>该服务可以让系统支持LVM逻辑卷组，如果分区采用的是LVM方式，那么应该开启</td>
+<td>on</td>
+</tr>
+<tr>
+<td>mcstrans</td>
+<td>SELinux的支持服务</td>
+<td>on</td>
+</tr>
+<tr>
+<td>mdmonitor</td>
+<td>该服务用来监测Software RAID或LVM的信息。不是必须服务</td>
+<td>off</td>
+</tr>
+<tr>
+<td>mdmpd</td>
+<td>该服务用来监测Multi-Path设备</td>
+<td>off</td>
+</tr>
+<tr>
+<td>messagebus</td>
+<td>这是Linuxr IPC（Interprocess Communication, 进程间通讯）服务，用来在各个软件中交换信息</td>
+<td>off</td>
+</tr>
+<tr>
+<td>microcode_ctl</td>
+<td>Intel系列的CPU可以通过这个服务支持额外的微指令集。</td>
+<td>off</td>
+</tr>
+<tr>
+<td>mysqld</td>
+<td>mysql数据库服务器。如果需要就开启，</td>
+<td>off</td>
+</tr>
+<tr>
+<td>named</td>
+<td>DNS服务的守护进程，用来进行域名解析。如果是DNS服务器则开启</td>
+<td>off</td>
+</tr>
+<tr>
+<td>netfs</td>
+<td>该服务用于在系统启动时自动挂载网络中的共享文件空间，比如：NFS, Samba等。需要则开启</td>
+<td>off</td>
+</tr>
+<tr>
+<td>network</td>
+<td>提供网络设置功能。通过这个服务来管理网络</td>
+<td>on</td>
+</tr>
+<tr>
+<td>nfs</td>
+<td>NFS（Network File System）服务，Linux与Linux之间的文件共享服务。需要就开启</td>
+<td>off</td>
+</tr>
+<tr>
+<td>nfslock</td>
+<td>在Linux中如果使用了NFS服务，为了避免同一个文件被不同的用户编辑，所以有了这个锁服务。有NFS是开启</td>
+<td>off</td>
+</tr>
+<tr>
+<td>ntpd</td>
+<td>该服务可以通过互联网自动更新系统时间，使系统时间永远都准确。需要则开启</td>
+<td>off</td>
+</tr>
+<tr>
+<td>pcscd</td>
+<td>智能卡检测服务</td>
+<td>off</td>
+</tr>
+<tr>
+<td>portmap</td>
+<td>用在远程过程调用（RPC）的服务，如果没有任何RPC服务时，可以关闭，主要是NFS和NIS服务需要</td>
+<td>off</td>
+</tr>
+<tr>
+<td>psacct</td>
+<td>该守护进程支持几个监控进程活动的工具。</td>
+<td>off</td>
+</tr>
+<tr>
+<td>rdisc</td>
+<td>客户端ICMP路由协议</td>
+<td>off</td>
+</tr>
+<tr>
+<td>readahead_early</td>
+<td>在系统开机的时候，先将某些进程加载如内存整理，可以加快一点启动速度。</td>
+<td>off</td>
+</tr>
+<tr>
+<td>readahead_later</td>
+<td>同上</td>
+<td>off</td>
+</tr>
+<tr>
+<td>restorecond</td>
+<td>用于给SELinux监测和重新加载正确的文件上下文。如果开启SELinux则需要开启。</td>
+<td>off</td>
+</tr>
+<tr>
+<td>rpcgssd</td>
+<td>与NFS有关的客户端功能</td>
+<td>off</td>
+</tr>
+<tr>
+<td>rpcidmapd</td>
+<td>同上</td>
+<td>off</td>
+</tr>
+<tr>
+<td>rsync</td>
+<td>远程数据备份守护进程</td>
+<td>off</td>
+</tr>
+<tr>
+<td>sendmail</td>
+<td>sendmail邮件服务的守护进程。如果有邮件服务就开启</td>
+<td>off</td>
+</tr>
+<tr>
+<td>setroubleshoot</td>
+<td>该服务用于将SELinux相关信息记录在日志&#x2F;var&#x2F;log&#x2F;messages中</td>
+<td>on</td>
+</tr>
+<tr>
+<td>smartd</td>
+<td>该服务用于自动检则硬盘状态</td>
+<td>on</td>
+</tr>
+<tr>
+<td>smb</td>
+<td>网络服务samba守护进程。可以让Linux和Windows之间共享数据。如果需要则开启</td>
+<td>off</td>
+</tr>
+<tr>
+<td>squid</td>
+<td>代理服务的守护进程。</td>
+<td>off</td>
+</tr>
+<tr>
+<td>sshd</td>
+<td>ssh加密远程登录管理的服务。</td>
+<td>on</td>
+</tr>
+<tr>
+<td>syslog</td>
+<td>日志的守护进程。</td>
+<td>on</td>
+</tr>
+<tr>
+<td>vsftpd</td>
+<td>vsftpd服务的守护进程。如果需要FTP服务则开启</td>
+<td>off</td>
+</tr>
+<tr>
+<td>xfs</td>
+<td>这个是X Window的字体守护进程。为图形界面提供字体服务，如果不启动图形界面就不用开启</td>
+<td>off</td>
+</tr>
+<tr>
+<td>xinetd</td>
+<td>超级守护进程。如果有依赖xinetd的服务就必须开启</td>
+<td>off</td>
+</tr>
+<tr>
+<td>ypbind</td>
+<td>为NIS(网络信息系统)客户机激活ypbind服务进程。</td>
+<td>off</td>
+</tr>
+<tr>
+<td>yum-updatesd</td>
+<td>yum的在线升级服务</td>
+<td>off</td>
+</tr>
+</tbody></table>
 ]]></content>
       <categories>
         <category>Linux</category>

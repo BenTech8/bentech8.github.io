@@ -20,15 +20,15 @@
     var CONFIG = {"hostname":"bentech8.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":5,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="启动引导与修复系统运行级别运行级别Linux默认有7个运行级别    运行级别 含义    0 关机   1 单用户模式，可以想象为windows的安全模式，主要用于系统修复   2 不完全的命令行模式，不含NFS服务   3 完全的命令行模式，就是标准字符界面   4 系统保留   5 图形模式   6 重启动   在Linux系统中可以使用runlevel命令来查看系统的运行级别： 12[ro">
+  <meta name="description" content="系统运行级别运行级别Linux默认有7个运行级别    运行级别 含义    0 关机   1 单用户模式，可以想象为windows的安全模式，主要用于系统修复   2 不完全的命令行模式，不含NFS服务   3 完全的命令行模式，就是标准字符界面   4 系统保留   5 图形模式   6 重启动   在Linux系统中可以使用runlevel命令来查看系统的运行级别： 12[root@loca">
 <meta property="og:type" content="article">
 <meta property="og:title" content="启动引导与修复">
 <meta property="og:url" content="https://bentech8.github.io/2025/03/04/%E5%90%AF%E5%8A%A8%E5%BC%95%E5%AF%BC%E4%B8%8E%E4%BF%AE%E5%A4%8D/index.html">
 <meta property="og:site_name" content="Ben">
-<meta property="og:description" content="启动引导与修复系统运行级别运行级别Linux默认有7个运行级别    运行级别 含义    0 关机   1 单用户模式，可以想象为windows的安全模式，主要用于系统修复   2 不完全的命令行模式，不含NFS服务   3 完全的命令行模式，就是标准字符界面   4 系统保留   5 图形模式   6 重启动   在Linux系统中可以使用runlevel命令来查看系统的运行级别： 12[ro">
+<meta property="og:description" content="系统运行级别运行级别Linux默认有7个运行级别    运行级别 含义    0 关机   1 单用户模式，可以想象为windows的安全模式，主要用于系统修复   2 不完全的命令行模式，不含NFS服务   3 完全的命令行模式，就是标准字符界面   4 系统保留   5 图形模式   6 重启动   在Linux系统中可以使用runlevel命令来查看系统的运行级别： 12[root@loca">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-03-04T07:32:41.000Z">
-<meta property="article:modified_time" content="2025-03-05T07:28:51.339Z">
+<meta property="article:modified_time" content="2025-03-05T09:27:30.767Z">
 <meta property="article:author" content="Ben">
 <meta name="twitter:card" content="summary">
 
@@ -195,7 +195,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-03-05 15:28:51" itemprop="dateModified" datetime="2025-03-05T15:28:51+08:00">2025-03-05</time>
+                <time title="修改时间：2025-03-05 17:27:30" itemprop="dateModified" datetime="2025-03-05T17:27:30+08:00">2025-03-05</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -218,7 +218,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="启动引导与修复"><a href="#启动引导与修复" class="headerlink" title="启动引导与修复"></a>启动引导与修复</h2><h3 id="系统运行级别"><a href="#系统运行级别" class="headerlink" title="系统运行级别"></a>系统运行级别</h3><h4 id="运行级别"><a href="#运行级别" class="headerlink" title="运行级别"></a>运行级别</h4><p>Linux默认有7个运行级别</p>
+        <h2 id="系统运行级别"><a href="#系统运行级别" class="headerlink" title="系统运行级别"></a>系统运行级别</h2><h3 id="运行级别"><a href="#运行级别" class="headerlink" title="运行级别"></a>运行级别</h3><p>Linux默认有7个运行级别</p>
 <table>
 <thead>
 <tr>
@@ -265,10 +265,10 @@
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">进入图形界面，当然要已经安装了图形界面才可以</span></span><br><span class="line">[root@localhost ~]# init 5</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">关机</span></span><br><span class="line">[root@localhost ~]# init 0</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">重启</span></span><br><span class="line">[root@localhost ~]# init 6</span><br></pre></td></tr></table></figure>
 
 <p>不过要注意使用init命令关机和重启并不是太安全，容易造成数据丢失。所以推荐还是使用shutdown命令进行关机和重启。</p>
-<h4 id="系统默认运行级别"><a href="#系统默认运行级别" class="headerlink" title="系统默认运行级别"></a>系统默认运行级别</h4><p>&#x2F;etc&#x2F;init&#x2F;rcS.conf配置文件调用&#x2F;etc&#x2F;inittab配置文件的目的就是为了确定系统的默认运行级别。也就是系统一开机后会进入那个运行级别。</p>
+<h3 id="系统默认运行级别"><a href="#系统默认运行级别" class="headerlink" title="系统默认运行级别"></a>系统默认运行级别</h3><p>&#x2F;etc&#x2F;init&#x2F;rcS.conf配置文件调用&#x2F;etc&#x2F;inittab配置文件的目的就是为了确定系统的默认运行级别。也就是系统一开机后会进入那个运行级别。</p>
 <p>注意这里的默认运行级别只能写成3或5，其的级别要不就是关机重启，要不就是保留或单用户，都不能作为系统默认运行级别。</p>
-<h4 id="etc-rc-d-rc-local文件"><a href="#etc-rc-d-rc-local文件" class="headerlink" title="&#x2F;etc&#x2F;rc.d&#x2F;rc.local文件"></a>&#x2F;etc&#x2F;rc.d&#x2F;rc.local文件</h4><p>这个配置文件会在用户登录之前读取，这个文件中写入什么命令，在每次系统启动时都会执行一次。也就是说，如果有任何需要在系统启动就运行的工作，只需要写入&#x2F;etc&#x2F;rc.d&#x2F;rc.local这个配置文件即可。</p>
-<h3 id="启动引导程序-Boot-Loader"><a href="#启动引导程序-Boot-Loader" class="headerlink" title="启动引导程序(Boot Loader)"></a>启动引导程序(Boot Loader)</h3><p>早期的Lilo引导程序已经不是很常见了，grub相比有很多优势，主要有：</p>
+<h3 id="etc-rc-d-rc-local文件"><a href="#etc-rc-d-rc-local文件" class="headerlink" title="&#x2F;etc&#x2F;rc.d&#x2F;rc.local文件"></a>&#x2F;etc&#x2F;rc.d&#x2F;rc.local文件</h3><p>这个配置文件会在用户登录之前读取，这个文件中写入什么命令，在每次系统启动时都会执行一次。也就是说，如果有任何需要在系统启动就运行的工作，只需要写入&#x2F;etc&#x2F;rc.d&#x2F;rc.local这个配置文件即可。</p>
+<h2 id="启动引导程序-Boot-Loader"><a href="#启动引导程序-Boot-Loader" class="headerlink" title="启动引导程序(Boot Loader)"></a>启动引导程序(Boot Loader)</h2><p>早期的Lilo引导程序已经不是很常见了，grub相比有很多优势，主要有：</p>
 <ul>
 <li>支持更多的文件系统；</li>
 <li>grub的主程序可以直接在文件系统中查找内核文件；</li>
@@ -424,7 +424,7 @@
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# vim /boot/grub/grub.conf</span><br><span class="line">default=0</span><br><span class="line">timeout-5</span><br><span class="line">password --md5 grub.pbkdf2.sha512.10000.E71038F43B0B8C0F0EE05B6BA49AA7D8EB87EB3D4293A9A0A97DD81FBC773BBCB8A268A833245C687C8D6C6F352A4E5E0C77C1BC78A956C7FBBB0B8DAC1F0BC8.3CF79D7B2F0F6BEC4BF54D0D7D8A7F9B9B5CC2BE1609BFC33ADB08EC0372276B555D051AAD5ECA95B92E92CAC12FC0BCFD574A50E69ABA74A1BA214A729EBC80</span><br><span class="line">splashimage=(hd0,0)/grub/splash.xmp.gz</span><br><span class="line">hiddenmenu</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">以上为grub整体设置</span></span><br><span class="line">title Centos6 (2.6.32-279.el6.i686)</span><br><span class="line">		lock</span><br><span class="line">		...</span><br></pre></td></tr></table></figure>
 
 <p>在title字段加入lock。代表锁死，如果不输入正确的grub密码也不能启动。</p>
-<h3 id="系统修复模式"><a href="#系统修复模式" class="headerlink" title="系统修复模式"></a>系统修复模式</h3><h4 id="单用户模式"><a href="#单用户模式" class="headerlink" title="单用户模式"></a>单用户模式</h4><p>Linux的单用户模式有些类似Windows的安全模式，只启动最少的程序用于系统修复。在单用户模式(运行级别为1)中，Linux引导进入根shell，网络被禁用，只有少数进程运行。单用户模式可以用来修改文件系统损坏、还原配置文件、移动用户数据等。</p>
+<h2 id="系统修复模式"><a href="#系统修复模式" class="headerlink" title="系统修复模式"></a>系统修复模式</h2><h3 id="单用户模式"><a href="#单用户模式" class="headerlink" title="单用户模式"></a>单用户模式</h3><p>Linux的单用户模式有些类似Windows的安全模式，只启动最少的程序用于系统修复。在单用户模式(运行级别为1)中，Linux引导进入根shell，网络被禁用，只有少数进程运行。单用户模式可以用来修改文件系统损坏、还原配置文件、移动用户数据等。</p>
 <p>a）进入单用户模式</p>
 <p>开机进入引导界面，按“e”进入。</p>
 <p>b）单用户模式常见的错误修复</p>
@@ -458,7 +458,10 @@
     <a href="/2025/02/28/Terraform/" rel="prev" title="Terraform">
       <i class="fa fa-chevron-left"></i> Terraform
     </a></div>
-      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2025/03/05/%E6%9C%8D%E5%8A%A1%E7%AE%A1%E7%90%86/" rel="next" title="服务管理">
+      服务管理 <i class="fa fa-chevron-right"></i>
+    </a></div>
     </div>
       </footer>
     
@@ -517,7 +520,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8%E5%BC%95%E5%AF%BC%E4%B8%8E%E4%BF%AE%E5%A4%8D"><span class="nav-number">1.</span> <span class="nav-text">启动引导与修复</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E8%BF%90%E8%A1%8C%E7%BA%A7%E5%88%AB"><span class="nav-number">1.1.</span> <span class="nav-text">系统运行级别</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C%E7%BA%A7%E5%88%AB"><span class="nav-number">1.1.1.</span> <span class="nav-text">运行级别</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E9%BB%98%E8%AE%A4%E8%BF%90%E8%A1%8C%E7%BA%A7%E5%88%AB"><span class="nav-number">1.1.2.</span> <span class="nav-text">系统默认运行级别</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#etc-rc-d-rc-local%E6%96%87%E4%BB%B6"><span class="nav-number">1.1.3.</span> <span class="nav-text">&#x2F;etc&#x2F;rc.d&#x2F;rc.local文件</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8%E5%BC%95%E5%AF%BC%E7%A8%8B%E5%BA%8F-Boot-Loader"><span class="nav-number">1.2.</span> <span class="nav-text">启动引导程序(Boot Loader)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E4%BF%AE%E5%A4%8D%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.3.</span> <span class="nav-text">系统修复模式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8D%95%E7%94%A8%E6%88%B7%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.3.1.</span> <span class="nav-text">单用户模式</span></a></li></ol></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E8%BF%90%E8%A1%8C%E7%BA%A7%E5%88%AB"><span class="nav-number">1.</span> <span class="nav-text">系统运行级别</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C%E7%BA%A7%E5%88%AB"><span class="nav-number">1.1.</span> <span class="nav-text">运行级别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E9%BB%98%E8%AE%A4%E8%BF%90%E8%A1%8C%E7%BA%A7%E5%88%AB"><span class="nav-number">1.2.</span> <span class="nav-text">系统默认运行级别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#etc-rc-d-rc-local%E6%96%87%E4%BB%B6"><span class="nav-number">1.3.</span> <span class="nav-text">&#x2F;etc&#x2F;rc.d&#x2F;rc.local文件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8%E5%BC%95%E5%AF%BC%E7%A8%8B%E5%BA%8F-Boot-Loader"><span class="nav-number">2.</span> <span class="nav-text">启动引导程序(Boot Loader)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E4%BF%AE%E5%A4%8D%E6%A8%A1%E5%BC%8F"><span class="nav-number">3.</span> <span class="nav-text">系统修复模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%95%E7%94%A8%E6%88%B7%E6%A8%A1%E5%BC%8F"><span class="nav-number">3.1.</span> <span class="nav-text">单用户模式</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -531,7 +534,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">11</span>
+          <span class="site-state-item-count">12</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
