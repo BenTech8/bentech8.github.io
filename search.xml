@@ -4670,10 +4670,159 @@
 <li>放入后台的命令必须可以持续运行一段时间，这样我们才能捕捉和操作这个工作。如果把1s命令放入后台执行，它很快就会执行完成，我们很难操作它。</li>
 <li>放入后台执行的命令不能和前台用户有交互或需要前台输入，否则放入后台只能暂停，而不能执行。比如vim命令放入后台只能暂停，而不能执行，因为vim需要前台输入信息。top命令也不能放入后台执行，而只能放入后台暂停，因为top命令需要和前台有交互。</li>
 </ul>
-<h3 id="如何把命令放入后台"><a href="#如何把命令放入后台" class="headerlink" title="如何把命令放入后台"></a>如何把命令放入后台</h3><h4 id="命令"><a href="#命令" class="headerlink" title="命令 &amp;"></a>命令 &amp;</h4><p>把命令放入后台的方法是在命令后面加入“空格&amp;”，这种方法放入后台的命令，在后台是执行状态。但是注意，放入后台执行的命令不能与前台有交互，否则这个命令是不能在后台执行的。</p>
+<h3 id="如何把命令放入后台"><a href="#如何把命令放入后台" class="headerlink" title="如何把命令放入后台"></a>如何把命令放入后台</h3><h4 id="命令"><a href="#命令" class="headerlink" title="命令 &amp;"></a>命令 &amp;</h4><p>第一种方法把命令放入后台的方法是在命令后面加入“空格&amp;”，这种方法放入后台的命令，在后台是执行状态。但是注意，放入后台执行的命令不能与前台有交互，否则这个命令是不能在后台执行的。</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">find命令放入后台执行，每个后台命令会分配一个工作号，命令既然可以执行，就会有进程产生，所以也会有进程号。</span></span><br><span class="line">[root@localhost ~]# find / -name install.log &amp;</span><br><span class="line">[2] 284313</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">[工作号] 进程号</span></span><br></pre></td></tr></table></figure>
 
-<p>虽然find命令在执行，但是当前操作还是可以进行其他命令操作的。</p>
+<p>虽然find命令在执行，但是当前操作还是可以进行其他命令操作的。如果在终端出现：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">```</span><br><span class="line"></span><br><span class="line">证明后台这个任务已经完成了，当然命令如果有执行结果的话，也会显示到操作终端上。[2]是这个命令的工作号，+号代表这个任务是最近一个被放入后台的工作。</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="comment">### ctrl+z</span></span></span><br><span class="line"></span><br><span class="line">第二种方法是在命令执行过程中按ctrl+z快捷键，命令在后台是暂停状态。</span><br><span class="line"></span><br><span class="line">使用这种方法放入后台的命令，就算是不和前台有交互，能在后台执行的命令，也是暂停状态，ctrl+z快捷键就是暂停的快捷键。</span><br><span class="line"></span><br><span class="line">```shell</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">在top命令执行的过程中，按下ctrl+z快捷键</span></span><br><span class="line">[root@localhost ~]# top</span><br><span class="line">[1]+  已停止               top</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">提示命令被放入后台，工作号是1，状态是暂停。而且虽然top命令没有结束，也能取得控制台权限</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">压缩一下/etc/目录</span></span><br><span class="line">[root@localhost ~]# tar -zcf etc.tar.gz /etc</span><br><span class="line">tar: 从成员名中删除开头的&quot;/&quot;</span><br><span class="line">tar: 从硬连接目标中删除开头的&quot;/&quot;</span><br><span class="line">^Z                              # 执行过程中，按下ctrl+z快捷键</span><br><span class="line">[2]+   Stopped    tar -zcf etc.tar.gz /etc</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">命令被放入后台，工作号是2，状态是暂停</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="后台命令管理"><a href="#后台命令管理" class="headerlink" title="后台命令管理"></a>后台命令管理</h3><h4 id="查看后台的工作"><a href="#查看后台的工作" class="headerlink" title="查看后台的工作"></a>查看后台的工作</h4><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# jobs [-l]</span><br><span class="line">选项：</span><br><span class="line">  -l:	显示工作的PID</span><br></pre></td></tr></table></figure>
+
+<h4 id="将后台暂停的工作恢复到前台执行"><a href="#将后台暂停的工作恢复到前台执行" class="headerlink" title="将后台暂停的工作恢复到前台执行"></a>将后台暂停的工作恢复到前台执行</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# fg %工作号</span><br><span class="line">参数：</span><br><span class="line">  %工作号:		%号可以省略，但是注意工作号和PID的区别</span><br></pre></td></tr></table></figure>
+
+<h4 id="把后台暂停的工作恢复到后台执行"><a href="#把后台暂停的工作恢复到后台执行" class="headerlink" title="把后台暂停的工作恢复到后台执行"></a>把后台暂停的工作恢复到后台执行</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# bg %工作号</span><br></pre></td></tr></table></figure>
+
+<h4 id="后台命令脱离登录终端运行"><a href="#后台命令脱离登录终端运行" class="headerlink" title="后台命令脱离登录终端运行"></a>后台命令脱离登录终端运行</h4><p>我们已经知道把命令放入后台，只能在当前登录终端执行。那如果我是远程管理的服务器，在远程终端中执行了后台命令，这时我退出终端，这个后台命令还能继续执行吗？当然是不行的， 这个后台命令会被终止。如果确实需要在远程终端中执行某些后台命令，可以这么做：</p>
+<ul>
+<li>把需要后台执行的命令加入&#x2F;etc&#x2F;rc.local文件，让系统在启动时执行这个后台程序。这种方法的问题是，服务器是不能随便重启的，万一有临时后台任务，就不能执行。</li>
+<li>使用系统定时任务，让系统在指定的时间执行某个后台命令。这样放入后台的命令与终端无关，是不依赖登录终端的。</li>
+<li>使用nohup命令。</li>
+</ul>
+<p>nohup命令的作用就是让后台工作在离开操作终端时，也能够正确的在后台执行。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# nohup [命令] &amp; </span><br></pre></td></tr></table></figure>
+
+<p>用find命令打印&#x2F;下所有文件，放入后台执行：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# nohup find / -print &gt; /root/file.log &amp;</span><br><span class="line">[3] 2349</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">有提示信息</span></span><br><span class="line">[root@localhost ~]# nohup：忽略输入并把输出追加到&quot;nohup.out&quot;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="系统资源查看"><a href="#系统资源查看" class="headerlink" title="系统资源查看"></a>系统资源查看</h2><h3 id="vmstat"><a href="#vmstat" class="headerlink" title="vmstat"></a>vmstat</h3><p>监控系统资源</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# vmstat [刷新延时 刷新次数]</span><br></pre></td></tr></table></figure>
+
+<p>使用vmstat检测，每1秒刷新一次，共刷新3次：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# vmstat 1 3</span><br><span class="line">procs -----------memory---------- ---swap-- -----io---- -system-- -------cpu-------</span><br><span class="line"> r  b 交换 空闲 缓冲 缓存   si   so    bi    bo   in   cs us sy id wa st gu</span><br><span class="line"> 1  0 1975536 315116 888372 2032876    1   13    58    88  912    6  4  2 94  0  0  0</span><br><span class="line"> 0  0 1975536 296724 888372 2032912    8    0     8     0 2845 3503  4  2 94  0  0  0</span><br><span class="line"> 3  0 1975536 294804 888372 2032916    0    0     0     0 2592 3581  1  2 97  0  0  0</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>procs：进程信息字段</p>
+<ul>
+<li>r：等待运行的进程数，数量越大，系统越繁忙。</li>
+<li>b：不可被唤醒的进程数量，数量越大，系统越繁忙。</li>
+</ul>
+</li>
+<li><p>memory：内存信息字段</p>
+<ul>
+<li>swpd：虚拟内存的使用情况，单位KB</li>
+<li>free：空闲的内存容量，单位KB</li>
+<li>buff：缓冲的内存容量，单位KB</li>
+<li>cache：缓存的内存容量，单位KB</li>
+</ul>
+</li>
+<li><p>swap：交换分区的信息字段</p>
+<ul>
+<li>si：从磁盘中交换到内存中数据的数量，单位KB</li>
+<li>so：从内存中交换到磁盘中数据的数量，单位KB。此两个数越大，证明数据需要经常在磁盘和内存之间交换，系统性能越差。</li>
+</ul>
+</li>
+<li><p>io：磁盘读写信息字段</p>
+<ul>
+<li>bi：从块设备读入数据的总量，单位是块</li>
+<li>bo：写到块设备的数据的总量，单位是块。此两个数越大，代表系统的I&#x2F;O越繁忙。</li>
+</ul>
+</li>
+<li><p>system：系统信息字段</p>
+<ul>
+<li>in：每秒被中断的进程次数</li>
+<li>cs：每秒钟进行的事件切换次数。此两个数越大，代表系统与接口设备的通信非常繁忙。</li>
+</ul>
+</li>
+<li><p>cpu：cpu信息字段</p>
+<ul>
+<li>us：非内核进程消耗cpu运算时间的百分比</li>
+<li>sy：内核进程消耗cpu运算时间的百分比</li>
+<li>id：空闲cpu的百分比</li>
+<li>wa：等待I&#x2F;0所消耗的cpu百分比</li>
+<li>st：被虚拟机所盗用的cpu百分比</li>
+</ul>
+</li>
+</ul>
+<h3 id="dmesg"><a href="#dmesg" class="headerlink" title="dmesg"></a>dmesg</h3><p>显示开机时内核检测信息</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查看CPU信息</span></span><br><span class="line">[root@localhost ~]# dmesg | grep CPU</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="free"><a href="#free" class="headerlink" title="free"></a>free</h3><p>查看内存使用状态</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# free [-b|-k|-m|-g]</span><br><span class="line">选项：</span><br><span class="line">  -b:	以字节为单位显示</span><br><span class="line">  -k:	以KB为单位显示，默认是以KB为单位显示</span><br><span class="line">  -m:	以MB为单位显示</span><br><span class="line">  -g:	以GB为单位显示</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# free -h</span><br><span class="line">               total        used        free      shared  buff/cache   available</span><br><span class="line">内存：         6.7Gi       4.2Gi       283Mi       277Mi       2.8Gi       2.5Gi</span><br><span class="line">交换：         2.0Gi       1.9Gi       122Mi</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>第一行</p>
+<ul>
+<li>total：总内存数。</li>
+<li>used：已经使用的内存数。</li>
+<li>free：空闲的内存数。</li>
+<li>shared：多个进程共享的内存总数。</li>
+<li>buff&#x2F;cache：缓冲&#x2F;缓存内存数。</li>
+</ul>
+</li>
+<li><p>第二行</p>
+<ul>
+<li>total：swap的总数</li>
+<li>used：已经使用的swap数</li>
+<li>free：空闲的swap数。</li>
+</ul>
+</li>
+</ul>
+<h3 id="查看CPU信息"><a href="#查看CPU信息" class="headerlink" title="查看CPU信息"></a>查看CPU信息</h3><p>CPU的主要信息保存在&#x2F;proc&#x2F;cpuinfo这个文件中，只要查看这个文件，就可以知道cpu的相关信息：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# cat /proc/cpuinfo</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">逻辑CPU编号</span></span><br><span class="line">processor	: 0</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">CPU制造厂商</span></span><br><span class="line">vendor_id	: AuthenticAMD</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">产品的系列代号</span></span><br><span class="line">cpu family	: 23</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">CPU系列代号</span></span><br><span class="line">model		: 24</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">CPU系列的名字，编号，主频</span></span><br><span class="line">model name	: AMD Ryzen 7 3700U with Radeon Vega Mobile Gfx</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">更新版本</span></span><br><span class="line">stepping	: 1</span><br><span class="line">microcode	: 0x8108109</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">实际主频</span></span><br><span class="line">cpu MHz		: 1372.114</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">二级缓存</span></span><br><span class="line">cache size	: 512 KB</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="查看本机登录用户信息"><a href="#查看本机登录用户信息" class="headerlink" title="查看本机登录用户信息"></a>查看本机登录用户信息</h3><p>如果我们想要知道Linux服务器上目前已经登录的用户信息，可以使用w或who命令来进行查询。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# w</span><br><span class="line"> 17:54:27 up 2 days,  8:24,  1 user,  load average: 0.82, 0.89, 1.04</span><br><span class="line">USER     TTY      来自           LOGIN@   IDLE   JCPU   PCPU  WHAT</span><br><span class="line">ben               -                二09    2:27m  0.00s  0.04s lightdm --session-child 13 20</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>第一行：和top命令的第一行非常类似，主要显示了系统当前时间，开机多久(up)，有多少用户登录(users)，1分钟、5分钟、15分种前的平均负载(load average)。</li>
+<li>第二行：项目的说明<ul>
+<li>USER：登录的用户名</li>
+<li>TTY：登录终端</li>
+<li>FROM：从哪个IP地址登录</li>
+<li>LOGIN@：登录时间</li>
+<li>IDLE：用户闲置时间</li>
+<li>JCPU：指的是和该终端连接的所有进程占用的CPU运算时间。这个时间里并不包括过去的后台作业时间，但却包括当前正在运行的后台作业所占用的时间</li>
+<li>PCPU：是指当前进程所占用的CPU运算时间</li>
+<li>WHAT：当前正在运行的命令</li>
+</ul>
+</li>
+<li>第三行：代表一个用户</li>
+</ul>
+<p>who命令比w命令稍微简单一点，也可以用来查看系统中已经登录的用户：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# who</span><br><span class="line">ben      tty7         2025-03-04 09:29 (:0)</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">用户名  登录终端      登录时间(登录来源IP地址)</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="uptime"><a href="#uptime" class="headerlink" title="uptime"></a>uptime</h3><p>uptime命令的作用就是显示系统的启动时间和平均负载，也就是top命令的第一行：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# uptime</span><br><span class="line"> 18:05:21 up 2 days,  8:35,  1 user,  load average: 1.61, 1.24, 1.10</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="查看系统与内核相关信息"><a href="#查看系统与内核相关信息" class="headerlink" title="查看系统与内核相关信息"></a>查看系统与内核相关信息</h3><p>使用uname命令查看内核的相关信息。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# uname [选项]</span><br><span class="line">选项：</span><br><span class="line">  -a:	查看系统所有相关信息</span><br><span class="line">  -r:   查看内核版本</span><br><span class="line">  -s:   查看内核名称</span><br></pre></td></tr></table></figure>
+
+<p>如果我们想要判断当前系统的位数，可以通过file命令来判断系统文件(主要系统命令)的位数来推断系统的位数。如：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# file /bin/ls</span><br><span class="line">/bin/ls: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=3eca7e3905b37d48cf0a88b576faa7b95cc3097b, for GNU/Linux 3.2.0, stripped</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">很明显，当前系统是64位的</span></span><br></pre></td></tr></table></figure>
+
+<p>如果想要查询当前Linux系统的发行版本，可以使用：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# lsb_release -a </span><br><span class="line">No LSB modules are available.</span><br><span class="line">Distributor ID:	Ubuntu</span><br><span class="line">Description:	Ubuntu 24.04.1 LTS</span><br><span class="line">Release:	24.04</span><br><span class="line">Codename:	noble</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="系统定时任务"><a href="#系统定时任务" class="headerlink" title="系统定时任务"></a>系统定时任务</h2><h3 id="crontab"><a href="#crontab" class="headerlink" title="crontab"></a>crontab</h3><p>循环执行定时任务。</p>
+<p>1）crond服务管理与访问控制</p>
 ]]></content>
       <categories>
         <category>Linux</category>
