@@ -4437,6 +4437,324 @@
       </categories>
   </entry>
   <entry>
+    <title>软件包安装</title>
+    <url>/2025/02/25/%E8%BD%AF%E4%BB%B6%E5%8C%85%E5%AE%89%E8%A3%85/</url>
+    <content><![CDATA[<h1 id="软件包安装"><a href="#软件包安装" class="headerlink" title="软件包安装"></a>软件包安装</h1><h2 id="1-软件包分类"><a href="#1-软件包分类" class="headerlink" title="1. 软件包分类"></a>1. 软件包分类</h2><ul>
+<li>源码包</li>
+<li>二进制包</li>
+</ul>
+<h2 id="2-源码包"><a href="#2-源码包" class="headerlink" title="2. 源码包"></a>2. 源码包</h2><h3 id="1）源码包优点"><a href="#1）源码包优点" class="headerlink" title="1）源码包优点"></a>1）源码包优点</h3><ul>
+<li>开源，如果有足够的能力，可以修改源码包。</li>
+<li>可以自由选择所需的功能</li>
+<li>软件是编译安装，所以更加适合自己的系统，更加稳定也效率更高</li>
+<li>卸载方便</li>
+</ul>
+<h3 id="2）源码包缺点"><a href="#2）源码包缺点" class="headerlink" title="2）源码包缺点"></a>2）源码包缺点</h3><ul>
+<li>安装过程步骤较多，尤其安装较大的软件集合时(如LAMP环境搭建)，容易出现拼写错误</li>
+<li>编译过程时间较长，安装比二进制安装时间长</li>
+<li>因为是编译安装，安装过程中一旦报错新手很难解决</li>
+</ul>
+<h2 id="3-二进制包"><a href="#3-二进制包" class="headerlink" title="3. 二进制包"></a>3. 二进制包</h2><p>Linux系列：Debian和RedHat。</p>
+<h3 id="1）二进制包分类"><a href="#1）二进制包分类" class="headerlink" title="1）二进制包分类"></a>1）二进制包分类</h3><p>a）DPKG包</p>
+<p>是由Debian Linux所开发出来的包管理机制，通过DPKG包，Debian Linux就可以进行软件包管理。主要应用在Debian和Ubuntu中。</p>
+<p>b）RPM包</p>
+<p>是由Red Hat公司所开发的包管理系统。功能强大，安装、升级、查询和卸载都非常简单和方便。目前很多Linux都在使用这种包管理方式，包括Fedora、CentOS、SuSE等。</p>
+<h3 id="2）RPM包特点"><a href="#2）RPM包特点" class="headerlink" title="2）RPM包特点"></a>2）RPM包特点</h3><p>RPM包优点：</p>
+<ul>
+<li>包管理系统简单，只通过几个命令就可以实现包的安装、升级、查询和卸载</li>
+<li>安装速度比源码包安装快的多</li>
+</ul>
+<p>RPM包缺点：</p>
+<ul>
+<li>经过编译，不再可以看到源代码</li>
+<li>功能选择不如源码包灵活</li>
+<li>依赖性。有时我们会发现需要安装软件包a时需要先安装b和c，而安装b时需要安装d和e。这时需要先安装d和e，再安装b和c，最后才能安装a包。</li>
+</ul>
+<h3 id="3）RPM包依赖"><a href="#3）RPM包依赖" class="headerlink" title="3）RPM包依赖"></a>3）RPM包依赖</h3><p>a）树形依赖</p>
+<p>a——&gt;b——&gt;c</p>
+<p>b）环形依赖</p>
+<p>a——&gt;b——&gt;c——&gt;a</p>
+<p>c）模块依赖</p>
+<p>什么是模块依赖？例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -ivh mysql-connector-odbc-5.2.5-7.el7.x86_64.rpm</span><br><span class="line">错误：依赖检测失败：</span><br><span class="line">    libodbc.so.2()(64bit) 被 mysql-connector-odbc-5.2.5-7.el7.x86_64 需要</span><br><span class="line">    libodbcinst.so.2()(64bit) 被 mysql-connector-odbc-5.2.5-7.el7.x86_64 需要</span><br></pre></td></tr></table></figure>
+
+<p>发现报错，需要安装”libodbc.so.2”函数库文件，这时会发现在光盘中根本找不到这个文件，那是因为函数库没有单独成包，是包含在某一个软件包中的，而如果知道在哪个软件包中，需要查询网站<a href="http://www.rpmfind.net./">www.rpmfind.net。</a></p>
+<h3 id="4）RPM包安装方法"><a href="#4）RPM包安装方法" class="headerlink" title="4）RPM包安装方法"></a>4）RPM包安装方法</h3><ul>
+<li>手工安装</li>
+<li>yum在线安装</li>
+</ul>
+<h2 id="4-软件包选择建议"><a href="#4-软件包选择建议" class="headerlink" title="4. 软件包选择建议"></a>4. 软件包选择建议</h2><ul>
+<li>源码包：如果软件包是给大量客户端提供访问，建议使用源码包安装，源码包效率更高(LAMP)。</li>
+<li>RPM包：如果软件包是给Linux底层使用，或只给少量客户访问，建议使用RPM包安装，因为RPM包简单。</li>
+</ul>
+<h2 id="5-RPM手工安装"><a href="#5-RPM手工安装" class="headerlink" title="5. RPM手工安装"></a>5. RPM手工安装</h2><p>rpm数据库路径：&#x2F;var&#x2F;lib&#x2F;rpm&#x2F;</p>
+<h3 id="1）RPM包命名规则"><a href="#1）RPM包命名规则" class="headerlink" title="1）RPM包命名规则"></a>1）RPM包命名规则</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">httpd-2.2.15-15.el6.centos.1.i686.rpm</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>httpd：软件包名</li>
+<li>2.2.15：软件版本</li>
+<li>15：软件发布的次数</li>
+<li>el6：软件发行商。el6是RedHat公司发布，适合RHEL6.x(Red Hat Enterprise Linux)和CentOS6.x下使用</li>
+<li>i686：适合的硬件平台。RPM包可以在不同的硬件平台安装，选择适合不同CPU的软件版本，可以最大化的发挥CPU性能，所以出现了所谓的i386（386以上计算机都可以安装）、i586（586以上的计算机都可以安装）、i686（奔腾II以上计算机都可以安装，目前所有的CPU都是奔腾II以上，所以这个软件版本居多）、x86_64（64位CPU可以安装）和noarch（没有硬件限制）等文件名了。</li>
+<li>rpm：rpm包的扩展名，我们说过Linux下文件不是靠扩展名区分文件类型，也就是Linux中扩展名没有任何意义。可是这里怎么又出现了扩展名呢？如果RPM包不用“rpm”作为扩展名，系统可以正确识别没有问题，可是管理员很难识别这是个什么样的软件。</li>
+</ul>
+<h3 id="2）RPM包手工命令安装"><a href="#2）RPM包手工命令安装" class="headerlink" title="2）RPM包手工命令安装"></a>2）RPM包手工命令安装</h3><p>a）默认安装位置</p>
+<table>
+<thead>
+<tr>
+<th>路径</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>&#x2F;etc&#x2F;</td>
+<td>配置文件安装目录</td>
+</tr>
+<tr>
+<td>&#x2F;usr&#x2F;bin&#x2F;</td>
+<td>可执行的命令安装目录</td>
+</tr>
+<tr>
+<td>&#x2F;usr&#x2F;lib&#x2F;</td>
+<td>程序所使用的函数库保存位置</td>
+</tr>
+<tr>
+<td>&#x2F;usr&#x2F;share&#x2F;doc&#x2F;</td>
+<td>基本的软件使用手册保存位置</td>
+</tr>
+<tr>
+<td>&#x2F;usr&#x2F;share&#x2F;man&#x2F;</td>
+<td>帮助文件保存位置</td>
+</tr>
+</tbody></table>
+<p>b）安装命令</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -ivh 包全名</span><br><span class="line">选项：</span><br><span class="line">  -i    install安装(install)</span><br><span class="line">  -v    显示更详细的信息(verbose)</span><br><span class="line">  -h    打印#显示安装进度(hash)</span><br></pre></td></tr></table></figure>
+
+<p>其他选项：</p>
+<ul>
+<li>–nodeps：不检测依赖性安装。安装软件时会检测依赖性，确定所需的底层软件是否安装。如果没有安装则会报错。如果我不管依赖性，想强行安装，可以使用这个选项。这样不检测依赖性安装的软件是不能使用的，所以不建议这样做。</li>
+<li>–replacefiles：替换文件安装。如果安装软件包，可是包中部分文件已经存在，那么正常安装时，会报错”某个文件已经存在”从而导致软件无法安装，使用这个选项可以忽视这个报错，而覆盖安装。</li>
+<li>–replacepkgs：替换软件包安装。如果软件包已经安装，此选项可以把软件包重复安装一遍。</li>
+<li>–force：强制安装。不管是否已经安装，都重新安装。就是–replacefiles和–replacepkgs的综合。</li>
+<li>–test：测试安装。不会实际安装，只是检测一下依赖性。</li>
+<li>–prefix：指定安装路径。为安装软件指定安装路径，而不使用默认安装路径。如果指定了安装路径，软件没有安装到系统默认路径中的话，系统会找不到这些安装的软件，需要进行手工配置才能被系统识别。所以rpm包我们一般都采用默认路径安装：1）默认安装位置是系统的习惯位置。2）RPM包管理系统是有卸载命令的(数据库记录安装位置)</li>
+</ul>
+<p>c）服务启动</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># service启动</span><br><span class="line">service 服务名 start|stop|restart|status</span><br><span class="line">参数：</span><br><span class="line">  start:    启动服务</span><br><span class="line">  stop:     停止服务</span><br><span class="line">  restart:  重启服务</span><br><span class="line">  status:   查看服务状态</span><br><span class="line">  </span><br><span class="line">  # 标准启动</span><br><span class="line">  /etc/init.d/服务名 start|stop|restart|status</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="3）RPM包升级"><a href="#3）RPM包升级" class="headerlink" title="3）RPM包升级"></a>3）RPM包升级</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -Uvh 包全名</span><br><span class="line">选项：</span><br><span class="line">  -U      升级安装，如果没有安装过，系统直接安装。如果安装过的版本较旧，则升级到新版本(upgrade)</span><br><span class="line"> </span><br><span class="line">rpm -Fvh 包全名</span><br><span class="line">选项：</span><br><span class="line">  -F      升级安装，如果没有安装过，则不会安装，必须安装有较旧版本，才能升级(freshen)</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="4）RPM包卸载"><a href="#4）RPM包卸载" class="headerlink" title="4）RPM包卸载"></a>4）RPM包卸载</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -e 包名</span><br><span class="line">选项：</span><br><span class="line">  --nodeps      不检查依赖性</span><br><span class="line">  -e            卸载</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="5）RPM包查询"><a href="#5）RPM包查询" class="headerlink" title="5）RPM包查询"></a>5）RPM包查询</h3><p>a）查询软件包是否安装</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -q 包名</span><br><span class="line">选项：</span><br><span class="line">  -q：查询(query)</span><br></pre></td></tr></table></figure>
+
+
+
+<p>b）查询系统中的所有安装软件包</p>
+<p>可以查询Linux系统中所有已经安装的软件包。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -qa</span><br><span class="line">选项：</span><br><span class="line">  -a：所有(all)</span><br></pre></td></tr></table></figure>
+
+<p>可以用管道符来查看所需内容</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -qa | grep 包名</span><br></pre></td></tr></table></figure>
+
+
+
+<p>c）查询软件包的详细信息</p>
+<p>可以查询已经安装的某个软件包的详细信息</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -qi 包名</span><br><span class="line">选项：</span><br><span class="line">  -i：查询软件信息(information)</span><br></pre></td></tr></table></figure>
+
+<p>也可以查询还没有安装的软件包的详细信息</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -qip 包全名</span><br><span class="line">选项：</span><br><span class="line">  -p：查询没有安装的软件包(package)</span><br></pre></td></tr></table></figure>
+
+
+
+<p>d）查询软件包中的文件列表</p>
+<p>可以查询已经安装的软件包中的文件列表和安装的完整目录</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -ql 包名</span><br><span class="line">选项：</span><br><span class="line">  -l：列出软件包中所有的文件列表和软件所安装的目录(list)</span><br></pre></td></tr></table></figure>
+
+<p>查询未安装的软件包中的文件列表和打算安装的位置</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -qlp 包全名</span><br><span class="line">选项：</span><br><span class="line">  -p：查询没有安装的软件包信息(package)</span><br></pre></td></tr></table></figure>
+
+
+
+<p>e）查询系统文件属于哪个RPM包</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -qf 系统文件名</span><br><span class="line">选项：</span><br><span class="line">  -f：查询系统文件属于哪个软件包(file)</span><br></pre></td></tr></table></figure>
+
+
+
+<p>f）查询软件包所依赖的软件包</p>
+<p>查询系统中和已经安装的软件包有依赖关系的软件包</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -qR 包名</span><br><span class="line">选项：</span><br><span class="line">  -R：查询软件包的依赖性(requires)</span><br></pre></td></tr></table></figure>
+
+<p>查询未安装的软件包的依赖包</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -qRp 包全名</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="6）验证"><a href="#6）验证" class="headerlink" title="6）验证"></a>6）验证</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">校验本机已经安装的所有软件包</span></span><br><span class="line">rpm -Va</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">校验指定RPM包中的文件(verify)</span></span><br><span class="line">rpm -V 已安装的名包</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">校验某个系统文件是否被修改</span></span><br><span class="line">rpm -Vf 系统文件名</span><br></pre></td></tr></table></figure>
+
+<p>示例：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -V httpd</span><br><span class="line">S.5....T.    c             /etc/httpd/conf/httpd.conf</span><br><span class="line">验证内容    文件类型          文件名</span><br></pre></td></tr></table></figure>
+
+<p>验证内容详情：</p>
+<ul>
+<li>S：文件大小是否改变</li>
+<li>M：文件的类型或文件的权限(rwx)是否被改变</li>
+<li>5：文件MD5校验和是否改变(可以看成文件内容是否改变)</li>
+<li>D：设备的主从代码是否改变</li>
+<li>L：文件路径是否改变</li>
+<li>U：文件的属主(所有者)是否改变</li>
+<li>G：文件的属组是否改变</li>
+<li>T：文件的修改时间是否改变</li>
+</ul>
+<p>文件类型：</p>
+<ul>
+<li>c：配置文件(config file)</li>
+<li>d：普通文档(documention)</li>
+<li>g：“鬼”文件(ghost file)，很少见，就是该文件不应该被这个RPM包包含 </li>
+<li>l：授权文件(license file)</li>
+<li>r：描述文件(readme)</li>
+</ul>
+<h3 id="7）数字证书"><a href="#7）数字证书" class="headerlink" title="7）数字证书"></a>7）数字证书</h3><p>前面的校验方法只能对已经安装的RPM包中的文件进行校验，但是如果RPM包本身就被动过手脚，那么校验就不能解决问题了，我们就必须使用数字证书验证了。</p>
+<p>数字证书特点：</p>
+<ul>
+<li>首先必须找到原厂的公钥文件，然后进行安装</li>
+<li>再安装RPM包时会提取RPM包中的证书信息，然后和本机安装的原厂证书进行验证</li>
+<li>如果验证通过，则允许安装；如果验证不通过，则不允许安装并警告</li>
+</ul>
+<p> a）数字证书导入</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm --import 数字证书文件</span><br><span class="line">选项：</span><br><span class="line">  --import：导入数字证书</span><br></pre></td></tr></table></figure>
+
+
+
+<p>b）查询系统中安装好的数字证书</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -qa | grep gpg-pubkey</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="8）RPM包中文件的提取"><a href="#8）RPM包中文件的提取" class="headerlink" title="8）RPM包中文件的提取"></a>8）RPM包中文件的提取</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm2cpio 包全名 | cpio -idv . 文件的绝对路径</span><br></pre></td></tr></table></figure>
+
+<p>rpm2cpio：将rpm包转换为cpio格式的命令。</p>
+<p>cpio：是一个标准工具，它用于创建软件档案文件和从档案文件中提取文件。</p>
+<h2 id="6-RPM包在线安装-yum"><a href="#6-RPM包在线安装-yum" class="headerlink" title="6. RPM包在线安装(yum)"></a>6. RPM包在线安装(yum)</h2><h3 id="1）yum源文件解析"><a href="#1）yum源文件解析" class="headerlink" title="1）yum源文件解析"></a>1）yum源文件解析</h3><p>yum源配置文件保存在&#x2F;etc&#x2F;yum.repos.d&#x2F;目录中，文件的扩展名一定是”*.repo”。也就是说，yum源配置文件只要扩展名是”*.repo”就会生效。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">ls /etc/yum.repos.d/</span><br><span class="line">CentOS-Base.repo    CentOS-Debuginfo.repo    CentOS-fasttrack.repo    CentOS-Media.repo    CentOS-Vault.repo</span><br></pre></td></tr></table></figure>
+
+<p>这个目录中有5个yum源配置文件，默认情况下CentOS-Base.repo文件生效。</p>
+<p>CentOS-Base.repo中有5个yum源容器，以base容器解释其内容详情：</p>
+<ul>
+<li>[base]：容器名称，一定要放在[]中。</li>
+<li>name：容器说明，可以自己随便写。</li>
+<li>mirrorlist：镜像站点，这个可以注释掉。</li>
+<li>baseurl：yum源服务器的地址。默认是CentOS官方的yum源服务器，是可以使用的。如果觉得慢，可以改成国内yum源地址。</li>
+<li>enabled：此容器是否生效，如果不写或写成enabled&#x3D;1则表示此容器生效，写成enabled&#x3D;0则表示此容器不生效。</li>
+<li>gpgcheck：如果为1则表示RPM的数字证书生效，如果为0则表示RPM的数字证书不生效。</li>
+<li>gpgkey：数字证书的公钥文件保存位置，不用修改。</li>
+</ul>
+<h3 id="2）搭建本地光盘yum源"><a href="#2）搭建本地光盘yum源" class="headerlink" title="2）搭建本地光盘yum源"></a>2）搭建本地光盘yum源</h3><p>a）放入CentOS安装光盘，并挂载光盘到指定位置。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">创建cdrom目录，作为光盘的挂载点</span></span><br><span class="line">mkdir /mnt/cdrom</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">挂载光盘到/mnt/cdrom</span></span><br><span class="line">mount /dev/cdrom /mnt/cdrom/</span><br></pre></td></tr></table></figure>
+
+<p>b）修改其他几个yum源配置文件的扩展名，让它们失效，因为只有扩展名是”*.repo”的文件才能作为yum源配置文件。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">cd /etc/yum.repo.d</span><br><span class="line">mv CentOS-Base.repo CentOS-Base.repo.bak</span><br></pre></td></tr></table></figure>
+
+<p>c）修改光盘yum源配置文件CentOS-Media.repo</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">vim CentOS-Media.repo</span><br><span class="line">[c6-media]</span><br><span class="line">name=CentOS-$releasever - Media</span><br><span class="line">baseurl=file:///mnt/cdrom/</span><br><span class="line">gpgcheck=1</span><br><span class="line">enabled=1   # 让配置生效</span><br><span class="line">gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-6</span><br></pre></td></tr></table></figure>
+
+<p>d）查看是否生效</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查询yum源所有可安装的软件包列表</span></span><br><span class="line">yum list</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="3）yum命令"><a href="#3）yum命令" class="headerlink" title="3）yum命令"></a>3）yum命令</h3><p>a）查询</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查询yum所有安装包</span></span><br><span class="line">yum list</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查询yum源服务器中是否包含某个软件包</span></span><br><span class="line">yum list 包名</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">搜索yum源服务器上所有和关键字相关的软件包</span></span><br><span class="line">yum search 关键字</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查询指定软件包的信息</span></span><br><span class="line">yum info samba</span><br></pre></td></tr></table></figure>
+
+<p>yum search搜索可以用于确定某个软件在哪个相关包当中。</p>
+<p>b）安装</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">yum -y install 包名</span><br><span class="line">选项：</span><br><span class="line">  install：    安装</span><br><span class="line">  -y：         自动回答yes。如果不加-y，那么每个安装的软件都需要手工回答yes</span><br></pre></td></tr></table></figure>
+
+
+
+<p>c）升级</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">yum -y update 包名</span><br><span class="line">选项：</span><br><span class="line">  update:    升级</span><br><span class="line">  -y：       自动回答yes</span><br><span class="line"><span class="meta prompt_">  </span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">升级本机所有软件包（包括内核，不常用）</span></span><br><span class="line">yum -y update</span><br></pre></td></tr></table></figure>
+
+
+
+<p>d）卸载</p>
+<p>除非你确定卸载的软件的依赖包不会对系统产生影响，否则不要执行yum的卸载，因为很有可能在卸载软件包的同时卸载的依赖包也是重要的系统文件，这就可能导致系统崩溃。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">yum remove 包名</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="4）yum组管理命令"><a href="#4）yum组管理命令" class="headerlink" title="4）yum组管理命令"></a>4）yum组管理命令</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">列出所有可用的软件组列表</span></span><br><span class="line">yum grouplist</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">列出软件组中包含的软件</span></span><br><span class="line">yum groupinfo 软件组名</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">安装指定软件组</span></span><br><span class="line">yum groupinstall 软件组名</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">卸载指定软件组</span></span><br><span class="line">yum groupremove 软件组名</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="7-源码包安装"><a href="#7-源码包安装" class="headerlink" title="7.源码包安装"></a>7.源码包安装</h2><h3 id="1）注意事项"><a href="#1）注意事项" class="headerlink" title="1）注意事项"></a>1）注意事项</h3><p>a）源码包是从哪里来的？</p>
+<p>源码包是通过官方网站下载的，如果需要使用，是需要单独下载的。</p>
+<p>b）是否可以在系统中既安装rpm包的Apache，又安装源码包的Apache？</p>
+<p>可以，因为两种安装方法安装的Apache，安装位置是不一样的：</p>
+<ul>
+<li>源码包必须指定安装位置(源码包没有安装数据库，没有删除命令)</li>
+<li>RPM包不建议指定安装位置，建议安装在默认位置(RPM包安装的服务有标准卸载命令，不怕文件到处安装)</li>
+</ul>
+<h3 id="2）安装过程"><a href="#2）安装过程" class="headerlink" title="2）安装过程"></a>2）安装过程</h3><p>a）下载软件包</p>
+<p>b）解压缩</p>
+<p>c）进入解压目录</p>
+<p>d）.&#x2F;configure（编译前准备）</p>
+<p>这一步主要有三个作用：</p>
+<ul>
+<li>在安装之前需要检测系统环境是否符合安装要求。</li>
+<li>定义需要的功能选项。”.&#x2F;configure”支持的功能选项较多，可以执行“.&#x2F;configure –help”命令查询其支持的功能，一般都会通过”.&#x2F;configure –prefix&#x3D;安装路径”来指定安装路径。</li>
+<li>把系统环境的检测结果和定义好的功能选项写入Makefile文件，后续的编译和安装需要依赖这个文件的内容。</li>
+</ul>
+<p>需要注意的是，configure不是系统命令，而是源码包软件自带的一个脚本程序，所以必须采用“.&#x2F;configure”方式执行。</p>
+<p>e）make（编译）</p>
+<p>make会调用gcc编译器，并读取Makefile文件中的信息进行系统软件编译。编译的目的就是把源码程序转变为能被Linux识别的可执行文件，这些可执行文件保存在当前目录下。编译过程较为耗时，需要有足够的耐心。</p>
+<p>f）make clean（清空编译内容，非必需步骤）</p>
+<p>如果在”.&#x2F;configure”或“make”编译中报错，那么我们在重新执行命令前一定要记得执行make clean命令，它会清空Makefile文件或编译产生的“.o”文件。</p>
+<p>g）make install（编译安装）</p>
+<p>这才是真正的安装过程，一般会写清楚程序的安装位置。如果忘记指定安装目录，则可以把这个命令的执行过程保存下来，以备将来删除使用。</p>
+<h3 id="3）删除"><a href="#3）删除" class="headerlink" title="3）删除"></a>3）删除</h3><p>源码包没有删除命令，如果需要删除，直接删除安装目录即可。</p>
+<h3 id="4）打入补丁"><a href="#4）打入补丁" class="headerlink" title="4）打入补丁"></a>4）打入补丁</h3><p>a）补丁的生成</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 比较old和new文件的不同</span><br><span class="line">diff 选项 old new</span><br><span class="line">选项：</span><br><span class="line">  -a    将任何文档当做文本文档处理</span><br><span class="line">  -b    忽略空格造成的不同</span><br><span class="line">  -B    忽略空白行造成的不同</span><br><span class="line">  -I    忽略大小写造成的不同</span><br><span class="line">  -N    当比较两个目录时，如果某个文件只在一个目录中，则另一个目录中视作空文件。</span><br><span class="line">  -r    当比较目录时，递归比较子目录</span><br><span class="line">  -u    使用统一的输出格式</span><br></pre></td></tr></table></figure>
+
+<p>比较两个文件的不同，并生成补丁文件”txt.patch”：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 比较两个文件的不同，同时生成txt.patch补丁文件</span><br><span class="line">diff -Naur /root/test/old.txt /root/test/new.txt &gt; txt.patch</span><br></pre></td></tr></table></figure>
+
+
+
+<p>b）打入补丁</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 按照补丁文件进行更新</span><br><span class="line">patch -pn &lt; 补丁文件</span><br><span class="line">选项：</span><br><span class="line">  -pn    n为数字。代表按照补丁文件中的路径，指定更新文件的位置。</span><br></pre></td></tr></table></figure>
+
+<p>“-pn”不好理解，补丁文件是要打入旧文件的，但是你当前所在的目录和补丁文件中的记录是不一定匹配的，所以就需要”-pn”来同步两个目录。</p>
+<p>比如我当前在“&#x2F;root&#x2F;test”目录下，补丁文件中记录的文件目录是为“&#x2F;root&#x2F;test&#x2F;old.txt”。这时如果写入“p1”，那么补丁文件就会打入”&#x2F;root&#x2F;test&#x2F;root&#x2F;test&#x2F;old.txt”。如果写入的是“p2”，那么补丁文件就会打入”&#x2F;root&#x2F;test&#x2F;test&#x2F;old.txt”。如果写入的是“p3”，那么补丁文件就会打入”&#x2F;root&#x2F;test&#x2F;old.txt”。即n表示删除补丁文件中记录的文件目录的路径。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">patch -p3 &lt; txt.patch</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="8-脚本安装程序"><a href="#8-脚本安装程序" class="headerlink" title="8. 脚本安装程序"></a>8. 脚本安装程序</h2><p>以Webmin安装为例。</p>
+<p>a）下载webmin软件，地址：<a href="http://sourceforge.net/projects/webadmin/files/webmin/">http://sourceforge.net/projects/webadmin/files/webmin/</a></p>
+<p>b）解压软件</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">tar -zxvf webmin-1.610.tar.gz</span><br></pre></td></tr></table></figure>
+
+<p>c）进入解压目录</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">cd webmin-1.610</span><br></pre></td></tr></table></figure>
+
+<p>d）执行安装程序setup.sh，并指定功能选项。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">./setup.sh</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+  </entry>
+  <entry>
     <title>系统管理</title>
     <url>/2025/03/05/%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86/</url>
     <content><![CDATA[<h2 id="进程管理"><a href="#进程管理" class="headerlink" title="进程管理"></a>进程管理</h2><h3 id="进程简介"><a href="#进程简介" class="headerlink" title="进程简介"></a>进程简介</h3><p>1）什么是进程</p>
@@ -4944,324 +5262,6 @@
 
 <h2 id="系统定时任务"><a href="#系统定时任务" class="headerlink" title="系统定时任务"></a>系统定时任务</h2><h3 id="crontab"><a href="#crontab" class="headerlink" title="crontab"></a>crontab</h3><p>循环执行定时任务。</p>
 <p>1）crond服务管理与访问控制</p>
-]]></content>
-      <categories>
-        <category>Linux</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>软件包安装</title>
-    <url>/2025/02/25/%E8%BD%AF%E4%BB%B6%E5%8C%85%E5%AE%89%E8%A3%85/</url>
-    <content><![CDATA[<h1 id="软件包安装"><a href="#软件包安装" class="headerlink" title="软件包安装"></a>软件包安装</h1><h2 id="1-软件包分类"><a href="#1-软件包分类" class="headerlink" title="1. 软件包分类"></a>1. 软件包分类</h2><ul>
-<li>源码包</li>
-<li>二进制包</li>
-</ul>
-<h2 id="2-源码包"><a href="#2-源码包" class="headerlink" title="2. 源码包"></a>2. 源码包</h2><h3 id="1）源码包优点"><a href="#1）源码包优点" class="headerlink" title="1）源码包优点"></a>1）源码包优点</h3><ul>
-<li>开源，如果有足够的能力，可以修改源码包。</li>
-<li>可以自由选择所需的功能</li>
-<li>软件是编译安装，所以更加适合自己的系统，更加稳定也效率更高</li>
-<li>卸载方便</li>
-</ul>
-<h3 id="2）源码包缺点"><a href="#2）源码包缺点" class="headerlink" title="2）源码包缺点"></a>2）源码包缺点</h3><ul>
-<li>安装过程步骤较多，尤其安装较大的软件集合时(如LAMP环境搭建)，容易出现拼写错误</li>
-<li>编译过程时间较长，安装比二进制安装时间长</li>
-<li>因为是编译安装，安装过程中一旦报错新手很难解决</li>
-</ul>
-<h2 id="3-二进制包"><a href="#3-二进制包" class="headerlink" title="3. 二进制包"></a>3. 二进制包</h2><p>Linux系列：Debian和RedHat。</p>
-<h3 id="1）二进制包分类"><a href="#1）二进制包分类" class="headerlink" title="1）二进制包分类"></a>1）二进制包分类</h3><p>a）DPKG包</p>
-<p>是由Debian Linux所开发出来的包管理机制，通过DPKG包，Debian Linux就可以进行软件包管理。主要应用在Debian和Ubuntu中。</p>
-<p>b）RPM包</p>
-<p>是由Red Hat公司所开发的包管理系统。功能强大，安装、升级、查询和卸载都非常简单和方便。目前很多Linux都在使用这种包管理方式，包括Fedora、CentOS、SuSE等。</p>
-<h3 id="2）RPM包特点"><a href="#2）RPM包特点" class="headerlink" title="2）RPM包特点"></a>2）RPM包特点</h3><p>RPM包优点：</p>
-<ul>
-<li>包管理系统简单，只通过几个命令就可以实现包的安装、升级、查询和卸载</li>
-<li>安装速度比源码包安装快的多</li>
-</ul>
-<p>RPM包缺点：</p>
-<ul>
-<li>经过编译，不再可以看到源代码</li>
-<li>功能选择不如源码包灵活</li>
-<li>依赖性。有时我们会发现需要安装软件包a时需要先安装b和c，而安装b时需要安装d和e。这时需要先安装d和e，再安装b和c，最后才能安装a包。</li>
-</ul>
-<h3 id="3）RPM包依赖"><a href="#3）RPM包依赖" class="headerlink" title="3）RPM包依赖"></a>3）RPM包依赖</h3><p>a）树形依赖</p>
-<p>a——&gt;b——&gt;c</p>
-<p>b）环形依赖</p>
-<p>a——&gt;b——&gt;c——&gt;a</p>
-<p>c）模块依赖</p>
-<p>什么是模块依赖？例如：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -ivh mysql-connector-odbc-5.2.5-7.el7.x86_64.rpm</span><br><span class="line">错误：依赖检测失败：</span><br><span class="line">    libodbc.so.2()(64bit) 被 mysql-connector-odbc-5.2.5-7.el7.x86_64 需要</span><br><span class="line">    libodbcinst.so.2()(64bit) 被 mysql-connector-odbc-5.2.5-7.el7.x86_64 需要</span><br></pre></td></tr></table></figure>
-
-<p>发现报错，需要安装”libodbc.so.2”函数库文件，这时会发现在光盘中根本找不到这个文件，那是因为函数库没有单独成包，是包含在某一个软件包中的，而如果知道在哪个软件包中，需要查询网站<a href="http://www.rpmfind.net./">www.rpmfind.net。</a></p>
-<h3 id="4）RPM包安装方法"><a href="#4）RPM包安装方法" class="headerlink" title="4）RPM包安装方法"></a>4）RPM包安装方法</h3><ul>
-<li>手工安装</li>
-<li>yum在线安装</li>
-</ul>
-<h2 id="4-软件包选择建议"><a href="#4-软件包选择建议" class="headerlink" title="4. 软件包选择建议"></a>4. 软件包选择建议</h2><ul>
-<li>源码包：如果软件包是给大量客户端提供访问，建议使用源码包安装，源码包效率更高(LAMP)。</li>
-<li>RPM包：如果软件包是给Linux底层使用，或只给少量客户访问，建议使用RPM包安装，因为RPM包简单。</li>
-</ul>
-<h2 id="5-RPM手工安装"><a href="#5-RPM手工安装" class="headerlink" title="5. RPM手工安装"></a>5. RPM手工安装</h2><p>rpm数据库路径：&#x2F;var&#x2F;lib&#x2F;rpm&#x2F;</p>
-<h3 id="1）RPM包命名规则"><a href="#1）RPM包命名规则" class="headerlink" title="1）RPM包命名规则"></a>1）RPM包命名规则</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">httpd-2.2.15-15.el6.centos.1.i686.rpm</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>httpd：软件包名</li>
-<li>2.2.15：软件版本</li>
-<li>15：软件发布的次数</li>
-<li>el6：软件发行商。el6是RedHat公司发布，适合RHEL6.x(Red Hat Enterprise Linux)和CentOS6.x下使用</li>
-<li>i686：适合的硬件平台。RPM包可以在不同的硬件平台安装，选择适合不同CPU的软件版本，可以最大化的发挥CPU性能，所以出现了所谓的i386（386以上计算机都可以安装）、i586（586以上的计算机都可以安装）、i686（奔腾II以上计算机都可以安装，目前所有的CPU都是奔腾II以上，所以这个软件版本居多）、x86_64（64位CPU可以安装）和noarch（没有硬件限制）等文件名了。</li>
-<li>rpm：rpm包的扩展名，我们说过Linux下文件不是靠扩展名区分文件类型，也就是Linux中扩展名没有任何意义。可是这里怎么又出现了扩展名呢？如果RPM包不用“rpm”作为扩展名，系统可以正确识别没有问题，可是管理员很难识别这是个什么样的软件。</li>
-</ul>
-<h3 id="2）RPM包手工命令安装"><a href="#2）RPM包手工命令安装" class="headerlink" title="2）RPM包手工命令安装"></a>2）RPM包手工命令安装</h3><p>a）默认安装位置</p>
-<table>
-<thead>
-<tr>
-<th>路径</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>&#x2F;etc&#x2F;</td>
-<td>配置文件安装目录</td>
-</tr>
-<tr>
-<td>&#x2F;usr&#x2F;bin&#x2F;</td>
-<td>可执行的命令安装目录</td>
-</tr>
-<tr>
-<td>&#x2F;usr&#x2F;lib&#x2F;</td>
-<td>程序所使用的函数库保存位置</td>
-</tr>
-<tr>
-<td>&#x2F;usr&#x2F;share&#x2F;doc&#x2F;</td>
-<td>基本的软件使用手册保存位置</td>
-</tr>
-<tr>
-<td>&#x2F;usr&#x2F;share&#x2F;man&#x2F;</td>
-<td>帮助文件保存位置</td>
-</tr>
-</tbody></table>
-<p>b）安装命令</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -ivh 包全名</span><br><span class="line">选项：</span><br><span class="line">  -i    install安装(install)</span><br><span class="line">  -v    显示更详细的信息(verbose)</span><br><span class="line">  -h    打印#显示安装进度(hash)</span><br></pre></td></tr></table></figure>
-
-<p>其他选项：</p>
-<ul>
-<li>–nodeps：不检测依赖性安装。安装软件时会检测依赖性，确定所需的底层软件是否安装。如果没有安装则会报错。如果我不管依赖性，想强行安装，可以使用这个选项。这样不检测依赖性安装的软件是不能使用的，所以不建议这样做。</li>
-<li>–replacefiles：替换文件安装。如果安装软件包，可是包中部分文件已经存在，那么正常安装时，会报错”某个文件已经存在”从而导致软件无法安装，使用这个选项可以忽视这个报错，而覆盖安装。</li>
-<li>–replacepkgs：替换软件包安装。如果软件包已经安装，此选项可以把软件包重复安装一遍。</li>
-<li>–force：强制安装。不管是否已经安装，都重新安装。就是–replacefiles和–replacepkgs的综合。</li>
-<li>–test：测试安装。不会实际安装，只是检测一下依赖性。</li>
-<li>–prefix：指定安装路径。为安装软件指定安装路径，而不使用默认安装路径。如果指定了安装路径，软件没有安装到系统默认路径中的话，系统会找不到这些安装的软件，需要进行手工配置才能被系统识别。所以rpm包我们一般都采用默认路径安装：1）默认安装位置是系统的习惯位置。2）RPM包管理系统是有卸载命令的(数据库记录安装位置)</li>
-</ul>
-<p>c）服务启动</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># service启动</span><br><span class="line">service 服务名 start|stop|restart|status</span><br><span class="line">参数：</span><br><span class="line">  start:    启动服务</span><br><span class="line">  stop:     停止服务</span><br><span class="line">  restart:  重启服务</span><br><span class="line">  status:   查看服务状态</span><br><span class="line">  </span><br><span class="line">  # 标准启动</span><br><span class="line">  /etc/init.d/服务名 start|stop|restart|status</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="3）RPM包升级"><a href="#3）RPM包升级" class="headerlink" title="3）RPM包升级"></a>3）RPM包升级</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -Uvh 包全名</span><br><span class="line">选项：</span><br><span class="line">  -U      升级安装，如果没有安装过，系统直接安装。如果安装过的版本较旧，则升级到新版本(upgrade)</span><br><span class="line"> </span><br><span class="line">rpm -Fvh 包全名</span><br><span class="line">选项：</span><br><span class="line">  -F      升级安装，如果没有安装过，则不会安装，必须安装有较旧版本，才能升级(freshen)</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="4）RPM包卸载"><a href="#4）RPM包卸载" class="headerlink" title="4）RPM包卸载"></a>4）RPM包卸载</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -e 包名</span><br><span class="line">选项：</span><br><span class="line">  --nodeps      不检查依赖性</span><br><span class="line">  -e            卸载</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="5）RPM包查询"><a href="#5）RPM包查询" class="headerlink" title="5）RPM包查询"></a>5）RPM包查询</h3><p>a）查询软件包是否安装</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -q 包名</span><br><span class="line">选项：</span><br><span class="line">  -q：查询(query)</span><br></pre></td></tr></table></figure>
-
-
-
-<p>b）查询系统中的所有安装软件包</p>
-<p>可以查询Linux系统中所有已经安装的软件包。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -qa</span><br><span class="line">选项：</span><br><span class="line">  -a：所有(all)</span><br></pre></td></tr></table></figure>
-
-<p>可以用管道符来查看所需内容</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -qa | grep 包名</span><br></pre></td></tr></table></figure>
-
-
-
-<p>c）查询软件包的详细信息</p>
-<p>可以查询已经安装的某个软件包的详细信息</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -qi 包名</span><br><span class="line">选项：</span><br><span class="line">  -i：查询软件信息(information)</span><br></pre></td></tr></table></figure>
-
-<p>也可以查询还没有安装的软件包的详细信息</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -qip 包全名</span><br><span class="line">选项：</span><br><span class="line">  -p：查询没有安装的软件包(package)</span><br></pre></td></tr></table></figure>
-
-
-
-<p>d）查询软件包中的文件列表</p>
-<p>可以查询已经安装的软件包中的文件列表和安装的完整目录</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -ql 包名</span><br><span class="line">选项：</span><br><span class="line">  -l：列出软件包中所有的文件列表和软件所安装的目录(list)</span><br></pre></td></tr></table></figure>
-
-<p>查询未安装的软件包中的文件列表和打算安装的位置</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -qlp 包全名</span><br><span class="line">选项：</span><br><span class="line">  -p：查询没有安装的软件包信息(package)</span><br></pre></td></tr></table></figure>
-
-
-
-<p>e）查询系统文件属于哪个RPM包</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -qf 系统文件名</span><br><span class="line">选项：</span><br><span class="line">  -f：查询系统文件属于哪个软件包(file)</span><br></pre></td></tr></table></figure>
-
-
-
-<p>f）查询软件包所依赖的软件包</p>
-<p>查询系统中和已经安装的软件包有依赖关系的软件包</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -qR 包名</span><br><span class="line">选项：</span><br><span class="line">  -R：查询软件包的依赖性(requires)</span><br></pre></td></tr></table></figure>
-
-<p>查询未安装的软件包的依赖包</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -qRp 包全名</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="6）验证"><a href="#6）验证" class="headerlink" title="6）验证"></a>6）验证</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">校验本机已经安装的所有软件包</span></span><br><span class="line">rpm -Va</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">校验指定RPM包中的文件(verify)</span></span><br><span class="line">rpm -V 已安装的名包</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">校验某个系统文件是否被修改</span></span><br><span class="line">rpm -Vf 系统文件名</span><br></pre></td></tr></table></figure>
-
-<p>示例：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -V httpd</span><br><span class="line">S.5....T.    c             /etc/httpd/conf/httpd.conf</span><br><span class="line">验证内容    文件类型          文件名</span><br></pre></td></tr></table></figure>
-
-<p>验证内容详情：</p>
-<ul>
-<li>S：文件大小是否改变</li>
-<li>M：文件的类型或文件的权限(rwx)是否被改变</li>
-<li>5：文件MD5校验和是否改变(可以看成文件内容是否改变)</li>
-<li>D：设备的主从代码是否改变</li>
-<li>L：文件路径是否改变</li>
-<li>U：文件的属主(所有者)是否改变</li>
-<li>G：文件的属组是否改变</li>
-<li>T：文件的修改时间是否改变</li>
-</ul>
-<p>文件类型：</p>
-<ul>
-<li>c：配置文件(config file)</li>
-<li>d：普通文档(documention)</li>
-<li>g：“鬼”文件(ghost file)，很少见，就是该文件不应该被这个RPM包包含 </li>
-<li>l：授权文件(license file)</li>
-<li>r：描述文件(readme)</li>
-</ul>
-<h3 id="7）数字证书"><a href="#7）数字证书" class="headerlink" title="7）数字证书"></a>7）数字证书</h3><p>前面的校验方法只能对已经安装的RPM包中的文件进行校验，但是如果RPM包本身就被动过手脚，那么校验就不能解决问题了，我们就必须使用数字证书验证了。</p>
-<p>数字证书特点：</p>
-<ul>
-<li>首先必须找到原厂的公钥文件，然后进行安装</li>
-<li>再安装RPM包时会提取RPM包中的证书信息，然后和本机安装的原厂证书进行验证</li>
-<li>如果验证通过，则允许安装；如果验证不通过，则不允许安装并警告</li>
-</ul>
-<p> a）数字证书导入</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm --import 数字证书文件</span><br><span class="line">选项：</span><br><span class="line">  --import：导入数字证书</span><br></pre></td></tr></table></figure>
-
-
-
-<p>b）查询系统中安装好的数字证书</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -qa | grep gpg-pubkey</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="8）RPM包中文件的提取"><a href="#8）RPM包中文件的提取" class="headerlink" title="8）RPM包中文件的提取"></a>8）RPM包中文件的提取</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm2cpio 包全名 | cpio -idv . 文件的绝对路径</span><br></pre></td></tr></table></figure>
-
-<p>rpm2cpio：将rpm包转换为cpio格式的命令。</p>
-<p>cpio：是一个标准工具，它用于创建软件档案文件和从档案文件中提取文件。</p>
-<h2 id="6-RPM包在线安装-yum"><a href="#6-RPM包在线安装-yum" class="headerlink" title="6. RPM包在线安装(yum)"></a>6. RPM包在线安装(yum)</h2><h3 id="1）yum源文件解析"><a href="#1）yum源文件解析" class="headerlink" title="1）yum源文件解析"></a>1）yum源文件解析</h3><p>yum源配置文件保存在&#x2F;etc&#x2F;yum.repos.d&#x2F;目录中，文件的扩展名一定是”*.repo”。也就是说，yum源配置文件只要扩展名是”*.repo”就会生效。</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">ls /etc/yum.repos.d/</span><br><span class="line">CentOS-Base.repo    CentOS-Debuginfo.repo    CentOS-fasttrack.repo    CentOS-Media.repo    CentOS-Vault.repo</span><br></pre></td></tr></table></figure>
-
-<p>这个目录中有5个yum源配置文件，默认情况下CentOS-Base.repo文件生效。</p>
-<p>CentOS-Base.repo中有5个yum源容器，以base容器解释其内容详情：</p>
-<ul>
-<li>[base]：容器名称，一定要放在[]中。</li>
-<li>name：容器说明，可以自己随便写。</li>
-<li>mirrorlist：镜像站点，这个可以注释掉。</li>
-<li>baseurl：yum源服务器的地址。默认是CentOS官方的yum源服务器，是可以使用的。如果觉得慢，可以改成国内yum源地址。</li>
-<li>enabled：此容器是否生效，如果不写或写成enabled&#x3D;1则表示此容器生效，写成enabled&#x3D;0则表示此容器不生效。</li>
-<li>gpgcheck：如果为1则表示RPM的数字证书生效，如果为0则表示RPM的数字证书不生效。</li>
-<li>gpgkey：数字证书的公钥文件保存位置，不用修改。</li>
-</ul>
-<h3 id="2）搭建本地光盘yum源"><a href="#2）搭建本地光盘yum源" class="headerlink" title="2）搭建本地光盘yum源"></a>2）搭建本地光盘yum源</h3><p>a）放入CentOS安装光盘，并挂载光盘到指定位置。</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">创建cdrom目录，作为光盘的挂载点</span></span><br><span class="line">mkdir /mnt/cdrom</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">挂载光盘到/mnt/cdrom</span></span><br><span class="line">mount /dev/cdrom /mnt/cdrom/</span><br></pre></td></tr></table></figure>
-
-<p>b）修改其他几个yum源配置文件的扩展名，让它们失效，因为只有扩展名是”*.repo”的文件才能作为yum源配置文件。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">cd /etc/yum.repo.d</span><br><span class="line">mv CentOS-Base.repo CentOS-Base.repo.bak</span><br></pre></td></tr></table></figure>
-
-<p>c）修改光盘yum源配置文件CentOS-Media.repo</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">vim CentOS-Media.repo</span><br><span class="line">[c6-media]</span><br><span class="line">name=CentOS-$releasever - Media</span><br><span class="line">baseurl=file:///mnt/cdrom/</span><br><span class="line">gpgcheck=1</span><br><span class="line">enabled=1   # 让配置生效</span><br><span class="line">gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-6</span><br></pre></td></tr></table></figure>
-
-<p>d）查看是否生效</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查询yum源所有可安装的软件包列表</span></span><br><span class="line">yum list</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="3）yum命令"><a href="#3）yum命令" class="headerlink" title="3）yum命令"></a>3）yum命令</h3><p>a）查询</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查询yum所有安装包</span></span><br><span class="line">yum list</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查询yum源服务器中是否包含某个软件包</span></span><br><span class="line">yum list 包名</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">搜索yum源服务器上所有和关键字相关的软件包</span></span><br><span class="line">yum search 关键字</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查询指定软件包的信息</span></span><br><span class="line">yum info samba</span><br></pre></td></tr></table></figure>
-
-<p>yum search搜索可以用于确定某个软件在哪个相关包当中。</p>
-<p>b）安装</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">yum -y install 包名</span><br><span class="line">选项：</span><br><span class="line">  install：    安装</span><br><span class="line">  -y：         自动回答yes。如果不加-y，那么每个安装的软件都需要手工回答yes</span><br></pre></td></tr></table></figure>
-
-
-
-<p>c）升级</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">yum -y update 包名</span><br><span class="line">选项：</span><br><span class="line">  update:    升级</span><br><span class="line">  -y：       自动回答yes</span><br><span class="line"><span class="meta prompt_">  </span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">升级本机所有软件包（包括内核，不常用）</span></span><br><span class="line">yum -y update</span><br></pre></td></tr></table></figure>
-
-
-
-<p>d）卸载</p>
-<p>除非你确定卸载的软件的依赖包不会对系统产生影响，否则不要执行yum的卸载，因为很有可能在卸载软件包的同时卸载的依赖包也是重要的系统文件，这就可能导致系统崩溃。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">yum remove 包名</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="4）yum组管理命令"><a href="#4）yum组管理命令" class="headerlink" title="4）yum组管理命令"></a>4）yum组管理命令</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">列出所有可用的软件组列表</span></span><br><span class="line">yum grouplist</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">列出软件组中包含的软件</span></span><br><span class="line">yum groupinfo 软件组名</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">安装指定软件组</span></span><br><span class="line">yum groupinstall 软件组名</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">卸载指定软件组</span></span><br><span class="line">yum groupremove 软件组名</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="7-源码包安装"><a href="#7-源码包安装" class="headerlink" title="7.源码包安装"></a>7.源码包安装</h2><h3 id="1）注意事项"><a href="#1）注意事项" class="headerlink" title="1）注意事项"></a>1）注意事项</h3><p>a）源码包是从哪里来的？</p>
-<p>源码包是通过官方网站下载的，如果需要使用，是需要单独下载的。</p>
-<p>b）是否可以在系统中既安装rpm包的Apache，又安装源码包的Apache？</p>
-<p>可以，因为两种安装方法安装的Apache，安装位置是不一样的：</p>
-<ul>
-<li>源码包必须指定安装位置(源码包没有安装数据库，没有删除命令)</li>
-<li>RPM包不建议指定安装位置，建议安装在默认位置(RPM包安装的服务有标准卸载命令，不怕文件到处安装)</li>
-</ul>
-<h3 id="2）安装过程"><a href="#2）安装过程" class="headerlink" title="2）安装过程"></a>2）安装过程</h3><p>a）下载软件包</p>
-<p>b）解压缩</p>
-<p>c）进入解压目录</p>
-<p>d）.&#x2F;configure（编译前准备）</p>
-<p>这一步主要有三个作用：</p>
-<ul>
-<li>在安装之前需要检测系统环境是否符合安装要求。</li>
-<li>定义需要的功能选项。”.&#x2F;configure”支持的功能选项较多，可以执行“.&#x2F;configure –help”命令查询其支持的功能，一般都会通过”.&#x2F;configure –prefix&#x3D;安装路径”来指定安装路径。</li>
-<li>把系统环境的检测结果和定义好的功能选项写入Makefile文件，后续的编译和安装需要依赖这个文件的内容。</li>
-</ul>
-<p>需要注意的是，configure不是系统命令，而是源码包软件自带的一个脚本程序，所以必须采用“.&#x2F;configure”方式执行。</p>
-<p>e）make（编译）</p>
-<p>make会调用gcc编译器，并读取Makefile文件中的信息进行系统软件编译。编译的目的就是把源码程序转变为能被Linux识别的可执行文件，这些可执行文件保存在当前目录下。编译过程较为耗时，需要有足够的耐心。</p>
-<p>f）make clean（清空编译内容，非必需步骤）</p>
-<p>如果在”.&#x2F;configure”或“make”编译中报错，那么我们在重新执行命令前一定要记得执行make clean命令，它会清空Makefile文件或编译产生的“.o”文件。</p>
-<p>g）make install（编译安装）</p>
-<p>这才是真正的安装过程，一般会写清楚程序的安装位置。如果忘记指定安装目录，则可以把这个命令的执行过程保存下来，以备将来删除使用。</p>
-<h3 id="3）删除"><a href="#3）删除" class="headerlink" title="3）删除"></a>3）删除</h3><p>源码包没有删除命令，如果需要删除，直接删除安装目录即可。</p>
-<h3 id="4）打入补丁"><a href="#4）打入补丁" class="headerlink" title="4）打入补丁"></a>4）打入补丁</h3><p>a）补丁的生成</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 比较old和new文件的不同</span><br><span class="line">diff 选项 old new</span><br><span class="line">选项：</span><br><span class="line">  -a    将任何文档当做文本文档处理</span><br><span class="line">  -b    忽略空格造成的不同</span><br><span class="line">  -B    忽略空白行造成的不同</span><br><span class="line">  -I    忽略大小写造成的不同</span><br><span class="line">  -N    当比较两个目录时，如果某个文件只在一个目录中，则另一个目录中视作空文件。</span><br><span class="line">  -r    当比较目录时，递归比较子目录</span><br><span class="line">  -u    使用统一的输出格式</span><br></pre></td></tr></table></figure>
-
-<p>比较两个文件的不同，并生成补丁文件”txt.patch”：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 比较两个文件的不同，同时生成txt.patch补丁文件</span><br><span class="line">diff -Naur /root/test/old.txt /root/test/new.txt &gt; txt.patch</span><br></pre></td></tr></table></figure>
-
-
-
-<p>b）打入补丁</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 按照补丁文件进行更新</span><br><span class="line">patch -pn &lt; 补丁文件</span><br><span class="line">选项：</span><br><span class="line">  -pn    n为数字。代表按照补丁文件中的路径，指定更新文件的位置。</span><br></pre></td></tr></table></figure>
-
-<p>“-pn”不好理解，补丁文件是要打入旧文件的，但是你当前所在的目录和补丁文件中的记录是不一定匹配的，所以就需要”-pn”来同步两个目录。</p>
-<p>比如我当前在“&#x2F;root&#x2F;test”目录下，补丁文件中记录的文件目录是为“&#x2F;root&#x2F;test&#x2F;old.txt”。这时如果写入“p1”，那么补丁文件就会打入”&#x2F;root&#x2F;test&#x2F;root&#x2F;test&#x2F;old.txt”。如果写入的是“p2”，那么补丁文件就会打入”&#x2F;root&#x2F;test&#x2F;test&#x2F;old.txt”。如果写入的是“p3”，那么补丁文件就会打入”&#x2F;root&#x2F;test&#x2F;old.txt”。即n表示删除补丁文件中记录的文件目录的路径。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">patch -p3 &lt; txt.patch</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="8-脚本安装程序"><a href="#8-脚本安装程序" class="headerlink" title="8. 脚本安装程序"></a>8. 脚本安装程序</h2><p>以Webmin安装为例。</p>
-<p>a）下载webmin软件，地址：<a href="http://sourceforge.net/projects/webadmin/files/webmin/">http://sourceforge.net/projects/webadmin/files/webmin/</a></p>
-<p>b）解压软件</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">tar -zxvf webmin-1.610.tar.gz</span><br></pre></td></tr></table></figure>
-
-<p>c）进入解压目录</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">cd webmin-1.610</span><br></pre></td></tr></table></figure>
-
-<p>d）执行安装程序setup.sh，并指定功能选项。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">./setup.sh</span><br></pre></td></tr></table></figure>
-
 ]]></content>
       <categories>
         <category>Linux</category>
