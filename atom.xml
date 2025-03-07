@@ -6,7 +6,7 @@
   <link href="https://bentech8.github.io/atom.xml" rel="self"/>
   
   <link href="https://bentech8.github.io/"/>
-  <updated>2025-03-06T16:44:00.781Z</updated>
+  <updated>2025-03-07T14:38:12.120Z</updated>
   <id>https://bentech8.github.io/</id>
   
   <author>
@@ -15,6 +15,28 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>日志管理</title>
+    <link href="https://bentech8.github.io/2025/03/07/%E6%97%A5%E5%BF%97%E7%AE%A1%E7%90%86/"/>
+    <id>https://bentech8.github.io/2025/03/07/%E6%97%A5%E5%BF%97%E7%AE%A1%E7%90%86/</id>
+    <published>2025-03-07T11:48:29.000Z</published>
+    <updated>2025-03-07T14:38:12.120Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="日志简介"><a href="#日志简介" class="headerlink" title="日志简介"></a>日志简介</h2><h3 id="日志相关服务"><a href="#日志相关服务" class="headerlink" title="日志相关服务"></a>日志相关服务</h3><p>在CentOS 6.x中日志服务已经由rsyslogd取代了原先的syslogd服务。Redhat认为syslogd已经不能满足在工作中的需求，rsyslogd相比syslogd具有一些新的特点：</p><ul><li>基于TCP网络协议传输日志信息；</li><li>更安全的网络传输方式；</li><li>有日志消息的及时分析框架；</li><li>后台数据库；</li><li>配置文件中可以写简单的逻辑判断；</li><li>与syslog配置文件相兼容。</li></ul><h3 id="系统中常见的日志文件"><a href="#系统中常见的日志文件" class="headerlink" title="系统中常见的日志文件"></a>系统中常见的日志文件</h3><table><thead><tr><th>日志文件</th><th>说明</th></tr></thead><tbody><tr><td>&#x2F;var&#x2F;log&#x2F;cron</td><td>记录了系统定时任务相关的日志。</td></tr><tr><td>&#x2F;var&#x2F;log&#x2F;cups&#x2F;</td><td>记录打印信息的日志。</td></tr><tr><td>&#x2F;var&#x2F;log&#x2F;dmesg</td><td>记录了系统在开机时内核自检的信息。也可以使用dmesg命令直接查看内核自检信息。</td></tr><tr><td>&#x2F;var&#x2F;log&#x2F;btmp</td><td>记录错误登录的日志。这个文件是二进制文件，不能直接vim查看，而要使用lastb命令查看。</td></tr><tr><td>&#x2F;var&#x2F;log&#x2F;lastlog</td><td>记录系统中所有用户最后一次登录时间的日志。这个文件也是二进制文件，不能直接vim查看，而要使用lastlog命令查看。</td></tr><tr><td>&#x2F;var&#x2F;log&#x2F;mailog</td><td>记录邮件信息。</td></tr><tr><td>&#x2F;var&#x2F;log&#x2F;message</td><td>记录系统重要信息的日志。这个日志文件中会记录Linux系统的绝大多数重要信息，如果系统出现问题时，首先要检查的就应该是这个日志文件。</td></tr><tr><td>&#x2F;var&#x2F;log&#x2F;secure</td><td>记录验证和授权方面的信息，只要涉及账户和密码的程序都会记录。比如说系统的登录，ssh的登录，su切换用户，sudo授权，甚至添加用户和修改用户密码都会记录在这个日志文件中。</td></tr><tr><td>&#x2F;var&#x2F;log&#x2F;wtmp</td><td>永久记录所有用户的登录、注销信息，同时记录系统的启动、重启、关机事件。同样这个文件也是一个二进制文件，不能直接vim，而需要使用last命令来查看。</td></tr><tr><td>&#x2F;var&#x2F;run&#x2F;utmp</td><td>记录当前已经登录的用户的信息。这个文件会随着用户的登录和注销而不断变化，只记录当前登录用户的信息。同样这个文件不能直接vim，而要使用w,who,users等命令来查询。</td></tr></tbody></table>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;日志简介&quot;&gt;&lt;a href=&quot;#日志简介&quot; class=&quot;headerlink&quot; title=&quot;日志简介&quot;&gt;&lt;/a&gt;日志简介&lt;/h2&gt;&lt;h3 id=&quot;日志相关服务&quot;&gt;&lt;a href=&quot;#日志相关服务&quot; class=&quot;headerlink&quot; title=&quot;日志相关服</summary>
+      
+    
+    
+    
+    <category term="Linux" scheme="https://bentech8.github.io/categories/Linux/"/>
+    
+    
+  </entry>
   
   <entry>
     <title>Linux操作系统性能调优</title>
