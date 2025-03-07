@@ -4944,6 +4944,97 @@
 
 <h2 id="系统定时任务"><a href="#系统定时任务" class="headerlink" title="系统定时任务"></a>系统定时任务</h2><h3 id="crontab"><a href="#crontab" class="headerlink" title="crontab"></a>crontab</h3><p>循环执行定时任务。</p>
 <p>1）crond服务管理与访问控制</p>
+<p>crontab命令是需要crond服务支持的，crond服务同样是独立的服务，所以启动和自启动方法如下：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">重启动crond服务</span></span><br><span class="line">[root@localhost ~]# service crond restart</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">设定crond服务为开机自启动</span></span><br><span class="line">[root@localhost ~]# systemctl enable crond</span><br></pre></td></tr></table></figure>
+
+<p>crond服务默认是自启动的，如果服务器上有循环执行的系统定时任务，就不要关闭crond服务了。</p>
+<p>2）用户的crontab设置</p>
+<p>每个用户都可以实现自己的crontab定时任务，只要是使用这个用户身份执行“crontab -e”命令即可。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# crontab [选项]</span><br><span class="line">选项：</span><br><span class="line">  -e:		编辑crontab定时任务</span><br><span class="line">  -l:		查询crontab任务</span><br><span class="line">  -r:		删除当前用户所有的crontab任务，如果有多个任务，只想删除一个，可以使用&quot;crontab -e&quot;</span><br><span class="line">  -u 用户名: 修改或删除其他用户的crontab任务。只有root可用	</span><br></pre></td></tr></table></figure>
+
+<p>进入crontab编辑界面，会打开vim编辑你的工作：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# crontab -e</span><br><span class="line">* * * * * 执行的任务</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>含义</th>
+<th>范围</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>第一个“*”</td>
+<td>一小时当中的第几分钟</td>
+<td>0-59</td>
+</tr>
+<tr>
+<td>第二个“*”</td>
+<td>一天当中的第几个小时</td>
+<td>0-23</td>
+</tr>
+<tr>
+<td>第三个“*”</td>
+<td>一个月当中的第几天</td>
+<td>1-31</td>
+</tr>
+<tr>
+<td>第四个“*”</td>
+<td>一年当中的第几月</td>
+<td>1-12</td>
+</tr>
+<tr>
+<td>第五个“*”</td>
+<td>一周当中的星期几</td>
+<td>0-7(0和7都代表星期日)</td>
+</tr>
+</tbody></table>
+<p>特殊符号：</p>
+<table>
+<thead>
+<tr>
+<th>特殊符号</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>*</td>
+<td>代表任何时间，比如第一个“*”就代表一小时中每分钟都执行一次。</td>
+</tr>
+<tr>
+<td>，</td>
+<td>代表不连续的时间。比如“0 8,12,16 * * * 命令”，就代表在每天的8点0分，12点0分，16点0分都执行一次命令。</td>
+</tr>
+<tr>
+<td>~</td>
+<td>代表连续的时间范围。比如“0 5 * * 1-6 命令”，代表在周一到周六的凌晨5点0分执行命令。</td>
+</tr>
+<tr>
+<td>*&#x2F;n</td>
+<td>代表每隔多久执行一次。比如“*&#x2F;10 * * * * 命令”，代表每隔10分钟就执行一次命令。</td>
+</tr>
+</tbody></table>
+<p>例如：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">让系统每隔5分钟，就向/tmp/test文件中写入一行<span class="string">&quot;ll&quot;</span></span></span><br><span class="line">[root@localhost ~]# crontab -e</span><br><span class="line">*/5 * * * * /bin/echo &quot;ll&quot; &gt;&gt; /tmp/test</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">系统在每周二的凌晨5点05分重启一次</span></span><br><span class="line">[root@localhost ~]# crontab -e</span><br><span class="line">5 5 * * 2 /sbin/shutdown -r now</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">在每月的1号，10号，15号的凌晨3点30分都定时执行日志备份脚本autobak.sh</span></span><br><span class="line">[root@localhost ~]# crontab -e</span><br><span class="line">30 3 1,10,15 * * /root/sh/autobak.sh</span><br></pre></td></tr></table></figure>
+
+
+
+<p>3）crontab的注意事项</p>
+<p>在书写crontab定时任务时，需要注意几个注意事项：</p>
+<ul>
+<li>六个选项都不能为空，必须填写。如果不确定使用“*”代表任意时间。</li>
+<li>crontab定时任务，最小有效时间是分钟，最大时间范围是月。</li>
+<li>在定义时间时，日期和星期最好不要在一条定时任务中出现，因为它们都是以天为单位，非常容易让管理员混乱。</li>
+<li>在定时任务中，不管是直接写命令，还是在脚本中写命令，最好都是用绝对路径。有时相对路径的命令会报错。</li>
+</ul>
+<p>4）系统的crontab设置</p>
+<p>“crontab -e”是每个用户执行的命令，也就是说不同的用户身份可以执行自己的定时任务。可以是有些定时任务需要系统执行，这时就需要编辑&#x2F;etc&#x2F;crontab这个配置文件了。当然，并不是说写入&#x2F;etc&#x2F;crontab配置文件中的定时任务执行时，不需要用户身份，而是”crontab -e”命令定义定时任务时，默认用户身份是当前登录用户。而修改&#x2F;etc&#x2F;crontab配置文件时，定时任务的执行者身份是可以手工指定的。这样定时任务的执行会更加灵活，修改起来也更加方便。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# vim /etc/crontab</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">/etc/crontab: system-wide crontab</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Unlike any other crontab you don<span class="string">&#x27;t have to run the `crontab&#x27;</span></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash"><span class="built_in">command</span> to install the new version when you edit this file</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">and files <span class="keyword">in</span> /etc/cron.d. These files also have username fields,</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">that none of the other crontabs <span class="keyword">do</span>.</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">标识使用哪种shell</span></span><br><span class="line">SHELL=/bin/sh</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">You can also override PATH, but by default, newer versions inherit it from the environment</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Example of job definition:</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">.---------------- minute (0 - 59)</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">|  .------------- hour (0 - 23)</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">|  |  .---------- day of month (1 - 31)</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">|  |  |  .------- month (1 - 12) OR jan,feb,mar,apr ...</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">|  |  |  |  .---- day of week (0 - 6) (Sunday=0 or 7) OR sun,mon,tue,wed,thu,fri,sat</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">|  |  |  |  |</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">*  *  *  *  * user-name <span class="built_in">command</span> to be executed</span></span><br><span class="line">17 *	* * *	root	cd / &amp;&amp; run-parts --report /etc/cron.hourly</span><br><span class="line">25 6	* * *	root	test -x /usr/sbin/anacron || &#123; cd / &amp;&amp; run-parts --report /etc/cron.daily; &#125;</span><br><span class="line">47 6	* * 7	root	test -x /usr/sbin/anacron || &#123; cd / &amp;&amp; run-parts --report /etc/cron.weekly; &#125;</span><br><span class="line">52 6	1 * *	root	test -x /usr/sbin/anacron || &#123; cd / &amp;&amp; run-parts --report /etc/cron.monthly; &#125;</span><br><span class="line"><span class="meta prompt_">#</span></span><br></pre></td></tr></table></figure>
+
+<p>修改&#x2F;etc&#x2F;crontab这个配置文件，加入自己的定时任务，不过需要注意指定脚本的执行者身份：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# vim /etc/crontab</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">/etc/crontab: system-wide crontab</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Unlike any other crontab you don<span class="string">&#x27;t have to run the `crontab&#x27;</span></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash"><span class="built_in">command</span> to install the new version when you edit this file</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">and files <span class="keyword">in</span> /etc/cron.d. These files also have username fields,</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">that none of the other crontabs <span class="keyword">do</span>.</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">标识使用哪种shell</span></span><br><span class="line">SHELL=/bin/sh</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">You can also override PATH, but by default, newer versions inherit it from the environment</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Example of job definition:</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">.---------------- minute (0 - 59)</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">|  .------------- hour (0 - 23)</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">|  |  .---------- day of month (1 - 31)</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">|  |  |  .------- month (1 - 12) OR jan,feb,mar,apr ...</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">|  |  |  |  .---- day of week (0 - 6) (Sunday=0 or 7) OR sun,mon,tue,wed,thu,fri,sat</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">|  |  |  |  |</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">*  *  *  *  * user-name <span class="built_in">command</span> to be executed</span></span><br><span class="line">17 *	* * *	root	cd / &amp;&amp; run-parts --report /etc/cron.hourly</span><br><span class="line">25 6	* * *	root	test -x /usr/sbin/anacron || &#123; cd / &amp;&amp; run-parts --report /etc/cron.daily; &#125;</span><br><span class="line">47 6	* * 7	root	test -x /usr/sbin/anacron || &#123; cd / &amp;&amp; run-parts --report /etc/cron.weekly; &#125;</span><br><span class="line">52 6	1 * *	root	test -x /usr/sbin/anacron || &#123; cd / &amp;&amp; run-parts --report /etc/cron.monthly; &#125;</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">使用run-parts脚本调用并执行/root/cron/目录中所有的可执行文件</span></span><br><span class="line">* * * * *       root    run-parts /root/cron/</span><br></pre></td></tr></table></figure>
+
+<p>只要保存&#x2F;etc&#x2F;crontab文件，这个定时任务就可以执行了，当然要确定crond服务是运行的。</p>
 ]]></content>
       <categories>
         <category>Linux</category>
