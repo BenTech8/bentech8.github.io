@@ -239,6 +239,106 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://bentech8.github.io/2025/03/12/nginx%E5%9F%BA%E7%A1%80/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Ben">
+      <meta itemprop="description" content="E-mail:17620170099@163.com">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ben">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/03/12/nginx%E5%9F%BA%E7%A1%80/" class="post-title-link" itemprop="url">nginx原理</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2025-03-12 06:03:50 / 修改时间：19:29:07" itemprop="dateCreated datePublished" datetime="2025-03-12T06:03:50+08:00">2025-03-12</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Nginx/" itemprop="url" rel="index"><span itemprop="name">Nginx</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="同步与异步"><a href="#同步与异步" class="headerlink" title="同步与异步"></a>同步与异步</h2><p>同步与异步的重点在消息通知的方式上，也就是调用结果的通知方式不同。</p>
+<p>同步：当一个同步调用发出去后，调用者要一直等待调用的结果通知后，才能进行后续的执行。</p>
+<p>异步：当一个异步调用发出去后，调用者不必一直等待调用结果的返回，异步调用要想获得结果，一般有两种方式：</p>
+<ul>
+<li>主动轮询异步调用的结果；</li>
+<li>被调用方通过callback(回调通知)来通知调用方调用结果。</li>
+</ul>
+<p>实例解释：</p>
+<p>同步取快递：小明收到快递将送达的短信，在楼下一直等到快递送达。</p>
+<p>异步取快递：小时收到快递将送达的短信，快递到楼下后，小明再下楼去取。</p>
+<p>异步取快递，小明知道快递到达楼下有两种方式：</p>
+<ul>
+<li>不停的电话问快递小哥到了没有，即主动轮询；</li>
+<li>快递小哥到楼下后，打电话通知小明，然后小明下楼取快递，既定回调通知。</li>
+</ul>
+<h2 id="阻塞与非阻塞"><a href="#阻塞与非阻塞" class="headerlink" title="阻塞与非阻塞"></a>阻塞与非阻塞</h2><p>阻塞与非阻塞的重点在于进&#x2F;线程等待消息时候的行为，也就是在等待消息的时候，当前进&#x2F;线程是挂起状态，还是非挂起状态。</p>
+<p>阻塞：调用在发出去后，在消息返回之前，当前进&#x2F;线程会被挂起，直到有消息返回，当前进&#x2F;线程才会被激活。</p>
+<p>非阻塞：调用在发出去后，不会阻塞当前进&#x2F;线程，而会立即返回。</p>
+<p>同步与异步，重点在于消息通知的方式；阻塞与非阻塞，重点在于等消息时候的行为。所以，就出现了四种重合方式：</p>
+<ul>
+<li><p>同步阻塞</p>
+<p>小明收到信息后，啥都不干，等快递。</p>
+</li>
+<li><p>同步非阻塞</p>
+<p>小明收到信息后，边刷微博，边等着取快递。</p>
+</li>
+<li><p>异步阻塞</p>
+<p>小明收到信息后，啥都不干，一直等着快递员通知他取快递。</p>
+</li>
+<li><p>异步非阻塞</p>
+<p>小明收到信息后，边刷着微博，边等快递员通知他取快递。</p>
+</li>
+</ul>
+<h2 id="epoll模型"><a href="#epoll模型" class="headerlink" title="epoll模型"></a>epoll模型</h2><h2 id="Nginx工作原理"><a href="#Nginx工作原理" class="headerlink" title="Nginx工作原理"></a>Nginx工作原理</h2>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://bentech8.github.io/2025/03/07/%E6%97%A5%E5%BF%97%E7%AE%A1%E7%90%86/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -575,7 +675,7 @@
 </tr>
 <tr>
 <td>mail address</td>
-<td>当日志轮替时，输出内容通过邮件发送到指定的邮件地址。如mail <a href="mailto:&#97;&#97;&#97;&#64;&#49;&#54;&#51;&#46;&#x63;&#111;&#109;">aaa@163.com</a></td>
+<td>当日志轮替时，输出内容通过邮件发送到指定的邮件地址。如mail <a href="mailto:&#97;&#97;&#x61;&#x40;&#49;&#x36;&#51;&#46;&#x63;&#111;&#x6d;">aaa@163.com</a></td>
 </tr>
 <tr>
 <td>missingok</td>
@@ -3458,458 +3558,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://bentech8.github.io/2025/02/25/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Ben">
-      <meta itemprop="description" content="E-mail:17620170099@163.com">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Ben">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/02/25/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86/" class="post-title-link" itemprop="url">文件系统管理</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2025-02-25 13:05:05 / 修改时间：13:09:36" itemprop="dateCreated datePublished" datetime="2025-02-25T13:05:05+08:00">2025-02-25</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="文件系统管理"><a href="#文件系统管理" class="headerlink" title="文件系统管理"></a>文件系统管理</h1><h2 id="1-硬盘结构"><a href="#1-硬盘结构" class="headerlink" title="1. 硬盘结构"></a>1. 硬盘结构</h2><h3 id="1）硬盘的逻辑结构"><a href="#1）硬盘的逻辑结构" class="headerlink" title="1）硬盘的逻辑结构"></a>1）硬盘的逻辑结构</h3><p>每个扇区的大小是固定的，为512Byte。扇区也是磁盘的最小存储单位。</p>
-<p>硬盘的大小是用”磁头数X柱面数X扇区数X每个扇区的大小”这样的公式来计算的。其中磁头数(Heads)表示硬盘总共有几个磁头，也可以理解成硬盘有几个盘面，然后乘以2；柱面数(Cylinders)表示硬盘每一面盘片有几条磁道；扇区数(Sectors)表示每条磁道上有几个扇区；每个扇区的大小一般是512Byte。</p>
-<h3 id="2）硬盘接口"><a href="#2）硬盘接口" class="headerlink" title="2）硬盘接口"></a>2）硬盘接口</h3><ul>
-<li><p>IDE硬盘接口(Integrated Drive Electronics，并口，即电子集成驱动器)</p>
-<p>也称作”ATA硬盘”或”PATA硬盘”，是早期机械硬盘的主要接口，ATA133硬盘的理论速度可以达到133MB&#x2F;s(此速度为理论平均值)。</p>
-</li>
-<li><p>SATA接口(Serial ATA，串口)</p>
-<p>是速度更高的硬盘标准，具备了更高的传输速度，并具备了更强的纠错能力。目前已经是SATA三代，理论传输速度达到600MB&#x2F;s(此速度为理论平均值)。</p>
-</li>
-<li><p>SCSI接口(Small Computer System Interface，小型计算机系统接口)广泛用在服务器上，具有应用范围广、多任务、带宽大、CPU占用率低及支持执插拔等优点，理论传输速度达到320MB&#x2F;s。</p>
-</li>
-</ul>
-<h2 id="2-文件系统"><a href="#2-文件系统" class="headerlink" title="2. 文件系统"></a>2. 文件系统</h2><h3 id="1）Linux文件系统的特性"><a href="#1）Linux文件系统的特性" class="headerlink" title="1）Linux文件系统的特性"></a>1）Linux文件系统的特性</h3><ul>
-<li><p>super block（超级块）</p>
-<p>记录整个文件系统的信息，包括：</p>
-<ul>
-<li>block与inode的总量</li>
-<li>已经使用的inode和block的数量</li>
-<li>未使用的inode和block的数量</li>
-<li>block与inode的大小</li>
-<li>文件系统的挂载时间</li>
-<li>最近一次的写入时间</li>
-<li>最近一次的磁盘检验时间等</li>
-</ul>
-</li>
-<li><p>data block（数据块，也称作block）</p>
-<p>用来实际保存数据的，block的大小(1KB|2KB|4KB)和数量在格式化后就已经决定，不能改变，除非重新格式化。每个block只能保存一个文件的数据，要是文件数据小于一个block块，那么这个block的剩余空间不能被其他文件使用；要是文件数据大于一个block块，则占用多个block块。Windows中磁盘碎片整理工具的原理就是把一个文件占用的多个block块尽量整理到一起，这样可以加快读写速度。</p>
-</li>
-<li><p>inode（i节点）</p>
-<p>用来记录文件的权限(r、w、x)，文件的所有者和属组，文件的大小，文件的状态改变时间(ctime)，文件的最近一次读取时间(atime)，文件的最近一次修改时间(mtime)，文件的数据真正保存的block编号。每个文件需要占一个inode。</p>
-</li>
-</ul>
-<h3 id="2）Linux常见文件系统"><a href="#2）Linux常见文件系统" class="headerlink" title="2）Linux常见文件系统"></a>2）Linux常见文件系统</h3><table>
-<thead>
-<tr>
-<th>文件系统</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>ext</td>
-<td>Linux中最早的文件系统，由于在性能和兼容性上具有很多缺陷，现在已经很少使用。</td>
-</tr>
-<tr>
-<td>ext2</td>
-<td>是ext文件系统的升级版本，Red Hat Linux 7.2版本以前的系统默认都是ext2文件系统。于1993年发布，支持最大16TB的分区和最大2TB的文件</td>
-</tr>
-<tr>
-<td>ext3</td>
-<td>是ext2文件系统的升级版本，最大的区别就是带日志功能，以便在系统突然停止时提高文件系统的可靠性。支持最大16TB的分区和最大2TB的文件</td>
-</tr>
-<tr>
-<td>ext4</td>
-<td>是ext3文件系统的升级版。ext4在性能、伸缩性和可靠性方面进行了大量改进。ext4的变化可以说是翻天覆地的，比如向下兼容ext3、最大1EB文件系统和16TB文件、无限数量子目录、Extents连续数据块概念、多块分配、延迟分配、持久分配、快速FSCK、日志校验、无日志模式、在线碎片整理、inode增强、默认启用barrier等。它是CentOS 6.x的默认文件系统</td>
-</tr>
-<tr>
-<td>xfs</td>
-<td>XFS最早针对IRIX操作系统开发，是一个高性能的日志型文件系统，能够在断电以及操作系统崩溃的情况下保证文件系统数据的一致性。它是一个64位的文件系统，后来进行开源并且移植到了Linux操作系统中，目前CentOS 7.x将XFS+LVM作为默认的文件系统，据官方所称，XFS对于大文件的读写性能较好。</td>
-</tr>
-<tr>
-<td>swap</td>
-<td>swap是Linux中用于交换分区的文件系统(类似于Windows中的虚拟内存)，当内存不够用时，使用交换分区暂时替代内存。一般大小为内存的2倍，但不要超2GB。它是Linux的必需分区。</td>
-</tr>
-<tr>
-<td>NFS</td>
-<td>NFS是网络文件系统(Network File System)的缩写，是用来实现不同主机之间文件共享的一种网络服务，本地主机可以通过挂载的方式使用远程共享的资源</td>
-</tr>
-<tr>
-<td>ISO9660</td>
-<td>光盘的标准文件系统，Linux要想使用光盘，必须支持iso9660文件系统</td>
-</tr>
-<tr>
-<td>fat</td>
-<td>就是Windows下的fat16文件系统，在Linux中识别为fat</td>
-</tr>
-<tr>
-<td>vfat</td>
-<td>就是Windows下的fat32文件系统，在Linux中识别为vfat。支持最大32GB的分区和最大4GB的文件。</td>
-</tr>
-<tr>
-<td>NTFS</td>
-<td>就是Windows下的NTFS文件系统，不过Linux默认是不能识别NTFS文件系统的，如果需要识别，则需要重新编译内核才能支持。它比fat32文件系统更加安全，速度更快，支持最大2TB的分区和最大64GB的文件。</td>
-</tr>
-</tbody></table>
-<h2 id="3-常用的硬盘管理命令"><a href="#3-常用的硬盘管理命令" class="headerlink" title="3. 常用的硬盘管理命令"></a>3. 常用的硬盘管理命令</h2><h3 id="1）df命令"><a href="#1）df命令" class="headerlink" title="1）df命令"></a>1）df命令</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# df -ahT</span><br><span class="line">选项：</span><br><span class="line">  -a:    显示特殊文件系统，这些文件系统几乎都是保存在内存中的。如/proc,因为挂载在内存中，所以占用量都是0</span><br><span class="line">  -h:    单位不是只用KB，而是换算成习惯单位</span><br><span class="line">  -T:    多出了文件系统类型一列</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="2）du命令"><a href="#2）du命令" class="headerlink" title="2）du命令"></a>2）du命令</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# du [选项] [目录或文件名]</span><br><span class="line">选项：</span><br><span class="line">  -a 显示每个子文件的磁盘占用量。默认只统计子目录的磁盘占用量</span><br><span class="line">  -h 使用习惯单位显示磁盘占用量，如KB，MB或GB等</span><br><span class="line">  -s 统计总占用量，而不列出子目录和子文件的占用量</span><br></pre></td></tr></table></figure>
-
-<p>du与df的区别：du是用于统计文件大小的，统计的文件大小是准确的；df是用于统计空间大小的，统计的剩余空间是准确的。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# df -Th</span><br><span class="line">文件系统        类型      大小  已用  可用 已用% 挂载点</span><br><span class="line">tmpfs           tmpfs     687M  2.5M  685M    1% /run</span><br><span class="line">/dev/nvme0n1p10 ext4      187G  144G   34G   82% /</span><br><span class="line">tmpfs           tmpfs     3.4G  5.4M  3.4G    1% /dev/shm</span><br><span class="line">tmpfs           tmpfs     5.0M   12K  5.0M    1% /run/lock</span><br><span class="line">efivarfs        efivarfs  148K  112K   32K   79% /sys/firmware/efi/efivars</span><br><span class="line">/dev/nvme0n1p1  vfat       96M   53M   44M   56% /boot/efi</span><br><span class="line">tmpfs           tmpfs     687M  172K  687M    1% /run/user/1000</span><br><span class="line"></span><br><span class="line">[root@localhost ~]# du -sh /</span><br><span class="line">113G	/</span><br></pre></td></tr></table></figure>
-
-<p>df和du统计的根目录大小有差异，是因为du统计的是根目录文件大小，df统计的不仅只有根目录文件大小，还有临时文件的大小。</p>
-<h3 id="3）fsck文件系统修复命令"><a href="#3）fsck文件系统修复命令" class="headerlink" title="3）fsck文件系统修复命令"></a>3）fsck文件系统修复命令</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# fsck -y 分区                  # 开机重启自动修复</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="4）显示磁盘状态"><a href="#4）显示磁盘状态" class="headerlink" title="4）显示磁盘状态"></a>4）显示磁盘状态</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# dumpe2fs -h 分区</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="5）查看文件的详细时间"><a href="#5）查看文件的详细时间" class="headerlink" title="5）查看文件的详细时间"></a>5）查看文件的详细时间</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# stat 文件名</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="6）判断文件类型"><a href="#6）判断文件类型" class="headerlink" title="6）判断文件类型"></a>6）判断文件类型</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# file 文件名</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="7）判断命令类型"><a href="#7）判断命令类型" class="headerlink" title="7）判断命令类型"></a>7）判断命令类型</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# type 命令名</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="4-fdisk命令手工分区"><a href="#4-fdisk命令手工分区" class="headerlink" title="4. fdisk命令手工分区"></a>4. fdisk命令手工分区</h2><h3 id="1）查看系统所有硬盘及分区"><a href="#1）查看系统所有硬盘及分区" class="headerlink" title="1）查看系统所有硬盘及分区"></a>1）查看系统所有硬盘及分区</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# fdisk -l</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="2）磁盘分区"><a href="#2）磁盘分区" class="headerlink" title="2）磁盘分区"></a>2）磁盘分区</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# fdisk 磁盘</span><br></pre></td></tr></table></figure>
-
-<p>fdisk交互指令说明：</p>
-<table>
-<thead>
-<tr>
-<th>命令</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>a</td>
-<td>设置可引导标记</td>
-</tr>
-<tr>
-<td>b</td>
-<td>编辑bsd磁盘标签</td>
-</tr>
-<tr>
-<td>c</td>
-<td>设置DOS操作系统兼容标记</td>
-</tr>
-<tr>
-<td>d</td>
-<td>删除一个分区</td>
-</tr>
-<tr>
-<td>l</td>
-<td>显示已知的文件系统类型。82为Linux swap分区，83为Linux分区</td>
-</tr>
-<tr>
-<td>m</td>
-<td>显示帮助菜单</td>
-</tr>
-<tr>
-<td>n</td>
-<td>新建分区</td>
-</tr>
-<tr>
-<td>o</td>
-<td>建立空白DOS分区表</td>
-</tr>
-<tr>
-<td>p</td>
-<td>显示分区列表</td>
-</tr>
-<tr>
-<td>q</td>
-<td>不保存退出</td>
-</tr>
-<tr>
-<td>s</td>
-<td>新建空白SUN磁盘标签</td>
-</tr>
-<tr>
-<td>t</td>
-<td>改变一个分区的系统ID</td>
-</tr>
-<tr>
-<td>u</td>
-<td>改变显示记录单位</td>
-</tr>
-<tr>
-<td>v</td>
-<td>验证分区表</td>
-</tr>
-<tr>
-<td>w</td>
-<td>保存退出</td>
-</tr>
-<tr>
-<td>x</td>
-<td>附加功能</td>
-</tr>
-</tbody></table>
-<p>新建主分区：n—p—1—1分区号—分区大小+100M—w</p>
-<p>新建扩展分区：n—e—2分区号—124起始柱面—1024柱面(所有剩余空间都分配给扩展分区)</p>
-<p>新建逻辑分区：n—l—不用指定分区号—124起始柱面—+100M(指定大小)—w</p>
-<h3 id="3）格式化"><a href="#3）格式化" class="headerlink" title="3）格式化"></a>3）格式化</h3><p>a）mkfs</p>
-<p>mkfs命令非常简单易用，不过是不能调整分区的默认参数的（比如块大小是4096），这些默认参数除非特殊情况，否则不能调整。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# mkfs -t 文件系统类型 分区</span><br></pre></td></tr></table></figure>
-
-
-
-<p>b）mke2fs</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# mke2fs [选项] 分区</span><br><span class="line">[选项]：</span><br><span class="line">  -t 文件系统：    指定格式化成哪个文件系统，如ext4, xfs</span><br><span class="line">  -b 字节:        指定block块的大小</span><br><span class="line">  -i 字切:        指定&quot;字节/inode&quot;的比例，也就是多少个字节分配一个inode</span><br><span class="line">  -j：            建立带有ext3日志功能的文件系统</span><br><span class="line">  -L 卷标名:      给文件系统设置卷标名，就不使用e2label命令设定了</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="4）建立挂载点"><a href="#4）建立挂载点" class="headerlink" title="4）建立挂载点"></a>4）建立挂载点</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# mkdir /disk1</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="5）挂载"><a href="#5）挂载" class="headerlink" title="5）挂载"></a>5）挂载</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# mount 分区 挂载点</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="6）查看"><a href="#6）查看" class="headerlink" title="6）查看"></a>6）查看</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># 查看所有已经挂载的分区和光盘</span><br><span class="line">[root@localhost ~]# mount</span><br><span class="line"></span><br><span class="line"># 查看系统分区</span><br><span class="line">[root@localhost ~]# fdisk -l</span><br><span class="line"></span><br><span class="line"># 查看分区占用百分比</span><br><span class="line">[root@Loaclhost ~]# df -Th</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="7）自动挂载"><a href="#7）自动挂载" class="headerlink" title="7）自动挂载"></a>7）自动挂载</h3><p>修改分区自动挂载文件(&#x2F;etc&#x2F;fstab)。此文件直接参与系统启动，如果修改错误，系统启动报错。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# vim /etc/fstab</span><br><span class="line">...</span><br><span class="line">/dev/sdb1              /disk1               ext4            defaults            1                  2</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>第一列：设备文件名</li>
-<li>第二列：挂载点</li>
-<li>第三列：文件系统</li>
-<li>第四列：挂载选项</li>
-<li>第五列：是否可以被备份。0（不备份） 1（每天备份） 2（不定期备份）</li>
-<li>第六列：是否检测磁盘。0（不检测） 1（启动时检测） 2（启动后检测）</li>
-</ul>
-<p>也可以使用UUID进行挂载，UUID（硬盘通用唯一识别码，可以理解为硬盘的ID）。</p>
-<ul>
-<li>这个字段在CentOS 5.5的系统当中是写入分区的卷标名或分区设备文件名的，现在变更成硬盘的UUID。这样做的好处是当硬盘增加了新的分区，或者分区的顺序改变，再或者内核升级后，仍然能够保证分区能够正确的加载，而不至于造成启动障碍。</li>
-<li>dumpe2fs命令可以查看磁盘状态</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# dumpe2fs /dev/sdb5</span><br></pre></td></tr></table></figure>
-
-<p>或者：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# ls -l /dev/disk/by-uuid/</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="8）重启测试"><a href="#8）重启测试" class="headerlink" title="8）重启测试"></a>8）重启测试</h3><p>或者使用”mount -a”重新挂载所有内容，用它进行测试。</p>
-<h2 id="5-etc-fstab文件修复"><a href="#5-etc-fstab文件修复" class="headerlink" title="5. &#x2F;etc&#x2F;fstab文件修复"></a>5. &#x2F;etc&#x2F;fstab文件修复</h2><ul>
-<li><p>服务器连接显示器输入root密码登录系统。</p>
-</li>
-<li><p>此时根目录为只读文件系统，需要重新挂载</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# mount -o remount,rw /</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>修改&#x2F;etc&#x2F;fstab文件内容至正确。</p>
-</li>
-<li><p>重启服务器</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# reboot</span><br></pre></td></tr></table></figure></li>
-</ul>
-<h2 id="6-parted命令分区"><a href="#6-parted命令分区" class="headerlink" title="6 parted命令分区"></a>6 parted命令分区</h2><p>Linux系统中有两种常见的分区表：</p>
-<ul>
-<li><p>MBR分区表（主引导记录分区表）</p>
-<p>支持的最大分区是2TB，最多支持4个主分区，或3个主分区1个扩展分区。</p>
-</li>
-<li><p>GPT分区表（GUID分区表）</p>
-<p>支持最大18EB分区，最多支持128个分区，其中1个系统保留分区，127个用户自定义分区。</p>
-</li>
-</ul>
-<p>不过parted命令也有点小问题，就是命令自身分区的时候只能格式化成ext2文件系统，不支持ext3和ext4文件系统。不过这没有太多的影响，因为我们可以先分区再用mkfs进行格式化。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# parted 硬盘</span><br></pre></td></tr></table></figure>
-
-<table>
-<thead>
-<tr>
-<th>parted交互命令</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>check NUMBER</td>
-<td>做一次简单的文件系统检测</td>
-</tr>
-<tr>
-<td>cp [FROM-DEVICE] FROM-NUMBER TO NUMBER</td>
-<td>复制文件系统到另一个分区</td>
-</tr>
-<tr>
-<td>help [COMMAND]</td>
-<td>显示所有的命令帮助</td>
-</tr>
-<tr>
-<td>mklabel,mktable LABEL-TYPE</td>
-<td>创建新的磁盘卷标(分区表)</td>
-</tr>
-<tr>
-<td>mkfs NUMBER FS-TYPE</td>
-<td>在分区上建立文件系统</td>
-</tr>
-<tr>
-<td>mkpart PART-TYPE [FS-TYPE] START END</td>
-<td>创建一个分区</td>
-</tr>
-<tr>
-<td>mkpartfs PART-TYPE FS-TYPE START END</td>
-<td>创建分区，并建立文件系统</td>
-</tr>
-<tr>
-<td>move NUMBER START END</td>
-<td>移动分区</td>
-</tr>
-<tr>
-<td>name NUMBER NAME</td>
-<td>给分区命名</td>
-</tr>
-<tr>
-<td>print [devices|free|list,all|NUMBER]</td>
-<td>显示分区表，活动设备，空闲空间，所有分区</td>
-</tr>
-<tr>
-<td>quit</td>
-<td>退出</td>
-</tr>
-<tr>
-<td>rescue START END</td>
-<td>修复丢失的分区</td>
-</tr>
-<tr>
-<td>resize NUMBER START END</td>
-<td>修改分区大小</td>
-</tr>
-<tr>
-<td>rm NUMBER</td>
-<td>删除分区</td>
-</tr>
-<tr>
-<td>select DEVICE</td>
-<td>选择需要编辑的设备</td>
-</tr>
-<tr>
-<td>set NUMBER FLAG STATE</td>
-<td>改变分区标记</td>
-</tr>
-<tr>
-<td>toggle [NUMBER [FLAG]]</td>
-<td>切换分区表的状态</td>
-</tr>
-<tr>
-<td>unit UNIT</td>
-<td>设置默认的单位</td>
-</tr>
-<tr>
-<td>Version</td>
-<td>显示版本</td>
-</tr>
-</tbody></table>
-<h3 id="1）查看分区"><a href="#1）查看分区" class="headerlink" title="1）查看分区"></a>1）查看分区</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# parted /dev/sdb</span><br><span class="line">(parted) print                                 # 输入print指令</span><br><span class="line">Model： VMware, VMware Virtual S（scsi）        # 硬盘参数</span><br><span class="line">Disk /dev/sdb：21.5GB                           # 硬盘大小</span><br><span class="line">Sector size (logical/physical)：512B/512B       # 扇区大小</span><br><span class="line">Partition Table：msdos                          # 分区表类型，就是MBR分区表</span><br><span class="line">Number      Start    End     Size    Type    File system    标志</span><br><span class="line">1           32.3kB   5379MB  5379MB   primary</span><br></pre></td></tr></table></figure>
-
-<h3 id="2）修改成GPT分区表"><a href="#2）修改成GPT分区表" class="headerlink" title="2）修改成GPT分区表"></a>2）修改成GPT分区表</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# parted /dev/sdb</span><br><span class="line">（parted）mklabel gpt</span><br><span class="line">警告：正在使用/dev/sdb上的分区                            # 由于/dev/sdb分区已经挂载，所以有警告</span><br><span class="line"></span><br><span class="line">忽略/Ingore/放弃/Cancel? ignore                         # 输入ignore忽略报错</span><br><span class="line">警告：The existing disk label on /dev/sdb will be destroyed and all data on this disk will be lost, Do you want to continue?</span><br><span class="line">是/Yes/否/No? yes                                       # 输入yes</span><br><span class="line">警告：WARNING：the kernel failed to re-read the partition table on /dev/sdb（设备或资源忙）. As a result,it may not reflect all of your changes until after reboot.                        # 下次重启后，才能生效</span><br><span class="line"></span><br><span class="line">（parted）print                                          # 查看分区表</span><br><span class="line">Model：VMware, VMware Virtual S （scsi）</span><br><span class="line">Disk /dev/sdb：21.5GB</span><br><span class="line">Sector size （logical/physical）：512B/512B</span><br><span class="line">Partition Table: gpt                                     # 分区表已经变成GPT</span><br><span class="line"></span><br><span class="line">Number    Start    End    Size    File system    Name    标志          # 所有的分区都消失了</span><br></pre></td></tr></table></figure>
-
-<p>修改了分区表，如果这块硬盘已经有分区了，那么原有分区和分区中的数据都会消失，而且需要重启系统才会生效。</p>
-<p>转换分区表的目的是为了支持大于2TB的分区，如果分区并没有大于2TB，那么这步是可以不执行的。</p>
-<p>**注意：**一定要把&#x2F;etc&#x2F;fstab文件中和原有分区的内容删除掉，才能重启，不然系统重启一定会报错。</p>
-<h3 id="3）建立分区"><a href="#3）建立分区" class="headerlink" title="3）建立分区"></a>3）建立分区</h3><p>因为修改过分区表，所以&#x2F;dev&#x2F;sdb中的所有数据丢失了。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# parted /dev/sdb</span><br><span class="line">（parted）mkpart                                    # 输入创建分区命令</span><br><span class="line">分区名称?  []? disk1                                 # 分区名称</span><br><span class="line">文件系统类型？  [ext2]?                               # 文件系统类型，直接回车，使用默认ext2</span><br><span class="line">起始点? 1MB                                          # 分区从1MB开始</span><br><span class="line">结束点? 5GB                                          # 分区到5GB结束</span><br><span class="line">(parted) print                                      # 查看分区</span><br><span class="line">Model：VMware, VMware Virtual S （scsi）</span><br><span class="line">Disk /dev/sdb：21.5GB</span><br><span class="line">Sector size （logical/physical）：512B/512B</span><br><span class="line">Partition Table: gpt</span><br><span class="line"></span><br><span class="line">Number    Start    End    Size    File system    Name    标志</span><br><span class="line">1         1049kB   5000MB  4999MB                disk1</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="4）建立文件系统"><a href="#4）建立文件系统" class="headerlink" title="4）建立文件系统"></a>4）建立文件系统</h3><p>分区分完了，还需要格式化。不过如果使用parted交互命令格式化的话，只能格式化成ext2文件系统。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">（parted）mkfs</span><br><span class="line">WARNING：you are attempting to use parted to operate on （mkfs） a file system. parted&#x27;s file system manipulation code is not as rebust as what you&#x27;ll find in dedicated, file-system-specific packages like e2fsprogs. We recommand you use parted only to manipulate partition tables, whenever possible. Support for performing most operations on most types of file systems will be removed in an upcoming release.</span><br><span class="line">警告：The existing file system will be destoryed and all data on the partition will be lost.</span><br><span class="line">Do you want to continue?</span><br><span class="line">是/Yes/否/No? yes                                # 警告你格式化数据会丢失</span><br><span class="line">分区编号? 1</span><br><span class="line">文件系统类型?  [ext2]?                             # 指定文件系统类型</span><br><span class="line">(parted) print                                      # 查看分区</span><br><span class="line">Model：VMware, VMware Virtual S （scsi）</span><br><span class="line">Disk /dev/sdb：21.5GB</span><br><span class="line">Sector size （logical/physical）：512B/512B</span><br><span class="line">Partition Table: gpt</span><br><span class="line"></span><br><span class="line">Number    Start    End    Size    File system    Name    标志</span><br><span class="line">1         1049kB   5000MB  4999MB    ext2        disk1</span><br></pre></td></tr></table></figure>
-
-<p>如果要格式化成ext4文件系统，需要使用Linux的mkfs命令。</p>
-<h3 id="5）删除分区"><a href="#5）删除分区" class="headerlink" title="5）删除分区"></a>5）删除分区</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">(parted) rm                                     # 删除分区命令</span><br><span class="line">分区编号? 1                                      # 指定分区号</span><br><span class="line">(parted) print                                      # 查看分区</span><br><span class="line">Model：VMware, VMware Virtual S （scsi）</span><br><span class="line">Disk /dev/sdb：21.5GB</span><br><span class="line">Sector size （logical/physical）：512B/512B</span><br><span class="line">Partition Table: gpt</span><br><span class="line"></span><br><span class="line">Number    Start    End    Size    File system    Name    标志</span><br></pre></td></tr></table></figure>
-
-<p>parted中的所有操作都是立即生效，没有保存生效的概念，这点和fdisk交互命令明显不同。</p>
-<p>至于到底使用fdisk还是parted进行分区？推荐分区大小小于2GB，使用fdisk分区；分区大小大于2GB，使用parted分区。 </p>
-<h2 id="7-swap分区"><a href="#7-swap分区" class="headerlink" title="7. swap分区"></a>7. swap分区</h2><h3 id="1）分区"><a href="#1）分区" class="headerlink" title="1）分区"></a>1）分区</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# fdisk /dev/sdb</span><br><span class="line">Command (m for help): t                               # 修改分区的系统id</span><br><span class="line">Selected partition 1                                  # 选择分区</span><br><span class="line">Hex code (type L to list codes)：82                    # 改为swap的id</span><br><span class="line">Changed system type of partition 1 to 82 (Linux swap / Solaris)</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="2）格式化"><a href="#2）格式化" class="headerlink" title="2）格式化"></a>2）格式化</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# mkswap /dev/sdb1</span><br><span class="line">Setting up swapspace version 1, size = 522076 KiB</span><br><span class="line">no label, UUID=C3351dc3-f403-419a-9666-c24615e170fb</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="3）挂载"><a href="#3）挂载" class="headerlink" title="3）挂载"></a>3）挂载</h3><p>swap空间支持扩容。扩容也使用swapon命令</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# swapon /dev/sdb1</span><br></pre></td></tr></table></figure>
-
-<p>开机自动挂载：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# vim /etc/fstab</span><br><span class="line">...</span><br><span class="line">/dev/sdb1      swap      swap      defaults      0      0</span><br></pre></td></tr></table></figure>
-
-<p>也可以使用uuid。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -3979,7 +3627,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">16</span>
+          <span class="site-state-item-count">17</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
