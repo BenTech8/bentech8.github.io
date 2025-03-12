@@ -2666,6 +2666,24 @@
       </categories>
   </entry>
   <entry>
+    <title>nginx原理</title>
+    <url>/2025/03/12/nginx%E5%8E%9F%E7%90%86/</url>
+    <content><![CDATA[<h2 id="同步与异步"><a href="#同步与异步" class="headerlink" title="同步与异步"></a>同步与异步</h2><p>同步与异步的重点在消息通知的方式上，也就是调用结果的通知方式不同。</p>
+<p>同步：当一个同步调用发出去后，调用者要一直等待调用的结果通知后，才能进行后续的执行。</p>
+<p>异步：当一个异步调用发出去后，调用者不必一直等待调用结果的返回，异步调用要想获得结果，一般有两种方式：</p>
+<ul>
+<li>主动轮询异步调用的结果；</li>
+<li>被调用方通过callback(回调通知)来通知调用方调用结果。</li>
+</ul>
+<h2 id="阻塞与非阻塞"><a href="#阻塞与非阻塞" class="headerlink" title="阻塞与非阻塞"></a>阻塞与非阻塞</h2><p>阻塞与非阻塞的重点在于进&#x2F;线程等待消息时候的行为，也就是在等待消息的时候，当前进&#x2F;线程是挂起状态，还是非挂起状态。</p>
+<p>阻塞：调用在发出去后，在消息返回之前，当前进&#x2F;线程会被挂起，直到有消息返回，当前进&#x2F;线程才会被激活。</p>
+<p>非阻塞：调用在发出去后，不会阻塞当前进&#x2F;线程，而会立即返回。</p>
+<h2 id="epoll模型"><a href="#epoll模型" class="headerlink" title="epoll模型"></a>epoll模型</h2><h2 id="Nginx工作原理"><a href="#Nginx工作原理" class="headerlink" title="Nginx工作原理"></a>Nginx工作原理</h2>]]></content>
+      <categories>
+        <category>Nginx</category>
+      </categories>
+  </entry>
+  <entry>
     <title>vim编辑器</title>
     <url>/2025/02/25/vim%E7%BC%96%E8%BE%91%E5%99%A8/</url>
     <content><![CDATA[<h1 id="vim编辑器"><a href="#vim编辑器" class="headerlink" title="vim编辑器"></a>vim编辑器</h1><p>vim是一个全屏幕纯文本编辑器，是vi编辑器的增强版。</p>
@@ -3912,7 +3930,7 @@
 </tr>
 <tr>
 <td>mail address</td>
-<td>当日志轮替时，输出内容通过邮件发送到指定的邮件地址。如mail <a href="mailto:&#x61;&#97;&#97;&#x40;&#49;&#x36;&#51;&#46;&#x63;&#x6f;&#109;">aaa@163.com</a></td>
+<td>当日志轮替时，输出内容通过邮件发送到指定的邮件地址。如mail <a href="mailto:&#97;&#97;&#97;&#64;&#49;&#54;&#51;&#46;&#x63;&#111;&#109;">aaa@163.com</a></td>
 </tr>
 <tr>
 <td>missingok</td>
