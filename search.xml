@@ -2668,24 +2668,6 @@
   <entry>
     <title>nginx原理</title>
     <url>/2025/03/12/nginx%E5%8E%9F%E7%90%86/</url>
-    <content><![CDATA[<h2 id="同步与异步"><a href="#同步与异步" class="headerlink" title="同步与异步"></a>同步与异步</h2><p>同步与异步的重点在消息通知的方式上，也就是调用结果的通知方式不同。</p>
-<p>同步：当一个同步调用发出去后，调用者要一直等待调用的结果通知后，才能进行后续的执行。</p>
-<p>异步：当一个异步调用发出去后，调用者不必一直等待调用结果的返回，异步调用要想获得结果，一般有两种方式：</p>
-<ul>
-<li>主动轮询异步调用的结果；</li>
-<li>被调用方通过callback(回调通知)来通知调用方调用结果。</li>
-</ul>
-<h2 id="阻塞与非阻塞"><a href="#阻塞与非阻塞" class="headerlink" title="阻塞与非阻塞"></a>阻塞与非阻塞</h2><p>阻塞与非阻塞的重点在于进&#x2F;线程等待消息时候的行为，也就是在等待消息的时候，当前进&#x2F;线程是挂起状态，还是非挂起状态。</p>
-<p>阻塞：调用在发出去后，在消息返回之前，当前进&#x2F;线程会被挂起，直到有消息返回，当前进&#x2F;线程才会被激活。</p>
-<p>非阻塞：调用在发出去后，不会阻塞当前进&#x2F;线程，而会立即返回。</p>
-<h2 id="epoll模型"><a href="#epoll模型" class="headerlink" title="epoll模型"></a>epoll模型</h2><h2 id="Nginx工作原理"><a href="#Nginx工作原理" class="headerlink" title="Nginx工作原理"></a>Nginx工作原理</h2>]]></content>
-      <categories>
-        <category>Nginx</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>nginx原理</title>
-    <url>/2025/03/12/nginx%E5%9F%BA%E7%A1%80/</url>
     <content><![CDATA[<h2 id="Nginx概述"><a href="#Nginx概述" class="headerlink" title="Nginx概述"></a>Nginx概述</h2><p>Nginx是一个高性能的HTTP和反向代理web服务器，同时也提供了IMAP&#x2F;POP3&#x2F;SMTP服务。Nginx是由伊戈尔、赛索耶夫为俄罗斯访问第二的Rambler.ru站点开发的，第一个公开版本0.1.0发布于2004年10月4日。</p>
 <p>Nginx是一款轻量级的Web服务器&#x2F;反向代理服务器及电子邮件(IMAP&#x2F;POP3)代理服务器，在BSD-like协议下发行。其特点是占有内存少，并发能力强。</p>
 <h2 id="Nginx工作原理"><a href="#Nginx工作原理" class="headerlink" title="Nginx工作原理"></a>Nginx工作原理</h2><h3 id="同步与异步"><a href="#同步与异步" class="headerlink" title="同步与异步"></a>同步与异步</h3><p>同步与异步的重点在消息通知的方式上，也就是调用结果的通知方式不同。</p>
@@ -4088,7 +4070,7 @@
 </tr>
 <tr>
 <td>mail address</td>
-<td>当日志轮替时，输出内容通过邮件发送到指定的邮件地址。如mail <a href="mailto:&#x61;&#x61;&#x61;&#x40;&#x31;&#54;&#51;&#46;&#99;&#111;&#x6d;">aaa@163.com</a></td>
+<td>当日志轮替时，输出内容通过邮件发送到指定的邮件地址。如mail <a href="mailto:&#x61;&#97;&#97;&#x40;&#49;&#54;&#51;&#x2e;&#x63;&#x6f;&#109;">aaa@163.com</a></td>
 </tr>
 <tr>
 <td>missingok</td>

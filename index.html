@@ -345,83 +345,6 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2025-03-12 06:03:50 / 修改时间：06:13:41" itemprop="dateCreated datePublished" datetime="2025-03-12T06:03:50+08:00">2025-03-12</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Nginx/" itemprop="url" rel="index"><span itemprop="name">Nginx</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="同步与异步"><a href="#同步与异步" class="headerlink" title="同步与异步"></a>同步与异步</h2><p>同步与异步的重点在消息通知的方式上，也就是调用结果的通知方式不同。</p>
-<p>同步：当一个同步调用发出去后，调用者要一直等待调用的结果通知后，才能进行后续的执行。</p>
-<p>异步：当一个异步调用发出去后，调用者不必一直等待调用结果的返回，异步调用要想获得结果，一般有两种方式：</p>
-<ul>
-<li>主动轮询异步调用的结果；</li>
-<li>被调用方通过callback(回调通知)来通知调用方调用结果。</li>
-</ul>
-<h2 id="阻塞与非阻塞"><a href="#阻塞与非阻塞" class="headerlink" title="阻塞与非阻塞"></a>阻塞与非阻塞</h2><p>阻塞与非阻塞的重点在于进&#x2F;线程等待消息时候的行为，也就是在等待消息的时候，当前进&#x2F;线程是挂起状态，还是非挂起状态。</p>
-<p>阻塞：调用在发出去后，在消息返回之前，当前进&#x2F;线程会被挂起，直到有消息返回，当前进&#x2F;线程才会被激活。</p>
-<p>非阻塞：调用在发出去后，不会阻塞当前进&#x2F;线程，而会立即返回。</p>
-<h2 id="epoll模型"><a href="#epoll模型" class="headerlink" title="epoll模型"></a>epoll模型</h2><h2 id="Nginx工作原理"><a href="#Nginx工作原理" class="headerlink" title="Nginx工作原理"></a>Nginx工作原理</h2>
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://bentech8.github.io/2025/03/12/nginx%E5%9F%BA%E7%A1%80/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Ben">
-      <meta itemprop="description" content="E-mail:17620170099@163.com">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Ben">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/03/12/nginx%E5%9F%BA%E7%A1%80/" class="post-title-link" itemprop="url">nginx原理</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
 
               <time title="创建时间：2025-03-12 06:03:50" itemprop="dateCreated datePublished" datetime="2025-03-12T06:03:50+08:00">2025-03-12</time>
             </span>
@@ -857,7 +780,7 @@
 </tr>
 <tr>
 <td>mail address</td>
-<td>当日志轮替时，输出内容通过邮件发送到指定的邮件地址。如mail <a href="mailto:&#x61;&#x61;&#x61;&#x40;&#x31;&#54;&#51;&#46;&#99;&#111;&#x6d;">aaa@163.com</a></td>
+<td>当日志轮替时，输出内容通过邮件发送到指定的邮件地址。如mail <a href="mailto:&#x61;&#97;&#97;&#x40;&#49;&#54;&#51;&#x2e;&#x63;&#x6f;&#109;">aaa@163.com</a></td>
 </tr>
 <tr>
 <td>missingok</td>
@@ -3484,6 +3407,262 @@
   
   
 
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://bentech8.github.io/2025/02/25/%E9%AB%98%E7%BA%A7%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Ben">
+      <meta itemprop="description" content="E-mail:17620170099@163.com">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ben">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/02/25/%E9%AB%98%E7%BA%A7%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86/" class="post-title-link" itemprop="url">高级文件系统管理</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2025-02-25 13:05:22 / 修改时间：13:10:07" itemprop="dateCreated datePublished" datetime="2025-02-25T13:05:22+08:00">2025-02-25</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="高级文件系统管理"><a href="#高级文件系统管理" class="headerlink" title="高级文件系统管理"></a>高级文件系统管理</h1><h2 id="1-磁盘配额"><a href="#1-磁盘配额" class="headerlink" title="1. 磁盘配额"></a>1. 磁盘配额</h2><h3 id="1）磁盘配额条件"><a href="#1）磁盘配额条件" class="headerlink" title="1）磁盘配额条件"></a>1）磁盘配额条件</h3><ul>
+<li><p>内核必须支持磁盘配额</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# grep CONFIG_QUOTA /boot/config-2.6.32-279.el6.i686</span><br><span class="line">CONFIG_QUOTA=y</span><br><span class="line">CONFIG_QUOTA_NETLINK_INTERFACE=y</span><br><span class="line"># CONFIG_QUOTA_DEBUG is not set</span><br><span class="line">CONFIG_QUOTA_TREE=m</span><br><span class="line">CONFIG_QUOTACTL=y</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>系统中必须安装了quota工具，Linux默认是安装了quota工具</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# rpm -qa | grep quota</span><br><span class="line">quota-3.17-16.el6.i686</span><br></pre></td></tr></table></figure>
+
+<p>要支持磁盘配额的分区必须开启磁盘配额功能，这个功能需要手工开启，不再是默认就开启的。</p>
+</li>
+</ul>
+<h3 id="2）概念"><a href="#2）概念" class="headerlink" title="2）概念"></a>2）概念</h3><ul>
+<li>用户配额和组配额</li>
+<li>磁盘容量限制和文件个数限制</li>
+<li>软限制和硬限制</li>
+<li>宽限时间</li>
+</ul>
+<p>如果用户的空间占用数处于软限制和硬限制之间，都会在用户登录时警告用户磁盘将满，这个时间就是宽限时间，默认是7天。如果达到了宽限时间，用户的磁盘占用量还超过软限制，那么软限制就会升级为硬限制。</p>
+<h3 id="3）磁盘配额规划"><a href="#3）磁盘配额规划" class="headerlink" title="3）磁盘配额规划"></a>3）磁盘配额规划</h3><p>磁盘配额实验：</p>
+<ul>
+<li>磁盘配额是限制普通用户在分区上使用磁盘空间和文件个数的，所以我们需要指定一个分区，那么我们手工建立一个5GB的&#x2F;dev&#x2F;sdb1分区，把它挂载到&#x2F;disk目录当中。</li>
+<li>还有我们需要建立被限制的用户和用户组。那么我们假设需要限制user1、user2和user3用户，这三个用户属于test组。</li>
+<li>其中test组磁盘容量硬限制为500MB，软限制450MB，文件个数不做限制。user1用户为了便于测试，磁盘容量硬限制为50MB，软限制为40MB，文件个数硬限制为10个，软限制为8个。user2和user3用户磁盘容量硬限制为250MB，软限制为200MB，文件个数不做限制。</li>
+<li>user1、user2和user3用户加起来的磁盘容量限制为550MB，超过了test组的磁盘容量500MB。这样的话，某个用户可能达不到自己的用户限制，而达到组限制时就不能再写入数据了。也就是说，如果用户限制和组限制同时存在，那么哪个限制更小，哪个限制优先生效。</li>
+<li>系统宽限时间改为8天。</li>
+</ul>
+<p>磁盘配额步骤：</p>
+<ul>
+<li><p>分配5GB的&#x2F;dev&#x2F;sdb1分区，并将它挂载到&#x2F;disk目录当中。</p>
+</li>
+<li><p>建立需要做限制的用户和用户组</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# groupadd test</span><br><span class="line">[root@localhost ~]# useradd -G test user1</span><br><span class="line">[root@localhost ~]# useradd -G test user2</span><br><span class="line">[root@localhost ~]# useradd -G test user3</span><br><span class="line">[root@localhost ~]# passwd user1</span><br><span class="line">[root@localhost ~]# passwd user2</span><br><span class="line">[root@localhost ~]# passwd user3</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在分区上开启磁盘配额功能</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# mount -o remount,usruota,grpquota /disk    # 重新挂载/disk分区，并加入用户和用户组的磁盘配额功能</span><br></pre></td></tr></table></figure>
+
+<p>要想永久生效，则需要修改&#x2F;etc&#x2F;fstab文件：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# vim /etc/fstab</span><br><span class="line">...</span><br><span class="line">/dev/sdb1    /disk    ext4    defaults,usrquota,grpquota    0    0</span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">[root@localhost ~]# mount -o remount /disk    # 修改配置文件如果想要生效，必须重启系统，否则也需要把分区重新挂载一遍</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>建立磁盘配额的配置文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# quotacheck [选项] [分区名]</span><br><span class="line">选项：</span><br><span class="line">  -a：扫描/etc/mtab文件中所有启用磁盘配额功能的分区。如果加入此参数，命令后面就不需要加入分区名了</span><br><span class="line">  -c：不管原有的配置文件，重新扫描并建立新的配置文件</span><br><span class="line">  -u：建立用户配额的配置文件，也就是生成aquota.user文件</span><br><span class="line">  -g：建立组配额的配置文件，会生成aquota.group文件</span><br><span class="line">  -v：显示扫描过程</span><br><span class="line">  -m：强制以读写的方式扫描文件系统，和-M类似。一般扫描根分区时使用。</span><br><span class="line">  -f：强制扫描文件系统，并写入新的配置文件。一般扫描新添加的硬盘分区时使用。</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# quotacheck -avug</span><br></pre></td></tr></table></figure>
+
+<p>需要关闭SELinux，否则会报错。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# ll /disk/</span><br><span class="line">总计 24</span><br><span class="line">-rw-------   1 root root  6144  4月 31 19:30 aquota.group</span><br><span class="line">-rw-------   1 root root  6144  4月 18 19:30 aquota.user</span><br><span class="line"># /disk目录中两个配额配置文件已经建立</span><br></pre></td></tr></table></figure>
+
+<p>如果需要给根分区开启配额功能，需要：</p>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# vim /etc/fstab</span><br><span class="line">...</span><br><span class="line">UUID=c2ca6f57-b15c-43ea-bca0-f239083d8bd2    /    ext4    defaults,usrquota,grpquota    1    1</span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">[root@localhost ~]# mount -o remount /</span><br><span class="line">[root@localhost ~]# quotacheck -avugm</span><br></pre></td></tr></table></figure>
+
+<p>如果我们自动扫描&#x2F;分区建立配额文件时，因为&#x2F;分区已经挂载成读写系统，而quotacheck需要把分区先挂载成只读分区，然后建立配置文件，最后再挂载回来，所以不能直接在&#x2F;分区建立配置文件，这时就需要使用-m强制以读写方式扫描文件系统了。</p>
+<ul>
+<li><p>设置用户和组的配额限制</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# edquota [选项] [用户名或组名]</span><br><span class="line">选项：</span><br><span class="line">  -u 用户名：  设定用户配额</span><br><span class="line">  -g 组名：    设定组配额</span><br><span class="line">  -t：        设定宽限时间</span><br><span class="line">  -p：        复制配额限制。如果已经设定好某个用户的配额限制，其他用户的配额限制如果和这个用户相同，那么可以直接复制配额限制，而不用都手工指定</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# edquota -u user1</span><br><span class="line"># edquota命令进入之后，就是标准的vi操作方法</span><br><span class="line">Disk quotas for user user1（uid 500）：</span><br><span class="line"># 磁盘配额是设定用户user1（UID是500）</span><br><span class="line">Filesystem    blocks        soft     hard     inodes        soft      hard</span><br><span class="line">/dev/sdb1       0           40000    50000      0            8         10</span><br><span class="line"># 分区名        已占用容量    软限制    硬限制     已占用文件数   软限制     硬限制</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>配额复制</p>
+<p>user3用户的配额值和user2用户完全一样，就可以使用user2用户作为模板进行复制，这样我们如果需要建立大量的配额值一致的用户时，就会非常方便，不用一个个手工建立了：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# edquota -p user2 -u user3</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>修改宽限时间</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# edquota -t</span><br><span class="line">Grace period before enforcing soft limits for users:</span><br><span class="line">Time units may be: days, hours, minutes, or seconds</span><br><span class="line">Filesystem    Block grace period    Inode grace period</span><br><span class="line">/dev/sdb1       8days                8days</span><br><span class="line"># 分区名        容量的宽限时间          个数的宽限时间</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>启动和关闭配额</p>
+<p>启动配额：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# quotaon [选项] [分区名]</span><br><span class="line">选项：</span><br><span class="line">  -a：依据/etc/mtab文件启动所有的配额分区。如果不加-a，后面就一定要指定分区名</span><br><span class="line">  -u：启动用户配额</span><br><span class="line">  -g：启动组配额</span><br><span class="line">  -v：显示启动过程的信息</span><br><span class="line">  </span><br><span class="line">[root@localhost ~]# quotaon -vug /disk/        # 启动/disk分区的配额</span><br><span class="line">/dev/sdb1 [/disk]：group quotas turned on</span><br><span class="line">/dev/sdb1 [/disk]：user quotas turned on</span><br><span class="line"></span><br><span class="line">[root@localhost ~]# quotaon -avug        # 这条命令也可以</span><br></pre></td></tr></table></figure>
+
+<p>关闭配额：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# quotaoff [选项] [分区名]</span><br><span class="line">选项：</span><br><span class="line">  -a：依据/etc/mtab文件关闭所有的配额分区。如果不加-a，后面就一定要指定分区名</span><br><span class="line">  -u：关闭用户配额</span><br><span class="line">  -g：关闭组配额</span><br><span class="line">  </span><br><span class="line"> [root@localhost ~]# quotaoff -a        # 依据/etc/mtab文件关闭配额分区</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="4）磁盘配额查询"><a href="#4）磁盘配额查询" class="headerlink" title="4）磁盘配额查询"></a>4）磁盘配额查询</h3><ul>
+<li><p>quota查询用户或用户组配额</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# quota [选项] [用户名或组名]</span><br><span class="line">选项：</span><br><span class="line">  -u 用户名：   查询用户配额</span><br><span class="line">  -g 组名：     查询组配额</span><br><span class="line">  -v：          显示详细信息</span><br><span class="line">  -s：          以习惯单位显示容量大小，如M,G</span><br><span class="line">  </span><br><span class="line">[root@localhost ~]# quota -uvs user1</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>repquota查询文件系统配额</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# repquota [选项] [分区名]</span><br><span class="line">选项：</span><br><span class="line">  -a：    依据/etc/mtab文件查询配额，如果不加-a选项，就一定要加分区名</span><br><span class="line">  -u：    查询用户配额</span><br><span class="line">  -g:     查询组配额</span><br><span class="line">  -v：    显示详细信息</span><br><span class="line">  -s：    以习惯单位显示容量大小</span><br><span class="line"></span><br><span class="line">[root@localhost ~]# repquota -augvs</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="5）测试"><a href="#5）测试" class="headerlink" title="5）测试"></a>5）测试</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[user1@localhost disk]$ dd if=/dev/zero of=/disk/testfile bs=1M count=60    # 建立testfile文件，指定大小60MB</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="6）非交互设定用户磁盘配额"><a href="#6）非交互设定用户磁盘配额" class="headerlink" title="6）非交互设定用户磁盘配额"></a>6）非交互设定用户磁盘配额</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# setquota -u 用户名 容量软限制 容量硬限制 个数软限制 个数硬限制 分区名</span><br><span class="line"></span><br><span class="line">示例：</span><br><span class="line">[root@localhost ~]# setquota -u user4 10000 20000 5 8 /disk</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="2-LVM逻辑卷管理"><a href="#2-LVM逻辑卷管理" class="headerlink" title="2. LVM逻辑卷管理"></a>2. LVM逻辑卷管理</h2><h3 id="1）简介"><a href="#1）简介" class="headerlink" title="1）简介"></a>1）简介</h3><p>LVM是Logical Volume Manager的简称，中文就是逻辑卷管理。</p>
+<ul>
+<li>物理卷(PV, Physical Volume)：就是真正的物理硬盘或分区。</li>
+<li>卷组(VG, Volume Group)：将多个物理卷合起来就组成了卷组，组成同一个卷组的物理卷可以是同一个硬盘的不同分区，也可以是不同硬盘上的不同分区，可以把卷组想象为一个逻辑硬盘。</li>
+<li>逻辑卷(LV, Logical Volume)：卷组是一个逻辑硬盘，硬盘必须分区之后才能使用，这个分区称作逻辑卷，逻辑卷可以格式化和写入数据。可以把逻辑卷想象成为分区。</li>
+<li>物理扩展(PE, Physical Extend)：PE是用来保存数据的最小单元，数据实际上都是写入PE当中，PE的大小是可以配置的，默认是4MB。</li>
+</ul>
+<h3 id="2）建立LVM的步骤"><a href="#2）建立LVM的步骤" class="headerlink" title="2）建立LVM的步骤"></a>2）建立LVM的步骤</h3><ul>
+<li>首先需要把物理硬盘分成分区，当然也可以是整块物理硬盘。</li>
+<li>然后把物理分区建立成为物理卷(PV)，也可以直接把整块硬盘都建立为物理卷。</li>
+<li>接下来把物理卷整合成为卷组(VG)。卷组就已经可以动态的调整大小了，可以把物理分区加入卷组，也可以把物理分区从卷组中删除。</li>
+<li>最后就是把卷组再划分成为逻辑卷(LV)，当然逻辑卷也是可以直接调整大小的。逻辑卷可以想象成为分区，所以也需要格式化和挂载。</li>
+</ul>
+<h3 id="3）物理卷管理"><a href="#3）物理卷管理" class="headerlink" title="3）物理卷管理"></a>3）物理卷管理</h3><p>a）硬盘分区</p>
+<p>创建方式就是使用fdisk交互命令，不过需要注意的是分区的系统ID不再是Linux默认的分区ID号(83)了，而要改为LVM的ID号8e。</p>
+<p>b）建立物理卷</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# pvcreate [设备文件名]</span><br><span class="line"></span><br><span class="line">示例：</span><br><span class="line"># 把整块硬盘都建立成物理卷</span><br><span class="line">[root@localhost ~]# pvcreate /dev/sdb</span><br><span class="line"></span><br><span class="line"># 把分区建立成为物理卷</span><br><span class="line">[root@localhost ~]# pvcreate /dev/sdb5</span><br></pre></td></tr></table></figure>
+
+
+
+<p>c）查看物理卷</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# pvscan</span><br><span class="line">[root@localhost ~]# pvdisplay        # 更详细的物理卷信息</span><br></pre></td></tr></table></figure>
+
+
+
+<p>d）删除物理卷</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# pvremove /dev/sdb5</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="4）卷组管理"><a href="#4）卷组管理" class="headerlink" title="4）卷组管理"></a>4）卷组管理</h3><p>a）建立卷组</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# vgcreate [选项] 卷组名 物理卷名</span><br><span class="line">[选项]：</span><br><span class="line">  -s PE大小    指定PE的大小，单位可以是MB,GB,TB等。如是不写默认PE大小为4MB</span><br></pre></td></tr></table></figure>
+
+<p>示例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# vgcreate -s 8MB scvg /dev/sdb5 /dev/sdb6</span><br></pre></td></tr></table></figure>
+
+
+
+<p>b）查看卷组</p>
+<p>查看卷组的命令有两个：</p>
+<ul>
+<li><p>vgscan</p>
+<p>vgscan主要是查看系统中是否有卷组。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# vgscan</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>vgdisplay</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# vgdisplay</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>c）增加卷组容量</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# vgextend scvg /dev/sdb7</span><br></pre></td></tr></table></figure>
+
+
+
+<p>d）减小卷组容量</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># 在卷组中删除/dev/sdb7物理卷</span><br><span class="line">[root@localhost ~]# vgreduce scvg /dev/sdb7</span><br><span class="line"># 删除所有的未使用物理卷</span><br><span class="line">[root@localhost ~]# vgreduce -a</span><br></pre></td></tr></table></figure>
+
+
+
+<p>e）删除卷组</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# vgremove scvg</span><br></pre></td></tr></table></figure>
+
+<p>卷组删除之后，才能删除物理卷，要注意的是scvg卷组还没有添加任何的逻辑卷，如果拥有了逻辑卷，得先删除逻辑卷再删除卷组。</p>
+<h3 id="5）逻辑卷管理"><a href="#5）逻辑卷管理" class="headerlink" title="5）逻辑卷管理"></a>5）逻辑卷管理</h3><p>a）建立逻辑卷</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# lvcreate [选项] [-n 逻辑卷名] 卷组名</span><br><span class="line">选项：</span><br><span class="line">  -L 容量：指定逻辑卷大小，单位MB，GB，TB等</span><br><span class="line">  -l 个数：按照PE个数指定逻辑卷大小，这个参数需要换算容量，太麻烦</span><br><span class="line">  -n 逻辑卷名：指定逻辑卷名</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# lvcreate -L 1.5G -n userlv scvg    # 在scvg卷组中建立1.5GB的userlv逻辑卷</span><br></pre></td></tr></table></figure>
+
+<p>建立完成逻辑卷之后，还要格式化和挂载之后逻辑卷才能正常使用。不过需要注意的是逻辑卷的设备文件名是&#x2F;dev&#x2F;卷组名&#x2F;逻辑卷名。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# mkfs -t ext4 /dev/scvg/userlv</span><br><span class="line">[root@localhost ~]# mkdir /disklvm</span><br><span class="line">[root@localhost ~]# mount /dev/scvg/userlv /disklvm/</span><br><span class="line">[root@localhost ~]# mount      # 查看挂载</span><br></pre></td></tr></table></figure>
+
+<p>如果需要开机自动挂载，也要修改&#x2F;etc&#x2F;fstab文件。</p>
+<p>b）查看逻辑卷</p>
+<p>查看命令有两个：</p>
+<ul>
+<li><p>lvscan</p>
+<p>lvscan只能看到系统中是否拥有逻辑卷。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# lvscan</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>lvdisplay</p>
+<p>lvdisplay可以看到逻辑卷的详细信息。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# lvdisplay</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>c）调整逻辑卷大小</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# lvresize [选项] 逻辑卷设备文件名</span><br><span class="line">选项：</span><br><span class="line">  -L 容量：安装容量调整大小，单位KB,GB,TB等。使用+代表增加空间，-号代表减少空间。如果直接写容量，代表设定逻辑卷大小为指定大小。</span><br><span class="line">  -l 个数：按照PE个数调整逻辑卷大小</span><br></pre></td></tr></table></figure>
+
+<p>示例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# lvresize -L 2.5.G /dev/scvg/userlv</span><br><span class="line">[root@localhost ~]# lvdisplay               # 逻辑卷的大小已经改变了</span><br><span class="line">[root@localhost ~]# df -h /disklvm/         # 大小没有变化</span><br></pre></td></tr></table></figure>
+
+<p>lvresize只能改变逻辑卷的大小，如果需要让分区使用这个新逻辑卷，还要使用resize2fs命令来调整分区的大小。不过这里体现了LVM的优势，不需要卸载分区，直接就能调整分区的大小。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# resize2fs [选项] [设备文件名] [调整的大小]</span><br><span class="line">选项：</span><br><span class="line">  -f：    强制调整</span><br><span class="line">  设备文件名：指定调整哪个分区的大小</span><br><span class="line">  调整的大小：指定把分区调整到多大，要加M,G等单位。如果不加大小，会使用整个分区</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# resize2fs /dev/scvg/userlv</span><br><span class="line">[root@localhost ~]# df -h /disklvm/       # 已经调整过来了</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="4）删除逻辑卷"><a href="#4）删除逻辑卷" class="headerlink" title="4）删除逻辑卷"></a>4）删除逻辑卷</h3><p>删除逻辑卷前要先卸载。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# lvremove 逻辑卷设备文件名</span><br></pre></td></tr></table></figure>
+
+
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
 
   
   <nav class="pagination">
@@ -3553,7 +3732,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">18</span>
+          <span class="site-state-item-count">17</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
