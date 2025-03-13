@@ -2741,6 +2741,107 @@
       </categories>
   </entry>
   <entry>
+    <title>nginx配置详解</title>
+    <url>/2025/03/13/nginx%E9%85%8D%E7%BD%AE%E8%AF%A6%E8%A7%A3/</url>
+    <content><![CDATA[<h2 id="配置文件结构"><a href="#配置文件结构" class="headerlink" title="配置文件结构"></a>配置文件结构</h2><figure class="highlight nginx"><table><tr><td class="code"><pre><span class="line"><span class="attribute">user</span>	www www;</span><br><span class="line"><span class="comment"># 程序运行用户和组</span></span><br><span class="line"><span class="attribute">worker_processes</span>	auto;</span><br><span class="line"><span class="comment"># 启动进程，指定nginx启动的工作进程数量，建议按照cpu数目来指定，一般等于cpu核心数目</span></span><br><span class="line"><span class="attribute">error_log</span>	/home/wwwlogs/nginx_error.log	<span class="literal">crit</span>;</span><br><span class="line"><span class="comment"># 全局错误日志</span></span><br><span class="line"><span class="attribute">pid</span>		/usr/local/nginx/logs/nginx.pid;</span><br><span class="line"><span class="comment"># 主进程PID保存文件</span></span><br><span class="line"><span class="attribute">worker_rlimit_nofile</span>	<span class="number">51200</span>;</span><br><span class="line"><span class="comment"># 文件描述符数量</span></span><br><span class="line">events&#123;</span><br><span class="line">    <span class="attribute">use</span> <span class="literal">epoll</span>;</span><br><span class="line">    <span class="comment"># 使用expoll模型，对于2.6以上的内核，建议使用epoll模型以提高性能</span></span><br><span class="line">    <span class="attribute">worker_connections</span> <span class="number">51200</span>;</span><br><span class="line">    <span class="comment"># 工作进程的最大连接数量</span></span><br><span class="line">&#125;</span><br><span class="line">http&#123;</span><br><span class="line">    <span class="comment"># 网站优化参数</span></span><br><span class="line">    server&#123;								<span class="comment"># 具体的某一网站的配置信息</span></span><br><span class="line">        <span class="attribute">listen</span>	<span class="number">80</span>;						<span class="comment"># 监听端口</span></span><br><span class="line">        <span class="attribute">root</span> 	html;					<span class="comment"># 网页根目录(/usr/local/nginx/html)</span></span><br><span class="line">        <span class="attribute">server_name</span>	www.atguigu.com;	<span class="comment"># 服务器域名</span></span><br><span class="line">        <span class="attribute">index</span>	index.html;				<span class="comment"># 默认加载页面</span></span><br><span class="line">        <span class="attribute">access_log</span>	logs/access.log;	<span class="comment"># 访问日志保存位置</span></span><br><span class="line">        ......;</span><br><span class="line">        <span class="section">location</span> (.*)\.php$ &#123;</span><br><span class="line">            用于正则匹配具体的访问对象；</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="section">location</span> &#123;</span><br><span class="line">            跳转等规则；</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="section">server</span> &#123;</span><br><span class="line">        虚拟主机;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h2><ul>
+<li><p>注意配置文件中的结尾有“;”作为结束。</p>
+</li>
+<li><p>每次实验修改完配置文件后需要重启nginx才会生效。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">pkill -HUP nginx</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="应用示例"><a href="#应用示例" class="headerlink" title="应用示例"></a>应用示例</h2><h3 id="nginx状态统计"><a href="#nginx状态统计" class="headerlink" title="nginx状态统计"></a>nginx状态统计</h3><ul>
+<li><p>安装nginx时将–with-http_stub_status_module模块开启。</p>
+</li>
+<li><p>修改nginx配置文件(写入要访问的server标签中)</p>
+<figure class="highlight nginx"><table><tr><td class="code"><pre><span class="line"><span class="section">location</span> /nginx_status &#123;</span><br><span class="line">    <span class="attribute">stub_status</span>	<span class="literal">on</span>;</span><br><span class="line">    <span class="attribute">access_log</span>	<span class="literal">off</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>客户端访问网址：<a href="http://ip/nginx_status">http://IP/nginx_status</a></p>
+<ul>
+<li>Active connections：表示当前的活动连接数；</li>
+<li>server accetps handled request：表示已经处理的连接信息。三个数字依次表示已处理的连接数、成功的TCP握手次数、已处理的请求数。</li>
+</ul>
+</li>
+</ul>
+<h3 id="目录保护"><a href="#目录保护" class="headerlink" title="目录保护"></a>目录保护</h3><ul>
+<li><p>原理和apache的目录保护原理一样。</p>
+</li>
+<li><p>在状态统计的location中添加：</p>
+<figure class="highlight nginx"><table><tr><td class="code"><pre><span class="line"><span class="attribute">auth_basic</span> <span class="string">&quot;Welcome to nginx_status!&quot;</span>;</span><br><span class="line"><span class="attribute">auth_basic_user_file</span>	/usr/local/nginx/html/htpasswd.nginx;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用http的命令htpasswd进行用户密码文件的创建</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">htpasswd -c /usr/local/nginx/html/htpasswd.nginx user</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>重启nginx并再次访问统计页面</p>
+</li>
+</ul>
+<h3 id="基于IP的身份验证-访问控制"><a href="#基于IP的身份验证-访问控制" class="headerlink" title="基于IP的身份验证(访问控制)"></a>基于IP的身份验证(访问控制)</h3><ul>
+<li><p>在状态统计的location中添加：</p>
+<figure class="highlight nginx"><table><tr><td class="code"><pre><span class="line"><span class="attribute">allow</span>	<span class="number">192.168.88.1</span>;</span><br><span class="line"><span class="attribute">deny</span>	<span class="number">192.168.88.0</span>/<span class="number">24</span>;</span><br><span class="line"><span class="comment"># 仅允许192.168.88.1访问服务器</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="nginx的虚拟主机-基于域名"><a href="#nginx的虚拟主机-基于域名" class="headerlink" title="nginx的虚拟主机(基于域名)"></a>nginx的虚拟主机(基于域名)</h3><ul>
+<li><p>提前准备好两个网站的域名，并且规划好两个网站网页存放目录</p>
+</li>
+<li><p>在Nginx主配置文件中并列编写两个server标签，并分别写好各自信息</p>
+<figure class="highlight nginx"><table><tr><td class="code"><pre><span class="line"><span class="section">server</span> &#123;</span><br><span class="line">    <span class="attribute">listen</span> 			<span class="number">80</span>;</span><br><span class="line">    <span class="attribute">server_name</span>		blog.atguigu.com;</span><br><span class="line">    <span class="attribute">index</span> 			index.html index htm index.php;</span><br><span class="line">    <span class="attribute">root</span> 			html/blog;</span><br><span class="line">    <span class="attribute">access_log</span>		logs/blog-access.log main;</span><br><span class="line">&#125;</span><br><span class="line"><span class="section">server</span> &#123;</span><br><span class="line">    <span class="attribute">listen</span>			<span class="number">80</span>;</span><br><span class="line">    <span class="attribute">server_name</span>		bbs.atguigu.com;</span><br><span class="line">    <span class="attribute">index</span> 			index.html index.htm index.php;</span><br><span class="line">    <span class="attribute">root</span>			html/bbs;</span><br><span class="line">    <span class="attribute">access_log</span>		logs/bbs-access.log main;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>分别访问两个不同的域名验证结果</p>
+</li>
+</ul>
+<h3 id="nginx的反向代理"><a href="#nginx的反向代理" class="headerlink" title="nginx的反向代理"></a>nginx的反向代理</h3><p>代理：找别人代替你去完成一件你完成不成的事(代购)，代理的对象是客户端</p>
+<p>反向代理：替成厂家卖东西的人就叫反向代理(烟酒代理)，代理的对象是服务器端</p>
+<ul>
+<li><p>在另外一台机器上安装apache，启动并填写测试页面</p>
+</li>
+<li><p>在nginx服务器的配置文件中添加（写在某一个网站的server标签内）</p>
+<figure class="highlight nginx"><table><tr><td class="code"><pre><span class="line"><span class="section">location</span> / &#123;</span><br><span class="line">    <span class="attribute">proxy_pass</span> http://192.168.88.100:80;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>重启nginx，并使用客户端访问测试</p>
+</li>
+</ul>
+<h3 id="负载调度-负载均衡"><a href="#负载调度-负载均衡" class="headerlink" title="负载调度(负载均衡)"></a>负载调度(负载均衡)</h3><p>负载均衡（Load Balance）其意思就是将任务分摊到多个操作单元上进行执行，例如Web服务器、FTP服务器、企业关键应用服务器和其他关键任务服务器等，从而共同完成工作任务。</p>
+<ul>
+<li><p>使用默认的rr轮询算法，修改nginx配置文件</p>
+<figure class="highlight nginx"><table><tr><td class="code"><pre><span class="line"><span class="section">upstream</span> bbs &#123;</span><br><span class="line">    <span class="attribute">server</span> <span class="number">192.168.88.100:80</span>;</span><br><span class="line">    <span class="attribute">server</span> <span class="number">192.168.88.200:80</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="section">server</span> &#123;</span><br><span class="line">    ......;</span><br><span class="line">    <span class="section">location</span> / &#123;</span><br><span class="line">        <span class="attribute">proxy_pass</span>		http://bbs;			<span class="comment"># 添加反向代理，代理地址填写upstream声明的名字</span></span><br><span class="line">        <span class="attribute">proxy_set_header</span> Host <span class="variable">$host</span>;		<span class="comment"># 重写请求头部，保证网站所有页面都可访问成功</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>开启并设置两台88.100和88.200的主机</p>
+<p>安装apache并设置不同的index.html页面内容(设置不同页面是为了看实验效果)</p>
+</li>
+<li><p>重启nginx，并使用客户端访问测试</p>
+</li>
+</ul>
+<p>rr算法实现加权轮询</p>
+<figure class="highlight nginx"><table><tr><td class="code"><pre><span class="line"><span class="section">upstream</span> bbs &#123;</span><br><span class="line">    <span class="attribute">server</span>	<span class="number">192.168.88.100:80</span> weight=<span class="number">1</span>;</span><br><span class="line">    <span class="attribute">server</span>	<span class="number">192.168.88.200:80</span> weight=<span class="number">2</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="nginx实现https（证书-rewrite）"><a href="#nginx实现https（证书-rewrite）" class="headerlink" title="nginx实现https（证书+rewrite）"></a>nginx实现https（证书+rewrite）</h3><ul>
+<li><p>安装nginx时，需要将–with-http_ssl_module模块开启</p>
+</li>
+<li><p>在对应要进行加密的server标签中添加以下内容开启SSL</p>
+<figure class="highlight nginx"><table><tr><td class="code"><pre><span class="line"><span class="section">server</span> &#123;</span><br><span class="line">    ......;</span><br><span class="line">    <span class="attribute">ssl</span>							<span class="literal">on</span>;</span><br><span class="line">    <span class="attribute">ssl_certificate</span>				/usr/local/nginx/conf/ssl/atguigu.crt;</span><br><span class="line">    <span class="attribute">ssl_certificate_key</span>			/usr/local/nginx/conf/ssl/atguigu.key;</span><br><span class="line">    <span class="attribute">ssl_session_timeout</span>			<span class="number">5m</span>;</span><br><span class="line">    <span class="attribute">ssl_protocols</span> 				TLSv1 TLSv1.<span class="number">1</span> TLSv1.<span class="number">2</span>;</span><br><span class="line">    <span class="attribute">ssl_prefer_server_ciphers</span>	<span class="literal">on</span>;</span><br><span class="line">    <span class="attribute">ssl_ciphers</span> 				<span class="string">&quot;......&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>生成证书和密钥文件</p>
+</li>
+<li><p>设置http自动跳转https功能</p>
+<p>原有的server标签修改监听端口</p>
+<figure class="highlight nginx"><table><tr><td class="code"><pre><span class="line"><span class="section">server</span> &#123;</span><br><span class="line">    ......;</span><br><span class="line">    <span class="attribute">listen</span>	<span class="number">443</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>新增以下server标签(利用虚拟主机+rewrite的功能)</p>
+<figure class="highlight nginx"><table><tr><td class="code"><pre><span class="line"><span class="section">server</span> &#123;</span><br><span class="line">    <span class="attribute">listen</span>			<span class="number">80</span>;</span><br><span class="line">    <span class="attribute">server_name</span>		bbs.atguigu.com;</span><br><span class="line">    <span class="attribute">rewrite</span><span class="regexp"> ^(.*)$</span> https://bbs.atguigu.com permancent;</span><br><span class="line">    <span class="attribute">root</span>			html;</span><br><span class="line">    <span class="attribute">index</span>			index.html index.htm;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>重启nginx，并测试</p>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>Nginx</category>
+      </categories>
+  </entry>
+  <entry>
     <title>vim编辑器</title>
     <url>/2025/02/25/vim%E7%BC%96%E8%BE%91%E5%99%A8/</url>
     <content><![CDATA[<h1 id="vim编辑器"><a href="#vim编辑器" class="headerlink" title="vim编辑器"></a>vim编辑器</h1><p>vim是一个全屏幕纯文本编辑器，是vi编辑器的增强版。</p>
@@ -3987,7 +4088,7 @@
 </tr>
 <tr>
 <td>mail address</td>
-<td>当日志轮替时，输出内容通过邮件发送到指定的邮件地址。如mail <a href="mailto:&#x61;&#97;&#x61;&#64;&#49;&#x36;&#x33;&#46;&#99;&#111;&#x6d;">aaa@163.com</a></td>
+<td>当日志轮替时，输出内容通过邮件发送到指定的邮件地址。如mail <a href="mailto:&#x61;&#x61;&#x61;&#x40;&#x31;&#54;&#51;&#46;&#99;&#111;&#x6d;">aaa@163.com</a></td>
 </tr>
 <tr>
 <td>missingok</td>
