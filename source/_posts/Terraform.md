@@ -2,7 +2,7 @@
 title: Terraform
 date: 2025-02-28 20:48:38
 tags:
-categories: terraform
+categories: Devops
 ---
 
 ## Terraform工作流程
