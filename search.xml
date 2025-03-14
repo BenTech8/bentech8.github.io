@@ -1,6 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>ArgoCD</title>
+    <url>/2025/03/14/ArgoCD/</url>
+    <content><![CDATA[<h2 id="ArgoCD简介"><a href="#ArgoCD简介" class="headerlink" title="ArgoCD简介"></a>ArgoCD简介</h2><p>Argo CD是一个基于Kubernetes的声明式的GitOps工具。</p>
+<h3 id="GitOps"><a href="#GitOps" class="headerlink" title="GitOps"></a>GitOps</h3><p>GitOps是以Git为基础，使用CI&#x2F;CD来更新运行在云原生环境的应用，它秉承了DevOps的核心理念——“构建它并交付它(you built it you ship it)”。</p>
+<p>当开发人员将开发完成的代码推送到git仓库会触发CI制作镜像并推送到镜像仓库。</p>
+<p>CI处理完成后，可以手动或者自动修改应用配置，再将其推送到git仓库。</p>
+<p>GitOps会同时对比目标状态和当前状态，如果两者不一致会触发CD将新的配置部署到集群中。</p>
+<p>其中，目标状态是Git中的状态，现有状态是集群里的应用状态。</p>
+<h3 id="ArgoCD"><a href="#ArgoCD" class="headerlink" title="ArgoCD"></a>ArgoCD</h3><p>Argo CD 遵循GitOps模式，使用Git存储库存储所需应用程序的配置。</p>
+<p>Kubernetes清单可以通过以下几种方式指定：</p>
+<ul>
+<li>kustomize</li>
+<li>helm</li>
+<li>ksonnet</li>
+<li>jsonnet</li>
+<li>基于YAML&#x2F;json</li>
+<li>配置管理插件配置的任何自定义配置管理工具</li>
+</ul>
+<p>Argo CD实现为kubernetes控制器，它持续监视运行中的应用程序，并将当前的活动状态与期望的目标状态进行比较(如Git repo中指定的那样)。如果已部署的应用程序的活动状态偏离了目标状态，则认为是OutOfSync。Argo CD报告和可视化这些差异，同时提供了方法，可以自动或手动将活动状态同步回所需的目录状态。在Git repo中对所需目标状态所做的任何修改都可以自动应用并反映到指定的目标环境中。</p>
+<h3 id="ArgoCD优势"><a href="#ArgoCD优势" class="headerlink" title="ArgoCD优势"></a>ArgoCD优势</h3><ul>
+<li>应用定义、配置和环境信息是声明式的，并且可以进行版本控制。</li>
+<li>应用部署和生命周期管理是全自动化的，是可审计的，清晰易懂。</li>
+<li>Argo CD是一个独立的部署工具，支持对多个环境、多个Kubernetes集群上的应用进行统一部署和管理。</li>
+</ul>
+<h2 id="链接"><a href="#链接" class="headerlink" title="链接"></a>链接</h2><ul>
+<li>官方文档：<a href="https://argo-cd.readthedocs.io/en/stable/">https://argo-cd.readthedocs.io/en/stable/</a></li>
+</ul>
+]]></content>
+      <categories>
+        <category>DevOps</category>
+      </categories>
+  </entry>
+  <entry>
     <title>Linux常用命令</title>
     <url>/2025/02/25/Linux%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</url>
     <content><![CDATA[<h1 id="Linux常用命令"><a href="#Linux常用命令" class="headerlink" title="Linux常用命令"></a>Linux常用命令</h1><h2 id="1-命令提示符"><a href="#1-命令提示符" class="headerlink" title="1. 命令提示符"></a>1. 命令提示符</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ben@ben-NBLK-WAX9X:~$</span><br></pre></td></tr></table></figure>
@@ -2662,7 +2695,7 @@
 </ul>
 ]]></content>
       <categories>
-        <category>Devops</category>
+        <category>DevOps</category>
       </categories>
   </entry>
   <entry>
@@ -3216,236 +3249,6 @@
       </categories>
   </entry>
   <entry>
-    <title>启动引导与修复</title>
-    <url>/2025/03/04/%E5%90%AF%E5%8A%A8%E5%BC%95%E5%AF%BC%E4%B8%8E%E4%BF%AE%E5%A4%8D/</url>
-    <content><![CDATA[<h2 id="系统运行级别"><a href="#系统运行级别" class="headerlink" title="系统运行级别"></a>系统运行级别</h2><h3 id="运行级别"><a href="#运行级别" class="headerlink" title="运行级别"></a>运行级别</h3><p>Linux默认有7个运行级别</p>
-<table>
-<thead>
-<tr>
-<th>运行级别</th>
-<th>含义</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>0</td>
-<td>关机</td>
-</tr>
-<tr>
-<td>1</td>
-<td>单用户模式，可以想象为windows的安全模式，主要用于系统修复</td>
-</tr>
-<tr>
-<td>2</td>
-<td>不完全的命令行模式，不含NFS服务</td>
-</tr>
-<tr>
-<td>3</td>
-<td>完全的命令行模式，就是标准字符界面</td>
-</tr>
-<tr>
-<td>4</td>
-<td>系统保留</td>
-</tr>
-<tr>
-<td>5</td>
-<td>图形模式</td>
-</tr>
-<tr>
-<td>6</td>
-<td>重启动</td>
-</tr>
-</tbody></table>
-<p>在Linux系统中可以使用runlevel命令来查看系统的运行级别：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# runlevel</span><br><span class="line">N 5</span><br></pre></td></tr></table></figure>
-
-<p>在这个命令的结果中，”N 5”中的N代表进入这个级别前，上一个级别是什么，5代表当前级别。”N”就是None的意思，也就是说系统是开机直接进入的5运行级别，没有上一个运行级别。那如果是从图形界面切换到字符界面的话，再查看运行级别，应该是：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# runlevel</span><br><span class="line">5 3</span><br></pre></td></tr></table></figure>
-
-<p>使用init命令可以手工改变当前的运行级别：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">进入图形界面，当然要已经安装了图形界面才可以</span></span><br><span class="line">[root@localhost ~]# init 5</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">关机</span></span><br><span class="line">[root@localhost ~]# init 0</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">重启</span></span><br><span class="line">[root@localhost ~]# init 6</span><br></pre></td></tr></table></figure>
-
-<p>不过要注意使用init命令关机和重启并不是太安全，容易造成数据丢失。所以推荐还是使用shutdown命令进行关机和重启。</p>
-<h3 id="系统默认运行级别"><a href="#系统默认运行级别" class="headerlink" title="系统默认运行级别"></a>系统默认运行级别</h3><p>&#x2F;etc&#x2F;init&#x2F;rcS.conf配置文件调用&#x2F;etc&#x2F;inittab配置文件的目的就是为了确定系统的默认运行级别。也就是系统一开机后会进入那个运行级别。</p>
-<p>注意这里的默认运行级别只能写成3或5，其的级别要不就是关机重启，要不就是保留或单用户，都不能作为系统默认运行级别。</p>
-<h3 id="etc-rc-d-rc-local文件"><a href="#etc-rc-d-rc-local文件" class="headerlink" title="&#x2F;etc&#x2F;rc.d&#x2F;rc.local文件"></a>&#x2F;etc&#x2F;rc.d&#x2F;rc.local文件</h3><p>这个配置文件会在用户登录之前读取，这个文件中写入什么命令，在每次系统启动时都会执行一次。也就是说，如果有任何需要在系统启动就运行的工作，只需要写入&#x2F;etc&#x2F;rc.d&#x2F;rc.local这个配置文件即可。</p>
-<h2 id="启动引导程序-Boot-Loader"><a href="#启动引导程序-Boot-Loader" class="headerlink" title="启动引导程序(Boot Loader)"></a>启动引导程序(Boot Loader)</h2><p>早期的Lilo引导程序已经不是很常见了，grub相比有很多优势，主要有：</p>
-<ul>
-<li>支持更多的文件系统；</li>
-<li>grub的主程序可以直接在文件系统中查找内核文件；</li>
-<li>在系统启动时，可以利用grub的交互界面编辑和修改启动选项；</li>
-<li>可以动态的修改grub的配置文件，这样在修改配置文件之后不需要重新安装grub，而只需要重新启动就可以生效了。</li>
-</ul>
-<p>a）&#x2F;boot&#x2F;grub目录</p>
-<p>grub的作用有以下几个：</p>
-<ul>
-<li>加载操作系统的内核。</li>
-<li>拥有一个可以让用户选择的菜单，来选择到底启动哪个系统。</li>
-<li>还可以调用其他的启动引导程序，来实现多系统引导。</li>
-</ul>
-<p>grub的配置文件主要是放置在&#x2F;boot&#x2F;grub&#x2F;目录中的。其实这个目录中主要就是grub的配置文件和各种文件系统的stage1.5文件。不过grub的配置文件有两个&#x2F;boot&#x2F;grub&#x2F;grub.conf和&#x2F;boot&#x2F;grub&#x2F;menu.lst，这两个配置文件是软链接，所以修改哪一个都可以，个人习惯改grub.conf。</p>
-<p>b）grub的配置文件</p>
-<p>在grub中分区的表示方法</p>
-<table>
-<thead>
-<tr>
-<th>硬盘</th>
-<th>分区</th>
-<th>Linux中设备文件名</th>
-<th>grub中设备文件名</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>第一块SCSI硬盘</td>
-<td>第一个主分区</td>
-<td>&#x2F;dev&#x2F;sda1</td>
-<td>hd(0,0)</td>
-</tr>
-<tr>
-<td></td>
-<td>第二个主分区</td>
-<td>&#x2F;dev&#x2F;sda2</td>
-<td>hd(0,1)</td>
-</tr>
-<tr>
-<td></td>
-<td>扩展分区</td>
-<td>&#x2F;dev&#x2F;sda3</td>
-<td>hd(0,2)</td>
-</tr>
-<tr>
-<td></td>
-<td>第一个逻辑分区</td>
-<td>&#x2F;dev&#x2F;sda5</td>
-<td>hd(0,4)</td>
-</tr>
-<tr>
-<td>第二块SCSI硬盘</td>
-<td>第一个主分区</td>
-<td>&#x2F;dev&#x2F;sdb1</td>
-<td>hd(1,0)</td>
-</tr>
-<tr>
-<td></td>
-<td>第二个主分区</td>
-<td>&#x2F;dev&#x2F;sdb2</td>
-<td>hd(1,1)</td>
-</tr>
-<tr>
-<td></td>
-<td>扩展分区</td>
-<td>&#x2F;dev&#x2F;sdb3</td>
-<td>hd(1,2)</td>
-</tr>
-<tr>
-<td></td>
-<td>第一个逻辑分区</td>
-<td>&#x2F;dev&#x2F;sdb5</td>
-<td>hd(1,4)</td>
-</tr>
-</tbody></table>
-<p>grub的配置文件</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# vim /boot/grub/grub.conf</span><br><span class="line">default=0</span><br><span class="line">timeout-5</span><br><span class="line">splashimage=(hd0,0)/grub/splash.xmp.gz</span><br><span class="line">hiddenmenu</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">以上为grub整体设置</span></span><br><span class="line">title Centos6 (2.6.32-279.el6.i686)</span><br><span class="line">		root (hd0,0)</span><br><span class="line">		kernel				/vmlinuz-2.6.32-279.el6.i686			ro		root=UUID=b9a7a1a8-767f-4a87-8a2b-a535edb362c9 rd_NO_LUKS	KEYBOARDTYPE=pc	KEYTABLE=us rd_NO_MD crashkernel=auto LANG=zh_CN.UTF-8 rd_NO_LVM rd_NO_DM rhgb quiet</span><br><span class="line">		initrd	/initramfs-2.6.32-279.el6.i686.img</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p>default&#x3D;0</p>
-<p>默认启动第一个系统。也就是如蛤在等待时间结束后，用户没有选择进入哪一个系统，那么系统会默认进入第一个系统。如果有多系统并存，那么每个系统都会有自己的titile字段，如果想要默认进入第二个系统，可以设为default&#x3D;1。</p>
-</li>
-<li><p>timeout&#x3D;5</p>
-<p>等待时间，默认是5秒。也就是进入系统时，如果5秒内用户没有按下任意键，那么系统会进入default字段定义的系统。当然可以手工修改这个等待时间，如果timeout&#x3D;0则不会等待直接进入系统，timeout&#x3D;-1则是一直等待用户输入，而不会自动进入系统。</p>
-</li>
-<li><p>splashimage&#x3D;(hd0,0)&#x2F;grub&#x2F;splash.xpm.gz</p>
-<p>这里是指定grub启动时的背景图像文件的保存位置。hd(0,0)代表第一个硬盘的第一个分区。</p>
-</li>
-<li><p>hiddenmenu</p>
-<p>隐藏菜单。启动时默认只能看到读秒，而不能看到菜单，如果想要看到菜单需要按任意键。如果注释了这句话，那么启动时就能直接看到菜单了。</p>
-</li>
-</ul>
-<p>Centos系统的启动配置：</p>
-<ul>
-<li><p>title Centos (2.6.32-279.el6.i686)</p>
-<p>title就是标题的意思，也就是说在title后面写入的是什么，那么系统启动时在grub的启动菜单中看到的就是什么。</p>
-</li>
-<li><p>root (hd0,0)</p>
-<p>是指启动程序的保存分区。这个root并不是管理员。在我的系统中，&#x2F;boot分区是独立划分的，而且设备文件名为&#x2F;dev&#x2F;sda1，所以在grub中，就被描述为hd（0,0）。</p>
-</li>
-<li><p>kernel				&#x2F;vmlinuz-2.6.32-279.el6.i686			ro		root&#x3D;UUID&#x3D;b9a7a1a8-767f-4a87-8a2b-a535edb362c9 rd_NO_LUKS	KEYBOARDTYPE&#x3D;pc	KEYTABLE&#x3D;us rd_NO_MD crashkernel&#x3D;auto LANG&#x3D;zh_CN.UTF-8 rd_NO_LVM rd_NO_DM rhgb quiet</p>
-<ul>
-<li><p>&#x2F;vmlinuz-2.6.32-279.el6.i686</p>
-<p>指定了内核文件的位置，这里的&#x2F;是指&#x2F;boot分区。</p>
-</li>
-<li><p>ro</p>
-<p>启动时以只读方式挂载根文件系统，这是为了不让启动过程影响磁盘内的文件系统。</p>
-</li>
-<li><p>root&#x3D;UUID&#x3D;b9a7a1a8-767f-4a87-8a2b-a535edb362c9 rd_NO_LUKS</p>
-<p>指定根文件系统所在位置。</p>
-</li>
-<li><p>rd_NO_LUKS</p>
-<p>禁用LUKS，LUKS用于给磁盘加密。</p>
-</li>
-<li><p>rd_NO_MD</p>
-<p>禁用软RAID</p>
-</li>
-<li><p>rd_NO_DM</p>
-<p>禁用硬RAID</p>
-</li>
-<li><p>rd_NO_LVM</p>
-<p>禁用LVM。以上禁用都只是在启动过程中禁用，是为加速系统启动的。</p>
-</li>
-<li><p>KEYBOARDTYPE&#x3D;pc    KEYTABLE&#x3D;us</p>
-<p>键盘类型</p>
-</li>
-<li><p>crashkernel&#x3D;auto</p>
-<p>自动为crashkernel预留内存</p>
-</li>
-<li><p>LANG&#x3D;zh_CN.UTF-8</p>
-<p>语言环境</p>
-</li>
-<li><p>rhgb</p>
-<p>（redhat graphics boot）用图片来代替启动过程中的文字信息。启动完成之后可以使用dmesg命令来查看这些文字信息。</p>
-</li>
-<li><p>quiet</p>
-<p>隐藏启动信息，只显示重要信息。</p>
-</li>
-<li><p>initrd    &#x2F;initramfs-2.6.32-279.el6.i686.img</p>
-<p>指定了initramfs内存文件系统镜像文件的所在位置。</p>
-</li>
-</ul>
-</li>
-</ul>
-<p>grub加密</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# grub-mkpasswd-pbkdf2</span><br><span class="line">输入密码： </span><br><span class="line">重新输入口令： </span><br><span class="line">您的密码的 PBKDF2 哈希为 grub.pbkdf2.sha512.10000.E71038F43B0B8C0F0EE05B6BA49AA7D8EB87EB3D4293A9A0A97DD81FBC773BBCB8A268A833245C687C8D6C6F352A4E5E0C77C1BC78A956C7FBBB0B8DAC1F0BC8.3CF79D7B2F0F6BEC4BF54D0D7D8A7F9B9B5CC2BE1609BFC33ADB08EC0372276B555D051AAD5ECA95B92E92CAC12FC0BCFD574A50E69ABA74A1BA214A729EBC80</span><br></pre></td></tr></table></figure>
-
-<p>这样就可以生成加密密码字串，这个字串是采用md5加密的，就是你的密码经md5编码之后的。</p>
-<p>grub菜单整体加密</p>
-<p>如果只是加密单个启动菜单，grub的编辑模式是不能锁定的，还是可以按“e”键进入编辑模式。而且进入编辑模式后，是可以删除password字段的，再按“b”（boot启动）键就可以不用密码直接进入系统。这时就需要给grub菜单整体加密了，整体加密后，如果想进入grub编辑界面必须输入正确的密码。加密方法其实只是把password字段换个位置而已。</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# vim /boot/grub/grub.conf</span><br><span class="line">default=0</span><br><span class="line">timeout=5</span><br><span class="line">password --md5 grub.pbkdf2.sha512.10000.E71038F43B0B8C0F0EE05B6BA49AA7D8EB87EB3D4293A9A0A97DD81FBC773BBCB8A268A833245C687C8D6C6F352A4E5E0C77C1BC78A956C7FBBB0B8DAC1F0BC8.3CF79D7B2F0F6BEC4BF54D0D7D8A7F9B9B5CC2BE1609BFC33ADB08EC0372276B555D051AAD5ECA95B92E92CAC12FC0BCFD574A50E69ABA74A1BA214A729EBC80</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
-
-<p>但是这样加密，启动CentOS时，是不需要密码就能正常启动的。如果需要grub整体加密，又需要系统启动时输入正确的密码时，则需：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# vim /boot/grub/grub.conf</span><br><span class="line">default=0</span><br><span class="line">timeout-5</span><br><span class="line">password --md5 grub.pbkdf2.sha512.10000.E71038F43B0B8C0F0EE05B6BA49AA7D8EB87EB3D4293A9A0A97DD81FBC773BBCB8A268A833245C687C8D6C6F352A4E5E0C77C1BC78A956C7FBBB0B8DAC1F0BC8.3CF79D7B2F0F6BEC4BF54D0D7D8A7F9B9B5CC2BE1609BFC33ADB08EC0372276B555D051AAD5ECA95B92E92CAC12FC0BCFD574A50E69ABA74A1BA214A729EBC80</span><br><span class="line">splashimage=(hd0,0)/grub/splash.xmp.gz</span><br><span class="line">hiddenmenu</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">以上为grub整体设置</span></span><br><span class="line">title Centos6 (2.6.32-279.el6.i686)</span><br><span class="line">		lock</span><br><span class="line">		...</span><br></pre></td></tr></table></figure>
-
-<p>在title字段加入lock。代表锁死，如果不输入正确的grub密码也不能启动。</p>
-<h2 id="系统修复模式"><a href="#系统修复模式" class="headerlink" title="系统修复模式"></a>系统修复模式</h2><h3 id="单用户模式"><a href="#单用户模式" class="headerlink" title="单用户模式"></a>单用户模式</h3><p>Linux的单用户模式有些类似Windows的安全模式，只启动最少的程序用于系统修复。在单用户模式(运行级别为1)中，Linux引导进入根shell，网络被禁用，只有少数进程运行。单用户模式可以用来修改文件系统损坏、还原配置文件、移动用户数据等。</p>
-<p>a）进入单用户模式</p>
-<p>开机进入引导界面，按“e”进入。</p>
-<p>b）单用户模式常见的错误修复</p>
-<ul>
-<li><p>遗忘root密码</p>
-<p>进入单用户模式最大的特点就是不需要输入用户名和密码就能登录。既然已经登录了单用户模式，那么直接给root用户设定新密码即可。</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost /]# passwd root</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>修改系统默认运行级别</p>
-<p>如果把系统的默认运行级别修改错误，比如改为了0或6，系统就不能正常启动了。这时也可以利用单用户模式进行修复，只要直接修改默认运行级别配置文件&#x2F;etc&#x2F;inittab，把系统默认运行级别修改回来即可。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# vim /etc/inittab</span><br><span class="line">id:3:initdefault:</span><br></pre></td></tr></table></figure>
-
-<p>绝大多数系统错误都可以通过单用户模式进行修复，理论上是只要能够进入单用户模式，那么系统错误就可以被单用户模式修复。当然意判断系统到底是哪里出现了问题，是需要不断地经验积累。</p>
-</li>
-</ul>
-]]></content>
-      <categories>
-        <category>Linux</category>
-      </categories>
-  </entry>
-  <entry>
     <title>文件系统管理</title>
     <url>/2025/02/25/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86/</url>
     <content><![CDATA[<h1 id="文件系统管理"><a href="#文件系统管理" class="headerlink" title="文件系统管理"></a>文件系统管理</h1><h2 id="1-硬盘结构"><a href="#1-硬盘结构" class="headerlink" title="1. 硬盘结构"></a>1. 硬盘结构</h2><h3 id="1）硬盘的逻辑结构"><a href="#1）硬盘的逻辑结构" class="headerlink" title="1）硬盘的逻辑结构"></a>1）硬盘的逻辑结构</h3><p>每个扇区的大小是固定的，为512Byte。扇区也是磁盘的最小存储单位。</p>
@@ -3833,6 +3636,584 @@
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# vim /etc/fstab</span><br><span class="line">...</span><br><span class="line">/dev/sdb1      swap      swap      defaults      0      0</span><br></pre></td></tr></table></figure>
 
 <p>也可以使用uuid。</p>
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>启动引导与修复</title>
+    <url>/2025/03/04/%E5%90%AF%E5%8A%A8%E5%BC%95%E5%AF%BC%E4%B8%8E%E4%BF%AE%E5%A4%8D/</url>
+    <content><![CDATA[<h2 id="系统运行级别"><a href="#系统运行级别" class="headerlink" title="系统运行级别"></a>系统运行级别</h2><h3 id="运行级别"><a href="#运行级别" class="headerlink" title="运行级别"></a>运行级别</h3><p>Linux默认有7个运行级别</p>
+<table>
+<thead>
+<tr>
+<th>运行级别</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td>关机</td>
+</tr>
+<tr>
+<td>1</td>
+<td>单用户模式，可以想象为windows的安全模式，主要用于系统修复</td>
+</tr>
+<tr>
+<td>2</td>
+<td>不完全的命令行模式，不含NFS服务</td>
+</tr>
+<tr>
+<td>3</td>
+<td>完全的命令行模式，就是标准字符界面</td>
+</tr>
+<tr>
+<td>4</td>
+<td>系统保留</td>
+</tr>
+<tr>
+<td>5</td>
+<td>图形模式</td>
+</tr>
+<tr>
+<td>6</td>
+<td>重启动</td>
+</tr>
+</tbody></table>
+<p>在Linux系统中可以使用runlevel命令来查看系统的运行级别：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# runlevel</span><br><span class="line">N 5</span><br></pre></td></tr></table></figure>
+
+<p>在这个命令的结果中，”N 5”中的N代表进入这个级别前，上一个级别是什么，5代表当前级别。”N”就是None的意思，也就是说系统是开机直接进入的5运行级别，没有上一个运行级别。那如果是从图形界面切换到字符界面的话，再查看运行级别，应该是：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# runlevel</span><br><span class="line">5 3</span><br></pre></td></tr></table></figure>
+
+<p>使用init命令可以手工改变当前的运行级别：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">进入图形界面，当然要已经安装了图形界面才可以</span></span><br><span class="line">[root@localhost ~]# init 5</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">关机</span></span><br><span class="line">[root@localhost ~]# init 0</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">重启</span></span><br><span class="line">[root@localhost ~]# init 6</span><br></pre></td></tr></table></figure>
+
+<p>不过要注意使用init命令关机和重启并不是太安全，容易造成数据丢失。所以推荐还是使用shutdown命令进行关机和重启。</p>
+<h3 id="系统默认运行级别"><a href="#系统默认运行级别" class="headerlink" title="系统默认运行级别"></a>系统默认运行级别</h3><p>&#x2F;etc&#x2F;init&#x2F;rcS.conf配置文件调用&#x2F;etc&#x2F;inittab配置文件的目的就是为了确定系统的默认运行级别。也就是系统一开机后会进入那个运行级别。</p>
+<p>注意这里的默认运行级别只能写成3或5，其的级别要不就是关机重启，要不就是保留或单用户，都不能作为系统默认运行级别。</p>
+<h3 id="etc-rc-d-rc-local文件"><a href="#etc-rc-d-rc-local文件" class="headerlink" title="&#x2F;etc&#x2F;rc.d&#x2F;rc.local文件"></a>&#x2F;etc&#x2F;rc.d&#x2F;rc.local文件</h3><p>这个配置文件会在用户登录之前读取，这个文件中写入什么命令，在每次系统启动时都会执行一次。也就是说，如果有任何需要在系统启动就运行的工作，只需要写入&#x2F;etc&#x2F;rc.d&#x2F;rc.local这个配置文件即可。</p>
+<h2 id="启动引导程序-Boot-Loader"><a href="#启动引导程序-Boot-Loader" class="headerlink" title="启动引导程序(Boot Loader)"></a>启动引导程序(Boot Loader)</h2><p>早期的Lilo引导程序已经不是很常见了，grub相比有很多优势，主要有：</p>
+<ul>
+<li>支持更多的文件系统；</li>
+<li>grub的主程序可以直接在文件系统中查找内核文件；</li>
+<li>在系统启动时，可以利用grub的交互界面编辑和修改启动选项；</li>
+<li>可以动态的修改grub的配置文件，这样在修改配置文件之后不需要重新安装grub，而只需要重新启动就可以生效了。</li>
+</ul>
+<p>a）&#x2F;boot&#x2F;grub目录</p>
+<p>grub的作用有以下几个：</p>
+<ul>
+<li>加载操作系统的内核。</li>
+<li>拥有一个可以让用户选择的菜单，来选择到底启动哪个系统。</li>
+<li>还可以调用其他的启动引导程序，来实现多系统引导。</li>
+</ul>
+<p>grub的配置文件主要是放置在&#x2F;boot&#x2F;grub&#x2F;目录中的。其实这个目录中主要就是grub的配置文件和各种文件系统的stage1.5文件。不过grub的配置文件有两个&#x2F;boot&#x2F;grub&#x2F;grub.conf和&#x2F;boot&#x2F;grub&#x2F;menu.lst，这两个配置文件是软链接，所以修改哪一个都可以，个人习惯改grub.conf。</p>
+<p>b）grub的配置文件</p>
+<p>在grub中分区的表示方法</p>
+<table>
+<thead>
+<tr>
+<th>硬盘</th>
+<th>分区</th>
+<th>Linux中设备文件名</th>
+<th>grub中设备文件名</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>第一块SCSI硬盘</td>
+<td>第一个主分区</td>
+<td>&#x2F;dev&#x2F;sda1</td>
+<td>hd(0,0)</td>
+</tr>
+<tr>
+<td></td>
+<td>第二个主分区</td>
+<td>&#x2F;dev&#x2F;sda2</td>
+<td>hd(0,1)</td>
+</tr>
+<tr>
+<td></td>
+<td>扩展分区</td>
+<td>&#x2F;dev&#x2F;sda3</td>
+<td>hd(0,2)</td>
+</tr>
+<tr>
+<td></td>
+<td>第一个逻辑分区</td>
+<td>&#x2F;dev&#x2F;sda5</td>
+<td>hd(0,4)</td>
+</tr>
+<tr>
+<td>第二块SCSI硬盘</td>
+<td>第一个主分区</td>
+<td>&#x2F;dev&#x2F;sdb1</td>
+<td>hd(1,0)</td>
+</tr>
+<tr>
+<td></td>
+<td>第二个主分区</td>
+<td>&#x2F;dev&#x2F;sdb2</td>
+<td>hd(1,1)</td>
+</tr>
+<tr>
+<td></td>
+<td>扩展分区</td>
+<td>&#x2F;dev&#x2F;sdb3</td>
+<td>hd(1,2)</td>
+</tr>
+<tr>
+<td></td>
+<td>第一个逻辑分区</td>
+<td>&#x2F;dev&#x2F;sdb5</td>
+<td>hd(1,4)</td>
+</tr>
+</tbody></table>
+<p>grub的配置文件</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# vim /boot/grub/grub.conf</span><br><span class="line">default=0</span><br><span class="line">timeout-5</span><br><span class="line">splashimage=(hd0,0)/grub/splash.xmp.gz</span><br><span class="line">hiddenmenu</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">以上为grub整体设置</span></span><br><span class="line">title Centos6 (2.6.32-279.el6.i686)</span><br><span class="line">		root (hd0,0)</span><br><span class="line">		kernel				/vmlinuz-2.6.32-279.el6.i686			ro		root=UUID=b9a7a1a8-767f-4a87-8a2b-a535edb362c9 rd_NO_LUKS	KEYBOARDTYPE=pc	KEYTABLE=us rd_NO_MD crashkernel=auto LANG=zh_CN.UTF-8 rd_NO_LVM rd_NO_DM rhgb quiet</span><br><span class="line">		initrd	/initramfs-2.6.32-279.el6.i686.img</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>default&#x3D;0</p>
+<p>默认启动第一个系统。也就是如蛤在等待时间结束后，用户没有选择进入哪一个系统，那么系统会默认进入第一个系统。如果有多系统并存，那么每个系统都会有自己的titile字段，如果想要默认进入第二个系统，可以设为default&#x3D;1。</p>
+</li>
+<li><p>timeout&#x3D;5</p>
+<p>等待时间，默认是5秒。也就是进入系统时，如果5秒内用户没有按下任意键，那么系统会进入default字段定义的系统。当然可以手工修改这个等待时间，如果timeout&#x3D;0则不会等待直接进入系统，timeout&#x3D;-1则是一直等待用户输入，而不会自动进入系统。</p>
+</li>
+<li><p>splashimage&#x3D;(hd0,0)&#x2F;grub&#x2F;splash.xpm.gz</p>
+<p>这里是指定grub启动时的背景图像文件的保存位置。hd(0,0)代表第一个硬盘的第一个分区。</p>
+</li>
+<li><p>hiddenmenu</p>
+<p>隐藏菜单。启动时默认只能看到读秒，而不能看到菜单，如果想要看到菜单需要按任意键。如果注释了这句话，那么启动时就能直接看到菜单了。</p>
+</li>
+</ul>
+<p>Centos系统的启动配置：</p>
+<ul>
+<li><p>title Centos (2.6.32-279.el6.i686)</p>
+<p>title就是标题的意思，也就是说在title后面写入的是什么，那么系统启动时在grub的启动菜单中看到的就是什么。</p>
+</li>
+<li><p>root (hd0,0)</p>
+<p>是指启动程序的保存分区。这个root并不是管理员。在我的系统中，&#x2F;boot分区是独立划分的，而且设备文件名为&#x2F;dev&#x2F;sda1，所以在grub中，就被描述为hd（0,0）。</p>
+</li>
+<li><p>kernel				&#x2F;vmlinuz-2.6.32-279.el6.i686			ro		root&#x3D;UUID&#x3D;b9a7a1a8-767f-4a87-8a2b-a535edb362c9 rd_NO_LUKS	KEYBOARDTYPE&#x3D;pc	KEYTABLE&#x3D;us rd_NO_MD crashkernel&#x3D;auto LANG&#x3D;zh_CN.UTF-8 rd_NO_LVM rd_NO_DM rhgb quiet</p>
+<ul>
+<li><p>&#x2F;vmlinuz-2.6.32-279.el6.i686</p>
+<p>指定了内核文件的位置，这里的&#x2F;是指&#x2F;boot分区。</p>
+</li>
+<li><p>ro</p>
+<p>启动时以只读方式挂载根文件系统，这是为了不让启动过程影响磁盘内的文件系统。</p>
+</li>
+<li><p>root&#x3D;UUID&#x3D;b9a7a1a8-767f-4a87-8a2b-a535edb362c9 rd_NO_LUKS</p>
+<p>指定根文件系统所在位置。</p>
+</li>
+<li><p>rd_NO_LUKS</p>
+<p>禁用LUKS，LUKS用于给磁盘加密。</p>
+</li>
+<li><p>rd_NO_MD</p>
+<p>禁用软RAID</p>
+</li>
+<li><p>rd_NO_DM</p>
+<p>禁用硬RAID</p>
+</li>
+<li><p>rd_NO_LVM</p>
+<p>禁用LVM。以上禁用都只是在启动过程中禁用，是为加速系统启动的。</p>
+</li>
+<li><p>KEYBOARDTYPE&#x3D;pc    KEYTABLE&#x3D;us</p>
+<p>键盘类型</p>
+</li>
+<li><p>crashkernel&#x3D;auto</p>
+<p>自动为crashkernel预留内存</p>
+</li>
+<li><p>LANG&#x3D;zh_CN.UTF-8</p>
+<p>语言环境</p>
+</li>
+<li><p>rhgb</p>
+<p>（redhat graphics boot）用图片来代替启动过程中的文字信息。启动完成之后可以使用dmesg命令来查看这些文字信息。</p>
+</li>
+<li><p>quiet</p>
+<p>隐藏启动信息，只显示重要信息。</p>
+</li>
+<li><p>initrd    &#x2F;initramfs-2.6.32-279.el6.i686.img</p>
+<p>指定了initramfs内存文件系统镜像文件的所在位置。</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>grub加密</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# grub-mkpasswd-pbkdf2</span><br><span class="line">输入密码： </span><br><span class="line">重新输入口令： </span><br><span class="line">您的密码的 PBKDF2 哈希为 grub.pbkdf2.sha512.10000.E71038F43B0B8C0F0EE05B6BA49AA7D8EB87EB3D4293A9A0A97DD81FBC773BBCB8A268A833245C687C8D6C6F352A4E5E0C77C1BC78A956C7FBBB0B8DAC1F0BC8.3CF79D7B2F0F6BEC4BF54D0D7D8A7F9B9B5CC2BE1609BFC33ADB08EC0372276B555D051AAD5ECA95B92E92CAC12FC0BCFD574A50E69ABA74A1BA214A729EBC80</span><br></pre></td></tr></table></figure>
+
+<p>这样就可以生成加密密码字串，这个字串是采用md5加密的，就是你的密码经md5编码之后的。</p>
+<p>grub菜单整体加密</p>
+<p>如果只是加密单个启动菜单，grub的编辑模式是不能锁定的，还是可以按“e”键进入编辑模式。而且进入编辑模式后，是可以删除password字段的，再按“b”（boot启动）键就可以不用密码直接进入系统。这时就需要给grub菜单整体加密了，整体加密后，如果想进入grub编辑界面必须输入正确的密码。加密方法其实只是把password字段换个位置而已。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# vim /boot/grub/grub.conf</span><br><span class="line">default=0</span><br><span class="line">timeout=5</span><br><span class="line">password --md5 grub.pbkdf2.sha512.10000.E71038F43B0B8C0F0EE05B6BA49AA7D8EB87EB3D4293A9A0A97DD81FBC773BBCB8A268A833245C687C8D6C6F352A4E5E0C77C1BC78A956C7FBBB0B8DAC1F0BC8.3CF79D7B2F0F6BEC4BF54D0D7D8A7F9B9B5CC2BE1609BFC33ADB08EC0372276B555D051AAD5ECA95B92E92CAC12FC0BCFD574A50E69ABA74A1BA214A729EBC80</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<p>但是这样加密，启动CentOS时，是不需要密码就能正常启动的。如果需要grub整体加密，又需要系统启动时输入正确的密码时，则需：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# vim /boot/grub/grub.conf</span><br><span class="line">default=0</span><br><span class="line">timeout-5</span><br><span class="line">password --md5 grub.pbkdf2.sha512.10000.E71038F43B0B8C0F0EE05B6BA49AA7D8EB87EB3D4293A9A0A97DD81FBC773BBCB8A268A833245C687C8D6C6F352A4E5E0C77C1BC78A956C7FBBB0B8DAC1F0BC8.3CF79D7B2F0F6BEC4BF54D0D7D8A7F9B9B5CC2BE1609BFC33ADB08EC0372276B555D051AAD5ECA95B92E92CAC12FC0BCFD574A50E69ABA74A1BA214A729EBC80</span><br><span class="line">splashimage=(hd0,0)/grub/splash.xmp.gz</span><br><span class="line">hiddenmenu</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">以上为grub整体设置</span></span><br><span class="line">title Centos6 (2.6.32-279.el6.i686)</span><br><span class="line">		lock</span><br><span class="line">		...</span><br></pre></td></tr></table></figure>
+
+<p>在title字段加入lock。代表锁死，如果不输入正确的grub密码也不能启动。</p>
+<h2 id="系统修复模式"><a href="#系统修复模式" class="headerlink" title="系统修复模式"></a>系统修复模式</h2><h3 id="单用户模式"><a href="#单用户模式" class="headerlink" title="单用户模式"></a>单用户模式</h3><p>Linux的单用户模式有些类似Windows的安全模式，只启动最少的程序用于系统修复。在单用户模式(运行级别为1)中，Linux引导进入根shell，网络被禁用，只有少数进程运行。单用户模式可以用来修改文件系统损坏、还原配置文件、移动用户数据等。</p>
+<p>a）进入单用户模式</p>
+<p>开机进入引导界面，按“e”进入。</p>
+<p>b）单用户模式常见的错误修复</p>
+<ul>
+<li><p>遗忘root密码</p>
+<p>进入单用户模式最大的特点就是不需要输入用户名和密码就能登录。既然已经登录了单用户模式，那么直接给root用户设定新密码即可。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost /]# passwd root</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>修改系统默认运行级别</p>
+<p>如果把系统的默认运行级别修改错误，比如改为了0或6，系统就不能正常启动了。这时也可以利用单用户模式进行修复，只要直接修改默认运行级别配置文件&#x2F;etc&#x2F;inittab，把系统默认运行级别修改回来即可。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# vim /etc/inittab</span><br><span class="line">id:3:initdefault:</span><br></pre></td></tr></table></figure>
+
+<p>绝大多数系统错误都可以通过单用户模式进行修复，理论上是只要能够进入单用户模式，那么系统错误就可以被单用户模式修复。当然意判断系统到底是哪里出现了问题，是需要不断地经验积累。</p>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>日志管理</title>
+    <url>/2025/03/07/%E6%97%A5%E5%BF%97%E7%AE%A1%E7%90%86/</url>
+    <content><![CDATA[<h2 id="日志简介"><a href="#日志简介" class="headerlink" title="日志简介"></a>日志简介</h2><h3 id="日志相关服务"><a href="#日志相关服务" class="headerlink" title="日志相关服务"></a>日志相关服务</h3><p>在CentOS 6.x中日志服务已经由rsyslogd取代了原先的syslogd服务。Redhat认为syslogd已经不能满足在工作中的需求，rsyslogd相比syslogd具有一些新的特点：</p>
+<ul>
+<li>基于TCP网络协议传输日志信息；</li>
+<li>更安全的网络传输方式；</li>
+<li>有日志消息的及时分析框架；</li>
+<li>后台数据库；</li>
+<li>配置文件中可以写简单的逻辑判断；</li>
+<li>与syslog配置文件相兼容。</li>
+</ul>
+<h3 id="系统中常见的日志文件"><a href="#系统中常见的日志文件" class="headerlink" title="系统中常见的日志文件"></a>系统中常见的日志文件</h3><table>
+<thead>
+<tr>
+<th>日志文件</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>&#x2F;var&#x2F;log&#x2F;cron</td>
+<td>记录了系统定时任务相关的日志。</td>
+</tr>
+<tr>
+<td>&#x2F;var&#x2F;log&#x2F;cups&#x2F;</td>
+<td>记录打印信息的日志。</td>
+</tr>
+<tr>
+<td>&#x2F;var&#x2F;log&#x2F;dmesg</td>
+<td>记录了系统在开机时内核自检的信息。也可以使用dmesg命令直接查看内核自检信息。</td>
+</tr>
+<tr>
+<td>&#x2F;var&#x2F;log&#x2F;btmp</td>
+<td>记录错误登录的日志。这个文件是二进制文件，不能直接vim查看，而要使用lastb命令查看。</td>
+</tr>
+<tr>
+<td>&#x2F;var&#x2F;log&#x2F;lastlog</td>
+<td>记录系统中所有用户最后一次登录时间的日志。这个文件也是二进制文件，不能直接vim查看，而要使用lastlog命令查看。</td>
+</tr>
+<tr>
+<td>&#x2F;var&#x2F;log&#x2F;mailog</td>
+<td>记录邮件信息。</td>
+</tr>
+<tr>
+<td>&#x2F;var&#x2F;log&#x2F;message</td>
+<td>记录系统重要信息的日志。这个日志文件中会记录Linux系统的绝大多数重要信息，如果系统出现问题时，首先要检查的就应该是这个日志文件。</td>
+</tr>
+<tr>
+<td>&#x2F;var&#x2F;log&#x2F;secure</td>
+<td>记录验证和授权方面的信息，只要涉及账户和密码的程序都会记录。比如说系统的登录，ssh的登录，su切换用户，sudo授权，甚至添加用户和修改用户密码都会记录在这个日志文件中。</td>
+</tr>
+<tr>
+<td>&#x2F;var&#x2F;log&#x2F;wtmp</td>
+<td>永久记录所有用户的登录、注销信息，同时记录系统的启动、重启、关机事件。同样这个文件也是一个二进制文件，不能直接vim，而需要使用last命令来查看。</td>
+</tr>
+<tr>
+<td>&#x2F;var&#x2F;run&#x2F;utmp</td>
+<td>记录当前已经登录的用户的信息。这个文件会随着用户的登录和注销而不断变化，只记录当前登录用户的信息。同样这个文件不能直接vim，而要使用w,who,users等命令来查询。</td>
+</tr>
+</tbody></table>
+<p>除了系统默认的日志之外，采用RPM方式安装的系统服务也会默认把日志记录在&#x2F;var&#x2F;log&#x2F;目录中(源码包安装的服务日志是在源码包指定目录中)。不过这些日志不是由rsyslogd服务来记录和管理的，而是各个服务器使用自己的日志管理文档来记录自身日志。</p>
+<table>
+<thead>
+<tr>
+<th>日志文件</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>&#x2F;var&#x2F;log&#x2F;httpd&#x2F;</td>
+<td>RPM包安装的apache服务的默认日志目录</td>
+</tr>
+<tr>
+<td>&#x2F;var&#x2F;log&#x2F;mail&#x2F;</td>
+<td>RPM包安装的邮件服务的额外日志目录</td>
+</tr>
+<tr>
+<td>&#x2F;var&#x2F;log&#x2F;samba&#x2F;</td>
+<td>RPM包安装的samba服务的日志目录</td>
+</tr>
+<tr>
+<td>&#x2F;var&#x2F;log&#x2F;sssd&#x2F;</td>
+<td>守护进程安全服务目录</td>
+</tr>
+</tbody></table>
+<h2 id="日志服务-rsyslogd"><a href="#日志服务-rsyslogd" class="headerlink" title="日志服务(rsyslogd)"></a>日志服务(rsyslogd)</h2><h3 id="日志文件格式"><a href="#日志文件格式" class="headerlink" title="日志文件格式"></a>日志文件格式</h3><p>只要是由日志服务rsyslogd记录的日志文件，他们的格式是一样的。基本日志格式包含以下四列：</p>
+<ul>
+<li>事件产生的时间</li>
+<li>发生事件的服务器的主机名</li>
+<li>产生事件的服务名或程序名</li>
+<li>事件的具体信息</li>
+</ul>
+<h3 id="rsyslogd服务的配置文件"><a href="#rsyslogd服务的配置文件" class="headerlink" title="rsyslogd服务的配置文件"></a>rsyslogd服务的配置文件</h3><h4 id="etc-rsyslog-d-50-default-conf"><a href="#etc-rsyslog-d-50-default-conf" class="headerlink" title="&#x2F;etc&#x2F;rsyslog.d&#x2F;50-default.conf"></a>&#x2F;etc&#x2F;rsyslog.d&#x2F;50-default.conf</h4><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">auth,authpriv.*			/var/log/auth.log</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">服务名称[连接符号]日志等级    日志记录位置</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">认证相关服务.所有日志等级     记录在/var/log/auth.log日志中</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>服务名称</p>
+<p>我们首先需要确定rsyslogd服务可以识别哪些服务的日志，也可以理解为以下这些服务委托了rsyslogd服务来代为管理日志。这些服务如下表所示：</p>
+<table>
+<thead>
+<tr>
+<th>服务名称</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>auth（LOG_AUTH）</td>
+<td>安全和认证相关消息(不推荐使用authpriv替代)</td>
+</tr>
+<tr>
+<td>authpriv（LOG_AUTHPRIV）</td>
+<td>安全和认证相关消息（私有的）</td>
+</tr>
+<tr>
+<td>cron（LOG_CRON）</td>
+<td>系统定时任务cront和at产生的日志</td>
+</tr>
+<tr>
+<td>daemon（LOG_DAEMON）</td>
+<td>和各个守护进程相关的日志</td>
+</tr>
+<tr>
+<td>ftp（LOG_FTP）</td>
+<td>ftp守护进程产生的日志</td>
+</tr>
+<tr>
+<td>kern（LOG_KERN）</td>
+<td>内核产生的日志（不是用户进程产生的）</td>
+</tr>
+<tr>
+<td>local0-local7（LOG_LOCAL0-7）</td>
+<td>为本地使用预留的服务</td>
+</tr>
+<tr>
+<td>lpr（LOG_LPR）</td>
+<td>打印产生的日志</td>
+</tr>
+<tr>
+<td>Mail（LOG_MAIL）</td>
+<td>邮件收发信息</td>
+</tr>
+<tr>
+<td>news（LOG_NEWS）</td>
+<td>与新闻服务器相关的日志</td>
+</tr>
+<tr>
+<td>syslog（LOG_SYSLOG）</td>
+<td>有syslogd服务产生的日志信息（虽然服务名称已经改为rsyslogd，但是很多配置都还是沿用了syslogd的，这里并没有修改服务名）。</td>
+</tr>
+<tr>
+<td>user（LOG_USER）</td>
+<td>用户等级类别的日志信息</td>
+</tr>
+<tr>
+<td>uucp（LOG_UUCP）</td>
+<td>uucp子系统的日志信息，uucp是早期linux系统进行数据传递的协议，后来也常用在新闻组服务中</td>
+</tr>
+</tbody></table>
+</li>
+<li><p>连接符号</p>
+<p>日志服务连接日志等级的格式为：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">日志服务[连接符号]日志等级			日志记录位置</span><br></pre></td></tr></table></figure>
+
+<p>在这里连接符号可以识别为：</p>
+<ul>
+<li>“.”代表只要比后面的等级高的（包含该等级）日志都记录下来。比如：”cron.info”代表cron服务产生的日志只要日志等级大于等于info级别，就记录。</li>
+<li>“.&#x3D;”代表只记录所需等级的日志，其他等级的都不记录。比如：“*.&#x3D;emerg”代表任何日志服务产生的日志，只要等级是emerg等级就记录。这种用法极少见，了解就好。</li>
+<li>“.!”代表不等于，也就是除了该等级的日志外，其他等级的日志都记录。</li>
+</ul>
+</li>
+<li><p>日志等级</p>
+<table>
+<thead>
+<tr>
+<th>等级名称</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>debug（LOG_DEBUG）</td>
+<td>一般的调试信息说明</td>
+</tr>
+<tr>
+<td>info（LOG_INFO）</td>
+<td>基本的通知信息</td>
+</tr>
+<tr>
+<td>notice（LOG_NOTICE）</td>
+<td>普通信息，但是有一定的重要性</td>
+</tr>
+<tr>
+<td>warning（LOG_WARNING）</td>
+<td>警告信息，但是还不会影响到服务或系统的运行</td>
+</tr>
+<tr>
+<td>err（LOG_ERR）</td>
+<td>错误信息，一般达到err等级的信息以及可以影响到服务或系统的运行了</td>
+</tr>
+<tr>
+<td>crit（LOG_CRIT）</td>
+<td>临界状况信息，比err等级还要严重</td>
+</tr>
+<tr>
+<td>alert（LOG_ALERT）</td>
+<td>警告状态信息，比crit还要严重。必须立即采取行动</td>
+</tr>
+<tr>
+<td>emerg（LOG_EMERG）</td>
+<td>疼痛等级信息，系统已经无法使用了</td>
+</tr>
+<tr>
+<td>*</td>
+<td>代表所有日志等级，比如：“authpriv.*”代表authpriv认证信息服务产生的日志，所有的日志等级都记录</td>
+</tr>
+</tbody></table>
+<p>日志等这里还可以识别”none”，如果日志等级是none，就说明忽略这个日志服务，该服务的所有日志都不再记录。</p>
+</li>
+<li><p>日志记录位置</p>
+<p>日志记录位置就是当前日志输出到哪个日志文件中保存，当然也可以把日志输出到印机打印，或者输出到远程日志服务器上（当然日志服务器要允许接收才行）。日志的记录位置也是固定的：</p>
+<ul>
+<li><p>日志文件的绝对路径</p>
+<p>这是最常见的日志保存方法，如“&#x2F;var&#x2F;log&#x2F;secure”就是保存系统验证和授权信息日志的。</p>
+</li>
+<li><p>系统设备文件</p>
+<p>如“&#x2F;dev&#x2F;lp0”代表第一台打印机，如果日志保存位置是打印机设备的话，当有日志时就会在打印机打印（不太符合可持续发展战略）。</p>
+</li>
+<li><p>转发给远程主机</p>
+<p>因为可以选择使用TCP协议和UDP协议传输日志信息，所以有两种发送格式。如使用“@192.168.0.210:514”，就会把日志内容使用UDP协议发送到192.168.0.210的UDP 514端口上；如果使用”@@192.168.0.210:514”就会把日志内容使用TCP协议发送到192.168.0.210的TCP 514端口上，其中514是日志服务默认端口。当然只要192.168.0.210同意接收此日志，就可以把日志内容保存在日志服务器上。</p>
+</li>
+<li><p>用户名</p>
+<p>如“root”，就会把日志发送给root用户，当然root要在线，否则就收不到日志信息了。发送日志给用户时，可以使用“*”代表发送给所有在线用户，如“mail.* *”就会把mail服务产生的所有级别的日志发送给所有在线用户。如果需要把日志发送给多个在线用户，用户名之间用“,”分隔。</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>忽略或丢弃日志。如果接受日志的对象是“~”，代表这个日志不会记录，而被直接丢弃。如“local3.* ~”代表忽略local3服务类型所有的日志都不记录。</p>
+<h4 id="etc-rsyslog-conf配置文件内容"><a href="#etc-rsyslog-conf配置文件内容" class="headerlink" title="&#x2F;etc&#x2F;rsyslog.conf配置文件内容"></a>&#x2F;etc&#x2F;rsyslog.conf配置文件内容</h4><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# vim /etc/rsyslog.conf</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">/etc/rsyslog.conf configuration file <span class="keyword">for</span> rsyslog</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"></span></span><br><span class="line"><span class="language-bash"><span class="comment"># For more information install rsyslog-doc and see</span></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">/usr/share/doc/rsyslog-doc/html/configuration/index.html</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"></span></span><br><span class="line"><span class="language-bash"><span class="comment"># Default logging rules can be found in /etc/rsyslog.d/50-default.conf</span></span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">加载模块</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="comment">################</span></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="comment">### MODULES ####</span></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="comment">################</span></span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">加载imuxsock模块，为本地系统登录提供支持</span></span><br><span class="line">module(load=&quot;imuxsock&quot;) # provides support for local system logging</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">加载immark模块，提供标记信息的能力</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">module(load=<span class="string">&quot;immark&quot;</span>)  <span class="comment"># provides --MARK-- message capability</span></span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">加载UDP模块，允许使用UDP的514端口接收采用UDP协议转发的日志</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">provides UDP syslog reception</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">module(load=<span class="string">&quot;imudp&quot;</span>)</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">input(<span class="built_in">type</span>=<span class="string">&quot;imudp&quot;</span> port=<span class="string">&quot;514&quot;</span>)</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">加载TCP模块，允许使用TCP的514端口接收采用TCP协议转发的日志</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">provides TCP syslog reception</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">module(load=<span class="string">&quot;imtcp&quot;</span>)</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">input(<span class="built_in">type</span>=<span class="string">&quot;imtcp&quot;</span> port=<span class="string">&quot;514&quot;</span>)</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">provides kernel logging support and <span class="built_in">enable</span> non-kernel klog messages</span></span><br><span class="line">module(load=&quot;imklog&quot; permitnonkernelfacility=&quot;on&quot;)</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">定义全局设置</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="comment">##########################</span></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="comment">### GLOBAL DIRECTIVES ####</span></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="comment">##########################</span></span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Filter duplicated messages</span></span><br><span class="line"><span class="meta prompt_">$</span><span class="language-bash">RepeatedMsgReduction on</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"></span></span><br><span class="line"><span class="language-bash"><span class="comment"># Set the default permissions for all log files.</span></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"></span></span><br><span class="line"><span class="language-bash"><span class="variable">$FileOwner</span> syslog</span></span><br><span class="line"><span class="meta prompt_">$</span><span class="language-bash">FileGroup adm</span></span><br><span class="line"><span class="meta prompt_">$</span><span class="language-bash">FileCreateMode 0640</span></span><br><span class="line"><span class="meta prompt_">$</span><span class="language-bash">DirCreateMode 0755</span></span><br><span class="line"><span class="meta prompt_">$</span><span class="language-bash">Umask 0022</span></span><br><span class="line"><span class="meta prompt_">$</span><span class="language-bash">PrivDropToUser syslog</span></span><br><span class="line"><span class="meta prompt_">$</span><span class="language-bash">PrivDropToGroup syslog</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"></span></span><br><span class="line"><span class="language-bash"><span class="comment"># Where to place spool and state files</span></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"></span></span><br><span class="line"><span class="language-bash"><span class="variable">$WorkDirectory</span> /var/spool/rsyslog</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"></span></span><br><span class="line"><span class="language-bash"><span class="comment"># Include all config files in /etc/rsyslog.d/</span></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"></span></span><br><span class="line"><span class="language-bash"><span class="comment"># 包含/etc/rsyslog.d/目录中所有的&quot;.conf&quot;子配置文件。也就是说这个目录中的所有子配置文件也同时生效</span></span></span><br><span class="line"><span class="meta prompt_">$</span><span class="language-bash">IncludeConfig /etc/rsyslog.d/*.conf</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="定义自己的日志"><a href="#定义自己的日志" class="headerlink" title="定义自己的日志"></a>定义自己的日志</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# vim /etc/rsyslog.d/60-custom.conf</span><br><span class="line">*.crit				/var/log/alert.log</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">把所有服务的<span class="string">&quot;临界点&quot;</span>以上的错误都保存在/var/log/alert.log日志中</span></span><br><span class="line"></span><br><span class="line">[root@localhost ~]# systemctl restart syslog</span><br><span class="line"></span><br><span class="line">[root@localhost ~]# ll /var/log/alert.log</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="日志轮替"><a href="#日志轮替" class="headerlink" title="日志轮替"></a>日志轮替</h2><h3 id="日志文件的命名规则"><a href="#日志文件的命名规则" class="headerlink" title="日志文件的命名规则"></a>日志文件的命名规则</h3><p>日志轮替最主要的作用就是把旧的日志文件移动并改名，同时建立新的空日志文件，当旧日志文件超出保存的范围之后，就会进行删除。那么旧的日志文件改名之后，如何命名呢？主要依靠&#x2F;etc&#x2F;logrotate.conf配置文件中“dateext”参数：</p>
+<ul>
+<li>如果配置文件中拥有”dateext”参数，那么日志会用日期来作为日志文件的后缀，例如“secure-20180605”。这样的话日志文件名不会重叠，所以也就不需要日志文件的改名，只需要保存指定的日志个数，删除多余的日志文件即可。</li>
+<li>如果配置文件中没有“dateext”参数，那么日志文件就需要进行改名了。当第一次进行日志轮替时，当前的“secure”日志会自动改名为”secure.1”，然后新建”secure”日志，用来保存新的日志。当第二次进行日志轮替时，“secure.1”会自动改名为“secure.2”，当前的“secure”日志会自动改名为”secure.1”，然后也会新建”secure”日志，用来保存新的日志，以此类推。</li>
+</ul>
+<h3 id="logrotate配置文件"><a href="#logrotate配置文件" class="headerlink" title="logrotate配置文件"></a>logrotate配置文件</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# vim /etc/logrotate.conf</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">see <span class="string">&quot;man logrotate&quot;</span> <span class="keyword">for</span> details</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">global options <span class="keyword">do</span> not affect preceding include directives</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">每周对日志文件进行一次轮替</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">rotate <span class="built_in">log</span> files weekly</span></span><br><span class="line">weekly</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">use the adm group by default, since this is the owning group</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">of /var/log/.</span></span><br><span class="line">su root adm</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">保存4个日志文件，也就是说如果进行了5次日志轮替，就会删除第一个备份日志</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">keep 4 weeks worth of backlogs</span></span><br><span class="line">rotate 4</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">在日志轮替时，自动创建新的日志文件</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">create new (empty) <span class="built_in">log</span> files after rotating old ones</span></span><br><span class="line">create</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">使用日期作为日志轮替文件的后缀</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">use <span class="built_in">date</span> as a suffix of the rotated file</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">dateext</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">日志文件是否压缩，如果取消注释，则日志会在转储的同时进行压缩</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">uncomment this <span class="keyword">if</span> you want your <span class="built_in">log</span> files compressed</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">compress</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">包含/etc/logrotate.d/目录中所有的子配置文件。也就是说会把这个目录中所有子配置文件读取进来，进行日志轮替。</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">packages drop <span class="built_in">log</span> rotation information into this directory</span></span><br><span class="line">include /etc/logrotate.d</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">system-specific logs may also be configured here.</span> </span><br></pre></td></tr></table></figure>
+
+<p>以上日志配置为默认配置，如果需要轮替的日志没有设定独立的参数，那么都会遵守以上参数。如果轮替日志配置了独立参数，那么独立参数优先级更高。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# vim /etc/logrotate.d/wtmp</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">no packages own wtmp -- we<span class="string">&#x27;ll rotate it here</span></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash"><span class="string">以下参数仅对此目录有效</span></span></span><br><span class="line">/var/log/wtmp &#123;</span><br><span class="line">    missingok</span><br><span class="line">    # 每月对日志文件进行一次轮替</span><br><span class="line">    monthly</span><br><span class="line">    # 建立的新日志文件,权限是0664,所有者是root，所属组是utmp组</span><br><span class="line">    create 0664 root utmp</span><br><span class="line">    # 日志文件最小轮替大小是1MB。也就是日志一定要超过1MB才会轮替，否则就算时间达到一个月，也不进行日志转储</span><br><span class="line">    minsize 1M</span><br><span class="line">    # 仅保留一个日志备份。也就是只有wtmp和wtmp.1日志保留而已</span><br><span class="line">    rotate 1</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>logrotate配置文件的主要参数，通过如下表说明：</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>参数说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>daily</td>
+<td>日志的轮替周期是每天</td>
+</tr>
+<tr>
+<td>weekly</td>
+<td>日志的轮替周期是每周</td>
+</tr>
+<tr>
+<td>monthly</td>
+<td>日志的轮替周期是每月</td>
+</tr>
+<tr>
+<td>rotate 数字</td>
+<td>保留的日志文件的个数。0指没有备份</td>
+</tr>
+<tr>
+<td>compress</td>
+<td>日志轮替时，旧的日志进行压缩</td>
+</tr>
+<tr>
+<td>create mode owner group</td>
+<td>建立新日志，同时指定新日志的权限与所有者和所属组。如create 0600 root utmp</td>
+</tr>
+<tr>
+<td>mail address</td>
+<td>当日志轮替时，输出内容通过邮件发送到指定的邮件地址。如mail <a href="mailto:&#x61;&#97;&#x61;&#64;&#49;&#x36;&#x33;&#x2e;&#99;&#111;&#109;">aaa@163.com</a></td>
+</tr>
+<tr>
+<td>missingok</td>
+<td>如果日志不存在，则忽略该日志的警告信息</td>
+</tr>
+<tr>
+<td>notifempty</td>
+<td>如果日志为空文件，则不进行日志轮替</td>
+</tr>
+<tr>
+<td>minsize 大小</td>
+<td>日志轮替的最小值。也就是日志一定要达到这个最小值才会轮替，否则就算时间达到也不轮替</td>
+</tr>
+<tr>
+<td>size 大小</td>
+<td>日志只有大于指定大小才进行日志轮替，而不是按照时间轮替。如size 100k</td>
+</tr>
+<tr>
+<td>dateext</td>
+<td>使用日期作为日志轮替文件的后缀。如secure-20180605</td>
+</tr>
+<tr>
+<td>sharedscripts</td>
+<td>在此关键字之后的脚本只执行一次</td>
+</tr>
+<tr>
+<td>prerotate&#x2F;endscript</td>
+<td>在日志轮替之前执行脚本命令。endscript标示prerotate脚本结束。</td>
+</tr>
+<tr>
+<td>postrotate&#x2F;endscript</td>
+<td>在日志轮替之后执行脚本命令。endscript标示postrotate脚本结束。</td>
+</tr>
+</tbody></table>
+<p>这些参数中较为不好理解的应该就是prerotate&#x2F;endscript和postrotate&#x2F;endscript参数了。例如：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">/var/log/httpd/error.log &#123;</span><br><span class="line">    rotate 5</span><br><span class="line">    mail www@my.org</span><br><span class="line">    size 100k</span><br><span class="line">    # 以下脚本只执行一次</span><br><span class="line">    sharedscripts</span><br><span class="line">    # 在日志轮替结束之后，执行以下脚本</span><br><span class="line">    postrotate</span><br><span class="line">    	# 重启apache服务</span><br><span class="line">        /usr/bin/killall -HUP httpd</span><br><span class="line">    endscript</span><br><span class="line">    # 脚本结束</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>prerotate和postrotate主要用于在日志轮替的同时，执行指定的脚本，一般用于日志轮替之后重启服务。这里强调，如果你的日志是写入rsyslog服务的配置文件的，那么把新日志加入logrotate后，一定要重启rsyslog服务，否则你会发现虽然新日志建立了，但是数据还是写入了旧的日志当中。那是因为虽然logrotate知道日志轮替了，但是rsyslog服务并不知道。同理，如果你的日志不是被rsyslog管理，如源码包安装的Apache、Nginx等服务，则需要重启Apache或Nginx服务，否则日志也不能正常轮替。</p>
+<h3 id="把自己的日志加入日志轮替"><a href="#把自己的日志加入日志轮替" class="headerlink" title="把自己的日志加入日志轮替"></a>把自己的日志加入日志轮替</h3><p>1）方法一</p>
+<p>直接在&#x2F;etc&#x2F;logrotate.conf配置文件中写入该日志的轮替策略，从而把日志加入轮替。</p>
+<p>2）方法二</p>
+<p>在&#x2F;etc&#x2F;logrotate.d&#x2F;目录中新建立该日志的轮替文件，在该轮替文件中写入正确的轮替策略，因为该目录中的文件都会被“include”到主配置文件中，所以也可以把日志加入轮替。推荐使用此方法，因为系统中需要轮替的日志非常多，如果全部直接写入&#x2F;etc&#x2F;logrotate.conf配置文件，那么这个文件的可管理性就会非常差，不利于此文件的维护。</p>
+<p>举个例子，如果需要把Nginx服务的日志加入日志轮替，则也需要重启Nginx服务。如：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">/date/logs/nginx/access/access.log /date/logs/nginx/access/default.log &#123;</span><br><span class="line">	daily</span><br><span class="line">	rotate 15</span><br><span class="line">	sharedscripts</span><br><span class="line">	postrotate</span><br><span class="line">		# 重启rsyslog服务</span><br><span class="line">		/bin/kill -HUP $(/bin/cat /var/run/syslogd.pid) &amp;&gt;/dev/null</span><br><span class="line">		# 重启nginx服务</span><br><span class="line">		/bin/kill -HUP $(/bin/cat /usr/local/nginx/logs/nginx.pid) &amp;&gt;/dev/null</span><br><span class="line">	endscript</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="logrotate命令"><a href="#logrotate命令" class="headerlink" title="logrotate命令"></a>logrotate命令</h3><p>日志轮替之所以可以在指定的时间备份日志，其实也要依赖系统定时任务。如果大家还记录&#x2F;etc&#x2F;cron&#x2F;daily&#x2F;目录，就会发现这个目录中是有logrotate文件，logrotate通过这个文件依赖定时任务执行的。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# logrotate [选项] 配置文件名</span><br><span class="line">选项：</span><br><span class="line">	如果此命令没有选项，则会按照配置文件中的条件进行日志轮替</span><br><span class="line">	-v:		显示日志轮替过程。加了-v选项，会显示日志的轮替的过程</span><br><span class="line">	-f:		强制进行日志轮替。不管日志轮替的条件是否已经符合，强制配置文件中所有的日志进行轮替</span><br></pre></td></tr></table></figure>
+
+<p>执行logrotate命令，并查看下执行过程：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# logrotate -v /etc/logrotate.conf</span><br><span class="line">...</span><br><span class="line">rotating pattern: /var/log/wtmp  monthly (1 rotations)</span><br><span class="line">empty log files are rotated, only log files &gt;= 1048576 bytes are rotated, old logs are removed</span><br><span class="line">switching euid from 0 to 0 and egid from 0 to 4 (pid 39834)</span><br><span class="line">considering log /var/log/wtmp</span><br><span class="line">  Now: 2025-03-10 19:45</span><br><span class="line">  Last rotated at 2024-08-26 09:05</span><br><span class="line">  log does not need rotating (&#x27;minsize&#x27; directive is used and the log size is smaller than the minsize value)</span><br><span class="line">switching euid from 0 to 0 and egid from 4 to 0 (pid 39834)</span><br></pre></td></tr></table></figure>
+
+<p>强制进行一次日志轮替，看看有什么效果：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# logrotate -vf /etc/logrotate.conf</span><br><span class="line">...</span><br><span class="line">rotating pattern: /var/log/wtmp  forced from command line (1 rotations)</span><br><span class="line">empty log files are rotated, only log files &gt;= 1048576 bytes are rotated, old logs are removed</span><br><span class="line">switching euid from 0 to 0 and egid from 0 to 4 (pid 40773)</span><br><span class="line">considering log /var/log/wtmp</span><br><span class="line">  Now: 2025-03-10 19:48</span><br><span class="line">  Last rotated at 2024-08-26 09:05</span><br><span class="line">  log needs rotating                                 # 日志需要轮替</span><br><span class="line">rotating log /var/log/wtmp, log-&gt;rotateCount is 1</span><br><span class="line">dateext suffix &#x27;-20250310&#x27;                           # 提取日期参数</span><br><span class="line">glob pattern &#x27;-[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]&#x27;</span><br><span class="line">renaming /var/log/wtmp.1 to /var/log/wtmp.2 (rotatecount 1, logstart 1, i 1), </span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">旧的日志被重命名</span></span><br><span class="line">renaming /var/log/wtmp to /var/log/wtmp.1</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">创建新日志文件</span></span><br><span class="line">creating new /var/log/wtmp mode = 0664 uid = 0 gid = 43</span><br><span class="line">removing old log /var/log/wtmp.2</span><br><span class="line">switching euid from 0 to 0 and egid from 4 to 0 (pid 40773)</span><br></pre></td></tr></table></figure>
+
+<p>logrotate命令使用“-f”选项之后，就不管日志是否已经符合了日志轮替条件，而强制把所有的日志都进行了轮替。</p>
 ]]></content>
       <categories>
         <category>Linux</category>
@@ -4259,354 +4640,6 @@
       </categories>
   </entry>
   <entry>
-    <title>日志管理</title>
-    <url>/2025/03/07/%E6%97%A5%E5%BF%97%E7%AE%A1%E7%90%86/</url>
-    <content><![CDATA[<h2 id="日志简介"><a href="#日志简介" class="headerlink" title="日志简介"></a>日志简介</h2><h3 id="日志相关服务"><a href="#日志相关服务" class="headerlink" title="日志相关服务"></a>日志相关服务</h3><p>在CentOS 6.x中日志服务已经由rsyslogd取代了原先的syslogd服务。Redhat认为syslogd已经不能满足在工作中的需求，rsyslogd相比syslogd具有一些新的特点：</p>
-<ul>
-<li>基于TCP网络协议传输日志信息；</li>
-<li>更安全的网络传输方式；</li>
-<li>有日志消息的及时分析框架；</li>
-<li>后台数据库；</li>
-<li>配置文件中可以写简单的逻辑判断；</li>
-<li>与syslog配置文件相兼容。</li>
-</ul>
-<h3 id="系统中常见的日志文件"><a href="#系统中常见的日志文件" class="headerlink" title="系统中常见的日志文件"></a>系统中常见的日志文件</h3><table>
-<thead>
-<tr>
-<th>日志文件</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>&#x2F;var&#x2F;log&#x2F;cron</td>
-<td>记录了系统定时任务相关的日志。</td>
-</tr>
-<tr>
-<td>&#x2F;var&#x2F;log&#x2F;cups&#x2F;</td>
-<td>记录打印信息的日志。</td>
-</tr>
-<tr>
-<td>&#x2F;var&#x2F;log&#x2F;dmesg</td>
-<td>记录了系统在开机时内核自检的信息。也可以使用dmesg命令直接查看内核自检信息。</td>
-</tr>
-<tr>
-<td>&#x2F;var&#x2F;log&#x2F;btmp</td>
-<td>记录错误登录的日志。这个文件是二进制文件，不能直接vim查看，而要使用lastb命令查看。</td>
-</tr>
-<tr>
-<td>&#x2F;var&#x2F;log&#x2F;lastlog</td>
-<td>记录系统中所有用户最后一次登录时间的日志。这个文件也是二进制文件，不能直接vim查看，而要使用lastlog命令查看。</td>
-</tr>
-<tr>
-<td>&#x2F;var&#x2F;log&#x2F;mailog</td>
-<td>记录邮件信息。</td>
-</tr>
-<tr>
-<td>&#x2F;var&#x2F;log&#x2F;message</td>
-<td>记录系统重要信息的日志。这个日志文件中会记录Linux系统的绝大多数重要信息，如果系统出现问题时，首先要检查的就应该是这个日志文件。</td>
-</tr>
-<tr>
-<td>&#x2F;var&#x2F;log&#x2F;secure</td>
-<td>记录验证和授权方面的信息，只要涉及账户和密码的程序都会记录。比如说系统的登录，ssh的登录，su切换用户，sudo授权，甚至添加用户和修改用户密码都会记录在这个日志文件中。</td>
-</tr>
-<tr>
-<td>&#x2F;var&#x2F;log&#x2F;wtmp</td>
-<td>永久记录所有用户的登录、注销信息，同时记录系统的启动、重启、关机事件。同样这个文件也是一个二进制文件，不能直接vim，而需要使用last命令来查看。</td>
-</tr>
-<tr>
-<td>&#x2F;var&#x2F;run&#x2F;utmp</td>
-<td>记录当前已经登录的用户的信息。这个文件会随着用户的登录和注销而不断变化，只记录当前登录用户的信息。同样这个文件不能直接vim，而要使用w,who,users等命令来查询。</td>
-</tr>
-</tbody></table>
-<p>除了系统默认的日志之外，采用RPM方式安装的系统服务也会默认把日志记录在&#x2F;var&#x2F;log&#x2F;目录中(源码包安装的服务日志是在源码包指定目录中)。不过这些日志不是由rsyslogd服务来记录和管理的，而是各个服务器使用自己的日志管理文档来记录自身日志。</p>
-<table>
-<thead>
-<tr>
-<th>日志文件</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>&#x2F;var&#x2F;log&#x2F;httpd&#x2F;</td>
-<td>RPM包安装的apache服务的默认日志目录</td>
-</tr>
-<tr>
-<td>&#x2F;var&#x2F;log&#x2F;mail&#x2F;</td>
-<td>RPM包安装的邮件服务的额外日志目录</td>
-</tr>
-<tr>
-<td>&#x2F;var&#x2F;log&#x2F;samba&#x2F;</td>
-<td>RPM包安装的samba服务的日志目录</td>
-</tr>
-<tr>
-<td>&#x2F;var&#x2F;log&#x2F;sssd&#x2F;</td>
-<td>守护进程安全服务目录</td>
-</tr>
-</tbody></table>
-<h2 id="日志服务-rsyslogd"><a href="#日志服务-rsyslogd" class="headerlink" title="日志服务(rsyslogd)"></a>日志服务(rsyslogd)</h2><h3 id="日志文件格式"><a href="#日志文件格式" class="headerlink" title="日志文件格式"></a>日志文件格式</h3><p>只要是由日志服务rsyslogd记录的日志文件，他们的格式是一样的。基本日志格式包含以下四列：</p>
-<ul>
-<li>事件产生的时间</li>
-<li>发生事件的服务器的主机名</li>
-<li>产生事件的服务名或程序名</li>
-<li>事件的具体信息</li>
-</ul>
-<h3 id="rsyslogd服务的配置文件"><a href="#rsyslogd服务的配置文件" class="headerlink" title="rsyslogd服务的配置文件"></a>rsyslogd服务的配置文件</h3><h4 id="etc-rsyslog-d-50-default-conf"><a href="#etc-rsyslog-d-50-default-conf" class="headerlink" title="&#x2F;etc&#x2F;rsyslog.d&#x2F;50-default.conf"></a>&#x2F;etc&#x2F;rsyslog.d&#x2F;50-default.conf</h4><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">auth,authpriv.*			/var/log/auth.log</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">服务名称[连接符号]日志等级    日志记录位置</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">认证相关服务.所有日志等级     记录在/var/log/auth.log日志中</span></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p>服务名称</p>
-<p>我们首先需要确定rsyslogd服务可以识别哪些服务的日志，也可以理解为以下这些服务委托了rsyslogd服务来代为管理日志。这些服务如下表所示：</p>
-<table>
-<thead>
-<tr>
-<th>服务名称</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>auth（LOG_AUTH）</td>
-<td>安全和认证相关消息(不推荐使用authpriv替代)</td>
-</tr>
-<tr>
-<td>authpriv（LOG_AUTHPRIV）</td>
-<td>安全和认证相关消息（私有的）</td>
-</tr>
-<tr>
-<td>cron（LOG_CRON）</td>
-<td>系统定时任务cront和at产生的日志</td>
-</tr>
-<tr>
-<td>daemon（LOG_DAEMON）</td>
-<td>和各个守护进程相关的日志</td>
-</tr>
-<tr>
-<td>ftp（LOG_FTP）</td>
-<td>ftp守护进程产生的日志</td>
-</tr>
-<tr>
-<td>kern（LOG_KERN）</td>
-<td>内核产生的日志（不是用户进程产生的）</td>
-</tr>
-<tr>
-<td>local0-local7（LOG_LOCAL0-7）</td>
-<td>为本地使用预留的服务</td>
-</tr>
-<tr>
-<td>lpr（LOG_LPR）</td>
-<td>打印产生的日志</td>
-</tr>
-<tr>
-<td>Mail（LOG_MAIL）</td>
-<td>邮件收发信息</td>
-</tr>
-<tr>
-<td>news（LOG_NEWS）</td>
-<td>与新闻服务器相关的日志</td>
-</tr>
-<tr>
-<td>syslog（LOG_SYSLOG）</td>
-<td>有syslogd服务产生的日志信息（虽然服务名称已经改为rsyslogd，但是很多配置都还是沿用了syslogd的，这里并没有修改服务名）。</td>
-</tr>
-<tr>
-<td>user（LOG_USER）</td>
-<td>用户等级类别的日志信息</td>
-</tr>
-<tr>
-<td>uucp（LOG_UUCP）</td>
-<td>uucp子系统的日志信息，uucp是早期linux系统进行数据传递的协议，后来也常用在新闻组服务中</td>
-</tr>
-</tbody></table>
-</li>
-<li><p>连接符号</p>
-<p>日志服务连接日志等级的格式为：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">日志服务[连接符号]日志等级			日志记录位置</span><br></pre></td></tr></table></figure>
-
-<p>在这里连接符号可以识别为：</p>
-<ul>
-<li>“.”代表只要比后面的等级高的（包含该等级）日志都记录下来。比如：”cron.info”代表cron服务产生的日志只要日志等级大于等于info级别，就记录。</li>
-<li>“.&#x3D;”代表只记录所需等级的日志，其他等级的都不记录。比如：“*.&#x3D;emerg”代表任何日志服务产生的日志，只要等级是emerg等级就记录。这种用法极少见，了解就好。</li>
-<li>“.!”代表不等于，也就是除了该等级的日志外，其他等级的日志都记录。</li>
-</ul>
-</li>
-<li><p>日志等级</p>
-<table>
-<thead>
-<tr>
-<th>等级名称</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>debug（LOG_DEBUG）</td>
-<td>一般的调试信息说明</td>
-</tr>
-<tr>
-<td>info（LOG_INFO）</td>
-<td>基本的通知信息</td>
-</tr>
-<tr>
-<td>notice（LOG_NOTICE）</td>
-<td>普通信息，但是有一定的重要性</td>
-</tr>
-<tr>
-<td>warning（LOG_WARNING）</td>
-<td>警告信息，但是还不会影响到服务或系统的运行</td>
-</tr>
-<tr>
-<td>err（LOG_ERR）</td>
-<td>错误信息，一般达到err等级的信息以及可以影响到服务或系统的运行了</td>
-</tr>
-<tr>
-<td>crit（LOG_CRIT）</td>
-<td>临界状况信息，比err等级还要严重</td>
-</tr>
-<tr>
-<td>alert（LOG_ALERT）</td>
-<td>警告状态信息，比crit还要严重。必须立即采取行动</td>
-</tr>
-<tr>
-<td>emerg（LOG_EMERG）</td>
-<td>疼痛等级信息，系统已经无法使用了</td>
-</tr>
-<tr>
-<td>*</td>
-<td>代表所有日志等级，比如：“authpriv.*”代表authpriv认证信息服务产生的日志，所有的日志等级都记录</td>
-</tr>
-</tbody></table>
-<p>日志等这里还可以识别”none”，如果日志等级是none，就说明忽略这个日志服务，该服务的所有日志都不再记录。</p>
-</li>
-<li><p>日志记录位置</p>
-<p>日志记录位置就是当前日志输出到哪个日志文件中保存，当然也可以把日志输出到印机打印，或者输出到远程日志服务器上（当然日志服务器要允许接收才行）。日志的记录位置也是固定的：</p>
-<ul>
-<li><p>日志文件的绝对路径</p>
-<p>这是最常见的日志保存方法，如“&#x2F;var&#x2F;log&#x2F;secure”就是保存系统验证和授权信息日志的。</p>
-</li>
-<li><p>系统设备文件</p>
-<p>如“&#x2F;dev&#x2F;lp0”代表第一台打印机，如果日志保存位置是打印机设备的话，当有日志时就会在打印机打印（不太符合可持续发展战略）。</p>
-</li>
-<li><p>转发给远程主机</p>
-<p>因为可以选择使用TCP协议和UDP协议传输日志信息，所以有两种发送格式。如使用“@192.168.0.210:514”，就会把日志内容使用UDP协议发送到192.168.0.210的UDP 514端口上；如果使用”@@192.168.0.210:514”就会把日志内容使用TCP协议发送到192.168.0.210的TCP 514端口上，其中514是日志服务默认端口。当然只要192.168.0.210同意接收此日志，就可以把日志内容保存在日志服务器上。</p>
-</li>
-<li><p>用户名</p>
-<p>如“root”，就会把日志发送给root用户，当然root要在线，否则就收不到日志信息了。发送日志给用户时，可以使用“*”代表发送给所有在线用户，如“mail.* *”就会把mail服务产生的所有级别的日志发送给所有在线用户。如果需要把日志发送给多个在线用户，用户名之间用“,”分隔。</p>
-</li>
-</ul>
-</li>
-</ul>
-<p>忽略或丢弃日志。如果接受日志的对象是“~”，代表这个日志不会记录，而被直接丢弃。如“local3.* ~”代表忽略local3服务类型所有的日志都不记录。</p>
-<h4 id="etc-rsyslog-conf配置文件内容"><a href="#etc-rsyslog-conf配置文件内容" class="headerlink" title="&#x2F;etc&#x2F;rsyslog.conf配置文件内容"></a>&#x2F;etc&#x2F;rsyslog.conf配置文件内容</h4><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# vim /etc/rsyslog.conf</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">/etc/rsyslog.conf configuration file <span class="keyword">for</span> rsyslog</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"></span></span><br><span class="line"><span class="language-bash"><span class="comment"># For more information install rsyslog-doc and see</span></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">/usr/share/doc/rsyslog-doc/html/configuration/index.html</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"></span></span><br><span class="line"><span class="language-bash"><span class="comment"># Default logging rules can be found in /etc/rsyslog.d/50-default.conf</span></span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">加载模块</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="comment">################</span></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="comment">### MODULES ####</span></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="comment">################</span></span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">加载imuxsock模块，为本地系统登录提供支持</span></span><br><span class="line">module(load=&quot;imuxsock&quot;) # provides support for local system logging</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">加载immark模块，提供标记信息的能力</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">module(load=<span class="string">&quot;immark&quot;</span>)  <span class="comment"># provides --MARK-- message capability</span></span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">加载UDP模块，允许使用UDP的514端口接收采用UDP协议转发的日志</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">provides UDP syslog reception</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">module(load=<span class="string">&quot;imudp&quot;</span>)</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">input(<span class="built_in">type</span>=<span class="string">&quot;imudp&quot;</span> port=<span class="string">&quot;514&quot;</span>)</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">加载TCP模块，允许使用TCP的514端口接收采用TCP协议转发的日志</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">provides TCP syslog reception</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">module(load=<span class="string">&quot;imtcp&quot;</span>)</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">input(<span class="built_in">type</span>=<span class="string">&quot;imtcp&quot;</span> port=<span class="string">&quot;514&quot;</span>)</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">provides kernel logging support and <span class="built_in">enable</span> non-kernel klog messages</span></span><br><span class="line">module(load=&quot;imklog&quot; permitnonkernelfacility=&quot;on&quot;)</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">定义全局设置</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="comment">##########################</span></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="comment">### GLOBAL DIRECTIVES ####</span></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="comment">##########################</span></span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Filter duplicated messages</span></span><br><span class="line"><span class="meta prompt_">$</span><span class="language-bash">RepeatedMsgReduction on</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"></span></span><br><span class="line"><span class="language-bash"><span class="comment"># Set the default permissions for all log files.</span></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"></span></span><br><span class="line"><span class="language-bash"><span class="variable">$FileOwner</span> syslog</span></span><br><span class="line"><span class="meta prompt_">$</span><span class="language-bash">FileGroup adm</span></span><br><span class="line"><span class="meta prompt_">$</span><span class="language-bash">FileCreateMode 0640</span></span><br><span class="line"><span class="meta prompt_">$</span><span class="language-bash">DirCreateMode 0755</span></span><br><span class="line"><span class="meta prompt_">$</span><span class="language-bash">Umask 0022</span></span><br><span class="line"><span class="meta prompt_">$</span><span class="language-bash">PrivDropToUser syslog</span></span><br><span class="line"><span class="meta prompt_">$</span><span class="language-bash">PrivDropToGroup syslog</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"></span></span><br><span class="line"><span class="language-bash"><span class="comment"># Where to place spool and state files</span></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"></span></span><br><span class="line"><span class="language-bash"><span class="variable">$WorkDirectory</span> /var/spool/rsyslog</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"></span></span><br><span class="line"><span class="language-bash"><span class="comment"># Include all config files in /etc/rsyslog.d/</span></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"></span></span><br><span class="line"><span class="language-bash"><span class="comment"># 包含/etc/rsyslog.d/目录中所有的&quot;.conf&quot;子配置文件。也就是说这个目录中的所有子配置文件也同时生效</span></span></span><br><span class="line"><span class="meta prompt_">$</span><span class="language-bash">IncludeConfig /etc/rsyslog.d/*.conf</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="定义自己的日志"><a href="#定义自己的日志" class="headerlink" title="定义自己的日志"></a>定义自己的日志</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# vim /etc/rsyslog.d/60-custom.conf</span><br><span class="line">*.crit				/var/log/alert.log</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">把所有服务的<span class="string">&quot;临界点&quot;</span>以上的错误都保存在/var/log/alert.log日志中</span></span><br><span class="line"></span><br><span class="line">[root@localhost ~]# systemctl restart syslog</span><br><span class="line"></span><br><span class="line">[root@localhost ~]# ll /var/log/alert.log</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="日志轮替"><a href="#日志轮替" class="headerlink" title="日志轮替"></a>日志轮替</h2><h3 id="日志文件的命名规则"><a href="#日志文件的命名规则" class="headerlink" title="日志文件的命名规则"></a>日志文件的命名规则</h3><p>日志轮替最主要的作用就是把旧的日志文件移动并改名，同时建立新的空日志文件，当旧日志文件超出保存的范围之后，就会进行删除。那么旧的日志文件改名之后，如何命名呢？主要依靠&#x2F;etc&#x2F;logrotate.conf配置文件中“dateext”参数：</p>
-<ul>
-<li>如果配置文件中拥有”dateext”参数，那么日志会用日期来作为日志文件的后缀，例如“secure-20180605”。这样的话日志文件名不会重叠，所以也就不需要日志文件的改名，只需要保存指定的日志个数，删除多余的日志文件即可。</li>
-<li>如果配置文件中没有“dateext”参数，那么日志文件就需要进行改名了。当第一次进行日志轮替时，当前的“secure”日志会自动改名为”secure.1”，然后新建”secure”日志，用来保存新的日志。当第二次进行日志轮替时，“secure.1”会自动改名为“secure.2”，当前的“secure”日志会自动改名为”secure.1”，然后也会新建”secure”日志，用来保存新的日志，以此类推。</li>
-</ul>
-<h3 id="logrotate配置文件"><a href="#logrotate配置文件" class="headerlink" title="logrotate配置文件"></a>logrotate配置文件</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# vim /etc/logrotate.conf</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">see <span class="string">&quot;man logrotate&quot;</span> <span class="keyword">for</span> details</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">global options <span class="keyword">do</span> not affect preceding include directives</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">每周对日志文件进行一次轮替</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">rotate <span class="built_in">log</span> files weekly</span></span><br><span class="line">weekly</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">use the adm group by default, since this is the owning group</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">of /var/log/.</span></span><br><span class="line">su root adm</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">保存4个日志文件，也就是说如果进行了5次日志轮替，就会删除第一个备份日志</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">keep 4 weeks worth of backlogs</span></span><br><span class="line">rotate 4</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">在日志轮替时，自动创建新的日志文件</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">create new (empty) <span class="built_in">log</span> files after rotating old ones</span></span><br><span class="line">create</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">使用日期作为日志轮替文件的后缀</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">use <span class="built_in">date</span> as a suffix of the rotated file</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">dateext</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">日志文件是否压缩，如果取消注释，则日志会在转储的同时进行压缩</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">uncomment this <span class="keyword">if</span> you want your <span class="built_in">log</span> files compressed</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">compress</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">包含/etc/logrotate.d/目录中所有的子配置文件。也就是说会把这个目录中所有子配置文件读取进来，进行日志轮替。</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">packages drop <span class="built_in">log</span> rotation information into this directory</span></span><br><span class="line">include /etc/logrotate.d</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">system-specific logs may also be configured here.</span> </span><br></pre></td></tr></table></figure>
-
-<p>以上日志配置为默认配置，如果需要轮替的日志没有设定独立的参数，那么都会遵守以上参数。如果轮替日志配置了独立参数，那么独立参数优先级更高。</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# vim /etc/logrotate.d/wtmp</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">no packages own wtmp -- we<span class="string">&#x27;ll rotate it here</span></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash"><span class="string">以下参数仅对此目录有效</span></span></span><br><span class="line">/var/log/wtmp &#123;</span><br><span class="line">    missingok</span><br><span class="line">    # 每月对日志文件进行一次轮替</span><br><span class="line">    monthly</span><br><span class="line">    # 建立的新日志文件,权限是0664,所有者是root，所属组是utmp组</span><br><span class="line">    create 0664 root utmp</span><br><span class="line">    # 日志文件最小轮替大小是1MB。也就是日志一定要超过1MB才会轮替，否则就算时间达到一个月，也不进行日志转储</span><br><span class="line">    minsize 1M</span><br><span class="line">    # 仅保留一个日志备份。也就是只有wtmp和wtmp.1日志保留而已</span><br><span class="line">    rotate 1</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>logrotate配置文件的主要参数，通过如下表说明：</p>
-<table>
-<thead>
-<tr>
-<th>参数</th>
-<th>参数说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>daily</td>
-<td>日志的轮替周期是每天</td>
-</tr>
-<tr>
-<td>weekly</td>
-<td>日志的轮替周期是每周</td>
-</tr>
-<tr>
-<td>monthly</td>
-<td>日志的轮替周期是每月</td>
-</tr>
-<tr>
-<td>rotate 数字</td>
-<td>保留的日志文件的个数。0指没有备份</td>
-</tr>
-<tr>
-<td>compress</td>
-<td>日志轮替时，旧的日志进行压缩</td>
-</tr>
-<tr>
-<td>create mode owner group</td>
-<td>建立新日志，同时指定新日志的权限与所有者和所属组。如create 0600 root utmp</td>
-</tr>
-<tr>
-<td>mail address</td>
-<td>当日志轮替时，输出内容通过邮件发送到指定的邮件地址。如mail <a href="mailto:&#97;&#97;&#97;&#64;&#x31;&#54;&#51;&#46;&#99;&#x6f;&#x6d;">aaa@163.com</a></td>
-</tr>
-<tr>
-<td>missingok</td>
-<td>如果日志不存在，则忽略该日志的警告信息</td>
-</tr>
-<tr>
-<td>notifempty</td>
-<td>如果日志为空文件，则不进行日志轮替</td>
-</tr>
-<tr>
-<td>minsize 大小</td>
-<td>日志轮替的最小值。也就是日志一定要达到这个最小值才会轮替，否则就算时间达到也不轮替</td>
-</tr>
-<tr>
-<td>size 大小</td>
-<td>日志只有大于指定大小才进行日志轮替，而不是按照时间轮替。如size 100k</td>
-</tr>
-<tr>
-<td>dateext</td>
-<td>使用日期作为日志轮替文件的后缀。如secure-20180605</td>
-</tr>
-<tr>
-<td>sharedscripts</td>
-<td>在此关键字之后的脚本只执行一次</td>
-</tr>
-<tr>
-<td>prerotate&#x2F;endscript</td>
-<td>在日志轮替之前执行脚本命令。endscript标示prerotate脚本结束。</td>
-</tr>
-<tr>
-<td>postrotate&#x2F;endscript</td>
-<td>在日志轮替之后执行脚本命令。endscript标示postrotate脚本结束。</td>
-</tr>
-</tbody></table>
-<p>这些参数中较为不好理解的应该就是prerotate&#x2F;endscript和postrotate&#x2F;endscript参数了。例如：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">/var/log/httpd/error.log &#123;</span><br><span class="line">    rotate 5</span><br><span class="line">    mail www@my.org</span><br><span class="line">    size 100k</span><br><span class="line">    # 以下脚本只执行一次</span><br><span class="line">    sharedscripts</span><br><span class="line">    # 在日志轮替结束之后，执行以下脚本</span><br><span class="line">    postrotate</span><br><span class="line">    	# 重启apache服务</span><br><span class="line">        /usr/bin/killall -HUP httpd</span><br><span class="line">    endscript</span><br><span class="line">    # 脚本结束</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>prerotate和postrotate主要用于在日志轮替的同时，执行指定的脚本，一般用于日志轮替之后重启服务。这里强调，如果你的日志是写入rsyslog服务的配置文件的，那么把新日志加入logrotate后，一定要重启rsyslog服务，否则你会发现虽然新日志建立了，但是数据还是写入了旧的日志当中。那是因为虽然logrotate知道日志轮替了，但是rsyslog服务并不知道。同理，如果你的日志不是被rsyslog管理，如源码包安装的Apache、Nginx等服务，则需要重启Apache或Nginx服务，否则日志也不能正常轮替。</p>
-<h3 id="把自己的日志加入日志轮替"><a href="#把自己的日志加入日志轮替" class="headerlink" title="把自己的日志加入日志轮替"></a>把自己的日志加入日志轮替</h3><p>1）方法一</p>
-<p>直接在&#x2F;etc&#x2F;logrotate.conf配置文件中写入该日志的轮替策略，从而把日志加入轮替。</p>
-<p>2）方法二</p>
-<p>在&#x2F;etc&#x2F;logrotate.d&#x2F;目录中新建立该日志的轮替文件，在该轮替文件中写入正确的轮替策略，因为该目录中的文件都会被“include”到主配置文件中，所以也可以把日志加入轮替。推荐使用此方法，因为系统中需要轮替的日志非常多，如果全部直接写入&#x2F;etc&#x2F;logrotate.conf配置文件，那么这个文件的可管理性就会非常差，不利于此文件的维护。</p>
-<p>举个例子，如果需要把Nginx服务的日志加入日志轮替，则也需要重启Nginx服务。如：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">/date/logs/nginx/access/access.log /date/logs/nginx/access/default.log &#123;</span><br><span class="line">	daily</span><br><span class="line">	rotate 15</span><br><span class="line">	sharedscripts</span><br><span class="line">	postrotate</span><br><span class="line">		# 重启rsyslog服务</span><br><span class="line">		/bin/kill -HUP $(/bin/cat /var/run/syslogd.pid) &amp;&gt;/dev/null</span><br><span class="line">		# 重启nginx服务</span><br><span class="line">		/bin/kill -HUP $(/bin/cat /usr/local/nginx/logs/nginx.pid) &amp;&gt;/dev/null</span><br><span class="line">	endscript</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="logrotate命令"><a href="#logrotate命令" class="headerlink" title="logrotate命令"></a>logrotate命令</h3><p>日志轮替之所以可以在指定的时间备份日志，其实也要依赖系统定时任务。如果大家还记录&#x2F;etc&#x2F;cron&#x2F;daily&#x2F;目录，就会发现这个目录中是有logrotate文件，logrotate通过这个文件依赖定时任务执行的。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# logrotate [选项] 配置文件名</span><br><span class="line">选项：</span><br><span class="line">	如果此命令没有选项，则会按照配置文件中的条件进行日志轮替</span><br><span class="line">	-v:		显示日志轮替过程。加了-v选项，会显示日志的轮替的过程</span><br><span class="line">	-f:		强制进行日志轮替。不管日志轮替的条件是否已经符合，强制配置文件中所有的日志进行轮替</span><br></pre></td></tr></table></figure>
-
-<p>执行logrotate命令，并查看下执行过程：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# logrotate -v /etc/logrotate.conf</span><br><span class="line">...</span><br><span class="line">rotating pattern: /var/log/wtmp  monthly (1 rotations)</span><br><span class="line">empty log files are rotated, only log files &gt;= 1048576 bytes are rotated, old logs are removed</span><br><span class="line">switching euid from 0 to 0 and egid from 0 to 4 (pid 39834)</span><br><span class="line">considering log /var/log/wtmp</span><br><span class="line">  Now: 2025-03-10 19:45</span><br><span class="line">  Last rotated at 2024-08-26 09:05</span><br><span class="line">  log does not need rotating (&#x27;minsize&#x27; directive is used and the log size is smaller than the minsize value)</span><br><span class="line">switching euid from 0 to 0 and egid from 4 to 0 (pid 39834)</span><br></pre></td></tr></table></figure>
-
-<p>强制进行一次日志轮替，看看有什么效果：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# logrotate -vf /etc/logrotate.conf</span><br><span class="line">...</span><br><span class="line">rotating pattern: /var/log/wtmp  forced from command line (1 rotations)</span><br><span class="line">empty log files are rotated, only log files &gt;= 1048576 bytes are rotated, old logs are removed</span><br><span class="line">switching euid from 0 to 0 and egid from 0 to 4 (pid 40773)</span><br><span class="line">considering log /var/log/wtmp</span><br><span class="line">  Now: 2025-03-10 19:48</span><br><span class="line">  Last rotated at 2024-08-26 09:05</span><br><span class="line">  log needs rotating                                 # 日志需要轮替</span><br><span class="line">rotating log /var/log/wtmp, log-&gt;rotateCount is 1</span><br><span class="line">dateext suffix &#x27;-20250310&#x27;                           # 提取日期参数</span><br><span class="line">glob pattern &#x27;-[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]&#x27;</span><br><span class="line">renaming /var/log/wtmp.1 to /var/log/wtmp.2 (rotatecount 1, logstart 1, i 1), </span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">旧的日志被重命名</span></span><br><span class="line">renaming /var/log/wtmp to /var/log/wtmp.1</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">创建新日志文件</span></span><br><span class="line">creating new /var/log/wtmp mode = 0664 uid = 0 gid = 43</span><br><span class="line">removing old log /var/log/wtmp.2</span><br><span class="line">switching euid from 0 to 0 and egid from 4 to 0 (pid 40773)</span><br></pre></td></tr></table></figure>
-
-<p>logrotate命令使用“-f”选项之后，就不管日志是否已经符合了日志轮替条件，而强制把所有的日志都进行了轮替。</p>
-]]></content>
-      <categories>
-        <category>Linux</category>
-      </categories>
-  </entry>
-  <entry>
     <title>权限管理</title>
     <url>/2025/02/25/%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86/</url>
     <content><![CDATA[<h1 id="权限管理"><a href="#权限管理" class="headerlink" title="权限管理"></a>权限管理</h1><h2 id="1-ACL权限"><a href="#1-ACL权限" class="headerlink" title="1. ACL权限"></a>1. ACL权限</h2><h3 id="1）ACL概述"><a href="#1）ACL概述" class="headerlink" title="1）ACL概述"></a>1）ACL概述</h3><p>ACL是用于解决用户对文件身份不足问题的。</p>
@@ -4777,6 +4810,218 @@
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# lsattr 选项 文件名</span><br><span class="line">选项：</span><br><span class="line">  -a:    显示所有文件和目录</span><br><span class="line">  -d:    若目标是目录，仅列出目录本身的属性，而不是子文件</span><br></pre></td></tr></table></figure>
 
 
+
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>用户管理</title>
+    <url>/2025/02/25/%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86/</url>
+    <content><![CDATA[<h1 id="用户管理"><a href="#用户管理" class="headerlink" title="用户管理"></a>用户管理</h1><h2 id="1-用户相关文件"><a href="#1-用户相关文件" class="headerlink" title="1. 用户相关文件"></a>1. 用户相关文件</h2><h3 id="1）用户信息文件"><a href="#1）用户信息文件" class="headerlink" title="1）用户信息文件"></a>1）用户信息文件</h3><p>&#x2F;etc&#x2F;passwd</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">root:x:0:0:root:/root:/bin/bash</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>第一列：用户名</p>
+</li>
+<li><p>第二列：密码位</p>
+<p>x为密码标志位，代表用户有密码，用户密码放置在&#x2F;etc&#x2F;shadow文件中。</p>
+</li>
+<li><p>第三列：用户ID</p>
+<ul>
+<li>0：超级用户UID，如果用户UID为0，代表这个账号是管理员账号。那Linux中如何把普通用户升级为管理员呢？就是把其他用户的UID修改为0就可以了。不过不建议建立多个管理员账号。</li>
+<li>1-499：系统用户(伪用户)UID，这些UID账号是系统保留给系统用户的UID，也就是说UID是1-499范围内的用户是不能登录系统的，而是用来运行系统或服务的，其中1-99是系统保留的账号，系统自动创建。100-499是预留给用户创建系统账号的。</li>
+<li>500-65535：普通用户UID。建立的普通用户UID从500开始，最大到65535。这些用户足够使用了，但是如果不够也不用害怕，2.6.x内核以后的Linux系统用户UID已经可以支持2的32次方了。</li>
+</ul>
+</li>
+<li><p>第四列：组ID（GID）</p>
+<p>添加用户时，如果不指定用户所属的初始组，那么会建立和用户名相同的组。</p>
+</li>
+<li><p>第五列：用户说明</p>
+</li>
+<li><p>第六列：用户家目录（~）</p>
+</li>
+<li><p>第七列：登录shell（标准是&#x2F;bin&#x2F;bash）</p>
+</li>
+</ul>
+<h3 id="2）影子文件"><a href="#2）影子文件" class="headerlink" title="2）影子文件"></a>2）影子文件</h3><p>&#x2F;etc&#x2F;shadow</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">root:$6$jvGI3Z2PqL/TT4lT$q1lVTdba3dRsmWsEJVHzTqAHOSlb3qvM/hL7wKTQCo5148xfMiT0mnq1zQ7n7wCZu/QEdtP/57BVko4X6U4in0:18929:0:99999:7:::</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>第一列：用户名</p>
+</li>
+<li><p>第二列：加密密码</p>
+<p>我们也可以在密码前人为的加入“!”或“*”改变加密值让密码暂时失效，使这个用户无法登录，达到暂时禁止用户登录的效果。</p>
+<p>所有伪用户的密码都是”!!”或“*”，代表没有密码是不能登录的。当然新创建的用户如果不设定密码，它的密码项也是”!!”，代表这个用户没有密码，不能登录。</p>
+</li>
+<li><p>第三列：密码最近更改时间（day），1970年1月1日作为标准时间</p>
+<p>时间戳转日期</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">date -d &quot;1970-01-01 18929 days&quot;</span><br><span class="line">2021年 10月 29日 星期五 00:00:00 CST</span><br></pre></td></tr></table></figure>
+
+<p>日期转时间戳</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">echo $(($(date --date=&quot;2021/10/29&quot; +%s)/86400+1))</span><br><span class="line">18929</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>第四列：两次密码的修改间隔时间（和第3个字段相比）</p>
+</li>
+<li><p>第五列：密码有效期(和第3个字段相比)</p>
+</li>
+<li><p>第六列：密码修改到期前警告天数(和第5个字段相比)</p>
+</li>
+<li><p>第七列：密码过期后的宽限天数(和第5个字段相比)</p>
+</li>
+<li><p>第八列：密码失效时间</p>
+<p>这里同样要写时间戳，也就是用1970年1月1日进行时间换算，如果超过了失效时间，就算密码没有过期，用户也就失效无法使用了。</p>
+</li>
+<li><p>第九列：保留</p>
+</li>
+</ul>
+<h3 id="3）组信息文件"><a href="#3）组信息文件" class="headerlink" title="3）组信息文件"></a>3）组信息文件</h3><p>&#x2F;etc&#x2F;group</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">root:x:0:</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>第一列：组名</li>
+<li>第二列：组密码位</li>
+<li>第三列：GID</li>
+<li>第四列：此组中支持的其他用户，附加组是此组的用户<ul>
+<li>初始组：每个用户初始组只能有一个，一般都是和用户名相同的组作为初始组。</li>
+<li>附加组：每个用户可以属于多个附加组。要把用户加入组，都是加入附加组。</li>
+</ul>
+</li>
+</ul>
+<h3 id="4）组密码文件-不建议使用"><a href="#4）组密码文件-不建议使用" class="headerlink" title="4）组密码文件(不建议使用)"></a>4）组密码文件(不建议使用)</h3><p>&#x2F;etc&#x2F;gshadow</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">root:*::</span><br></pre></td></tr></table></figure>
+
+<p>如果给用户组设定了组管理员，并给该用户组设定了组密码，组密码就保存在这个文件当中。组管理员就可以利用这个密码管理这个用户组了。</p>
+<h3 id="5）用户家目录"><a href="#5）用户家目录" class="headerlink" title="5）用户家目录"></a>5）用户家目录</h3><h3 id="6）用户邮箱目录"><a href="#6）用户邮箱目录" class="headerlink" title="6）用户邮箱目录"></a>6）用户邮箱目录</h3><p>这个邮箱在&#x2F;var&#x2F;spool&#x2F;mail目录当中，例如lamp用户的邮箱就是&#x2F;var&#x2F;spool&#x2F;mail&#x2F;lamp文件</p>
+<h3 id="7）用户模板目录"><a href="#7）用户模板目录" class="headerlink" title="7）用户模板目录"></a>7）用户模板目录</h3><p>&#x2F;etc&#x2F;skel&#x2F;</p>
+<p>用户家目录初始化时的模板目录。</p>
+<h2 id="2-用户管理命令"><a href="#2-用户管理命令" class="headerlink" title="2.用户管理命令"></a>2.用户管理命令</h2><h3 id="1）添加用户"><a href="#1）添加用户" class="headerlink" title="1）添加用户"></a>1）添加用户</h3><p>a）手工删除用户</p>
+<p>手工删除用户试验：手工删除，如果可以正常建立用户，证明用户删除干净。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 创建用户，就是写入这6个文件</span><br><span class="line">/etc/passwd</span><br><span class="line">/etc/shadow</span><br><span class="line">/etc/group</span><br><span class="line">/etc/gshadow</span><br><span class="line">/home/user1</span><br><span class="line">/var/spool/mail/user1</span><br></pre></td></tr></table></figure>
+
+
+
+<p>b）useradd命令</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">useradd 选项 用户名</span><br><span class="line">选项：</span><br><span class="line">  -u：UID   指定UID</span><br><span class="line">  -g：组名   指定初始组，不要手工指定</span><br><span class="line">  -G：组名   指定附加组，把用户加入组，使用附加组</span><br><span class="line">  -c：说明   添加说明</span><br><span class="line">  -d：目录   手工指定家目录，目录不需要事先建立</span><br><span class="line">  -s：shell  /bin/bash</span><br><span class="line">  -m：创建家目录</span><br></pre></td></tr></table></figure>
+
+
+
+<p>c）useradd默认值</p>
+<p>useradd添加用户时参考的默认值文件主要有两个：</p>
+<ul>
+<li><p>&#x2F;etc&#x2F;default&#x2F;useradd</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># useradd defaults file</span><br><span class="line">GROUP=100</span><br><span class="line">HOME=/home</span><br><span class="line">INACTIVE=-1</span><br><span class="line">EXPIRE=</span><br><span class="line">SHELL=/bin/bash</span><br><span class="line">SKEL=/etc/skel</span><br><span class="line">CREATE_MAIL_SPOOL=yes</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>GROUP&#x3D;100</p>
+<p>这个选项是建立用户的默认组，也就是说添加每个用户时，用户的初始组就是GID为100的这个用户组。</p>
+</li>
+<li><p>HOME&#x3D;&#x2F;home</p>
+<p>这个选项是用户的家目录的默认位置，所以所有的新建用户的家目录默认都在&#x2F;home&#x2F;下。</p>
+</li>
+<li><p>INACTIVE&#x3D;-1</p>
+<p>这个选项就是密码过期后的宽限天数，也就是&#x2F;etc&#x2F;shadow文件的第七个字段。如果是天数，比如10代表密码过期后10天后失效；如果是0，代表密码过期后立即失效；如果是-1，则代表密码永远不会失效。这是默认值是-1，所以所有新建立的用户密码都不会失效。</p>
+</li>
+<li><p>EXPIRE&#x3D;</p>
+<p>这个选项是密码失效时间，也就是&#x2F;etc&#x2F;shadow文件的第八个字段，也就是说用户到达这个日期后就会直接失效。当然这里也是使用时间戳来表示日期的。默认是空，所以所有新建用户没有失效时间。永久有效。</p>
+</li>
+<li><p>SHELL&#x3D;&#x2F;bin&#x2F;bash</p>
+<p>这个选项是用户的默认shell。&#x2F;bin&#x2F;bash是Linux的标志shell，所以所有新建立的用户默认都具备shell赋予的权限。</p>
+</li>
+<li><p>SKEL&#x3D;&#x2F;etc&#x2F;skel</p>
+<p>这个选项就是定义用户的模板目录的位置，&#x2F;etc&#x2F;skel&#x2F;目录中的文件都会复制到新建用户的家目录当中。</p>
+</li>
+<li><p>CREATE_MAIL_SPOOL&#x3D;yes</p>
+<p>这个选项定义是否给新建用户建立邮箱，默认是创建，也就是说所有的新建用户系统都会新建一个邮箱，放在&#x2F;var&#x2F;spool&#x2F;mail&#x2F;下，和用户名相同。</p>
+</li>
+</ul>
+</li>
+<li><p>&#x2F;etc&#x2F;login.defs</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">MAIL_DIR        /var/spool/mail</span><br><span class="line"></span><br><span class="line">PASS_MAX_DAYS   99999</span><br><span class="line">PASS_MIN_DYAS   0</span><br><span class="line">PASS_MIN_LEN    5</span><br><span class="line">PASS_WARN_AGE   7</span><br><span class="line"></span><br><span class="line">UID_MIN         500</span><br><span class="line">UID_MAX         60000</span><br><span class="line"></span><br><span class="line">GID_MIN         500</span><br><span class="line">GID_MAX         60000</span><br><span class="line"></span><br><span class="line">CREATE_HOME     yes</span><br><span class="line"></span><br><span class="line">UMASK           077</span><br><span class="line"></span><br><span class="line">USERGROUPS_ENAB yes</span><br><span class="line"></span><br><span class="line">ENCRYPT_METHOD  SHA512</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>MAIL_DIR          &#x2F;var&#x2F;spool&#x2F;mail</p>
+<p>这行指定了新建用户的默认邮箱位置。比如lamp用户的邮箱就是&#x2F;var&#x2F;spool&#x2F;mail&#x2F;lamp。</p>
+</li>
+<li><p>PASS_MAX_DAYS    99999</p>
+<p>这行指定的是密码的有效期，也就是&#x2F;etc&#x2F;shadow文件的第五个字段。代表多少天之后必须修改密码，默认值是99999</p>
+</li>
+<li><p>PASS_MIN_DAYS    0</p>
+<p>这行指定是两次密码的修改间隔时间，也就是&#x2F;etc&#x2F;shadow文件的第四个字段。代表第一次修改密码之后，几天后才能再次修改密码，默认值是0</p>
+</li>
+<li><p>PASS_MIN_LEN    5</p>
+<p>这行代表密码的最小长度，默认不小于5位，但是我们现在用户登录时验证已经被PAM模块取代，所以这个选项并不生效。</p>
+</li>
+<li><p>PASS_WARN_AGE    7</p>
+<p>这行代表密码修改到期前的警告天数。也就是&#x2F;etc&#x2F;shadow文件的第六个字段。代表密码到底有效期前多少天开始进行警告提醒，默认值是7天。</p>
+</li>
+<li><p>UID_MIN|UID_MAX</p>
+<p>这两行指定了UID的最小值和最大值之间的范围。</p>
+</li>
+<li><p>GID_MIN|GID_MAX</p>
+<p>这两行指定了GID的最小值和最大值之间的范围。</p>
+</li>
+<li><p>CREATE_HOME    yes</p>
+<p>这行指定建立用户时是否自动建立用户的家目录，默认是建立。</p>
+</li>
+<li><p>UMASK    077</p>
+<p>这行指定的是建立的用户家目录的默认权限，因为umask值是077，所以新建的用户家目录的权限是700。</p>
+</li>
+<li><p>USERGROUPS_ENAB    yes</p>
+<p>这行指定的是使用命令userdel删除用户时，是否删除用户的初始组，默认是删除。</p>
+</li>
+<li><p>ENCRYPT_METHOD    SHA512</p>
+<p>这行指定Linux用户的密码使用SHA512散列模式加密，这是新的密码加密模式，原先的Linux只能用DES或MD5方式加密。</p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="2）设定密码"><a href="#2）设定密码" class="headerlink" title="2）设定密码"></a>2）设定密码</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">passwd [选项] 用户名</span><br><span class="line">选项：</span><br><span class="line">  -l:         暂时锁定用户。仅root用户可用（lock）</span><br><span class="line">  -u:         解锁用户。仅root用户可用（unlock）</span><br><span class="line">  --stdin:    可以将通过管道符输出的数据作为用户的密码。主要在批量添加用户时使用</span><br></pre></td></tr></table></figure>
+
+<p>示例：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 修改当前用户的密码</span><br><span class="line">passwd</span><br><span class="line"></span><br><span class="line"># 使用字符串作为密码</span><br><span class="line">echo &quot;123&quot; | passwd --stdin lamp</span><br><span class="line"></span><br><span class="line"># 把密码修改日期归零(shadow第3个字段，0代表1970年1月1日)。这样用户一登录就要修改密码。</span><br><span class="line">chage -d 0 lamp</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="3）用户信息修改"><a href="#3）用户信息修改" class="headerlink" title="3）用户信息修改"></a>3）用户信息修改</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">usermod [选项] 用户名</span><br><span class="line">选项：</span><br><span class="line">  -u UID:        修改用户的UID</span><br><span class="line">  -d 家目录：     修改用户的家目录。家目录必须写绝对路径</span><br><span class="line">  -c 用户说明:    修改用户的说明信息，就是/etc/passwd文件的第五个字段</span><br><span class="line">  -g 组名：       修改用户的初始组，就是/etc/passwd文件的第四个字段</span><br><span class="line">  -G 组名：       修改用户的附加组，其实就是把用户加入其他用户组</span><br><span class="line">  -s shell:      修改用户的登录Shell。默认是/bin/bash</span><br><span class="line">  -e 日期：       修改用户的失效日期，格式为&quot;YYYY-MM-DD&quot;。也就是/etc/shadow文件的第八个字段</span><br><span class="line">  -L:            临时锁定用户(Lock)</span><br><span class="line">  -U:            解锁用户(Unlock)</span><br></pre></td></tr></table></figure>
+
+<p>usermod也可以修改用户名，但不建议这么做，这样及其容易把管理员自己稿晕。建议删除旧用户，再建立新用户。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 修改用户名</span><br><span class="line">usermod -l 新名 旧名</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="4）删除用户"><a href="#4）删除用户" class="headerlink" title="4）删除用户"></a>4）删除用户</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">userdel [-r] 用户名</span><br><span class="line">选项：</span><br><span class="line">  -r:    在删除用户的同时删除用户的家目录</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="5）切换用户身份"><a href="#5）切换用户身份" class="headerlink" title="5）切换用户身份"></a>5）切换用户身份</h3><p>su命令可以切换成不同的用户身份。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">su [选项] 用户名</span><br><span class="line">选项：</span><br><span class="line">  -:          选项只使用“-”代表连带用户的环境变量一起切换</span><br><span class="line">  -c 命令:    仅执行一次命令，而不切换用户身份</span><br></pre></td></tr></table></figure>
+
+<p>“-”不能省略，它代表切换用户身份时，用户的环境变量也要切换成新用户的环境变量。</p>
+<h2 id="3-组管理命令"><a href="#3-组管理命令" class="headerlink" title="3. 组管理命令"></a>3. 组管理命令</h2><h3 id="1）添加用户组"><a href="#1）添加用户组" class="headerlink" title="1）添加用户组"></a>1）添加用户组</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">groupadd [选项] 组名</span><br><span class="line">选项：</span><br><span class="line">  -g GID:    指定组ID</span><br></pre></td></tr></table></figure>
+
+<p>示例：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 添加group1组</span><br><span class="line">groupadd group1</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="2）删除用户组"><a href="#2）删除用户组" class="headerlink" title="2）删除用户组"></a>2）删除用户组</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">groupdel 组名</span><br></pre></td></tr></table></figure>
+
+<p>不过要注意，要删除的组不能是其他用户的初始组，也就是说这个组中没有初始用户才可以删除。如果组中有附加用户，则删除组时不受影响。</p>
+<h3 id="3）把用户添加进组或从组中删除"><a href="#3）把用户添加进组或从组中删除" class="headerlink" title="3）把用户添加进组或从组中删除"></a>3）把用户添加进组或从组中删除</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">gpasswd [选项] 组名</span><br><span class="line">选项：</span><br><span class="line">  -a 用户名：    把用户加入组</span><br><span class="line">  -d 用户名：    把用户从组中删除</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 添加test组</span><br><span class="line">groupadd test</span><br><span class="line"></span><br><span class="line"># 把test1用户加入test组</span><br><span class="line">gpasswd -a test1 test</span><br><span class="line"></span><br><span class="line"># 把用户test1从test组中删除</span><br><span class="line">gpasswd -d test1 test</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="4）改变有效组"><a href="#4）改变有效组" class="headerlink" title="4）改变有效组"></a>4）改变有效组</h3><p>每个用户可以属于一个初始组（用户是这个组的初始用户），也可以属于多个附加组（用户是这个组的附加用户）。既然用户可以属于这么多用户组，那么用户在创建文件后，默认生效的组身份是哪个呢？当然是初始用户组的组身份。因为初始组是用户一旦登录就直接获得的组身份。也就是说，用户在创建文件后，文件的属组就是用户的初始组，因为用户的有效组默认是初始组。使用newgrp可以切换用户的有效组。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">newgrp 组名</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="5-组权限实验"><a href="#5-组权限实验" class="headerlink" title="5. 组权限实验"></a>5. 组权限实验</h3><p>根目录下创建个www目录，属主为teacher, 学生st1，st2可以往这个目录提交作业。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 创建www目录</span><br><span class="line">mkdir /www</span><br><span class="line"></span><br><span class="line"># 创建teacher用户</span><br><span class="line">useradd -m teacher</span><br><span class="line"></span><br><span class="line"># 设置teacher用户密码</span><br><span class="line">passwd teacher</span><br><span class="line"></span><br><span class="line"># 创建st1,st2用户并设置密码</span><br><span class="line">useradd -m st1</span><br><span class="line">useradd -m st2</span><br><span class="line"></span><br><span class="line"># 创建tg组</span><br><span class="line">groupadd tg</span><br><span class="line"></span><br><span class="line"># 将st1, st2加入tg组</span><br><span class="line">gpasswd -a st1 tg</span><br><span class="line">gpasswd -a st2 tg</span><br><span class="line"></span><br><span class="line"># 设置www目录属主和属组</span><br><span class="line">chown teacher:tg /www/</span><br><span class="line"></span><br><span class="line"># 设置www目录权限</span><br><span class="line">chmod 770 /www/</span><br></pre></td></tr></table></figure>
 
 ]]></content>
       <categories>
@@ -5382,218 +5627,6 @@
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# vim /etc/crontab</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">/etc/crontab: system-wide crontab</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Unlike any other crontab you don<span class="string">&#x27;t have to run the `crontab&#x27;</span></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash"><span class="built_in">command</span> to install the new version when you edit this file</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">and files <span class="keyword">in</span> /etc/cron.d. These files also have username fields,</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">that none of the other crontabs <span class="keyword">do</span>.</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">标识使用哪种shell</span></span><br><span class="line">SHELL=/bin/sh</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">You can also override PATH, but by default, newer versions inherit it from the environment</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Example of job definition:</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">.---------------- minute (0 - 59)</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">|  .------------- hour (0 - 23)</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">|  |  .---------- day of month (1 - 31)</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">|  |  |  .------- month (1 - 12) OR jan,feb,mar,apr ...</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">|  |  |  |  .---- day of week (0 - 6) (Sunday=0 or 7) OR sun,mon,tue,wed,thu,fri,sat</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">|  |  |  |  |</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">*  *  *  *  * user-name <span class="built_in">command</span> to be executed</span></span><br><span class="line">17 *	* * *	root	cd / &amp;&amp; run-parts --report /etc/cron.hourly</span><br><span class="line">25 6	* * *	root	test -x /usr/sbin/anacron || &#123; cd / &amp;&amp; run-parts --report /etc/cron.daily; &#125;</span><br><span class="line">47 6	* * 7	root	test -x /usr/sbin/anacron || &#123; cd / &amp;&amp; run-parts --report /etc/cron.weekly; &#125;</span><br><span class="line">52 6	1 * *	root	test -x /usr/sbin/anacron || &#123; cd / &amp;&amp; run-parts --report /etc/cron.monthly; &#125;</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">使用run-parts脚本调用并执行/root/cron/目录中所有的可执行文件</span></span><br><span class="line">* * * * *       root    run-parts /root/cron/</span><br></pre></td></tr></table></figure>
 
 <p>只要保存&#x2F;etc&#x2F;crontab文件，这个定时任务就可以执行了，当然要确定crond服务是运行的。</p>
-]]></content>
-      <categories>
-        <category>Linux</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>用户管理</title>
-    <url>/2025/02/25/%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86/</url>
-    <content><![CDATA[<h1 id="用户管理"><a href="#用户管理" class="headerlink" title="用户管理"></a>用户管理</h1><h2 id="1-用户相关文件"><a href="#1-用户相关文件" class="headerlink" title="1. 用户相关文件"></a>1. 用户相关文件</h2><h3 id="1）用户信息文件"><a href="#1）用户信息文件" class="headerlink" title="1）用户信息文件"></a>1）用户信息文件</h3><p>&#x2F;etc&#x2F;passwd</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">root:x:0:0:root:/root:/bin/bash</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p>第一列：用户名</p>
-</li>
-<li><p>第二列：密码位</p>
-<p>x为密码标志位，代表用户有密码，用户密码放置在&#x2F;etc&#x2F;shadow文件中。</p>
-</li>
-<li><p>第三列：用户ID</p>
-<ul>
-<li>0：超级用户UID，如果用户UID为0，代表这个账号是管理员账号。那Linux中如何把普通用户升级为管理员呢？就是把其他用户的UID修改为0就可以了。不过不建议建立多个管理员账号。</li>
-<li>1-499：系统用户(伪用户)UID，这些UID账号是系统保留给系统用户的UID，也就是说UID是1-499范围内的用户是不能登录系统的，而是用来运行系统或服务的，其中1-99是系统保留的账号，系统自动创建。100-499是预留给用户创建系统账号的。</li>
-<li>500-65535：普通用户UID。建立的普通用户UID从500开始，最大到65535。这些用户足够使用了，但是如果不够也不用害怕，2.6.x内核以后的Linux系统用户UID已经可以支持2的32次方了。</li>
-</ul>
-</li>
-<li><p>第四列：组ID（GID）</p>
-<p>添加用户时，如果不指定用户所属的初始组，那么会建立和用户名相同的组。</p>
-</li>
-<li><p>第五列：用户说明</p>
-</li>
-<li><p>第六列：用户家目录（~）</p>
-</li>
-<li><p>第七列：登录shell（标准是&#x2F;bin&#x2F;bash）</p>
-</li>
-</ul>
-<h3 id="2）影子文件"><a href="#2）影子文件" class="headerlink" title="2）影子文件"></a>2）影子文件</h3><p>&#x2F;etc&#x2F;shadow</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">root:$6$jvGI3Z2PqL/TT4lT$q1lVTdba3dRsmWsEJVHzTqAHOSlb3qvM/hL7wKTQCo5148xfMiT0mnq1zQ7n7wCZu/QEdtP/57BVko4X6U4in0:18929:0:99999:7:::</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p>第一列：用户名</p>
-</li>
-<li><p>第二列：加密密码</p>
-<p>我们也可以在密码前人为的加入“!”或“*”改变加密值让密码暂时失效，使这个用户无法登录，达到暂时禁止用户登录的效果。</p>
-<p>所有伪用户的密码都是”!!”或“*”，代表没有密码是不能登录的。当然新创建的用户如果不设定密码，它的密码项也是”!!”，代表这个用户没有密码，不能登录。</p>
-</li>
-<li><p>第三列：密码最近更改时间（day），1970年1月1日作为标准时间</p>
-<p>时间戳转日期</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">date -d &quot;1970-01-01 18929 days&quot;</span><br><span class="line">2021年 10月 29日 星期五 00:00:00 CST</span><br></pre></td></tr></table></figure>
-
-<p>日期转时间戳</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">echo $(($(date --date=&quot;2021/10/29&quot; +%s)/86400+1))</span><br><span class="line">18929</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>第四列：两次密码的修改间隔时间（和第3个字段相比）</p>
-</li>
-<li><p>第五列：密码有效期(和第3个字段相比)</p>
-</li>
-<li><p>第六列：密码修改到期前警告天数(和第5个字段相比)</p>
-</li>
-<li><p>第七列：密码过期后的宽限天数(和第5个字段相比)</p>
-</li>
-<li><p>第八列：密码失效时间</p>
-<p>这里同样要写时间戳，也就是用1970年1月1日进行时间换算，如果超过了失效时间，就算密码没有过期，用户也就失效无法使用了。</p>
-</li>
-<li><p>第九列：保留</p>
-</li>
-</ul>
-<h3 id="3）组信息文件"><a href="#3）组信息文件" class="headerlink" title="3）组信息文件"></a>3）组信息文件</h3><p>&#x2F;etc&#x2F;group</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">root:x:0:</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>第一列：组名</li>
-<li>第二列：组密码位</li>
-<li>第三列：GID</li>
-<li>第四列：此组中支持的其他用户，附加组是此组的用户<ul>
-<li>初始组：每个用户初始组只能有一个，一般都是和用户名相同的组作为初始组。</li>
-<li>附加组：每个用户可以属于多个附加组。要把用户加入组，都是加入附加组。</li>
-</ul>
-</li>
-</ul>
-<h3 id="4）组密码文件-不建议使用"><a href="#4）组密码文件-不建议使用" class="headerlink" title="4）组密码文件(不建议使用)"></a>4）组密码文件(不建议使用)</h3><p>&#x2F;etc&#x2F;gshadow</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">root:*::</span><br></pre></td></tr></table></figure>
-
-<p>如果给用户组设定了组管理员，并给该用户组设定了组密码，组密码就保存在这个文件当中。组管理员就可以利用这个密码管理这个用户组了。</p>
-<h3 id="5）用户家目录"><a href="#5）用户家目录" class="headerlink" title="5）用户家目录"></a>5）用户家目录</h3><h3 id="6）用户邮箱目录"><a href="#6）用户邮箱目录" class="headerlink" title="6）用户邮箱目录"></a>6）用户邮箱目录</h3><p>这个邮箱在&#x2F;var&#x2F;spool&#x2F;mail目录当中，例如lamp用户的邮箱就是&#x2F;var&#x2F;spool&#x2F;mail&#x2F;lamp文件</p>
-<h3 id="7）用户模板目录"><a href="#7）用户模板目录" class="headerlink" title="7）用户模板目录"></a>7）用户模板目录</h3><p>&#x2F;etc&#x2F;skel&#x2F;</p>
-<p>用户家目录初始化时的模板目录。</p>
-<h2 id="2-用户管理命令"><a href="#2-用户管理命令" class="headerlink" title="2.用户管理命令"></a>2.用户管理命令</h2><h3 id="1）添加用户"><a href="#1）添加用户" class="headerlink" title="1）添加用户"></a>1）添加用户</h3><p>a）手工删除用户</p>
-<p>手工删除用户试验：手工删除，如果可以正常建立用户，证明用户删除干净。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 创建用户，就是写入这6个文件</span><br><span class="line">/etc/passwd</span><br><span class="line">/etc/shadow</span><br><span class="line">/etc/group</span><br><span class="line">/etc/gshadow</span><br><span class="line">/home/user1</span><br><span class="line">/var/spool/mail/user1</span><br></pre></td></tr></table></figure>
-
-
-
-<p>b）useradd命令</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">useradd 选项 用户名</span><br><span class="line">选项：</span><br><span class="line">  -u：UID   指定UID</span><br><span class="line">  -g：组名   指定初始组，不要手工指定</span><br><span class="line">  -G：组名   指定附加组，把用户加入组，使用附加组</span><br><span class="line">  -c：说明   添加说明</span><br><span class="line">  -d：目录   手工指定家目录，目录不需要事先建立</span><br><span class="line">  -s：shell  /bin/bash</span><br><span class="line">  -m：创建家目录</span><br></pre></td></tr></table></figure>
-
-
-
-<p>c）useradd默认值</p>
-<p>useradd添加用户时参考的默认值文件主要有两个：</p>
-<ul>
-<li><p>&#x2F;etc&#x2F;default&#x2F;useradd</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># useradd defaults file</span><br><span class="line">GROUP=100</span><br><span class="line">HOME=/home</span><br><span class="line">INACTIVE=-1</span><br><span class="line">EXPIRE=</span><br><span class="line">SHELL=/bin/bash</span><br><span class="line">SKEL=/etc/skel</span><br><span class="line">CREATE_MAIL_SPOOL=yes</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p>GROUP&#x3D;100</p>
-<p>这个选项是建立用户的默认组，也就是说添加每个用户时，用户的初始组就是GID为100的这个用户组。</p>
-</li>
-<li><p>HOME&#x3D;&#x2F;home</p>
-<p>这个选项是用户的家目录的默认位置，所以所有的新建用户的家目录默认都在&#x2F;home&#x2F;下。</p>
-</li>
-<li><p>INACTIVE&#x3D;-1</p>
-<p>这个选项就是密码过期后的宽限天数，也就是&#x2F;etc&#x2F;shadow文件的第七个字段。如果是天数，比如10代表密码过期后10天后失效；如果是0，代表密码过期后立即失效；如果是-1，则代表密码永远不会失效。这是默认值是-1，所以所有新建立的用户密码都不会失效。</p>
-</li>
-<li><p>EXPIRE&#x3D;</p>
-<p>这个选项是密码失效时间，也就是&#x2F;etc&#x2F;shadow文件的第八个字段，也就是说用户到达这个日期后就会直接失效。当然这里也是使用时间戳来表示日期的。默认是空，所以所有新建用户没有失效时间。永久有效。</p>
-</li>
-<li><p>SHELL&#x3D;&#x2F;bin&#x2F;bash</p>
-<p>这个选项是用户的默认shell。&#x2F;bin&#x2F;bash是Linux的标志shell，所以所有新建立的用户默认都具备shell赋予的权限。</p>
-</li>
-<li><p>SKEL&#x3D;&#x2F;etc&#x2F;skel</p>
-<p>这个选项就是定义用户的模板目录的位置，&#x2F;etc&#x2F;skel&#x2F;目录中的文件都会复制到新建用户的家目录当中。</p>
-</li>
-<li><p>CREATE_MAIL_SPOOL&#x3D;yes</p>
-<p>这个选项定义是否给新建用户建立邮箱，默认是创建，也就是说所有的新建用户系统都会新建一个邮箱，放在&#x2F;var&#x2F;spool&#x2F;mail&#x2F;下，和用户名相同。</p>
-</li>
-</ul>
-</li>
-<li><p>&#x2F;etc&#x2F;login.defs</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">MAIL_DIR        /var/spool/mail</span><br><span class="line"></span><br><span class="line">PASS_MAX_DAYS   99999</span><br><span class="line">PASS_MIN_DYAS   0</span><br><span class="line">PASS_MIN_LEN    5</span><br><span class="line">PASS_WARN_AGE   7</span><br><span class="line"></span><br><span class="line">UID_MIN         500</span><br><span class="line">UID_MAX         60000</span><br><span class="line"></span><br><span class="line">GID_MIN         500</span><br><span class="line">GID_MAX         60000</span><br><span class="line"></span><br><span class="line">CREATE_HOME     yes</span><br><span class="line"></span><br><span class="line">UMASK           077</span><br><span class="line"></span><br><span class="line">USERGROUPS_ENAB yes</span><br><span class="line"></span><br><span class="line">ENCRYPT_METHOD  SHA512</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p>MAIL_DIR          &#x2F;var&#x2F;spool&#x2F;mail</p>
-<p>这行指定了新建用户的默认邮箱位置。比如lamp用户的邮箱就是&#x2F;var&#x2F;spool&#x2F;mail&#x2F;lamp。</p>
-</li>
-<li><p>PASS_MAX_DAYS    99999</p>
-<p>这行指定的是密码的有效期，也就是&#x2F;etc&#x2F;shadow文件的第五个字段。代表多少天之后必须修改密码，默认值是99999</p>
-</li>
-<li><p>PASS_MIN_DAYS    0</p>
-<p>这行指定是两次密码的修改间隔时间，也就是&#x2F;etc&#x2F;shadow文件的第四个字段。代表第一次修改密码之后，几天后才能再次修改密码，默认值是0</p>
-</li>
-<li><p>PASS_MIN_LEN    5</p>
-<p>这行代表密码的最小长度，默认不小于5位，但是我们现在用户登录时验证已经被PAM模块取代，所以这个选项并不生效。</p>
-</li>
-<li><p>PASS_WARN_AGE    7</p>
-<p>这行代表密码修改到期前的警告天数。也就是&#x2F;etc&#x2F;shadow文件的第六个字段。代表密码到底有效期前多少天开始进行警告提醒，默认值是7天。</p>
-</li>
-<li><p>UID_MIN|UID_MAX</p>
-<p>这两行指定了UID的最小值和最大值之间的范围。</p>
-</li>
-<li><p>GID_MIN|GID_MAX</p>
-<p>这两行指定了GID的最小值和最大值之间的范围。</p>
-</li>
-<li><p>CREATE_HOME    yes</p>
-<p>这行指定建立用户时是否自动建立用户的家目录，默认是建立。</p>
-</li>
-<li><p>UMASK    077</p>
-<p>这行指定的是建立的用户家目录的默认权限，因为umask值是077，所以新建的用户家目录的权限是700。</p>
-</li>
-<li><p>USERGROUPS_ENAB    yes</p>
-<p>这行指定的是使用命令userdel删除用户时，是否删除用户的初始组，默认是删除。</p>
-</li>
-<li><p>ENCRYPT_METHOD    SHA512</p>
-<p>这行指定Linux用户的密码使用SHA512散列模式加密，这是新的密码加密模式，原先的Linux只能用DES或MD5方式加密。</p>
-</li>
-</ul>
-</li>
-</ul>
-<h3 id="2）设定密码"><a href="#2）设定密码" class="headerlink" title="2）设定密码"></a>2）设定密码</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">passwd [选项] 用户名</span><br><span class="line">选项：</span><br><span class="line">  -l:         暂时锁定用户。仅root用户可用（lock）</span><br><span class="line">  -u:         解锁用户。仅root用户可用（unlock）</span><br><span class="line">  --stdin:    可以将通过管道符输出的数据作为用户的密码。主要在批量添加用户时使用</span><br></pre></td></tr></table></figure>
-
-<p>示例：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 修改当前用户的密码</span><br><span class="line">passwd</span><br><span class="line"></span><br><span class="line"># 使用字符串作为密码</span><br><span class="line">echo &quot;123&quot; | passwd --stdin lamp</span><br><span class="line"></span><br><span class="line"># 把密码修改日期归零(shadow第3个字段，0代表1970年1月1日)。这样用户一登录就要修改密码。</span><br><span class="line">chage -d 0 lamp</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="3）用户信息修改"><a href="#3）用户信息修改" class="headerlink" title="3）用户信息修改"></a>3）用户信息修改</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">usermod [选项] 用户名</span><br><span class="line">选项：</span><br><span class="line">  -u UID:        修改用户的UID</span><br><span class="line">  -d 家目录：     修改用户的家目录。家目录必须写绝对路径</span><br><span class="line">  -c 用户说明:    修改用户的说明信息，就是/etc/passwd文件的第五个字段</span><br><span class="line">  -g 组名：       修改用户的初始组，就是/etc/passwd文件的第四个字段</span><br><span class="line">  -G 组名：       修改用户的附加组，其实就是把用户加入其他用户组</span><br><span class="line">  -s shell:      修改用户的登录Shell。默认是/bin/bash</span><br><span class="line">  -e 日期：       修改用户的失效日期，格式为&quot;YYYY-MM-DD&quot;。也就是/etc/shadow文件的第八个字段</span><br><span class="line">  -L:            临时锁定用户(Lock)</span><br><span class="line">  -U:            解锁用户(Unlock)</span><br></pre></td></tr></table></figure>
-
-<p>usermod也可以修改用户名，但不建议这么做，这样及其容易把管理员自己稿晕。建议删除旧用户，再建立新用户。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 修改用户名</span><br><span class="line">usermod -l 新名 旧名</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="4）删除用户"><a href="#4）删除用户" class="headerlink" title="4）删除用户"></a>4）删除用户</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">userdel [-r] 用户名</span><br><span class="line">选项：</span><br><span class="line">  -r:    在删除用户的同时删除用户的家目录</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="5）切换用户身份"><a href="#5）切换用户身份" class="headerlink" title="5）切换用户身份"></a>5）切换用户身份</h3><p>su命令可以切换成不同的用户身份。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">su [选项] 用户名</span><br><span class="line">选项：</span><br><span class="line">  -:          选项只使用“-”代表连带用户的环境变量一起切换</span><br><span class="line">  -c 命令:    仅执行一次命令，而不切换用户身份</span><br></pre></td></tr></table></figure>
-
-<p>“-”不能省略，它代表切换用户身份时，用户的环境变量也要切换成新用户的环境变量。</p>
-<h2 id="3-组管理命令"><a href="#3-组管理命令" class="headerlink" title="3. 组管理命令"></a>3. 组管理命令</h2><h3 id="1）添加用户组"><a href="#1）添加用户组" class="headerlink" title="1）添加用户组"></a>1）添加用户组</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">groupadd [选项] 组名</span><br><span class="line">选项：</span><br><span class="line">  -g GID:    指定组ID</span><br></pre></td></tr></table></figure>
-
-<p>示例：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 添加group1组</span><br><span class="line">groupadd group1</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="2）删除用户组"><a href="#2）删除用户组" class="headerlink" title="2）删除用户组"></a>2）删除用户组</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">groupdel 组名</span><br></pre></td></tr></table></figure>
-
-<p>不过要注意，要删除的组不能是其他用户的初始组，也就是说这个组中没有初始用户才可以删除。如果组中有附加用户，则删除组时不受影响。</p>
-<h3 id="3）把用户添加进组或从组中删除"><a href="#3）把用户添加进组或从组中删除" class="headerlink" title="3）把用户添加进组或从组中删除"></a>3）把用户添加进组或从组中删除</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">gpasswd [选项] 组名</span><br><span class="line">选项：</span><br><span class="line">  -a 用户名：    把用户加入组</span><br><span class="line">  -d 用户名：    把用户从组中删除</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 添加test组</span><br><span class="line">groupadd test</span><br><span class="line"></span><br><span class="line"># 把test1用户加入test组</span><br><span class="line">gpasswd -a test1 test</span><br><span class="line"></span><br><span class="line"># 把用户test1从test组中删除</span><br><span class="line">gpasswd -d test1 test</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="4）改变有效组"><a href="#4）改变有效组" class="headerlink" title="4）改变有效组"></a>4）改变有效组</h3><p>每个用户可以属于一个初始组（用户是这个组的初始用户），也可以属于多个附加组（用户是这个组的附加用户）。既然用户可以属于这么多用户组，那么用户在创建文件后，默认生效的组身份是哪个呢？当然是初始用户组的组身份。因为初始组是用户一旦登录就直接获得的组身份。也就是说，用户在创建文件后，文件的属组就是用户的初始组，因为用户的有效组默认是初始组。使用newgrp可以切换用户的有效组。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">newgrp 组名</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="5-组权限实验"><a href="#5-组权限实验" class="headerlink" title="5. 组权限实验"></a>5. 组权限实验</h3><p>根目录下创建个www目录，属主为teacher, 学生st1，st2可以往这个目录提交作业。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 创建www目录</span><br><span class="line">mkdir /www</span><br><span class="line"></span><br><span class="line"># 创建teacher用户</span><br><span class="line">useradd -m teacher</span><br><span class="line"></span><br><span class="line"># 设置teacher用户密码</span><br><span class="line">passwd teacher</span><br><span class="line"></span><br><span class="line"># 创建st1,st2用户并设置密码</span><br><span class="line">useradd -m st1</span><br><span class="line">useradd -m st2</span><br><span class="line"></span><br><span class="line"># 创建tg组</span><br><span class="line">groupadd tg</span><br><span class="line"></span><br><span class="line"># 将st1, st2加入tg组</span><br><span class="line">gpasswd -a st1 tg</span><br><span class="line">gpasswd -a st2 tg</span><br><span class="line"></span><br><span class="line"># 设置www目录属主和属组</span><br><span class="line">chown teacher:tg /www/</span><br><span class="line"></span><br><span class="line"># 设置www目录权限</span><br><span class="line">chmod 770 /www/</span><br></pre></td></tr></table></figure>
-
 ]]></content>
       <categories>
         <category>Linux</category>
