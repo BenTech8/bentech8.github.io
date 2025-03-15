@@ -1874,38 +1874,6 @@
       </categories>
   </entry>
   <entry>
-    <title>Terraform</title>
-    <url>/2025/02/28/Terraform/</url>
-    <content><![CDATA[<h2 id="Terraform工作流程"><a href="#Terraform工作流程" class="headerlink" title="Terraform工作流程"></a>Terraform工作流程</h2><p>Terraform是一个基础设施即代码(IaC)工具，通过以下几个步骤来管理基础设施：</p>
-<ul>
-<li><p>配置文件（.tf文件）</p>
-<p>用户首先通过编写Terraform配置文件来定义所需的基础设施。这些文件使用HCL（HashiCorp Configuration Language）语言，描述资源的类型、属性和配置。</p>
-</li>
-<li><p>初始化（terraform init）</p>
-<p>在开始Terraform之前，用户需要运行terraform init命令。这一步会初始化工作目录，下载所需的提供程序(如AWS、Azure等)，并准备后续的操作。</p>
-</li>
-<li><p>生成执行计划（terraform plan）</p>
-<p>使用terraform plan命令，Terraform会读取配置文件并生成执行计划，展示将要执行的操作（如创建、更新或删除资源）。这一步允许用户预览即将进行的变更，避免意外操作。</p>
-</li>
-<li><p>应用变更（terraform apply）</p>
-<p>在确认执行计划后，用户可以运行terraform apply命令，Terraform会根据生成的计划实际执行相应的操作，创建、更新或删除云资源。</p>
-</li>
-<li><p>状态管理</p>
-<p>Terraform会维护一个状态文件（terraform.tfstate），记录当前基础设施的状态。这个文件用于跟踪资源的实际状态，以便在后续操作中进行对比和管理。</p>
-</li>
-<li><p>变更管理</p>
-<p>当需要对基础设施进行更改时，用户只需要修改配置文件，然后重复执行plan和apply流程。Terraform会自动识别资源的变更，并进行相应的更新。</p>
-</li>
-<li><p>销毁资源（terraform destory）</p>
-<p>当不再需要某些资源时，用户可以运行terraform destory命令，Terraform会删除所有配置文件中定义的资源，确保清理工作整洁。</p>
-</li>
-</ul>
-]]></content>
-      <categories>
-        <category>DevOps</category>
-      </categories>
-  </entry>
-  <entry>
     <title>Shell编程</title>
     <url>/2025/02/27/Shell%E7%BC%96%E7%A8%8B/</url>
     <content><![CDATA[<h2 id="Shell编程"><a href="#Shell编程" class="headerlink" title="Shell编程"></a>Shell编程</h2><h3 id="正则表达式"><a href="#正则表达式" class="headerlink" title="正则表达式"></a>正则表达式</h3><h4 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h4><p>正则表达式用来在文件中匹配符合条件的字符串，通配符用来匹配符合条件的文件名。其实这种区别只在Shell当中适用，因为用来文件当中搜索字符串的命令如grep、awk、sed等命令可以支持正则表达式，而在系统当中搜索文件的命令如ls、find、cp这些命令不支持正则表达式，所以只能使用Shell自己的通配符来进行匹配了。</p>
@@ -2666,6 +2634,38 @@
 ]]></content>
       <categories>
         <category>Shell</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Terraform</title>
+    <url>/2025/02/28/Terraform/</url>
+    <content><![CDATA[<h2 id="Terraform工作流程"><a href="#Terraform工作流程" class="headerlink" title="Terraform工作流程"></a>Terraform工作流程</h2><p>Terraform是一个基础设施即代码(IaC)工具，通过以下几个步骤来管理基础设施：</p>
+<ul>
+<li><p>配置文件（.tf文件）</p>
+<p>用户首先通过编写Terraform配置文件来定义所需的基础设施。这些文件使用HCL（HashiCorp Configuration Language）语言，描述资源的类型、属性和配置。</p>
+</li>
+<li><p>初始化（terraform init）</p>
+<p>在开始Terraform之前，用户需要运行terraform init命令。这一步会初始化工作目录，下载所需的提供程序(如AWS、Azure等)，并准备后续的操作。</p>
+</li>
+<li><p>生成执行计划（terraform plan）</p>
+<p>使用terraform plan命令，Terraform会读取配置文件并生成执行计划，展示将要执行的操作（如创建、更新或删除资源）。这一步允许用户预览即将进行的变更，避免意外操作。</p>
+</li>
+<li><p>应用变更（terraform apply）</p>
+<p>在确认执行计划后，用户可以运行terraform apply命令，Terraform会根据生成的计划实际执行相应的操作，创建、更新或删除云资源。</p>
+</li>
+<li><p>状态管理</p>
+<p>Terraform会维护一个状态文件（terraform.tfstate），记录当前基础设施的状态。这个文件用于跟踪资源的实际状态，以便在后续操作中进行对比和管理。</p>
+</li>
+<li><p>变更管理</p>
+<p>当需要对基础设施进行更改时，用户只需要修改配置文件，然后重复执行plan和apply流程。Terraform会自动识别资源的变更，并进行相应的更新。</p>
+</li>
+<li><p>销毁资源（terraform destory）</p>
+<p>当不再需要某些资源时，用户可以运行terraform destory命令，Terraform会删除所有配置文件中定义的资源，确保清理工作整洁。</p>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>DevOps</category>
       </categories>
   </entry>
   <entry>
@@ -3858,6 +3858,242 @@
       </categories>
   </entry>
   <entry>
+    <title>小数据池</title>
+    <url>/2025/03/15/%E5%B0%8F%E6%95%B0%E6%8D%AE%E6%B1%A0/</url>
+    <content><![CDATA[<h2 id="小数据池"><a href="#小数据池" class="headerlink" title="小数据池"></a>小数据池</h2><h3 id="代码块"><a href="#代码块" class="headerlink" title="代码块"></a>代码块</h3><p>  python程序是由代码块构成的，一个代码块的文本作为pythont程序执行的单元</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">官方文档：</span><br><span class="line">     A Python program is constructed from code blocks. A block is a piece of Python program text that is executed as a unit. The following are blocks: a module, a function body, and a class definition. Each command typed interactively is a block. A script file (a file given as standard input to the interpreter or specified as a command line argument to the interpreter) is a code block. A script command (a command specified on the interpreter command line with the ‘-c‘ option) is a code block. The string argument passed to the built-in functions eval() and exec() is a code block. A code block is executed in an execution frame. A frame contains some administrative information (used for debugging) and determines where and how execution continues after the code block’s execution has completed.</span><br></pre></td></tr></table></figure>
+
+<p>一个代码块：</p>
+<ul>
+<li>一个模块(module)</li>
+<li>一个函数(function)</li>
+<li>一个类(class)</li>
+<li>每一个command命令</li>
+<li>一个文件(file)</li>
+<li>eval()</li>
+<li>exec()</li>
+</ul>
+<h3 id="id"><a href="#id" class="headerlink" title="id()"></a>id()</h3><p>  通过id()可以查看到一个变量表示的值在内存中的地址</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">s = &quot;hello&quot;</span><br><span class="line">print(id(s)) # 2305859175064</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="is-和-区别"><a href="#is-和-区别" class="headerlink" title="is 和 &#x3D;&#x3D; 区别"></a>is 和 &#x3D;&#x3D; 区别</h3><ul>
+<li><p>&#x3D;&#x3D;：判断左右两端的值是否相等</p>
+</li>
+<li><p>is：判断左右两端内容的内存地址是否一致。如果返回True,那可以确定这两个变量使用的是同一个对象</p>
+<p>如果内存地址相同，则值一定是相等的，如果值相等，则不一定同一对象</p>
+</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a = <span class="number">100</span></span><br><span class="line">b = <span class="number">100</span></span><br><span class="line"><span class="built_in">print</span>(a <span class="keyword">is</span> b)  <span class="comment"># True</span></span><br><span class="line"><span class="built_in">print</span>(a == b)  <span class="comment"># True</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a = <span class="number">1000</span></span><br><span class="line">b = <span class="number">1000</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(a == b) <span class="comment"># True</span></span><br><span class="line"><span class="built_in">print</span>(a <span class="keyword">is</span> b) <span class="comment"># False 在command命令下为False, 在.py文件中（例如pycharm中）得到的结果为True。（详情见下面）</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="小数据池-1"><a href="#小数据池-1" class="headerlink" title="小数据池"></a>小数据池</h3><ul>
+<li>一种缓存机制，也被称为驻留机制。各大编程语言中都有类似的东西。网上搜索常量池，小数据池指的是同一个内容</li>
+<li>小数据池只针对：int(整数)， string(字符串)， bool(布尔值)。其他数据类型不存在驻留机制</li>
+</ul>
+<p>优点：能够提高字符串、整数的处理速度。省略了创建对象的过程。</p>
+<p>缺点：在”池”中创建或者插入新的内容会花费更多的时间。</p>
+<p>1.整数</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">官方文档：</span><br><span class="line">    The current implementation keeps an array of integer objects for all integers between -5 and 256, when you create an int in that range you actually just get back a reference to the existing object. So it should be possible to change the value of 1. I suspect the behavior of Python in this case is undefined.</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>在python中，-5~256会被加到小数据池中，每次使用都是同一个对象</li>
+<li>在使用的时候，内存中只会创建一个该数据的对象，保存在小数据池中。当使用的时候直接从小数据池中获取对象的内存引用，而不需要重新创建一个新的数据，这样会节省更多的内存区域。</li>
+</ul>
+<p>2.字符串</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Incomputer science, string interning is a method of storing only onecopy of each distinct string value, which must be immutable. Interning strings makes </span><br><span class="line">some stringprocessing tasks more time- or space-efficient at the cost of requiring moretime when the string is created or interned. The distinct values are</span><br><span class="line"> stored ina string intern pool. –引⾃自维基百科</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>如果字符串的长度是0或者1，都会默认进行缓存。（中文字符无效）</li>
+<li>字符串长度大于1，但是字符串中只包含数字，字母，下划线时会被缓存。</li>
+<li>用乘法得到的字符串：1）乘数为1，仅包含数字，字母，下划线时会被缓存。如果包含其他字符，而长度&lt;&#x3D; 1也会被驻存(中文字符除外)。2）乘数大于1，仅包含数字，字母，下划线时会被缓存，但字符串长度不能大于20</li>
+<li>指定驻留：可以通过sys模块中的intern()函数来指定要驻留的内容。(详情见sys模块相关内容)</li>
+</ul>
+<h3 id="代码块缓存机制"><a href="#代码块缓存机制" class="headerlink" title="代码块缓存机制"></a>代码块缓存机制</h3><p>  在代码块内缓存机制是不一样的：</p>
+<ul>
+<li>在执行同一个代码块的初始化对象的命令时，会检查其值是否已经存在，如果存在，会将其重用。换句话说：执行同一个代码块时，遇到初始化对象的命令时，他会将初始化的这个变量与值存储在一个字典中，再遇到新的初始化对象命令时，先在字典中查询其值是否已经存在，如果存在，那么它会重复使用这个字典中的之前的这个值。即两变量指向同一个内存地址。</li>
+<li>如果是不同的代码块，则判断这两个变量是否满足小数据池的数据，如果满足，则两变量指向同一个地址。如果不满足，则得到两个不同的对象，即两变量指向的是不同的内存地址。</li>
+</ul>
+<p>注意：对于同一个代码块，只针对单纯创建变量，才会采用缓存机制，对于创建变量并同时做相关运算，则无。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">a = 1000</span><br><span class="line">b = 1000</span><br><span class="line"></span><br><span class="line">print(id(a)) # 2135225709680</span><br><span class="line">print(id(b)) # 2135225709680</span><br><span class="line">print(a is b)  # True  .py文件运行</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">a = 1000</span><br><span class="line">b = 10*100</span><br><span class="line"></span><br><span class="line">print(id(a)) # 1925536396400</span><br><span class="line">print(id(b)) # 1925536643952</span><br><span class="line">print(a is b) # False  .py文件运行</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="小数据池与代码块缓存机制区别与联系"><a href="#小数据池与代码块缓存机制区别与联系" class="headerlink" title="小数据池与代码块缓存机制区别与联系"></a>小数据池与代码块缓存机制区别与联系</h3><ul>
+<li>小数据池与代码块对缓存数据类型要求不一致，代码块只针对单纯创建变量有效，而对整数大小，字符串字符要求及长度无限制。</li>
+<li>对于代码块缓存机制：如果不满足代码块缓存机制，则判断是否满足小数据池数据，如果满足，则采用小数据池缓存机制。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">a = 5*5</span><br><span class="line">b = 25</span><br><span class="line"></span><br><span class="line">print(id(a))  # 1592487712</span><br><span class="line">print(id(b))  # 1592487712</span><br><span class="line"></span><br><span class="line">print(a is b)  # True  .py文件运行</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">a = &quot;Incomputer science, string interning is a method of storing only onecopy of each distinct string value&quot;</span><br><span class="line">b = &quot;Incomputer science, string interning is a method of storing only onecopy of each distinct string value&quot;</span><br><span class="line"></span><br><span class="line">print(id(a)) # 2926961023256</span><br><span class="line">print(id(b)) # 2926961023256</span><br><span class="line"></span><br><span class="line">print(a is b) # True  .py文件运行</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>Python</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>文件操作</title>
+    <url>/2025/03/15/%E6%96%87%E4%BB%B6%E6%93%8D%E4%BD%9C/</url>
+    <content><![CDATA[<h2 id="基本用法"><a href="#基本用法" class="headerlink" title="基本用法"></a>基本用法</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">f = open(&quot;文件操作.txt&quot;, mode=&#x27;r&#x27;, encoding=&quot;utf-8&quot;)</span><br><span class="line">...</span><br><span class="line">f.close()</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>open：表示打开一个文件</li>
+<li>f：变量，操控文件操作.txt文件的句柄。为一个可迭代对象</li>
+<li>f.flush()：刷新管道，在向文件里写内容时，管道里也会有数据，使用f.flush()可将管道里数据写入到文件里。</li>
+<li>f.close()：关闭文件</li>
+</ul>
+<h3 id="写入模式（w）"><a href="#写入模式（w）" class="headerlink" title="写入模式（w）"></a>写入模式（w）</h3><ul>
+<li>如果文件名不存在，则创建文件，然后再写入</li>
+<li>如果文件名已存在，则先清空文件内容，然后再写入</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">f = open(&quot;送别.txt&quot; mode=&quot;w&quot;, encoding=&quot;utf-8&quot;)</span><br><span class="line">f.write(&quot;下马饮君酒， 问君何所之？\n&quot;)</span><br><span class="line">f.write(&quot;君言不得意， 归卧南山陲。\n&quot;)</span><br><span class="line">f.write(&quot;但去莫复问， 白云无尽时。\n&quot;)</span><br><span class="line">f.close()</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="只读模式（r）"><a href="#只读模式（r）" class="headerlink" title="只读模式（r）"></a>只读模式（r）</h3><ul>
+<li>read()</li>
+</ul>
+<p>1.read()：一次性全都读取出来。弊端：占内存。如果文件过大，容易导致内存崩溃。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">f = open(&quot;送别.txt&quot;, mode=&quot;r&quot;, encoding=&quot;utf-8&quot;)</span><br><span class="line">content = f.read()</span><br><span class="line">print(content)f.close()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">结果：</span><br><span class="line">下马饮君酒， 问君何所之？</span><br><span class="line">君言不得意， 归卧南山陲。</span><br><span class="line">但去莫复问， 白云无尽时。</span><br></pre></td></tr></table></figure>
+
+<p>2.read(n)：读取n个字符。需要注意的是，如果再次读取，那么会在当前位置继续去读，而不是从头读。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">f = open(&quot;送别.txt&quot;, mode=&quot;r&quot;, encoding=&quot;utf-8&quot;)</span><br><span class="line">content = f.read(5)</span><br><span class="line">print(content)f.close()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">结果：</span><br><span class="line">下马饮君酒</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>readline()：一次读取一行数据。但每次读取出来的数据末尾都会有一个\n。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">f = open(&quot;送别.txt&quot;, mode=&quot;r&quot;, encoding=&quot;utf-8&quot;)</span><br><span class="line">content = f.readline()</span><br><span class="line">print(content)f.close()</span><br><span class="line"></span><br><span class="line">结果：</span><br><span class="line">下马饮君酒， 问君何所之？</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>readlines()：一次性全都读取出来，返回的是列表，如果文件过大，容易出现内存崩溃的问题。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">f = open(&quot;送别.txt&quot;, mode=&quot;r&quot;, encoding=&quot;utf-8&quot;)</span><br><span class="line">content = f.readlines()</span><br><span class="line">print(content)f.close()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">结果：</span><br><span class="line">[&#x27;下马饮君酒， 问君何所之？\n&#x27;, &#x27;君言不得意， 归卧南山陲。\n&#x27;, &#x27;但去莫复问， 白云无尽时。&#x27;]</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>循环读取</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">f = open(&quot;送别.txt&quot;, mode=&quot;r&quot;, encoding=&quot;utf-8&quot;)</span><br><span class="line">for line in f:</span><br><span class="line">    print(line.strip())</span><br><span class="line">f.close()</span><br><span class="line"></span><br><span class="line">结果：</span><br><span class="line">下马饮君酒， 问君何所之？</span><br><span class="line">君言不得意， 归卧南山陲。</span><br><span class="line">但去莫复问， 白云无尽时。</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="追加模式（a）"><a href="#追加模式（a）" class="headerlink" title="追加模式（a）"></a>追加模式（a）</h3><ul>
+<li>在追加模式下，我们写入的内容会追加在文件的结尾</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">f = open(&quot;送别.txt&quot;, mode=&quot;a&quot;, encoding=&quot;utf-8&quot;)</span><br><span class="line">f.write(&quot;- 王维&quot;)f.close()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">结果：</span><br><span class="line">下马饮君酒， 问君何所之？</span><br><span class="line">君言不得意， 归卧南山陲。</span><br><span class="line">但去莫复问， 白云无尽时。</span><br><span class="line">- 王维</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="路径"><a href="#路径" class="headerlink" title="路径"></a>路径</h2><ul>
+<li>如果文件夹命名为n或t时，此时\n，\t会被识别为转义字符，防止转义，可以路径前加”r”禁止转义。</li>
+</ul>
+<h3 id="绝对路径"><a href="#绝对路径" class="headerlink" title="绝对路径"></a>绝对路径</h3><p>从磁盘根目录找文件</p>
+<ul>
+<li>Windows：E:\python\送别.txt</li>
+<li>Linux：\user\bin\xxx</li>
+</ul>
+<h3 id="相对路径（用的多）"><a href="#相对路径（用的多）" class="headerlink" title="相对路径（用的多）"></a>相对路径（用的多）</h3><p>指相对于当前程序所在的文件夹</p>
+<ul>
+<li>例如文件在上一层文件下的送别.txt：..&#x2F;送别.txt</li>
+</ul>
+<h2 id="读写字节（rb，wb，ab）"><a href="#读写字节（rb，wb，ab）" class="headerlink" title="读写字节（rb，wb，ab）"></a>读写字节（rb，wb，ab）</h2><ul>
+<li>b：bytes，读取和写入的是字节</li>
+<li>应用：用来操作非文本文件（图片， 音频， 视频）</li>
+<li>在这些模式下，不能选择encoding字符集</li>
+</ul>
+<h3 id="rb"><a href="#rb" class="headerlink" title="rb"></a>rb</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">f = open(&quot;送别.txt&quot;, mode=&quot;rb&quot;)</span><br><span class="line">content = f.read()</span><br><span class="line">print(content)f.close()</span><br><span class="line"></span><br><span class="line">结果：</span><br><span class="line">b&#x27;\xe4\xb8\x8b\xe9\xa9\xac\xe9\xa5\xae\xe5\x90\x9b\xe9\x85\x92\xef\xbc\x8c \xe9\x97\xae\xe5\x90\x9b\xe4\xbd\x95\xe6\x89\x80\xe4\xb9\x8b\xef\xbc\x9f\r\n\xe5\x90\x9b\xe8\xa8\x80\xe4\xb8\x8d\xe5\xbe\x97\xe6\x84\x8f\xef\xbc\x8c \xe5\xbd\x92\xe5\x8d\xa7\xe5\x8d\x97\xe5\xb1\xb1\xe9\x99\xb2\xe3\x80\x82\r\n\xe4\xbd\x86\xe5\x8e\xbb\xe8\x8e\xab\xe5\xa4\x8d\xe9\x97\xae\xef\xbc\x8c \xe7\x99\xbd\xe4\xba\x91\xe6\x97\xa0\xe5\xb0\xbd\xe6\x97\xb6\xe3\x80\x82&#x27;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="wb"><a href="#wb" class="headerlink" title="wb"></a>wb</h3><p>  wb模式下，可以不指定打开文件的编码。但是在写文件的时候必须将字符串转化成utf-8的bytes数据，否则报错：TypeError: a bytes-like object is required, not ‘str’</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">f = open(&quot;送别.txt&quot;, mode=&quot;wb&quot;)</span><br><span class="line">f.write(&quot;   五言古诗&quot;.encode(&quot;utf-8&quot;))f.close()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">结果：</span><br><span class="line"></span><br><span class="line">   五言古诗</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h3><p>将图片(长城.jpg)从C盘复制到D盘：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">f1 = open(r&quot;c:\长城.jpg&quot;, mode=&quot;rb&quot;)</span><br><span class="line">f2 = open(r&quot;d:\长城.jpg&quot;, mode=&quot;wb&quot;)</span><br><span class="line"></span><br><span class="line">for line in f1:</span><br><span class="line">    f2.read(line)</span><br><span class="line"></span><br><span class="line">f1.close()</span><br><span class="line">f2.close()</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="扩展（-）"><a href="#扩展（-）" class="headerlink" title="扩展（+）"></a>扩展（+）</h2><h3 id="r-读写"><a href="#r-读写" class="headerlink" title="r+(读写)"></a>r+(读写)</h3><ul>
+<li>先读后写（正常）</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># place.txt:</span><br><span class="line"># 北京</span><br><span class="line"># 上海</span><br><span class="line"># 深圳</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">f = open(&quot;place.txt&quot;, mode=&quot;r+&quot;, encoding=&quot;utf-8&quot;)</span><br><span class="line">content = f.read()</span><br><span class="line">f.write(&quot;广州&quot;)</span><br><span class="line">print(content)f.close()</span><br><span class="line"></span><br><span class="line">结果：</span><br><span class="line">北京</span><br><span class="line">上海</span><br><span class="line">深圳</span><br><span class="line"></span><br><span class="line"># place.txt:</span><br><span class="line"># 北京</span><br><span class="line"># 上海</span><br><span class="line"># 深圳</span><br><span class="line"># 广州</span><br></pre></td></tr></table></figure>
+
+<p>注意：在r+模式下，不论读取多少内容，再次写入时，都是在末尾写入</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">送别.txt:</span><br><span class="line">下马饮 君酒，问君何所之?</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">f = open(&quot;送别.txt&quot;, mode=&quot;r+&quot;, encoding=&quot;utf-8&quot;)</span><br><span class="line">content = f.read(3)</span><br><span class="line">f.write(&quot;\n君言不得意，归卧南山陲。&quot;)</span><br><span class="line">print(content)</span><br><span class="line">f.close()</span><br><span class="line"></span><br><span class="line">结果：</span><br><span class="line">下马饮</span><br><span class="line"></span><br><span class="line">送别.txt:</span><br><span class="line">下马饮君酒，问君何所之?</span><br><span class="line">君言不得意，归卧南山陲。</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>先写后读（错误示范）</p>
+<p>如果直接写入的话，则在开头写入，覆盖开头的内容</p>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">place.txt:</span><br><span class="line">北京</span><br><span class="line">上海</span><br><span class="line">深圳</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">f = open(&quot;place.txt&quot;, mode=&quot;r+&quot;, encoding=&quot;utf-8&quot;)</span><br><span class="line">f.write(&quot;广州&quot;)</span><br><span class="line">content = f.read()</span><br><span class="line">print(content)</span><br><span class="line"></span><br><span class="line">f.close()</span><br><span class="line"></span><br><span class="line">结果：</span><br><span class="line"></span><br><span class="line">上海</span><br><span class="line">深圳</span><br><span class="line"></span><br><span class="line">place.txt:</span><br><span class="line">广州</span><br><span class="line">上海</span><br><span class="line">深圳</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="w-写读"><a href="#w-写读" class="headerlink" title="w+(写读)"></a>w+(写读)</h3><ul>
+<li>如果文件存在，则先清空，再写入，如果文件不存在，则先创建文件，再写入。</li>
+<li>写入东西后，光标在末尾，再次读取时，读取内容为空白</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">f = open(&quot;introduction.txt&quot;, mode=&quot;w+&quot;, encoding=&quot;utf-8&quot;)</span><br><span class="line">f.write(&quot;你好，我叫赛利亚&quot;)</span><br><span class="line">content = f.read()</span><br><span class="line">print(content)</span><br><span class="line"></span><br><span class="line">f.close()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">结果：</span><br></pre></td></tr></table></figure>
+
+<p>a+(追加写读)</p>
+<ul>
+<li>不论光标在何处，写入时，都是在末尾写入</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">f = open(&quot;introduction.txt&quot;, mode=&quot;a+&quot;, encoding=&quot;utf-8&quot;)</span><br><span class="line">f.write(&quot;祝你玩的愉快！&quot;)</span><br><span class="line">content = f.read()</span><br><span class="line">print(content)</span><br><span class="line"></span><br><span class="line">f.close()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">结果：</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">introduction.txt:</span><br><span class="line">你好，我叫赛利亚祝你玩的愉快！</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="光标"><a href="#光标" class="headerlink" title="光标"></a>光标</h2><h3 id="seek-参数1-参数2"><a href="#seek-参数1-参数2" class="headerlink" title="seek(参数1, 参数2)"></a>seek(参数1, 参数2)</h3><ul>
+<li>参数1：偏移量，表示移动多少个单位。</li>
+<li>参数2：表示从什么位置进行偏移。0表示开头，1表示当前位置，2表示末尾。把光标移动至文件的开头：seek(0)；移至末尾：seek(0, 2)</li>
+<li>功能：移动光标</li>
+<li>特点：以字节为单位</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">introduction.txt:</span><br><span class="line">你好，我叫赛利亚</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">f = open(&quot;introduction.txt&quot;, mode=&quot;r&quot;, encoding=&quot;utf-8&quot;)</span><br><span class="line">f.seek(3)</span><br><span class="line">content = f.read(3)</span><br><span class="line">print(content)f.close()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">结果：</span><br><span class="line">好，我</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="tell"><a href="#tell" class="headerlink" title="tell()"></a>tell()</h3><p>程序返回当前光标的位置</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">introduction.txt:</span><br><span class="line">你好，我叫赛利亚</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">f = open(&quot;introduction.txt&quot;, mode=&quot;r&quot;, encoding=&quot;utf-8&quot;)</span><br><span class="line">content = f.read(3)</span><br><span class="line">print(f.tell())  # 9f.close()</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="truncate"><a href="#truncate" class="headerlink" title="truncate()"></a>truncate()</h3><p>默认从开头截取到光标位置，后面的内容将会被删除。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">introduction.txt:</span><br><span class="line">你好，我叫赛利亚</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">f = open(&quot;introduction.txt&quot;, mode=&quot;r+&quot;, encoding=&quot;utf-8&quot;)</span><br><span class="line">f.seek(3)</span><br><span class="line">f.truncate()</span><br><span class="line">f.close()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">introduction.txt:</span><br><span class="line">你</span><br></pre></td></tr></table></figure>
+
+<p>truncate(n)：从开头载取到n位置，后面的内容将会被删除。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">introduction.txt:</span><br><span class="line">你好，我叫赛利亚</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">f = open(&quot;introduction.txt&quot;, mode=&quot;r+&quot;, encoding=&quot;utf-8&quot;)</span><br><span class="line">f.truncate(3)</span><br><span class="line">f.close()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">introduction.txt:</span><br><span class="line">你</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="文件修改"><a href="#文件修改" class="headerlink" title="文件修改"></a>文件修改</h2><p>  文件操作没有直接修改文件功能，只能将文件中的内容读取到内存中，将信息修改完毕，然后将源文件删除，将新的文件的名字改成老文件的名字。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">import os</span><br><span class="line"></span><br><span class="line">with open(&quot;唐诗&quot;, mode=&quot;r&quot;, encoding=&quot;utf-8&quot;) as f1,\</span><br><span class="line">    open(&quot;唐诗_副本&quot;, mode=&quot;w&quot;, encoding=&quot;utf-8&quot;) as f2:</span><br><span class="line">    for line in f1:</span><br><span class="line">        line = line.replace(&quot;?&quot;, &quot;。&quot;)</span><br><span class="line">        f2.write(line)</span><br><span class="line"></span><br><span class="line">os.remove(&quot;唐诗&quot;)  # 删除源文件</span><br><span class="line">os.rename(&quot;唐诗_副本&quot;, &quot;唐诗&quot;)  # 把副本改名为源文件</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="文件操作应用"><a href="#文件操作应用" class="headerlink" title="文件操作应用"></a>文件操作应用</h2><h3 id="文本文件的复制"><a href="#文本文件的复制" class="headerlink" title="文本文件的复制"></a>文本文件的复制</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">f1 = open(r&quot;C:\日记本.txt&quot;, mode=&quot;r&quot;, encoding=&quot;utf-8&quot;)</span><br><span class="line">f2 = open(r&quot;D：\日记本.txt&quot;, mode=&quot;w&quot;, encoding=&quot;utf-8&quot;)</span><br><span class="line"></span><br><span class="line">for line in f1:</span><br><span class="line">    f2.write(line)</span><br><span class="line"></span><br><span class="line">f1.close()</span><br><span class="line">f2.close()</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="数据统计"><a href="#数据统计" class="headerlink" title="数据统计"></a>数据统计</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">data.txt:</span><br><span class="line">序号，名称，价格，库存</span><br><span class="line">1，苹果，5，6000</span><br><span class="line">2，榴莲，20，5000</span><br><span class="line">3，香蕉，3，2000</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">with open(&quot;data.txt&quot;, mode=&quot;r&quot;, encoding=&quot;utf-8&quot;) as f:</span><br><span class="line">    titles = f.readline().strip()</span><br><span class="line">    t_list = titles.split(&quot;,&quot;)</span><br><span class="line"></span><br><span class="line">    lst = []</span><br><span class="line">    for line in f:</span><br><span class="line">        dic = &#123;&#125;</span><br><span class="line">        line = line.strip().split(&quot;,&quot;)</span><br><span class="line">        for i in range(len(line)):</span><br><span class="line">            dic[t_list[i]] = line[i]</span><br><span class="line">        lst.append(dic)</span><br><span class="line">print(lst)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">结果：</span><br><span class="line">[&#123;&#x27;序号&#x27;: &#x27;1&#x27;, &#x27;名称&#x27;: &#x27;苹果&#x27;, &#x27;价格&#x27;: &#x27;5&#x27;, &#x27;库存&#x27;: &#x27;6000&#x27;&#125;, &#123;&#x27;序号&#x27;: &#x27;2&#x27;, &#x27;名称&#x27;: &#x27;榴莲&#x27;, &#x27;价格&#x27;: &#x27;20&#x27;, &#x27;库存&#x27;: &#x27;5000&#x27;&#125;, &#123;&#x27;序号&#x27;: &#x27;3&#x27;, &#x27;名称&#x27;: &#x27;香蕉&#x27;, &#x27;价格&#x27;: &#x27;3&#x27;, &#x27;库存&#x27;: &#x27;2000&#x27;&#125;]</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>Python</category>
+      </categories>
+      <tags>
+        <tag>Python</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>文件系统管理</title>
     <url>/2025/02/25/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86/</url>
     <content><![CDATA[<h1 id="文件系统管理"><a href="#文件系统管理" class="headerlink" title="文件系统管理"></a>文件系统管理</h1><h2 id="1-硬盘结构"><a href="#1-硬盘结构" class="headerlink" title="1. 硬盘结构"></a>1. 硬盘结构</h2><h3 id="1）硬盘的逻辑结构"><a href="#1）硬盘的逻辑结构" class="headerlink" title="1）硬盘的逻辑结构"></a>1）硬盘的逻辑结构</h3><p>每个扇区的大小是固定的，为512Byte。扇区也是磁盘的最小存储单位。</p>
@@ -4535,7 +4771,7 @@
 </tr>
 <tr>
 <td>mail address</td>
-<td>当日志轮替时，输出内容通过邮件发送到指定的邮件地址。如mail <a href="mailto:&#x61;&#97;&#x61;&#64;&#x31;&#54;&#x33;&#x2e;&#x63;&#111;&#x6d;">aaa@163.com</a></td>
+<td>当日志轮替时，输出内容通过邮件发送到指定的邮件地址。如mail <a href="mailto:&#x61;&#97;&#97;&#64;&#x31;&#54;&#x33;&#46;&#x63;&#x6f;&#109;">aaa@163.com</a></td>
 </tr>
 <tr>
 <td>missingok</td>
@@ -5194,6 +5430,44 @@
       <categories>
         <category>Linux</category>
       </categories>
+  </entry>
+  <entry>
+    <title>深浅拷贝</title>
+    <url>/2025/03/15/%E6%B7%B1%E6%B5%85%E6%8B%B7%E8%B4%9D/</url>
+    <content><![CDATA[<h2 id=""><a href="#" class="headerlink" title="&#x3D;"></a>&#x3D;</h2><ul>
+<li>没有产生新对象，都是内存地址的赋值</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lst1 = [11, 22, 33, 44]</span><br><span class="line">lst2 = lst1print(id(lst1)) # 1916361712712print(id(lst2)) # 1916361712712</span><br><span class="line"></span><br><span class="line">lst1.append(&quot;hello&quot;)</span><br><span class="line">print(lst1)  # [11, 22, 33, 44, &#x27;hello&#x27;]</span><br><span class="line">print(lst2)  # [11, 22, 33, 44, &#x27;hello&#x27;]</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">dic1 = &#123;&quot;name&quot;: &quot;Tom&quot;, &quot;age&quot;: 18&#125;</span><br><span class="line">dic2 = dic1</span><br><span class="line">print(id(dic1)) # 2020711820888print(id(dic2)) # 2020711820888</span><br><span class="line">dic1[&quot;hobby&quot;]  = &quot;football&quot;</span><br><span class="line"></span><br><span class="line">print(dic1)  # &#123;&#x27;name&#x27;: &#x27;Tom&#x27;, &#x27;age&#x27;: 18, &#x27;hobby&#x27;: &#x27;football&#x27;&#125;</span><br><span class="line">print(dic2)  # &#123;&#x27;name&#x27;: &#x27;Tom&#x27;, &#x27;age&#x27;: 18, &#x27;hobby&#x27;: &#x27;football&#x27;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>  对于list，set，dict来说，变量1 &#x3D; 变量2，其实就相当于把变量2内容的内存地址交给变量1，并不是复制一份内容，所以一变，都变。 </p>
+<h2 id="浅拷贝"><a href="#浅拷贝" class="headerlink" title="浅拷贝"></a>浅拷贝</h2><ul>
+<li>优点：省内存</li>
+<li>缺点：只拷贝第一层内容</li>
+<li>浅拷贝方法：copy()，对于list，还有lst[:]</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lst1 = [11, 22, 33]</span><br><span class="line">lst2 = lst1[:]</span><br><span class="line"></span><br><span class="line">print(id(lst1))  # 1744651035720</span><br><span class="line">print(id(lst2))  # 1744651035848</span><br><span class="line"></span><br><span class="line">lst1.append(44)</span><br><span class="line"></span><br><span class="line">print(lst1) # [11, 22, 33, 44]</span><br><span class="line">print(lst2) # [11, 22, 33]</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lst1 = [11, 22, 33, [44, 55]]</span><br><span class="line">lst2 = lst1.copy()</span><br><span class="line"></span><br><span class="line">print(id(lst1))  # 2081315824712</span><br><span class="line">print(id(lst2))  # 2081316649864</span><br><span class="line"></span><br><span class="line">lst1[3].append(&quot;hello&quot;)</span><br><span class="line"></span><br><span class="line">print(lst1) # [11, 22, 33, [44, 55, &#x27;hello&#x27;]]</span><br><span class="line">print(lst2) # [11, 22, 33, [44, 55, &#x27;hello&#x27;]]</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="深拷贝"><a href="#深拷贝" class="headerlink" title="深拷贝"></a>深拷贝</h2><ul>
+<li><p>深拷贝把内部元素完全进行拷贝复制。</p>
+<p>深拷贝方法：</p>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">import copy</span><br><span class="line"></span><br><span class="line">s2 = copy.deepcopy(s1)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">import copy</span><br><span class="line"></span><br><span class="line">lst1 = [11, 22, 33, [44, 55]]</span><br><span class="line">lst2 = copy.deepcopy(lst1)</span><br><span class="line"></span><br><span class="line">print(id(lst1))  # 1236356428872</span><br><span class="line">print(id(lst2))  # 1236356430152</span><br><span class="line"></span><br><span class="line">lst1[3].append(&quot;hello&quot;)</span><br><span class="line"></span><br><span class="line">print(lst1) # [11, 22, 33, [44, 55, &#x27;hello&#x27;]]</span><br><span class="line">print(lst2) # [11, 22, 33, [44, 55]]</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>Python</category>
+      </categories>
+      <tags>
+        <tag>Python</tag>
+      </tags>
   </entry>
   <entry>
     <title>用户管理</title>
@@ -6010,6 +6284,107 @@
       <categories>
         <category>Linux</category>
       </categories>
+  </entry>
+  <entry>
+    <title>编码</title>
+    <url>/2025/03/15/%E7%BC%96%E7%A0%81/</url>
+    <content><![CDATA[<h2 id="编码种类"><a href="#编码种类" class="headerlink" title="编码种类"></a>编码种类</h2><h3 id="ASCII"><a href="#ASCII" class="headerlink" title="ASCII"></a>ASCII</h3><ul>
+<li>基于拉丁字母的一套电脑编码系统</li>
+<li>其最多只能用8位来表示(一字节)</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th><strong>Bin(二进制)</strong></th>
+<th><strong>Dec(十进制)</strong></th>
+<th><strong>缩写&#x2F;字符</strong></th>
+<th><strong>解释</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>01000001</td>
+<td>65</td>
+<td>A</td>
+<td>大写字母A</td>
+</tr>
+<tr>
+<td>01100001</td>
+<td>97</td>
+<td>a</td>
+<td>小写字母a</td>
+</tr>
+</tbody></table>
+<h3 id="GBK"><a href="#GBK" class="headerlink" title="GBK"></a>GBK</h3><ul>
+<li>国标码(GB2312)的扩展码</li>
+<li>一个字符占用16bit，两字节</li>
+<li>最多可容纳2**16 &#x3D; 65536字符</li>
+<li>程序无法跨平台使用</li>
+</ul>
+<h3 id="Unicode"><a href="#Unicode" class="headerlink" title="Unicode"></a>Unicode</h3><ul>
+<li>万国码，目的把全世界所有国家的文字信息进行编码</li>
+<li>一个字符占用32位，四字节</li>
+</ul>
+<h3 id="UTF-8"><a href="#UTF-8" class="headerlink" title="UTF-8"></a>UTF-8</h3><ul>
+<li>可变长度的编码</li>
+<li>每个字符占用的字节数不定，根据文字内容进行编码。</li>
+</ul>
+<p>不同字符占用字节数：</p>
+<ul>
+<li>英文：1字节</li>
+<li>欧洲文字：2字节</li>
+<li>中文：3字节</li>
+</ul>
+<h2 id="单位转换"><a href="#单位转换" class="headerlink" title="单位转换"></a>单位转换</h2><ul>
+<li>8bit &#x3D; 1 byte</li>
+<li>1024byte &#x3D; 1KB</li>
+<li>1024KB &#x3D; 1MB</li>
+<li>1024MB &#x3D; 1GB</li>
+<li>1024GB &#x3D; 1TB</li>
+<li>1024TB &#x3D; 1PB</li>
+<li>1024PB &#x3D; 1EB</li>
+<li>1024EB &#x3D; 1ZB</li>
+<li>1024ZB &#x3D; 1YB</li>
+<li>1024YB &#x3D; 1NB</li>
+<li>1024NB &#x3D; 1DB</li>
+</ul>
+<h2 id="编码和解码"><a href="#编码和解码" class="headerlink" title="编码和解码"></a>编码和解码</h2><ul>
+<li>python2中默认使用的是ASCII码。所以不支持中文。如果需要在Python2中更改编码。需要在文件的开始编写：</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># _*_ encoding:utf-8 _*_</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>python3中，内存中使用的是unicode码。</p>
+<p>在python3内存中，在程序运行阶段，使用的是unicode编码。因为unicode是万国码。什么内容都可以进行显示。那么在数据传输和存储时由于unicode比较浪费空间和资源。需要把unicode转存成UTF-8或GBK进行存储。</p>
+<p>编码之后的数据是<strong>bytes</strong>类型的数据。</p>
+</li>
+</ul>
+<h3 id="bytes的表现形式："><a href="#bytes的表现形式：" class="headerlink" title="bytes的表现形式："></a>bytes的表现形式：</h3><ul>
+<li>英文：英文的表现形式和字符串相差不大，前面多个”b”</li>
+<li>中文：中文编码之后的结果根据编码的不同，编码结果也不同，一个中文的UTF-8编码是3个字节，一个GBK的中文编码是2个字节。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">a = &quot;hello&quot;</span><br><span class="line">b = &quot;中&quot;</span><br><span class="line"></span><br><span class="line">print(a.encode(&quot;utf-8&quot;))  # b&#x27;hello&#x27;</span><br><span class="line">print(b.encode(&quot;utf-8&quot;))  # b&#x27;\xe4\xb8\xad&#x27;</span><br><span class="line">print(b.encode(&quot;gbk&quot;))    # b&#x27;\xd6\xd0&#x27;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="编码和解码-1"><a href="#编码和解码-1" class="headerlink" title="编码和解码"></a>编码和解码</h3><ul>
+<li><p>**encode()：**编码</p>
+</li>
+<li><p>**decode()：**解码</p>
+<p>以何种编码编码，就须以该种编码解码。否则，解码不成功，得不到想要的内容。</p>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">a = &quot;编码&quot;</span><br><span class="line">print(a.encode(&quot;utf-8&quot;)) # b&#x27;\xe7\xbc\x96\xe7\xa0\x81&#x27;</span><br><span class="line"></span><br><span class="line">b = b&#x27;\xe7\xbc\x96\xe7\xa0\x81&#x27;</span><br><span class="line">print(b.decode(&quot;utf-8&quot;))  # 编码</span><br></pre></td></tr></table></figure>
+
+<p>  不同编码之间的转换：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># GBK 转换成 UTF-8</span><br><span class="line">s = &quot;我是文字&quot;</span><br><span class="line">bs = s.encode(&quot;gbk&quot;)</span><br><span class="line"></span><br><span class="line"># 把GBK转换成unicode，也就是解码</span><br><span class="line">s = bs.decode(&quot;gbk&quot;)</span><br><span class="line"></span><br><span class="line"># 重新编码成UTF-8</span><br><span class="line">bss = s.encode(&quot;utf-8&quot;)</span><br><span class="line"></span><br><span class="line">print(bss)</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>Python</category>
+      </categories>
+      <tags>
+        <tag>Python</tag>
+      </tags>
   </entry>
   <entry>
     <title>软件包安装</title>
