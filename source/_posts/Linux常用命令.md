@@ -1,7 +1,7 @@
 ---
 title: Linux常用命令
 date: 2025-02-25 12:58:15
-tags:
+tags: Linux
 categories: Linux
 ---
 
