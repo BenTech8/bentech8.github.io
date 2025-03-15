@@ -1,8 +1,10 @@
 ---
 title: argo-workflows
 date: 2023-03-14 16:01:29
-tags:
-categories: Kubernetes
+tags: 
+- Kubernetes
+categories: 
+- Kubernetes
 ---
 
 ## Argo Workflows简介

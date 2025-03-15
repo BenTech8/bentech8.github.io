@@ -2,6 +2,8 @@
 title: argo-cd
 date: 2025-03-14 11:32:37
 tags:
+- DevOps
+- Kubernetes
 categories: DevOps
 ---
 

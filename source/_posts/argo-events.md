@@ -2,7 +2,9 @@
 title: argo-events
 date: 2023-03-14 16:01:39
 tags:
-categories: Kubernetes
+- Kubernetes
+categories: 
+- Kubernetes
 ---
 
 ## Argo Events概述
