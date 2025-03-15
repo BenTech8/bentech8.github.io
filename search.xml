@@ -2795,7 +2795,16 @@
   <entry>
     <title>argo-workflows</title>
     <url>/2023/03/14/argo-workflows/</url>
-    <content><![CDATA[]]></content>
+    <content><![CDATA[<h2 id="Argo-Workflows简介"><a href="#Argo-Workflows简介" class="headerlink" title="Argo Workflows简介"></a>Argo Workflows简介</h2><p>Argo Workflows是一个开源项目，为Kubernetes提供container-native工作流程，其主要通过Kubernetes CRD实现的。</p>
+<p>特点如下：</p>
+<ul>
+<li>工作流的每一步都是一个容器</li>
+<li>将多步骤工作流建模为一系列任务，或者使用有向无环图（DAG）描述任务之间的依赖关系</li>
+<li>可以在短时间内轻松运行用于机器学习或数据处理的计算密集型作业。</li>
+<li>在Kubernetes上运行CI&#x2F;CD Pipeline，无需复杂的软件配置</li>
+</ul>
+<h2 id="链接"><a href="#链接" class="headerlink" title="链接"></a>链接</h2><p>官方文档：<a href="https://argo-workflows.readthedocs.io/en/latest/">https://argo-workflows.readthedocs.io/en/latest/</a></p>
+]]></content>
       <categories>
         <category>Kubernetes</category>
       </categories>
@@ -4258,7 +4267,7 @@
 </tr>
 <tr>
 <td>mail address</td>
-<td>当日志轮替时，输出内容通过邮件发送到指定的邮件地址。如mail <a href="mailto:&#x61;&#97;&#x61;&#64;&#49;&#x36;&#x33;&#46;&#99;&#111;&#109;">aaa@163.com</a></td>
+<td>当日志轮替时，输出内容通过邮件发送到指定的邮件地址。如mail <a href="mailto:&#97;&#97;&#97;&#x40;&#49;&#54;&#51;&#x2e;&#99;&#111;&#x6d;">aaa@163.com</a></td>
 </tr>
 <tr>
 <td>missingok</td>
