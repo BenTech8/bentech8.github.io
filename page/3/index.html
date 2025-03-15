@@ -193,7 +193,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-03-15 20:04:37" itemprop="dateModified" datetime="2025-03-15T20:04:37+08:00">2025-03-15</time>
+                <time title="修改时间：2025-03-15 20:52:42" itemprop="dateModified" datetime="2025-03-15T20:52:42+08:00">2025-03-15</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -224,6 +224,42 @@
 <li>可以在短时间内轻松运行用于机器学习或数据处理的计算密集型作业。</li>
 <li>在Kubernetes上运行CI&#x2F;CD Pipeline，无需复杂的软件配置</li>
 </ul>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><h3 id="安装Argo-Workflows"><a href="#安装Argo-Workflows" class="headerlink" title="安装Argo Workflows"></a>安装Argo Workflows</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ARGO_WORKFLOWS_VERSION=&quot;v3.6.5&quot;</span><br><span class="line">kubectl create namespace argo</span><br><span class="line">kubectl apply -n argo -f &quot;https://github.com/argoproj/argo-workflows/releases/download/$&#123;ARGO_WORKFLOWS_VERSION&#125;/quick-start-minimal.yaml&quot;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="安装Argo-Workflows-CLI"><a href="#安装Argo-Workflows-CLI" class="headerlink" title="安装Argo Workflows CLI"></a>安装Argo Workflows CLI</h3><p>Mac&#x2F;Linux</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Detect OS</span></span><br><span class="line">ARGO_OS=&quot;darwin&quot;</span><br><span class="line">if [[ uname -s != &quot;Darwin&quot; ]]; then</span><br><span class="line">  ARGO_OS=&quot;linux&quot;</span><br><span class="line">fi</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Download the binary</span></span><br><span class="line">curl -sLO &quot;https://github.com/argoproj/argo-workflows/releases/download/v3.6.5/argo-$ARGO_OS-amd64.gz&quot;</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Unzip</span></span><br><span class="line">gunzip &quot;argo-$ARGO_OS-amd64.gz&quot;</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Make binary executable</span></span><br><span class="line">chmod +x &quot;argo-$ARGO_OS-amd64&quot;</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Move binary to path</span></span><br><span class="line">mv &quot;./argo-$ARGO_OS-amd64&quot; /usr/local/bin/argo</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Test installation</span></span><br><span class="line">argo version</span><br></pre></td></tr></table></figure>
+
+<p>argo命令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">提交一个workflow至kubernetes</span></span><br><span class="line">argo submit hello-world.yaml</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">列出当前所有workflows</span></span><br><span class="line">argo list</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">获取某个特定workflow的信息</span></span><br><span class="line">argo get hello-world-xxx</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">打印某个workflow的日志</span></span><br><span class="line">argo logs hello-world-xxx</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">删除workflow</span></span><br><span class="line">argo delete hello-world-xxx</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="核心概念"><a href="#核心概念" class="headerlink" title="核心概念"></a>核心概念</h2><h3 id="Workflow"><a href="#Workflow" class="headerlink" title="Workflow"></a>Workflow</h3><p>Workflow是Argo中最重要的资源，其主要有两个重要功能：</p>
+<ul>
+<li>它定义要执行的工作流</li>
+<li>它存储工作流的状态</li>
+</ul>
+<p>要执行的工作流定义在Workflow.spec字段中，其主要包括templates和entrypoint，如：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">argoproj.io/v1alpha1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Workflow</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">generateName:</span> <span class="string">hello-world-</span></span><br><span class="line">  <span class="attr">labels:</span></span><br><span class="line">    <span class="attr">workflows.argoproj.io/archive-strategy:</span> <span class="string">&quot;false&quot;</span></span><br><span class="line">  <span class="attr">annotations:</span></span><br><span class="line">    <span class="attr">workflows.argoproj.io/description:</span> <span class="string">|</span></span><br><span class="line"><span class="string">      This is a simple hello world example.</span></span><br><span class="line"><span class="string"></span><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">entrypoint:</span> <span class="string">hello-world</span>          <span class="comment"># 工作流的入口点，即工作流启动时首先执行的模板</span></span><br><span class="line">  <span class="attr">templates:</span>                       <span class="comment"># 模板</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">hello-world</span></span><br><span class="line">    <span class="attr">container:</span></span><br><span class="line">      <span class="attr">image:</span> <span class="string">busybox</span></span><br><span class="line">      <span class="attr">command:</span> [<span class="string">echo</span>]</span><br><span class="line">      <span class="attr">args:</span> [<span class="string">&quot;hello world&quot;</span>]</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="Templates"><a href="#Templates" class="headerlink" title="Templates"></a>Templates</h3><p>templates是列表结构，主要分为两类：</p>
+<ul>
+<li>定义具体的工作流</li>
+<li>调用其他模板提供并行控制</li>
+</ul>
+<p><strong>定义具体的工作流</strong></p>
+<p>定义具体的工作流有4种类别，如下：</p>
+<ul>
+<li>Container</li>
+<li>Script</li>
+<li>Resource</li>
+<li>Suspend</li>
+</ul>
+<p><strong>Container</strong></p>
 <h2 id="链接"><a href="#链接" class="headerlink" title="链接"></a>链接</h2><p>官方文档：<a target="_blank" rel="noopener" href="https://argo-workflows.readthedocs.io/en/latest/">https://argo-workflows.readthedocs.io/en/latest/</a></p>
 
       
