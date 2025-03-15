@@ -957,6 +957,17 @@
       </categories>
   </entry>
   <entry>
+    <title>MySQL调优</title>
+    <url>/2025/03/15/MySQL%E8%B0%83%E4%BC%98/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>MySQL</category>
+      </categories>
+      <tags>
+        <tag>db</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Shell基础</title>
     <url>/2025/02/25/Shell%E5%9F%BA%E7%A1%80/</url>
     <content><![CDATA[<h2 id="Shell概述"><a href="#Shell概述" class="headerlink" title="Shell概述"></a>Shell概述</h2><h3 id="Shell分类"><a href="#Shell分类" class="headerlink" title="Shell分类"></a>Shell分类</h3><table>
@@ -2700,6 +2711,10 @@
       <categories>
         <category>DevOps</category>
       </categories>
+      <tags>
+        <tag>DevOps</tag>
+        <tag>Kubernetes</tag>
+      </tags>
   </entry>
   <entry>
     <title>argo-events</title>
@@ -2771,6 +2786,9 @@
       <categories>
         <category>Kubernetes</category>
       </categories>
+      <tags>
+        <tag>Kubernetes</tag>
+      </tags>
   </entry>
   <entry>
     <title>argo-rollouts</title>
@@ -2794,6 +2812,9 @@
       <categories>
         <category>Kubernetes</category>
       </categories>
+      <tags>
+        <tag>Kubernetes</tag>
+      </tags>
   </entry>
   <entry>
     <title>argo-workflows</title>
@@ -2959,6 +2980,9 @@
       <categories>
         <category>Kubernetes</category>
       </categories>
+      <tags>
+        <tag>Kubernetes</tag>
+      </tags>
   </entry>
   <entry>
     <title>nginx原理</title>
@@ -4771,7 +4795,7 @@
 </tr>
 <tr>
 <td>mail address</td>
-<td>当日志轮替时，输出内容通过邮件发送到指定的邮件地址。如mail <a href="mailto:&#x61;&#97;&#97;&#64;&#x31;&#54;&#x33;&#46;&#x63;&#x6f;&#109;">aaa@163.com</a></td>
+<td>当日志轮替时，输出内容通过邮件发送到指定的邮件地址。如mail <a href="mailto:&#x61;&#x61;&#97;&#x40;&#x31;&#54;&#51;&#x2e;&#x63;&#x6f;&#x6d;">aaa@163.com</a></td>
 </tr>
 <tr>
 <td>missingok</td>
