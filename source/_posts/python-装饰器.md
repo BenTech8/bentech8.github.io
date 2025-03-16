@@ -1,6 +1,6 @@
 ---
 title: 装饰器
-date: 2025-03-16 17:24:16
+date: 2019-03-16 17:24:16
 tags:
 - Python
 categories:

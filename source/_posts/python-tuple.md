@@ -1,6 +1,6 @@
 ---
 title: Tuple
-date: 2025-03-16 16:35:39
+date: 2019-03-16 16:35:39
 tags:
 - Python
 categories:

@@ -1,6 +1,6 @@
 ---
 title: Dictionary
-date: 2025-03-16 16:47:32
+date: 2019-03-16 16:47:32
 tags:
 - Python
 categories:

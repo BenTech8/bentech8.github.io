@@ -1,5 +1,5 @@
 ---
-title: argo-rollouts
+title: Argo Rollouts
 date: 2025-03-14 15:39:17
 tags: 
 - Kubernetes

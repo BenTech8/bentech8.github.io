@@ -1,6 +1,6 @@
 ---
 title: 内置函数一
-date: 2025-03-16 17:02:59
+date: 2019-03-16 17:02:59
 tags:
 - Python
 categories:

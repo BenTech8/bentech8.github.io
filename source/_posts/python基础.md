@@ -1,6 +1,6 @@
 ---
 title: python基础
-date: 2025-03-15 22:35:14
+date: 2019-03-15 22:35:14
 tags: Python
 categories: Python
 ---

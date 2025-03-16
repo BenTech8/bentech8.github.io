@@ -1,5 +1,5 @@
 ---
-title: argo-workflows
+title: Argo Workflows
 date: 2023-03-14 16:01:29
 tags: 
 - Kubernetes

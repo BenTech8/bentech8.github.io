@@ -1,10 +1,11 @@
 ---
-title: argo-cd
+title: Argo CD
 date: 2025-03-14 11:32:37
 tags:
 - DevOps
 - Kubernetes
-categories: DevOps
+categories: 
+- DevOps
 ---
 
 ## ArgoCD简介

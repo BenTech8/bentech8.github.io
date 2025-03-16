@@ -1,6 +1,6 @@
 ---
 title: 初识函数
-date: 2025-03-16 16:57:01
+date: 2019-03-16 16:57:01
 tags:
 - Python
 categories:

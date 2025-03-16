@@ -1,5 +1,5 @@
 ---
-title: argo-events
+title: Argo Events
 date: 2023-03-14 16:01:39
 tags:
 - Kubernetes
