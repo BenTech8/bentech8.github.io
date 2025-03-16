@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>MySQL调优</title>
+    <url>/2025/03/15/DB-MySQL%E8%B0%83%E4%BC%98/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>MySQL</category>
+      </categories>
+      <tags>
+        <tag>DataBase</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Linux常用命令</title>
     <url>/2025/02/25/Linux%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</url>
     <content><![CDATA[<h1 id="Linux常用命令"><a href="#Linux常用命令" class="headerlink" title="Linux常用命令"></a>Linux常用命令</h1><h2 id="1-命令提示符"><a href="#1-命令提示符" class="headerlink" title="1. 命令提示符"></a>1. 命令提示符</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ben@ben-NBLK-WAX9X:~$</span><br></pre></td></tr></table></figure>
@@ -955,17 +966,6 @@
       <categories>
         <category>Linux</category>
       </categories>
-  </entry>
-  <entry>
-    <title>MySQL调优</title>
-    <url>/2025/03/15/MySQL%E8%B0%83%E4%BC%98/</url>
-    <content><![CDATA[]]></content>
-      <categories>
-        <category>MySQL</category>
-      </categories>
-      <tags>
-        <tag>db</tag>
-      </tags>
   </entry>
   <entry>
     <title>Shell基础</title>
@@ -6304,7 +6304,7 @@
 </tr>
 <tr>
 <td>mail address</td>
-<td>当日志轮替时，输出内容通过邮件发送到指定的邮件地址。如mail <a href="mailto:&#97;&#97;&#97;&#64;&#x31;&#x36;&#51;&#46;&#x63;&#111;&#109;">aaa@163.com</a></td>
+<td>当日志轮替时，输出内容通过邮件发送到指定的邮件地址。如mail <a href="mailto:&#97;&#97;&#x61;&#x40;&#x31;&#x36;&#51;&#x2e;&#99;&#111;&#109;">aaa@163.com</a></td>
 </tr>
 <tr>
 <td>missingok</td>

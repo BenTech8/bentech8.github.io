@@ -389,10 +389,10 @@
   
   <entry>
     <title>MySQL调优</title>
-    <link href="https://bentech8.github.io/2025/03/15/MySQL%E8%B0%83%E4%BC%98/"/>
-    <id>https://bentech8.github.io/2025/03/15/MySQL%E8%B0%83%E4%BC%98/</id>
+    <link href="https://bentech8.github.io/2025/03/15/DB-MySQL%E8%B0%83%E4%BC%98/"/>
+    <id>https://bentech8.github.io/2025/03/15/DB-MySQL%E8%B0%83%E4%BC%98/</id>
     <published>2025-03-15T15:05:40.000Z</published>
-    <updated>2025-03-15T15:39:29.249Z</updated>
+    <updated>2025-03-16T09:34:25.352Z</updated>
     
     
     
@@ -400,7 +400,7 @@
     <category term="MySQL" scheme="https://bentech8.github.io/categories/MySQL/"/>
     
     
-    <category term="db" scheme="https://bentech8.github.io/tags/db/"/>
+    <category term="DataBase" scheme="https://bentech8.github.io/tags/DataBase/"/>
     
   </entry>
   
