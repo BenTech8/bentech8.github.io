@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"bentech8.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":5,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="简介 生成器本质就是迭代器 生成器对象可以直接进行for循环  生成器特点 省内存 惰性机制 只能向前，不能反复  生成器获取方式">
+<meta property="og:type" content="article">
+<meta property="og:title" content="生成器">
+<meta property="og:url" content="https://bentech8.github.io/2025/03/16/python-%E7%94%9F%E6%88%90%E5%99%A8/index.html">
+<meta property="og:site_name" content="Ben">
+<meta property="og:description" content="简介 生成器本质就是迭代器 生成器对象可以直接进行for循环  生成器特点 省内存 惰性机制 只能向前，不能反复  生成器获取方式">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-03-16T09:15:20.000Z">
+<meta property="article:modified_time" content="2025-03-16T09:19:15.188Z">
+<meta property="article:author" content="Ben">
+<meta property="article:tag" content="Python">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://bentech8.github.io/2025/03/16/python-%E7%94%9F%E6%88%90%E5%99%A8/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>生成器 | Ben</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Ben" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Ben</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">个人学习笔记</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/BenTech8/bentech8.github.io.git" class="github-corner" title="BenTech8 GitHub" aria-label="BenTech8 GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://bentech8.github.io/2025/03/16/python-%E7%94%9F%E6%88%90%E5%99%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Ben">
+      <meta itemprop="description" content="E-mail:17620170099@163.com">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ben">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          生成器
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2025-03-16 17:15:20 / 修改时间：17:19:15" itemprop="dateCreated datePublished" datetime="2025-03-16T17:15:20+08:00">2025-03-16</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><ul>
+<li>生成器本质就是迭代器</li>
+<li>生成器对象可以直接进行for循环</li>
+</ul>
+<h3 id="生成器特点"><a href="#生成器特点" class="headerlink" title="生成器特点"></a>生成器特点</h3><ul>
+<li>省内存</li>
+<li>惰性机制</li>
+<li>只能向前，不能反复</li>
+</ul>
+<h3 id="生成器获取方式"><a href="#生成器获取方式" class="headerlink" title="生成器获取方式"></a>生成器获取方式</h3><ul>
+<li>通过生成器函数</li>
+<li>通过生成器表达式</li>
+</ul>
+<h2 id="生成器函数"><a href="#生成器函数" class="headerlink" title="生成器函数"></a>生成器函数</h2><h3 id="yield"><a href="#yield" class="headerlink" title="yield"></a>yield</h3><ul>
+<li>可以把函数分段运行</li>
+<li>作用和return一样，也是返回数据</li>
+</ul>
+<h3 id="普通函数与生成器函数区别"><a href="#普通函数与生成器函数区别" class="headerlink" title="普通函数与生成器函数区别"></a>普通函数与生成器函数区别</h3><p>普通函数：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">def func():</span><br><span class="line">    print(&quot;111&quot;)</span><br><span class="line">    return 222</span><br><span class="line"></span><br><span class="line">ret = func()</span><br><span class="line">print(ret)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">结果：</span><br><span class="line">111</span><br><span class="line">222</span><br></pre></td></tr></table></figure>
+
+<p>生成器函数：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">def func():</span><br><span class="line">    print(&quot;111&quot;)</span><br><span class="line">    yield 222</span><br><span class="line"></span><br><span class="line">ret = func()</span><br><span class="line">print(ret)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">结果：</span><br><span class="line">&lt;generator object func at 0x0000018007451C50&gt;</span><br></pre></td></tr></table></figure>
+
+<p>所以：</p>
+<ul>
+<li>当函数中存在yield，那么这个函数就是一个生成器函数</li>
+<li>当执行生成器函数时，实则为获取这个生成器</li>
+</ul>
+<h3 id="获取生成器"><a href="#获取生成器" class="headerlink" title="获取生成器"></a>获取生成器</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">def func():</span><br><span class="line">    print(&quot;111&quot;)</span><br><span class="line">    yield 222</span><br><span class="line"></span><br><span class="line">ret = func()  # 获取到生成器</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="执行生成器"><a href="#执行生成器" class="headerlink" title="执行生成器"></a>执行生成器</h3><ul>
+<li>通过__next__()</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">def func():</span><br><span class="line">    print(&quot;111&quot;)</span><br><span class="line">    yield 222</span><br><span class="line"></span><br><span class="line">gener = func()</span><br><span class="line">ret = gener.__next__()  # 打印 111，222返回给ret</span><br><span class="line">print(ret)</span><br></pre></td></tr></table></figure>
+
+<p>当程序运行完最后一个yield，那么后面继续执行__next__()，程序会报错，但后面内容还会执行。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">def func():</span><br><span class="line">    print(&quot;111&quot;)</span><br><span class="line">    yield 222</span><br><span class="line">    print(&quot;333&quot;)</span><br><span class="line">    yield 444</span><br><span class="line">    print(&quot;555&quot;)</span><br><span class="line"></span><br><span class="line">gener = func()</span><br><span class="line">print(gener.__next__())  # 111 222</span><br><span class="line">print(gener.__next__())  # 333 444</span><br><span class="line">print(gener.__next__())  # 555 StopIteration</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>通过send()</p>
+<p>send()和__next__()一样都可以让生成器执行到下一个yield，但send()可以给上一个yield的位置变量传递值。当执行完最后一个yield，再继续执行send()时，程序报错，但还可给最后一个yield位置变量传递值。</p>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">def func():</span><br><span class="line">    print(&quot;111&quot;)</span><br><span class="line">    a = yield 222</span><br><span class="line">    print(&quot;a = &quot;, a)</span><br><span class="line">    print(&quot;333&quot;)</span><br><span class="line">    b = yield 444</span><br><span class="line">    print(&quot;b = &quot;, b)</span><br><span class="line"></span><br><span class="line">gener = func()</span><br><span class="line">gener.__next__()  # 111</span><br><span class="line">print(gener.send(&quot;1&quot;))  # a = 1 333 444</span><br><span class="line">print(gener.send(&quot;2&quot;))  # b = 2  StopIteration</span><br></pre></td></tr></table></figure>
+
+<p> send和__next__()区别：</p>
+<ul>
+<li>send和__next__()都是让生成器向下走一次</li>
+<li>send可以给上一个yield的位置传递值，不能给最后一个yield发送值。在第一次执行生成器代码的时候不能使用send()</li>
+</ul>
+<h3 id="利用for循环获取生成器内部元素"><a href="#利用for循环获取生成器内部元素" class="headerlink" title="利用for循环获取生成器内部元素"></a>利用for循环获取生成器内部元素</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">def func():</span><br><span class="line">    yield 111</span><br><span class="line">    yield 222</span><br><span class="line">    yield 333</span><br><span class="line">    yield 444</span><br><span class="line"></span><br><span class="line">gen = func()</span><br><span class="line">for i in gen:</span><br><span class="line">    print(i)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">结果：</span><br><span class="line">111</span><br><span class="line">222</span><br><span class="line">333</span><br><span class="line">444</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="yield-from"><a href="#yield-from" class="headerlink" title="yield from"></a>yield from</h3><p>  可以直接把可迭代对象中的每一个数据作为生成器的结果进行返回</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">def gen():</span><br><span class="line">    lst = [11, 22, 33, 44, 55, 66]</span><br><span class="line">    yield from lst</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">ret = gen()</span><br><span class="line">for i in ret:</span><br><span class="line">    print(i)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">结果：</span><br><span class="line">11</span><br><span class="line">22</span><br><span class="line">33</span><br><span class="line">44</span><br><span class="line">55</span><br><span class="line">66</span><br></pre></td></tr></table></figure>
+
+<p>此时，上述代码相当于：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">def gen():</span><br><span class="line">    lst = [11, 22, 33, 44, 55, 66]</span><br><span class="line">    yield lst[0]</span><br><span class="line">    yield lst[1]</span><br><span class="line">    yield lst[2]</span><br><span class="line">    yield lst[3]</span><br><span class="line">    yield lst[4]</span><br><span class="line">    yield lst[5]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">ret = gen()</span><br><span class="line">for i in ret:</span><br><span class="line">    print(i)</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="生成器表达式"><a href="#生成器表达式" class="headerlink" title="生成器表达式"></a>生成器表达式</h2><h3 id="写法"><a href="#写法" class="headerlink" title="写法"></a>写法</h3><ul>
+<li>（结果 for 变量 in 可迭代对象 if 条件筛选）</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">gen = (i for i in range(10))</span><br><span class="line">print(gen)  # &lt;generator object &lt;genexpr&gt; at 0x000002CE52D91C50&gt;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h3><ul>
+<li>本质是迭代器</li>
+<li>省内存</li>
+<li>惰性机制</li>
+<li>只能向前，不能反复</li>
+</ul>
+<h3 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h3><p>1）list ()可把传递进来的数据转化成列表，list里面包含for循环</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">g = (i for i in range(10))</span><br><span class="line"></span><br><span class="line">print(list(g))  # [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li></li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">def func():</span><br><span class="line">    print(111)</span><br><span class="line">    yield 222</span><br><span class="line"></span><br><span class="line">g = func()</span><br><span class="line">g1 = (i for i in g)</span><br><span class="line">g2 = (i for i in g1)</span><br><span class="line"></span><br><span class="line">print(list(g)) # 111 [222]</span><br><span class="line">print(list(g1)) # []</span><br><span class="line">print(list(g2)) # []</span><br></pre></td></tr></table></figure>
+
+<p> 3）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">def add(a, b):</span><br><span class="line">    return a + b</span><br><span class="line"></span><br><span class="line">def test():</span><br><span class="line">    for r_i in range(4):</span><br><span class="line">        yield r_i</span><br><span class="line"></span><br><span class="line">g = test()</span><br><span class="line"></span><br><span class="line">for n in [2, 10]:</span><br><span class="line">    g = (add(n, i) for i in g)</span><br><span class="line"></span><br><span class="line">print(list(g))  # 20 21 22 23</span><br></pre></td></tr></table></figure>
+
+<p>此代码相当于：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">def add(a, b):</span><br><span class="line">    return a + b</span><br><span class="line"></span><br><span class="line">def test():</span><br><span class="line">    for r_i in range(4):</span><br><span class="line">        yield r_i</span><br><span class="line"></span><br><span class="line">g1 = test()</span><br><span class="line"></span><br><span class="line">n = 2</span><br><span class="line">g2 = (add(n, i) for i in g1)</span><br><span class="line"></span><br><span class="line">n = 10</span><br><span class="line">g3 = (add(n, i) for i in g2)</span><br><span class="line"></span><br><span class="line">print(list(g3)) # n = 10, g3 = (add(n, i) for i in (add(n, i) for i in g1))</span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Python/" rel="tag"># Python</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/03/16/python-%E8%BF%AD%E4%BB%A3%E5%99%A8/" rel="prev" title="迭代器">
+      <i class="fa fa-chevron-left"></i> 迭代器
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/03/16/python-%E9%80%92%E5%BD%92%E5%87%BD%E6%95%B0/" rel="next" title="递归函数">
+      递归函数 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%80%E4%BB%8B"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%9F%E6%88%90%E5%99%A8%E7%89%B9%E7%82%B9"><span class="nav-number">1.1.</span> <span class="nav-text">生成器特点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%9F%E6%88%90%E5%99%A8%E8%8E%B7%E5%8F%96%E6%96%B9%E5%BC%8F"><span class="nav-number">1.2.</span> <span class="nav-text">生成器获取方式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%9F%E6%88%90%E5%99%A8%E5%87%BD%E6%95%B0"><span class="nav-number">2.</span> <span class="nav-text">生成器函数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#yield"><span class="nav-number">2.1.</span> <span class="nav-text">yield</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%99%AE%E9%80%9A%E5%87%BD%E6%95%B0%E4%B8%8E%E7%94%9F%E6%88%90%E5%99%A8%E5%87%BD%E6%95%B0%E5%8C%BA%E5%88%AB"><span class="nav-number">2.2.</span> <span class="nav-text">普通函数与生成器函数区别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%8E%B7%E5%8F%96%E7%94%9F%E6%88%90%E5%99%A8"><span class="nav-number">2.3.</span> <span class="nav-text">获取生成器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%A7%E8%A1%8C%E7%94%9F%E6%88%90%E5%99%A8"><span class="nav-number">2.4.</span> <span class="nav-text">执行生成器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%A9%E7%94%A8for%E5%BE%AA%E7%8E%AF%E8%8E%B7%E5%8F%96%E7%94%9F%E6%88%90%E5%99%A8%E5%86%85%E9%83%A8%E5%85%83%E7%B4%A0"><span class="nav-number">2.5.</span> <span class="nav-text">利用for循环获取生成器内部元素</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#yield-from"><span class="nav-number">2.6.</span> <span class="nav-text">yield from</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%9F%E6%88%90%E5%99%A8%E8%A1%A8%E8%BE%BE%E5%BC%8F"><span class="nav-number">3.</span> <span class="nav-text">生成器表达式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%99%E6%B3%95"><span class="nav-number">3.1.</span> <span class="nav-text">写法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%89%B9%E7%82%B9"><span class="nav-number">3.2.</span> <span class="nav-text">特点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BA%94%E7%94%A8"><span class="nav-number">3.3.</span> <span class="nav-text">应用</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Ben</p>
+  <div class="site-description" itemprop="description">E-mail:17620170099@163.com</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">40</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ben</span>
+</div>
+<!--
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+-->
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
