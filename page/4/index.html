@@ -206,7 +206,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://bentech8.github.io/2025/02/25/%E9%AB%98%E7%BA%A7%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86/">
+    <link itemprop="mainEntityOfPage" href="https://bentech8.github.io/2019/03/16/python-set/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -220,478 +220,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2025/02/25/%E9%AB%98%E7%BA%A7%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86/" class="post-title-link" itemprop="url">高级文件系统管理</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2025-02-25 13:05:22 / 修改时间：13:10:07" itemprop="dateCreated datePublished" datetime="2025-02-25T13:05:22+08:00">2025-02-25</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="高级文件系统管理"><a href="#高级文件系统管理" class="headerlink" title="高级文件系统管理"></a>高级文件系统管理</h1><h2 id="1-磁盘配额"><a href="#1-磁盘配额" class="headerlink" title="1. 磁盘配额"></a>1. 磁盘配额</h2><h3 id="1）磁盘配额条件"><a href="#1）磁盘配额条件" class="headerlink" title="1）磁盘配额条件"></a>1）磁盘配额条件</h3><ul>
-<li><p>内核必须支持磁盘配额</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# grep CONFIG_QUOTA /boot/config-2.6.32-279.el6.i686</span><br><span class="line">CONFIG_QUOTA=y</span><br><span class="line">CONFIG_QUOTA_NETLINK_INTERFACE=y</span><br><span class="line"># CONFIG_QUOTA_DEBUG is not set</span><br><span class="line">CONFIG_QUOTA_TREE=m</span><br><span class="line">CONFIG_QUOTACTL=y</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>系统中必须安装了quota工具，Linux默认是安装了quota工具</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# rpm -qa | grep quota</span><br><span class="line">quota-3.17-16.el6.i686</span><br></pre></td></tr></table></figure>
-
-<p>要支持磁盘配额的分区必须开启磁盘配额功能，这个功能需要手工开启，不再是默认就开启的。</p>
-</li>
-</ul>
-<h3 id="2）概念"><a href="#2）概念" class="headerlink" title="2）概念"></a>2）概念</h3>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2025/02/25/%E9%AB%98%E7%BA%A7%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://bentech8.github.io/2025/02/25/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Ben">
-      <meta itemprop="description" content="E-mail:17620170099@163.com">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Ben">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/02/25/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86/" class="post-title-link" itemprop="url">文件系统管理</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2025-02-25 13:05:05 / 修改时间：13:09:36" itemprop="dateCreated datePublished" datetime="2025-02-25T13:05:05+08:00">2025-02-25</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="文件系统管理"><a href="#文件系统管理" class="headerlink" title="文件系统管理"></a>文件系统管理</h1><h2 id="1-硬盘结构"><a href="#1-硬盘结构" class="headerlink" title="1. 硬盘结构"></a>1. 硬盘结构</h2><h3 id="1）硬盘的逻辑结构"><a href="#1）硬盘的逻辑结构" class="headerlink" title="1）硬盘的逻辑结构"></a>1）硬盘的逻辑结构</h3><p>每个扇区的大小是固定的，为512Byte。扇区也是磁盘的最小存储单位。</p>
-<p>硬盘的大小是用”磁头数X柱面数X扇区数X每个扇区的大小”这样的公式来计算的。其中磁头数(Heads)表示硬盘总共有几个磁头，也可以理解成硬盘有几个盘面，然后乘以2；柱面数(Cylinders)表示硬盘每一面盘片有几条磁道；扇区数(Sectors)表示每条磁道上有几个扇区；每个扇区的大小一般是512Byte。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2025/02/25/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://bentech8.github.io/2025/02/25/%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Ben">
-      <meta itemprop="description" content="E-mail:17620170099@163.com">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Ben">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/02/25/%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86/" class="post-title-link" itemprop="url">权限管理</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2025-02-25 13:04:53 / 修改时间：13:08:52" itemprop="dateCreated datePublished" datetime="2025-02-25T13:04:53+08:00">2025-02-25</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="权限管理"><a href="#权限管理" class="headerlink" title="权限管理"></a>权限管理</h1><h2 id="1-ACL权限"><a href="#1-ACL权限" class="headerlink" title="1. ACL权限"></a>1. ACL权限</h2><h3 id="1）ACL概述"><a href="#1）ACL概述" class="headerlink" title="1）ACL概述"></a>1）ACL概述</h3><p>ACL是用于解决用户对文件身份不足问题的。</p>
-<h3 id="2）开启ACL"><a href="#2）开启ACL" class="headerlink" title="2）开启ACL"></a>2）开启ACL</h3>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2025/02/25/%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://bentech8.github.io/2025/02/25/%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Ben">
-      <meta itemprop="description" content="E-mail:17620170099@163.com">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Ben">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/02/25/%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86/" class="post-title-link" itemprop="url">用户管理</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2025-02-25 13:04:38 / 修改时间：13:07:39" itemprop="dateCreated datePublished" datetime="2025-02-25T13:04:38+08:00">2025-02-25</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="用户管理"><a href="#用户管理" class="headerlink" title="用户管理"></a>用户管理</h1><h2 id="1-用户相关文件"><a href="#1-用户相关文件" class="headerlink" title="1. 用户相关文件"></a>1. 用户相关文件</h2><h3 id="1）用户信息文件"><a href="#1）用户信息文件" class="headerlink" title="1）用户信息文件"></a>1）用户信息文件</h3><p>&#x2F;etc&#x2F;passwd</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">root:x:0:0:root:/root:/bin/bash</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2025/02/25/%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://bentech8.github.io/2025/02/25/%E8%BD%AF%E4%BB%B6%E5%8C%85%E5%AE%89%E8%A3%85/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Ben">
-      <meta itemprop="description" content="E-mail:17620170099@163.com">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Ben">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/02/25/%E8%BD%AF%E4%BB%B6%E5%8C%85%E5%AE%89%E8%A3%85/" class="post-title-link" itemprop="url">软件包安装</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2025-02-25 13:04:20 / 修改时间：13:06:34" itemprop="dateCreated datePublished" datetime="2025-02-25T13:04:20+08:00">2025-02-25</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="软件包安装"><a href="#软件包安装" class="headerlink" title="软件包安装"></a>软件包安装</h1><h2 id="1-软件包分类"><a href="#1-软件包分类" class="headerlink" title="1. 软件包分类"></a>1. 软件包分类</h2><ul>
-<li>源码包</li>
-<li>二进制包</li>
-</ul>
-<h2 id="2-源码包"><a href="#2-源码包" class="headerlink" title="2. 源码包"></a>2. 源码包</h2><h3 id="1）源码包优点"><a href="#1）源码包优点" class="headerlink" title="1）源码包优点"></a>1）源码包优点</h3>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2025/02/25/%E8%BD%AF%E4%BB%B6%E5%8C%85%E5%AE%89%E8%A3%85/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://bentech8.github.io/2025/02/25/vim%E7%BC%96%E8%BE%91%E5%99%A8/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Ben">
-      <meta itemprop="description" content="E-mail:17620170099@163.com">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Ben">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/02/25/vim%E7%BC%96%E8%BE%91%E5%99%A8/" class="post-title-link" itemprop="url">vim编辑器</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2025-02-25 13:01:43 / 修改时间：13:02:50" itemprop="dateCreated datePublished" datetime="2025-02-25T13:01:43+08:00">2025-02-25</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="vim编辑器"><a href="#vim编辑器" class="headerlink" title="vim编辑器"></a>vim编辑器</h1><p>vim是一个全屏幕纯文本编辑器，是vi编辑器的增强版。</p>
-<p>可以利用别名让输入vi命令的时候，实际上执行vim编辑器，如：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">定义别名</span></span><br><span class="line">alias vi=&#x27;vim&#x27;</span><br></pre></td></tr></table></figure>
-
-<p>这样定义的别名是临时生效，如果需要永久生效，需要放入环境变量配置文件(~&#x2F;.bashrc)。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2025/02/25/vim%E7%BC%96%E8%BE%91%E5%99%A8/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://bentech8.github.io/2025/02/25/Linux%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Ben">
-      <meta itemprop="description" content="E-mail:17620170099@163.com">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Ben">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/02/25/Linux%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/" class="post-title-link" itemprop="url">Linux常用命令</a>
+            <a href="/2019/03/16/python-set/" class="post-title-link" itemprop="url">Set</a>
         </h2>
 
         <div class="post-meta">
@@ -701,14 +230,14 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2025-02-25 12:58:15" itemprop="dateCreated datePublished" datetime="2025-02-25T12:58:15+08:00">2025-02-25</time>
+              <time title="创建时间：2019-03-16 16:51:30" itemprop="dateCreated datePublished" datetime="2019-03-16T16:51:30+08:00">2019-03-16</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-03-15 22:24:38" itemprop="dateModified" datetime="2025-03-15T22:24:38+08:00">2025-03-15</time>
+                <time title="修改时间：2025-03-16 18:11:26" itemprop="dateModified" datetime="2025-03-16T18:11:26+08:00">2025-03-16</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -716,7 +245,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
+                  <a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a>
                 </span>
             </span>
 
@@ -731,20 +260,453 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="Linux常用命令"><a href="#Linux常用命令" class="headerlink" title="Linux常用命令"></a>Linux常用命令</h1><h2 id="1-命令提示符"><a href="#1-命令提示符" class="headerlink" title="1. 命令提示符"></a>1. 命令提示符</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ben@ben-NBLK-WAX9X:~$</span><br></pre></td></tr></table></figure>
+          <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><ul>
+<li>set中的元素：可hash(int, str, tuple, bool)，不重复，底层存储无序</li>
+<li>set集合中的元素必须是可hash，但set本身是不可hash，是可变的数据类型</li>
+</ul>
+<h2 id="应用-重点"><a href="#应用-重点" class="headerlink" title="应用(重点)"></a>应用(重点)</h2><p>  利用set中元素不可重复，可给list去重</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">lst = [11, 11, 22, 22, 33, 33, 44, 44, 55, 55]</span><br><span class="line"></span><br><span class="line">lst = list(set(lst))</span><br><span class="line">print(lst)  # [33, 11, 44, 22, 55]  结果无序，但已去重</span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/03/16/python-set/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://bentech8.github.io/2019/03/16/python-dictionary/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Ben">
+      <meta itemprop="description" content="E-mail:17620170099@163.com">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ben">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/03/16/python-dictionary/" class="post-title-link" itemprop="url">Dictionary</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-03-16 16:47:32" itemprop="dateCreated datePublished" datetime="2019-03-16T16:47:32+08:00">2019-03-16</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-03-16 18:11:45" itemprop="dateModified" datetime="2025-03-16T18:11:45+08:00">2025-03-16</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="字典的简单介绍"><a href="#字典的简单介绍" class="headerlink" title="字典的简单介绍"></a>字典的简单介绍</h2><ul>
+<li>字典(dict)是python中唯一的一个映射类型。是以{ }括起来的键值对组成。</li>
+<li>字典(dict)中key必须是不可变的，而value没有要求，可以保存任意类型的数据。</li>
+</ul>
+<h3 id="字典的保存原理："><a href="#字典的保存原理：" class="headerlink" title="字典的保存原理："></a>字典的保存原理：</h3><p>  字典在保存的时候，采用的是hash算法：根据key来计算出一个内存地址，然后将key-value保存在这个地址中。所以，在dict中存储的key-value中的key必须是可hash的。</p>
+<p>  对于可hash，暂可以理解为可以改变的都是不可hash的，那么可哈希就意味着不可变，这个是为了能准确的计算内存地址而规定的。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/03/16/python-dictionary/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://bentech8.github.io/2019/03/16/python-list/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Ben">
+      <meta itemprop="description" content="E-mail:17620170099@163.com">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ben">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/03/16/python-list/" class="post-title-link" itemprop="url">List</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-03-16 16:37:47" itemprop="dateCreated datePublished" datetime="2019-03-16T16:37:47+08:00">2019-03-16</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-03-16 18:11:35" itemprop="dateModified" datetime="2025-03-16T18:11:35+08:00">2025-03-16</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="列表"><a href="#列表" class="headerlink" title="列表"></a>列表</h2><p>  以[ ]括起来，每个元素用”,”隔开，且可以存放各种数据类型。</p>
+<p>  列表相比于字符串，不仅可以存放不同的数据类型，而且可存放大量的数据。32位python可以存放：536870912个元素，64位可以存放：1152921504606846975个元素。</p>
+<p>  列表是有序的(按照保存的顺序)，有索引，可以切片方便取值。</p>
+<p>  列表属于可变数据类型。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/03/16/python-list/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://bentech8.github.io/2019/03/16/python-tuple/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Ben">
+      <meta itemprop="description" content="E-mail:17620170099@163.com">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ben">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/03/16/python-tuple/" class="post-title-link" itemprop="url">Tuple</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-03-16 16:35:39" itemprop="dateCreated datePublished" datetime="2019-03-16T16:35:39+08:00">2019-03-16</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-03-16 18:11:02" itemprop="dateModified" datetime="2025-03-16T18:11:02+08:00">2025-03-16</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><ul>
+<li>俗称不可变的列表，又被称为只读列表</li>
+<li>用小括号括起来，里面可放任何数据类型的数据</li>
+<li>可查询，循环，切片(切片后得到的还是元组)，但不可修改元素</li>
+<li>元组中如果只有一个元素，须添加一个逗号，否则就不是元组</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">t = (11, 22, 33, &#x27;python&#x27;, 44, 55, 66)</span><br><span class="line"></span><br><span class="line">print(t[0]) # 11</span><br><span class="line"></span><br><span class="line">print(t[1:3]) # (22, 33) </span><br><span class="line"></span><br><span class="line">for i in t:</span><br><span class="line">　　print(i) # 11 22 33 python 44 55 66</span><br><span class="line"></span><br><span class="line">t = (1,)</span><br><span class="line">print(type(t)) # &lt;class &#x27;tuple&#x27;&gt;</span><br><span class="line"></span><br><span class="line">t = (1)</span><br><span class="line">print(type(t)) # &lt;class &#x27;int&#x27;&gt;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="修改"><a href="#修改" class="headerlink" title="修改"></a>修改</h2><p>  元组的不可变指的是元组内第一层元素的内存地址不可变</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/03/16/python-tuple/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://bentech8.github.io/2019/03/16/python-string/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Ben">
+      <meta itemprop="description" content="E-mail:17620170099@163.com">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ben">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/03/16/python-string/" class="post-title-link" itemprop="url">String</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-03-16 16:30:33" itemprop="dateCreated datePublished" datetime="2019-03-16T16:30:33+08:00">2019-03-16</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-03-16 18:11:16" itemprop="dateModified" datetime="2025-03-16T18:11:16+08:00">2025-03-16</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><ul>
+<li>把字符连成串，在python中用’, ‘’, ‘’’, “””引起来的内容被称为字符串</li>
+<li>字符串是不可变对象，所有操作都是产生新字符串返回</li>
+</ul>
+<h2 id="切片和索引"><a href="#切片和索引" class="headerlink" title="切片和索引"></a>切片和索引</h2><h3 id="索引"><a href="#索引" class="headerlink" title="索引"></a>索引</h3><p> 索引就是下标，下标从<strong>0</strong>开始</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/03/16/python-string/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://bentech8.github.io/2019/03/15/python-%E6%96%87%E4%BB%B6%E6%93%8D%E4%BD%9C/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Ben">
+      <meta itemprop="description" content="E-mail:17620170099@163.com">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ben">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/03/15/python-%E6%96%87%E4%BB%B6%E6%93%8D%E4%BD%9C/" class="post-title-link" itemprop="url">文件操作</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-03-15 22:53:59" itemprop="dateCreated datePublished" datetime="2019-03-15T22:53:59+08:00">2019-03-15</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-03-16 18:15:28" itemprop="dateModified" datetime="2025-03-16T18:15:28+08:00">2025-03-16</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="基本用法"><a href="#基本用法" class="headerlink" title="基本用法"></a>基本用法</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">f = open(&quot;文件操作.txt&quot;, mode=&#x27;r&#x27;, encoding=&quot;utf-8&quot;)</span><br><span class="line">...</span><br><span class="line">f.close()</span><br></pre></td></tr></table></figure>
 
 <ul>
-<li>[]：这是提示符的分隔符号，没有特殊含义</li>
-<li>ben：显示的是当前的登录用户。</li>
-<li>@：分隔符号，没有特殊含义。</li>
-<li>ben-NBLK-WAX9X：当前系统的简写主机名。</li>
-<li>~：代表用户当前所在的目录。</li>
-<li>$：命令提示符，超级用户是#，普通用户是$。</li>
+<li>open：表示打开一个文件</li>
+<li>f：变量，操控文件操作.txt文件的句柄。为一个可迭代对象</li>
+<li>f.flush()：刷新管道，在向文件里写内容时，管道里也会有数据，使用f.flush()可将管道里数据写入到文件里。</li>
+<li>f.close()：关闭文件</li>
 </ul>
-<h2 id="2-文件操作命令"><a href="#2-文件操作命令" class="headerlink" title="2. 文件操作命令"></a>2. 文件操作命令</h2>
+<h3 id="写入模式（w）"><a href="#写入模式（w）" class="headerlink" title="写入模式（w）"></a>写入模式（w）</h3><ul>
+<li>如果文件名不存在，则创建文件，然后再写入</li>
+<li>如果文件名已存在，则先清空文件内容，然后再写入</li>
+</ul>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2025/02/25/Linux%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/#more" rel="contents">
+              <a class="btn" href="/2019/03/15/python-%E6%96%87%E4%BB%B6%E6%93%8D%E4%BD%9C/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -768,7 +730,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://bentech8.github.io/2025/02/25/Shell%E5%9F%BA%E7%A1%80/">
+    <link itemprop="mainEntityOfPage" href="https://bentech8.github.io/2019/03/15/python-%E6%B7%B1%E6%B5%85%E6%8B%B7%E8%B4%9D/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -782,7 +744,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2025/02/25/Shell%E5%9F%BA%E7%A1%80/" class="post-title-link" itemprop="url">Shell基础</a>
+            <a href="/2019/03/15/python-%E6%B7%B1%E6%B5%85%E6%8B%B7%E8%B4%9D/" class="post-title-link" itemprop="url">深浅拷贝</a>
         </h2>
 
         <div class="post-meta">
@@ -792,14 +754,14 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2025-02-25 12:16:28" itemprop="dateCreated datePublished" datetime="2025-02-25T12:16:28+08:00">2025-02-25</time>
+              <time title="创建时间：2019-03-15 22:50:49" itemprop="dateCreated datePublished" datetime="2019-03-15T22:50:49+08:00">2019-03-15</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-02-26 22:50:07" itemprop="dateModified" datetime="2025-02-26T22:50:07+08:00">2025-02-26</time>
+                <time title="修改时间：2025-03-16 18:15:06" itemprop="dateModified" datetime="2025-03-16T18:15:06+08:00">2025-03-16</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -807,7 +769,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Shell/" itemprop="url" rel="index"><span itemprop="name">Shell</span></a>
+                  <a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a>
                 </span>
             </span>
 
@@ -822,64 +784,208 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h2 id="Shell概述"><a href="#Shell概述" class="headerlink" title="Shell概述"></a>Shell概述</h2><h3 id="Shell分类"><a href="#Shell分类" class="headerlink" title="Shell分类"></a>Shell分类</h3><table>
+          <h2 id><a href="#" class="headerlink" title="&#x3D;"></a>&#x3D;</h2><ul>
+<li>没有产生新对象，都是内存地址的赋值</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">lst1 = [11, 22, 33, 44]</span><br><span class="line">lst2 = lst1print(id(lst1)) # 1916361712712print(id(lst2)) # 1916361712712</span><br><span class="line"></span><br><span class="line">lst1.append(&quot;hello&quot;)</span><br><span class="line">print(lst1)  # [11, 22, 33, 44, &#x27;hello&#x27;]</span><br><span class="line">print(lst2)  # [11, 22, 33, 44, &#x27;hello&#x27;]</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">dic1 = &#123;&quot;name&quot;: &quot;Tom&quot;, &quot;age&quot;: 18&#125;</span><br><span class="line">dic2 = dic1</span><br><span class="line">print(id(dic1)) # 2020711820888print(id(dic2)) # 2020711820888</span><br><span class="line">dic1[&quot;hobby&quot;]  = &quot;football&quot;</span><br><span class="line"></span><br><span class="line">print(dic1)  # &#123;&#x27;name&#x27;: &#x27;Tom&#x27;, &#x27;age&#x27;: 18, &#x27;hobby&#x27;: &#x27;football&#x27;&#125;</span><br><span class="line">print(dic2)  # &#123;&#x27;name&#x27;: &#x27;Tom&#x27;, &#x27;age&#x27;: 18, &#x27;hobby&#x27;: &#x27;football&#x27;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>  对于list，set，dict来说，变量1 &#x3D; 变量2，其实就相当于把变量2内容的内存地址交给变量1，并不是复制一份内容，所以一变，都变。 </p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/03/15/python-%E6%B7%B1%E6%B5%85%E6%8B%B7%E8%B4%9D/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://bentech8.github.io/2019/03/15/python-%E5%B0%8F%E6%95%B0%E6%8D%AE%E6%B1%A0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Ben">
+      <meta itemprop="description" content="E-mail:17620170099@163.com">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ben">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/03/15/python-%E5%B0%8F%E6%95%B0%E6%8D%AE%E6%B1%A0/" class="post-title-link" itemprop="url">小数据池</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-03-15 22:45:42" itemprop="dateCreated datePublished" datetime="2019-03-15T22:45:42+08:00">2019-03-15</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-03-16 18:13:35" itemprop="dateModified" datetime="2025-03-16T18:13:35+08:00">2025-03-16</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="小数据池"><a href="#小数据池" class="headerlink" title="小数据池"></a>小数据池</h2><h3 id="代码块"><a href="#代码块" class="headerlink" title="代码块"></a>代码块</h3><p>  python程序是由代码块构成的，一个代码块的文本作为pythont程序执行的单元</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">官方文档：</span><br><span class="line">     A Python program is constructed from code blocks. A block is a piece of Python program text that is executed as a unit. The following are blocks: a module, a function body, and a class definition. Each command typed interactively is a block. A script file (a file given as standard input to the interpreter or specified as a command line argument to the interpreter) is a code block. A script command (a command specified on the interpreter command line with the ‘-c‘ option) is a code block. The string argument passed to the built-in functions eval() and exec() is a code block. A code block is executed in an execution frame. A frame contains some administrative information (used for debugging) and determines where and how execution continues after the code block’s execution has completed.</span><br></pre></td></tr></table></figure>
+
+<p>一个代码块：</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/03/15/python-%E5%B0%8F%E6%95%B0%E6%8D%AE%E6%B1%A0/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://bentech8.github.io/2019/03/15/python-%E7%BC%96%E7%A0%81/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Ben">
+      <meta itemprop="description" content="E-mail:17620170099@163.com">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ben">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/03/15/python-%E7%BC%96%E7%A0%81/" class="post-title-link" itemprop="url">编码</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-03-15 22:41:46" itemprop="dateCreated datePublished" datetime="2019-03-15T22:41:46+08:00">2019-03-15</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-03-16 18:13:56" itemprop="dateModified" datetime="2025-03-16T18:13:56+08:00">2025-03-16</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="编码种类"><a href="#编码种类" class="headerlink" title="编码种类"></a>编码种类</h2><h3 id="ASCII"><a href="#ASCII" class="headerlink" title="ASCII"></a>ASCII</h3><ul>
+<li>基于拉丁字母的一套电脑编码系统</li>
+<li>其最多只能用8位来表示(一字节)</li>
+</ul>
+<table>
 <thead>
 <tr>
-<th>Shell类别</th>
-<th>易学性</th>
-<th>可移植性</th>
-<th>编辑性</th>
-<th>快捷性</th>
+<th><strong>Bin(二进制)</strong></th>
+<th><strong>Dec(十进制)</strong></th>
+<th><strong>缩写&#x2F;字符</strong></th>
+<th><strong>解释</strong></th>
 </tr>
 </thead>
 <tbody><tr>
-<td>Bourne Shell（sh）</td>
-<td>容易</td>
-<td>好</td>
-<td>较差</td>
-<td>较差</td>
+<td>01000001</td>
+<td>65</td>
+<td>A</td>
+<td>大写字母A</td>
 </tr>
 <tr>
-<td>Korn Shell（ksh）</td>
-<td>较难</td>
-<td>较好</td>
-<td>好</td>
-<td>较好</td>
-</tr>
-<tr>
-<td>Bourne Again（Bash）</td>
-<td>难</td>
-<td>较好</td>
-<td>好</td>
-<td>好</td>
-</tr>
-<tr>
-<td>POSIX Shell（psh）</td>
-<td>较难</td>
-<td>好</td>
-<td>好</td>
-<td>较好</td>
-</tr>
-<tr>
-<td>C Shell（csh）</td>
-<td>较难</td>
-<td>差</td>
-<td>较好</td>
-<td>较好</td>
-</tr>
-<tr>
-<td>TC Shell（tcsh）</td>
-<td>难</td>
-<td>差</td>
-<td>好</td>
-<td>好</td>
+<td>01100001</td>
+<td>97</td>
+<td>a</td>
+<td>小写字母a</td>
 </tr>
 </tbody></table>
-<p>Shell的两种主语法类型有Bourne和C，这两种语法彼此不兼容。Bourne家族主要包括sh、ksh、Bash、psh、zsh；C家族主要包括：csh、tcsh（Bash和zsh在不同程度上支持csh的语法）。</p>
-<p>可以通过&#x2F;etc&#x2F;shells文件来查询Linux支持的Shell：</p>
+<h3 id="GBK"><a href="#GBK" class="headerlink" title="GBK"></a>GBK</h3>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2025/02/25/Shell%E5%9F%BA%E7%A1%80/#more" rel="contents">
+              <a class="btn" href="/2019/03/15/python-%E7%BC%96%E7%A0%81/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -903,7 +1009,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://bentech8.github.io/2023/03/14/argo-events/">
+    <link itemprop="mainEntityOfPage" href="https://bentech8.github.io/2019/03/15/python%E5%9F%BA%E7%A1%80/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -917,7 +1023,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2023/03/14/argo-events/" class="post-title-link" itemprop="url">argo-events</a>
+            <a href="/2019/03/15/python%E5%9F%BA%E7%A1%80/" class="post-title-link" itemprop="url">python基础</a>
         </h2>
 
         <div class="post-meta">
@@ -927,14 +1033,14 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2023-03-14 16:01:39" itemprop="dateCreated datePublished" datetime="2023-03-14T16:01:39+08:00">2023-03-14</time>
+              <time title="创建时间：2019-03-15 22:35:14" itemprop="dateCreated datePublished" datetime="2019-03-15T22:35:14+08:00">2019-03-15</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-03-15 23:40:24" itemprop="dateModified" datetime="2025-03-15T23:40:24+08:00">2025-03-15</time>
+                <time title="修改时间：2025-03-16 18:12:44" itemprop="dateModified" datetime="2025-03-16T18:12:44+08:00">2025-03-16</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -942,7 +1048,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Kubernetes/" itemprop="url" rel="index"><span itemprop="name">Kubernetes</span></a>
+                  <a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a>
                 </span>
             </span>
 
@@ -957,101 +1063,12 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h2 id="Argo-Events概述"><a href="#Argo-Events概述" class="headerlink" title="Argo Events概述"></a>Argo Events概述</h2><p>在kubernetes集群中，工作流程的触发通常依赖于特定事件的发生，而Argo Events则提供了一种强大的方式来监控外部事件，并将这些事件映射到集群内的操作或任务执行。Argo Events是Argo项目中的一部分，它与Argo Workflows一起使用，能够在事件发生时启动工作流，形成自动化的DevOps流程。</p>
-<p>Argo Events是一种事件驱动的工作流程自动化工具。它允许Kubernetes集群根据外部或内部事件触发工作流程。这些事件可以是来自外部系统的HTTP请求、GitHub Webhook、Kafka消息、S3对象创建，或者Kubernetes内部资源的变化。通过Argo Events，我们可以定义触发器(Trigger)，并将它们与事件源(Event Source)关联，从而在事件发生时执行相应的操作，比如启动一个工作流。</p>
-<h2 id="核心概念"><a href="#核心概念" class="headerlink" title="核心概念"></a>核心概念</h2><p>在理解Argo Events如何触发Kubernetes工作流之前，需要熟悉几个核心组件：</p>
+          <h2 id="python简介"><a href="#python简介" class="headerlink" title="python简介"></a>python简介</h2><p> python是一门动态、解释型、强类型高级开发编程语言</p>
+<h2 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h2><p> 把程序运行过程中产生的值存储起来，方便后面程序调用</p>
+<h3 id="变量的命名规范"><a href="#变量的命名规范" class="headerlink" title="变量的命名规范"></a>变量的命名规范</h3>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2023/03/14/argo-events/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://bentech8.github.io/2023/03/14/argo-workflows/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Ben">
-      <meta itemprop="description" content="E-mail:17620170099@163.com">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Ben">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/03/14/argo-workflows/" class="post-title-link" itemprop="url">argo-workflows</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-03-14 16:01:29" itemprop="dateCreated datePublished" datetime="2023-03-14T16:01:29+08:00">2023-03-14</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-03-15 23:41:19" itemprop="dateModified" datetime="2025-03-15T23:41:19+08:00">2025-03-15</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Kubernetes/" itemprop="url" rel="index"><span itemprop="name">Kubernetes</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="Argo-Workflows简介"><a href="#Argo-Workflows简介" class="headerlink" title="Argo Workflows简介"></a>Argo Workflows简介</h2><p>Argo Workflows是一个开源项目，为Kubernetes提供container-native工作流程，其主要通过Kubernetes CRD实现的。</p>
-<p>特点如下：</p>
-<ul>
-<li>工作流的每一步都是一个容器</li>
-<li>将多步骤工作流建模为一系列任务，或者使用有向无环图（DAG）描述任务之间的依赖关系</li>
-<li>可以在短时间内轻松运行用于机器学习或数据处理的计算密集型作业。</li>
-<li>在Kubernetes上运行CI&#x2F;CD Pipeline，无需复杂的软件配置</li>
-</ul>
-<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2023/03/14/argo-workflows/#more" rel="contents">
+              <a class="btn" href="/2019/03/15/python%E5%9F%BA%E7%A1%80/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
