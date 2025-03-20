@@ -2717,6 +2717,32 @@
       </tags>
   </entry>
   <entry>
+    <title>Argo Rollouts</title>
+    <url>/2025/03/14/argo-rollouts/</url>
+    <content><![CDATA[<h2 id="Argo-Rollouts简介"><a href="#Argo-Rollouts简介" class="headerlink" title="Argo Rollouts简介"></a>Argo Rollouts简介</h2><p>Argo Rollouts是一个Kubernetes Operator实现，它为Kubernetes提供更加高级的部署能力，如蓝绿、金丝雀、金丝雀分析、实验和渐进式交付功能，为云原生应用和服务实现自动化、基于GitOps的逐步交付。</p>
+<p>支持如下特性：</p>
+<ul>
+<li>蓝绿更新策略</li>
+<li>金丝雀更新策略</li>
+<li>更加细粒度、加权流量拆分</li>
+<li>自动回滚</li>
+<li>手动判断</li>
+<li>可定制的指标查询和业务KPI分析</li>
+<li>Ingress控制器集成：NGINX，ALB</li>
+<li>Metrics指标集成：Prometheus、Wavefront、Kayenta、Web、Kubernetes Jobs、Datadog、New Relic、Graphite、InfluxDB</li>
+</ul>
+<h2 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h2><p>与Deployment对象类似，Argo Rollout控制器将管理ReplicaSets的创建、缩放和删除，这些ReplicaSet由Rollout资源中的spec.template定义，使用与Deployment对象相同的pod模板。</p>
+<p>当spec.template变更时，这会向Argo Rollouts控制器发出信号，表示将引入新的ReplicaSet，控制器将使用spec.strategy字段内的策略来确定从旧ReplicaSet到新ReplicaSet的rollout将如何进行，一旦这个新的ReplicaSet被放大(可以选择通过一个Analysis)，控制器会将其标记为稳定。</p>
+<p>如果在spec.template从稳定的ReplicaSet过渡到新的ReplicaSet的过程中发生另一次变更(即在发布过程中更改了应用程序版本)，那么之前的新ReplicaSet将缩小，并且控制器将尝试反映更新spec.template字段的ReplicaSet。</p>
+]]></content>
+      <categories>
+        <category>Kubernetes</category>
+      </categories>
+      <tags>
+        <tag>Kubernetes</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Argo Events</title>
     <url>/2023/03/14/argo-events/</url>
     <content><![CDATA[<h2 id="Argo-Events概述"><a href="#Argo-Events概述" class="headerlink" title="Argo Events概述"></a>Argo Events概述</h2><p>在kubernetes集群中，工作流程的触发通常依赖于特定事件的发生，而Argo Events则提供了一种强大的方式来监控外部事件，并将这些事件映射到集群内的操作或任务执行。Argo Events是Argo项目中的一部分，它与Argo Workflows一起使用，能够在事件发生时启动工作流，形成自动化的DevOps流程。</p>
@@ -2782,32 +2808,6 @@
 <h2 id="链接"><a href="#链接" class="headerlink" title="链接"></a>链接</h2><ul>
 <li>官方文档：<a href="https://argoproj.github.io/argo-events/">https://argoproj.github.io/argo-events/</a></li>
 </ul>
-]]></content>
-      <categories>
-        <category>Kubernetes</category>
-      </categories>
-      <tags>
-        <tag>Kubernetes</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Argo Rollouts</title>
-    <url>/2025/03/14/argo-rollouts/</url>
-    <content><![CDATA[<h2 id="Argo-Rollouts简介"><a href="#Argo-Rollouts简介" class="headerlink" title="Argo Rollouts简介"></a>Argo Rollouts简介</h2><p>Argo Rollouts是一个Kubernetes Operator实现，它为Kubernetes提供更加高级的部署能力，如蓝绿、金丝雀、金丝雀分析、实验和渐进式交付功能，为云原生应用和服务实现自动化、基于GitOps的逐步交付。</p>
-<p>支持如下特性：</p>
-<ul>
-<li>蓝绿更新策略</li>
-<li>金丝雀更新策略</li>
-<li>更加细粒度、加权流量拆分</li>
-<li>自动回滚</li>
-<li>手动判断</li>
-<li>可定制的指标查询和业务KPI分析</li>
-<li>Ingress控制器集成：NGINX，ALB</li>
-<li>Metrics指标集成：Prometheus、Wavefront、Kayenta、Web、Kubernetes Jobs、Datadog、New Relic、Graphite、InfluxDB</li>
-</ul>
-<h2 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h2><p>与Deployment对象类似，Argo Rollout控制器将管理ReplicaSets的创建、缩放和删除，这些ReplicaSet由Rollout资源中的spec.template定义，使用与Deployment对象相同的pod模板。</p>
-<p>当spec.template变更时，这会向Argo Rollouts控制器发出信号，表示将引入新的ReplicaSet，控制器将使用spec.strategy字段内的策略来确定从旧ReplicaSet到新ReplicaSet的rollout将如何进行，一旦这个新的ReplicaSet被放大(可以选择通过一个Analysis)，控制器会将其标记为稳定。</p>
-<p>如果在spec.template从稳定的ReplicaSet过渡到新的ReplicaSet的过程中发生另一次变更(即在发布过程中更改了应用程序版本)，那么之前的新ReplicaSet将缩小，并且控制器将尝试反映更新spec.template字段的ReplicaSet。</p>
 ]]></content>
       <categories>
         <category>Kubernetes</category>
@@ -5438,42 +5438,6 @@
       </tags>
   </entry>
   <entry>
-    <title>日志</title>
-    <url>/2019/03/20/python-%E6%97%A5%E5%BF%97/</url>
-    <content><![CDATA[<h2 id="basicConfig"><a href="#basicConfig" class="headerlink" title="basicConfig"></a>basicConfig</h2><ul>
-<li>导入logging模块</li>
-<li>简单配置一下logging</li>
-<li>出现异常的时候（except），向日志里写错误信息</li>
-</ul>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> logging</span><br><span class="line"><span class="keyword">import</span> traceback</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">logging.basicConfig(filename=<span class="string">&quot;x1.log&quot;</span>,</span><br><span class="line">                    <span class="built_in">format</span>=<span class="string">&quot;%(asctime)s - %(name)s - %(levelname)s - %(module)s: %(message)s&quot;</span>,</span><br><span class="line">                    datefmt=<span class="string">&quot;%Y-%m-%d %H:%M:%S&quot;</span>, level=<span class="number">30</span>)</span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    <span class="built_in">print</span>(<span class="number">1</span>/<span class="number">0</span>)</span><br><span class="line"><span class="keyword">except</span> Exception:</span><br><span class="line">    logging.error(traceback.format_exc())</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;出现错误&quot;</span>)</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>filename：文件名</li>
-<li>format：数据的格式化输出，最终在日志文件中的样子。时间-名称-级别-模块：错误信息</li>
-<li>datefmt：时间的格式</li>
-<li>level:错误的级别权重，当错误的级别权重大于等于leval的时候才会写入文件</li>
-</ul>
-<p>CRITICAL &#x3D; 50</p>
-<p>FATAL &#x3D; CRITICAL</p>
-<p>ERROR &#x3D; 40</p>
-<p>WARNING &#x3D; 30</p>
-<p>WARN &#x3D; WARNING</p>
-<p>INFO &#x3D; 20</p>
-<p>DEBUG &#x3D; 10</p>
-<p>LOG &#x3D; 0</p>
-<h2 id="FileHandler"><a href="#FileHandler" class="headerlink" title="FileHandler"></a>FileHandler</h2><ul>
-<li>可实现日志分开记录</li>
-</ul>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> logging</span><br><span class="line"><span class="keyword">import</span> traceback</span><br><span class="line"></span><br><span class="line">file_handler = logging.FileHandler(<span class="string">&quot;x2.log&quot;</span>, <span class="string">&quot;a&quot;</span>, encoding=<span class="string">&#x27;UTF-8&#x27;</span>)</span><br><span class="line">file_handler.setFormatter(logging.Formatter(fmt=<span class="string">&quot;%(asctime)s - %(name)s - %(levelname)s - %(module)s: %(message)s&quot;</span>))</span><br><span class="line"></span><br><span class="line">logger1 = logging.Logger(<span class="string">&quot;系统A&quot;</span>, level=<span class="number">30</span>)</span><br><span class="line">logger1.addHandler(file_handler)</span><br><span class="line"></span><br><span class="line">logger1.error(<span class="string">&quot;出现错误&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">file_handler = logging.FileHandler(<span class="string">&quot;x3.log&quot;</span>, <span class="string">&quot;a&quot;</span>, encoding=<span class="string">&#x27;UTF-8&#x27;</span>)</span><br><span class="line">file_handler.setFormatter(logging.Formatter(fmt=<span class="string">&quot;%(asctime)s - %(name)s - %(levelname)s - %(module)s: %(message)s&quot;</span>))</span><br><span class="line"></span><br><span class="line">logger2 = logging.Logger(<span class="string">&quot;系统B&quot;</span>, level=<span class="number">30</span>)</span><br><span class="line">logger2.addHandler(file_handler)</span><br><span class="line"></span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    <span class="built_in">print</span>(<span class="number">1</span>/<span class="number">0</span>)</span><br><span class="line"><span class="keyword">except</span> Exception:</span><br><span class="line">    logger2.error(traceback.format_exc())</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;出错了&quot;</span>)</span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>Python</category>
-      </categories>
-      <tags>
-        <tag>Python</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>文件操作</title>
     <url>/2019/03/15/python-%E6%96%87%E4%BB%B6%E6%93%8D%E4%BD%9C/</url>
     <content><![CDATA[<h2 id="基本用法"><a href="#基本用法" class="headerlink" title="基本用法"></a>基本用法</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">f = open(&quot;文件操作.txt&quot;, mode=&#x27;r&#x27;, encoding=&quot;utf-8&quot;)</span><br><span class="line">...</span><br><span class="line">f.close()</span><br></pre></td></tr></table></figure>
@@ -5630,6 +5594,42 @@
       </tags>
   </entry>
   <entry>
+    <title>日志</title>
+    <url>/2019/03/20/python-%E6%97%A5%E5%BF%97/</url>
+    <content><![CDATA[<h2 id="basicConfig"><a href="#basicConfig" class="headerlink" title="basicConfig"></a>basicConfig</h2><ul>
+<li>导入logging模块</li>
+<li>简单配置一下logging</li>
+<li>出现异常的时候（except），向日志里写错误信息</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> logging</span><br><span class="line"><span class="keyword">import</span> traceback</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">logging.basicConfig(filename=<span class="string">&quot;x1.log&quot;</span>,</span><br><span class="line">                    <span class="built_in">format</span>=<span class="string">&quot;%(asctime)s - %(name)s - %(levelname)s - %(module)s: %(message)s&quot;</span>,</span><br><span class="line">                    datefmt=<span class="string">&quot;%Y-%m-%d %H:%M:%S&quot;</span>, level=<span class="number">30</span>)</span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    <span class="built_in">print</span>(<span class="number">1</span>/<span class="number">0</span>)</span><br><span class="line"><span class="keyword">except</span> Exception:</span><br><span class="line">    logging.error(traceback.format_exc())</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;出现错误&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>filename：文件名</li>
+<li>format：数据的格式化输出，最终在日志文件中的样子。时间-名称-级别-模块：错误信息</li>
+<li>datefmt：时间的格式</li>
+<li>level:错误的级别权重，当错误的级别权重大于等于leval的时候才会写入文件</li>
+</ul>
+<p>CRITICAL &#x3D; 50</p>
+<p>FATAL &#x3D; CRITICAL</p>
+<p>ERROR &#x3D; 40</p>
+<p>WARNING &#x3D; 30</p>
+<p>WARN &#x3D; WARNING</p>
+<p>INFO &#x3D; 20</p>
+<p>DEBUG &#x3D; 10</p>
+<p>LOG &#x3D; 0</p>
+<h2 id="FileHandler"><a href="#FileHandler" class="headerlink" title="FileHandler"></a>FileHandler</h2><ul>
+<li>可实现日志分开记录</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> logging</span><br><span class="line"><span class="keyword">import</span> traceback</span><br><span class="line"></span><br><span class="line">file_handler = logging.FileHandler(<span class="string">&quot;x2.log&quot;</span>, <span class="string">&quot;a&quot;</span>, encoding=<span class="string">&#x27;UTF-8&#x27;</span>)</span><br><span class="line">file_handler.setFormatter(logging.Formatter(fmt=<span class="string">&quot;%(asctime)s - %(name)s - %(levelname)s - %(module)s: %(message)s&quot;</span>))</span><br><span class="line"></span><br><span class="line">logger1 = logging.Logger(<span class="string">&quot;系统A&quot;</span>, level=<span class="number">30</span>)</span><br><span class="line">logger1.addHandler(file_handler)</span><br><span class="line"></span><br><span class="line">logger1.error(<span class="string">&quot;出现错误&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">file_handler = logging.FileHandler(<span class="string">&quot;x3.log&quot;</span>, <span class="string">&quot;a&quot;</span>, encoding=<span class="string">&#x27;UTF-8&#x27;</span>)</span><br><span class="line">file_handler.setFormatter(logging.Formatter(fmt=<span class="string">&quot;%(asctime)s - %(name)s - %(levelname)s - %(module)s: %(message)s&quot;</span>))</span><br><span class="line"></span><br><span class="line">logger2 = logging.Logger(<span class="string">&quot;系统B&quot;</span>, level=<span class="number">30</span>)</span><br><span class="line">logger2.addHandler(file_handler)</span><br><span class="line"></span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    <span class="built_in">print</span>(<span class="number">1</span>/<span class="number">0</span>)</span><br><span class="line"><span class="keyword">except</span> Exception:</span><br><span class="line">    logger2.error(traceback.format_exc())</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;出错了&quot;</span>)</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>Python</category>
+      </categories>
+      <tags>
+        <tag>Python</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>模块语法</title>
     <url>/2019/03/20/python-%E6%A8%A1%E5%9D%97%E8%AF%AD%E6%B3%95/</url>
     <content><![CDATA[<h2 id="模块"><a href="#模块" class="headerlink" title="模块"></a>模块</h2><p>  模块就是一个包含python定义和声明的文件，文件名就是模块的名字加上.py后缀。换句话说，所有的py文件都可以看成是一个模块。</p>
@@ -5713,6 +5713,127 @@
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># test模块</span></span><br><span class="line">__all__ = [<span class="string">&quot;x&quot;</span>, <span class="string">&quot;y&quot;</span>]</span><br><span class="line">x = <span class="number">2</span></span><br><span class="line">y = <span class="number">3</span></span><br><span class="line">z = <span class="number">5</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">test</span>():</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;-----test-----&quot;</span>)</span><br></pre></td></tr></table></figure>
 
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 调用方</span></span><br><span class="line"><span class="keyword">from</span> test <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(x)  <span class="comment"># 2</span></span><br><span class="line"><span class="built_in">print</span>(z)  <span class="comment"># NameError: name &#x27;z&#x27; is not defined</span></span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>Python</category>
+      </categories>
+      <tags>
+        <tag>Python</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>正则表达式</title>
+    <url>/2019/03/20/python-%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/</url>
+    <content><![CDATA[<h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><ul>
+<li>正则表达式是对字符串操作的一种逻辑公式，一般使用正则表达式对字符串进行匹配和过滤</li>
+<li>正则表达式由普通字符和元字符组成</li>
+<li>优点：灵活，功能性强，逻辑性强</li>
+<li>缺点：上手难，一旦上手，会爱上这个东西</li>
+<li>工具：各大文本编辑器一般都有正则匹配功能。在线测试网址：<a href="http://tool.chinaz.com/regex/">http://tool.chinaz.com/regex/</a></li>
+</ul>
+<h2 id="普通字符"><a href="#普通字符" class="headerlink" title="普通字符"></a>普通字符</h2><p>  普通字符包含大小写字母、数字。在匹配普通字符时直接写就好。比如”abc”匹配的就是”abc”</p>
+<h2 id="元字符"><a href="#元字符" class="headerlink" title="元字符"></a>元字符</h2><h3 id="字符组"><a href="#字符组" class="headerlink" title="字符组"></a>字符组</h3><p>  用[ ]括起来，在[ ]中出现的内容会被匹配。例如：[abc]匹配a或b或c</p>
+<ul>
+<li>[a-z]：匹配a到z之间的一个字母</li>
+<li>[0-9]：匹配所有阿拉伯数字的一个</li>
+<li>[a-zA-Z0-9]：匹配a-z或A-Z或0-9其中的一个</li>
+</ul>
+<h3 id="简单元字符"><a href="#简单元字符" class="headerlink" title="简单元字符"></a>简单元字符</h3><ul>
+<li><strong>.</strong>：匹配换行符以外的任意字符</li>
+<li>\w：匹配字母或数字或下划线</li>
+<li>\s：匹配任意的空白符</li>
+<li>\d：匹配数字</li>
+<li>\n：匹配一个换行符</li>
+<li>\t：匹配一个制表符</li>
+<li>\b：匹配一个单词的结尾</li>
+<li>^：匹配字符串的开始</li>
+<li>$：匹配字符串的结尾</li>
+<li>\W：匹配非字母或数字或下划线</li>
+<li>\D：匹配非数字</li>
+<li>\S：匹配非空白符</li>
+<li>a|b：匹配字符a或字符b</li>
+<li>()：匹配括号内的表达式，也表示一个组</li>
+<li>[…]：匹配字符组中的字符</li>
+<li>[^…]：匹配除了字符中字符的所有字符</li>
+</ul>
+<h3 id="量词"><a href="#量词" class="headerlink" title="量词"></a>量词</h3><ul>
+<li>*：重复0次或更多次</li>
+<li>+：重复一次或更多次</li>
+<li>？：重复0次或一次</li>
+<li>{n}：重复n次</li>
+<li>{n, }：重复n次或更多次</li>
+<li>{n, m}：重复n到m次</li>
+</ul>
+<h2 id="贪婪匹配与惰性匹配"><a href="#贪婪匹配与惰性匹配" class="headerlink" title="贪婪匹配与惰性匹配"></a>贪婪匹配与惰性匹配</h2><h3 id="贪婪匹配"><a href="#贪婪匹配" class="headerlink" title="贪婪匹配"></a>贪婪匹配</h3><p>  量词中的*，+，{}都属于贪婪匹配，就是尽可能多的匹配到结果</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">str</span>：hello world</span><br><span class="line">reg: h.*</span><br><span class="line">此时匹配的结果：hello world</span><br><span class="line"><span class="built_in">str</span>：&lt;div&gt;hello&lt;/div&gt;</span><br><span class="line">reg：&lt;.*&gt;</span><br><span class="line">此时匹配的结果：&lt;div&gt;hello&lt;/div&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="惰性匹配"><a href="#惰性匹配" class="headerlink" title="惰性匹配"></a>惰性匹配</h3><p>  在使用.*后面如果加了”?”则是尽可能的少匹配</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">str</span>：hello world</span><br><span class="line">reg：h.*?</span><br><span class="line">此时匹配的结果：h</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">str</span>：&lt;div&gt;hello&lt;/div&gt;</span><br><span class="line">reg：&lt;.*?&gt;</span><br><span class="line">此时匹配的结果：</span><br><span class="line">&lt;div&gt;</span><br><span class="line">&lt;/div&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="分组"><a href="#分组" class="headerlink" title="分组"></a>分组</h2><p>  在正则中使用()进行分组。</p>
+<p>  例如要匹配一个相对复杂的身份证号。身份证号分成两种。老的身份证号有15位，而新的身份证号有18位。并且新身份证号结尾可能是x</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">正则为：</span><br><span class="line">^([1-9]\d&#123;16&#125;[0-9x]|[1-9]\d&#123;14&#125;)$</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="转义"><a href="#转义" class="headerlink" title="转义"></a>转义</h2><p>  在正则表达式中，有很多有特殊意义的元字符，比如\n和\s等。如果要在正则中匹配正常的”\n”而不是换行就需要对”&quot;进行转义。</p>
+<p>  同理，在python中，对于\n,\s等也是有特殊意义的，如果要得到”\n”也需要对”&quot;进行转义，所以，如果需要匹配字符\n，在正则表达及python表达中需要写成如下表格形式。</p>
+<table>
+<thead>
+<tr>
+<th><strong>目标</strong></th>
+<th><strong>正则</strong></th>
+<th><strong>python</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>\n</td>
+<td>\n</td>
+<td>\\n</td>
+</tr>
+</tbody></table>
+<p>表1 “\n”转义</p>
+<p>  此时可以利用r”\n”不转义，即上表中python中正则表达可写为：r”\n”</p>
+]]></content>
+      <categories>
+        <category>Python</category>
+      </categories>
+      <tags>
+        <tag>Python</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>深浅拷贝</title>
+    <url>/2019/03/15/python-%E6%B7%B1%E6%B5%85%E6%8B%B7%E8%B4%9D/</url>
+    <content><![CDATA[<h2 id=""><a href="#" class="headerlink" title="&#x3D;"></a>&#x3D;</h2><ul>
+<li>没有产生新对象，都是内存地址的赋值</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lst1 = [11, 22, 33, 44]</span><br><span class="line">lst2 = lst1print(id(lst1)) # 1916361712712print(id(lst2)) # 1916361712712</span><br><span class="line"></span><br><span class="line">lst1.append(&quot;hello&quot;)</span><br><span class="line">print(lst1)  # [11, 22, 33, 44, &#x27;hello&#x27;]</span><br><span class="line">print(lst2)  # [11, 22, 33, 44, &#x27;hello&#x27;]</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">dic1 = &#123;&quot;name&quot;: &quot;Tom&quot;, &quot;age&quot;: 18&#125;</span><br><span class="line">dic2 = dic1</span><br><span class="line">print(id(dic1)) # 2020711820888print(id(dic2)) # 2020711820888</span><br><span class="line">dic1[&quot;hobby&quot;]  = &quot;football&quot;</span><br><span class="line"></span><br><span class="line">print(dic1)  # &#123;&#x27;name&#x27;: &#x27;Tom&#x27;, &#x27;age&#x27;: 18, &#x27;hobby&#x27;: &#x27;football&#x27;&#125;</span><br><span class="line">print(dic2)  # &#123;&#x27;name&#x27;: &#x27;Tom&#x27;, &#x27;age&#x27;: 18, &#x27;hobby&#x27;: &#x27;football&#x27;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>  对于list，set，dict来说，变量1 &#x3D; 变量2，其实就相当于把变量2内容的内存地址交给变量1，并不是复制一份内容，所以一变，都变。 </p>
+<h2 id="浅拷贝"><a href="#浅拷贝" class="headerlink" title="浅拷贝"></a>浅拷贝</h2><ul>
+<li>优点：省内存</li>
+<li>缺点：只拷贝第一层内容</li>
+<li>浅拷贝方法：copy()，对于list，还有lst[:]</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lst1 = [11, 22, 33]</span><br><span class="line">lst2 = lst1[:]</span><br><span class="line"></span><br><span class="line">print(id(lst1))  # 1744651035720</span><br><span class="line">print(id(lst2))  # 1744651035848</span><br><span class="line"></span><br><span class="line">lst1.append(44)</span><br><span class="line"></span><br><span class="line">print(lst1) # [11, 22, 33, 44]</span><br><span class="line">print(lst2) # [11, 22, 33]</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lst1 = [11, 22, 33, [44, 55]]</span><br><span class="line">lst2 = lst1.copy()</span><br><span class="line"></span><br><span class="line">print(id(lst1))  # 2081315824712</span><br><span class="line">print(id(lst2))  # 2081316649864</span><br><span class="line"></span><br><span class="line">lst1[3].append(&quot;hello&quot;)</span><br><span class="line"></span><br><span class="line">print(lst1) # [11, 22, 33, [44, 55, &#x27;hello&#x27;]]</span><br><span class="line">print(lst2) # [11, 22, 33, [44, 55, &#x27;hello&#x27;]]</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="深拷贝"><a href="#深拷贝" class="headerlink" title="深拷贝"></a>深拷贝</h2><ul>
+<li><p>深拷贝把内部元素完全进行拷贝复制。</p>
+<p>深拷贝方法：</p>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">import copy</span><br><span class="line"></span><br><span class="line">s2 = copy.deepcopy(s1)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">import copy</span><br><span class="line"></span><br><span class="line">lst1 = [11, 22, 33, [44, 55]]</span><br><span class="line">lst2 = copy.deepcopy(lst1)</span><br><span class="line"></span><br><span class="line">print(id(lst1))  # 1236356428872</span><br><span class="line">print(id(lst2))  # 1236356430152</span><br><span class="line"></span><br><span class="line">lst1[3].append(&quot;hello&quot;)</span><br><span class="line"></span><br><span class="line">print(lst1) # [11, 22, 33, [44, 55, &#x27;hello&#x27;]]</span><br><span class="line">print(lst2) # [11, 22, 33, [44, 55]]</span><br></pre></td></tr></table></figure>
 ]]></content>
       <categories>
         <category>Python</category>
@@ -5856,89 +5977,6 @@
 
 <p> Next：</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">class Base(object):</span><br><span class="line">    def __init__(self, num):</span><br><span class="line">        self.num = num</span><br><span class="line"></span><br><span class="line">    def func1(self):</span><br><span class="line">        print(self.num)</span><br><span class="line">        self.func2()</span><br><span class="line"></span><br><span class="line">    def func2(self):</span><br><span class="line">        print(111, self.num)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Foo(Base):</span><br><span class="line"></span><br><span class="line">    def func2(self):</span><br><span class="line">        print(222, self.num)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">lst = [Base(1), Base(2), Foo(3)]</span><br><span class="line">for obj in lst:</span><br><span class="line">    obj.func1()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">结果：</span><br><span class="line">1</span><br><span class="line">111 1</span><br><span class="line">2</span><br><span class="line">111 2</span><br><span class="line">3</span><br><span class="line">222 3</span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>Python</category>
-      </categories>
-      <tags>
-        <tag>Python</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>正则表达式</title>
-    <url>/2019/03/20/python-%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/</url>
-    <content><![CDATA[<h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><ul>
-<li>正则表达式是对字符串操作的一种逻辑公式，一般使用正则表达式对字符串进行匹配和过滤</li>
-<li>正则表达式由普通字符和元字符组成</li>
-<li>优点：灵活，功能性强，逻辑性强</li>
-<li>缺点：上手难，一旦上手，会爱上这个东西</li>
-<li>工具：各大文本编辑器一般都有正则匹配功能。在线测试网址：<a href="http://tool.chinaz.com/regex/">http://tool.chinaz.com/regex/</a></li>
-</ul>
-<h2 id="普通字符"><a href="#普通字符" class="headerlink" title="普通字符"></a>普通字符</h2><p>  普通字符包含大小写字母、数字。在匹配普通字符时直接写就好。比如”abc”匹配的就是”abc”</p>
-<h2 id="元字符"><a href="#元字符" class="headerlink" title="元字符"></a>元字符</h2><h3 id="字符组"><a href="#字符组" class="headerlink" title="字符组"></a>字符组</h3><p>  用[ ]括起来，在[ ]中出现的内容会被匹配。例如：[abc]匹配a或b或c</p>
-<ul>
-<li>[a-z]：匹配a到z之间的一个字母</li>
-<li>[0-9]：匹配所有阿拉伯数字的一个</li>
-<li>[a-zA-Z0-9]：匹配a-z或A-Z或0-9其中的一个</li>
-</ul>
-<h3 id="简单元字符"><a href="#简单元字符" class="headerlink" title="简单元字符"></a>简单元字符</h3><ul>
-<li><strong>.</strong>：匹配换行符以外的任意字符</li>
-<li>\w：匹配字母或数字或下划线</li>
-<li>\s：匹配任意的空白符</li>
-<li>\d：匹配数字</li>
-<li>\n：匹配一个换行符</li>
-<li>\t：匹配一个制表符</li>
-<li>\b：匹配一个单词的结尾</li>
-<li>^：匹配字符串的开始</li>
-<li>$：匹配字符串的结尾</li>
-<li>\W：匹配非字母或数字或下划线</li>
-<li>\D：匹配非数字</li>
-<li>\S：匹配非空白符</li>
-<li>a|b：匹配字符a或字符b</li>
-<li>()：匹配括号内的表达式，也表示一个组</li>
-<li>[…]：匹配字符组中的字符</li>
-<li>[^…]：匹配除了字符中字符的所有字符</li>
-</ul>
-<h3 id="量词"><a href="#量词" class="headerlink" title="量词"></a>量词</h3><ul>
-<li>*：重复0次或更多次</li>
-<li>+：重复一次或更多次</li>
-<li>？：重复0次或一次</li>
-<li>{n}：重复n次</li>
-<li>{n, }：重复n次或更多次</li>
-<li>{n, m}：重复n到m次</li>
-</ul>
-<h2 id="贪婪匹配与惰性匹配"><a href="#贪婪匹配与惰性匹配" class="headerlink" title="贪婪匹配与惰性匹配"></a>贪婪匹配与惰性匹配</h2><h3 id="贪婪匹配"><a href="#贪婪匹配" class="headerlink" title="贪婪匹配"></a>贪婪匹配</h3><p>  量词中的*，+，{}都属于贪婪匹配，就是尽可能多的匹配到结果</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">str</span>：hello world</span><br><span class="line">reg: h.*</span><br><span class="line">此时匹配的结果：hello world</span><br><span class="line"><span class="built_in">str</span>：&lt;div&gt;hello&lt;/div&gt;</span><br><span class="line">reg：&lt;.*&gt;</span><br><span class="line">此时匹配的结果：&lt;div&gt;hello&lt;/div&gt;</span><br></pre></td></tr></table></figure>
-
-<h3 id="惰性匹配"><a href="#惰性匹配" class="headerlink" title="惰性匹配"></a>惰性匹配</h3><p>  在使用.*后面如果加了”?”则是尽可能的少匹配</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">str</span>：hello world</span><br><span class="line">reg：h.*?</span><br><span class="line">此时匹配的结果：h</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">str</span>：&lt;div&gt;hello&lt;/div&gt;</span><br><span class="line">reg：&lt;.*?&gt;</span><br><span class="line">此时匹配的结果：</span><br><span class="line">&lt;div&gt;</span><br><span class="line">&lt;/div&gt;</span><br></pre></td></tr></table></figure>
-
-<h2 id="分组"><a href="#分组" class="headerlink" title="分组"></a>分组</h2><p>  在正则中使用()进行分组。</p>
-<p>  例如要匹配一个相对复杂的身份证号。身份证号分成两种。老的身份证号有15位，而新的身份证号有18位。并且新身份证号结尾可能是x</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">正则为：</span><br><span class="line">^([1-9]\d&#123;16&#125;[0-9x]|[1-9]\d&#123;14&#125;)$</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="转义"><a href="#转义" class="headerlink" title="转义"></a>转义</h2><p>  在正则表达式中，有很多有特殊意义的元字符，比如\n和\s等。如果要在正则中匹配正常的”\n”而不是换行就需要对”&quot;进行转义。</p>
-<p>  同理，在python中，对于\n,\s等也是有特殊意义的，如果要得到”\n”也需要对”&quot;进行转义，所以，如果需要匹配字符\n，在正则表达及python表达中需要写成如下表格形式。</p>
-<table>
-<thead>
-<tr>
-<th><strong>目标</strong></th>
-<th><strong>正则</strong></th>
-<th><strong>python</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td>\n</td>
-<td>\n</td>
-<td>\\n</td>
-</tr>
-</tbody></table>
-<p>表1 “\n”转义</p>
-<p>  此时可以利用r”\n”不转义，即上表中python中正则表达可写为：r”\n”</p>
 ]]></content>
       <categories>
         <category>Python</category>
@@ -6125,44 +6163,6 @@
 <li>如果一个类中包含了抽象方法。那么这个类一定是一个抽象类</li>
 </ul>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> abc <span class="keyword">import</span> ABCMeta, abstractmethod</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Base</span>(metaclass=ABCMeta):</span><br><span class="line"><span class="meta">    @abstractmethod</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">login</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Normal</span>(<span class="title class_ inherited__">Base</span>):</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">login</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Member</span>(<span class="title class_ inherited__">Base</span>):</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">denglu</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Admin</span>(<span class="title class_ inherited__">Base</span>):</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">login</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">n = Normal()</span><br><span class="line">n.login()</span><br><span class="line"></span><br><span class="line">m = Member()  <span class="comment"># 报错 Can&#x27;t instantiate abstract class Member with abstract methods login  </span></span><br><span class="line">m.login()</span><br><span class="line"></span><br><span class="line">a = Admin()</span><br><span class="line">a.login()</span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>Python</category>
-      </categories>
-      <tags>
-        <tag>Python</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>深浅拷贝</title>
-    <url>/2019/03/15/python-%E6%B7%B1%E6%B5%85%E6%8B%B7%E8%B4%9D/</url>
-    <content><![CDATA[<h2 id=""><a href="#" class="headerlink" title="&#x3D;"></a>&#x3D;</h2><ul>
-<li>没有产生新对象，都是内存地址的赋值</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lst1 = [11, 22, 33, 44]</span><br><span class="line">lst2 = lst1print(id(lst1)) # 1916361712712print(id(lst2)) # 1916361712712</span><br><span class="line"></span><br><span class="line">lst1.append(&quot;hello&quot;)</span><br><span class="line">print(lst1)  # [11, 22, 33, 44, &#x27;hello&#x27;]</span><br><span class="line">print(lst2)  # [11, 22, 33, 44, &#x27;hello&#x27;]</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">dic1 = &#123;&quot;name&quot;: &quot;Tom&quot;, &quot;age&quot;: 18&#125;</span><br><span class="line">dic2 = dic1</span><br><span class="line">print(id(dic1)) # 2020711820888print(id(dic2)) # 2020711820888</span><br><span class="line">dic1[&quot;hobby&quot;]  = &quot;football&quot;</span><br><span class="line"></span><br><span class="line">print(dic1)  # &#123;&#x27;name&#x27;: &#x27;Tom&#x27;, &#x27;age&#x27;: 18, &#x27;hobby&#x27;: &#x27;football&#x27;&#125;</span><br><span class="line">print(dic2)  # &#123;&#x27;name&#x27;: &#x27;Tom&#x27;, &#x27;age&#x27;: 18, &#x27;hobby&#x27;: &#x27;football&#x27;&#125;</span><br></pre></td></tr></table></figure>
-
-<p>  对于list，set，dict来说，变量1 &#x3D; 变量2，其实就相当于把变量2内容的内存地址交给变量1，并不是复制一份内容，所以一变，都变。 </p>
-<h2 id="浅拷贝"><a href="#浅拷贝" class="headerlink" title="浅拷贝"></a>浅拷贝</h2><ul>
-<li>优点：省内存</li>
-<li>缺点：只拷贝第一层内容</li>
-<li>浅拷贝方法：copy()，对于list，还有lst[:]</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lst1 = [11, 22, 33]</span><br><span class="line">lst2 = lst1[:]</span><br><span class="line"></span><br><span class="line">print(id(lst1))  # 1744651035720</span><br><span class="line">print(id(lst2))  # 1744651035848</span><br><span class="line"></span><br><span class="line">lst1.append(44)</span><br><span class="line"></span><br><span class="line">print(lst1) # [11, 22, 33, 44]</span><br><span class="line">print(lst2) # [11, 22, 33]</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lst1 = [11, 22, 33, [44, 55]]</span><br><span class="line">lst2 = lst1.copy()</span><br><span class="line"></span><br><span class="line">print(id(lst1))  # 2081315824712</span><br><span class="line">print(id(lst2))  # 2081316649864</span><br><span class="line"></span><br><span class="line">lst1[3].append(&quot;hello&quot;)</span><br><span class="line"></span><br><span class="line">print(lst1) # [11, 22, 33, [44, 55, &#x27;hello&#x27;]]</span><br><span class="line">print(lst2) # [11, 22, 33, [44, 55, &#x27;hello&#x27;]]</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="深拷贝"><a href="#深拷贝" class="headerlink" title="深拷贝"></a>深拷贝</h2><ul>
-<li><p>深拷贝把内部元素完全进行拷贝复制。</p>
-<p>深拷贝方法：</p>
-</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">import copy</span><br><span class="line"></span><br><span class="line">s2 = copy.deepcopy(s1)</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">import copy</span><br><span class="line"></span><br><span class="line">lst1 = [11, 22, 33, [44, 55]]</span><br><span class="line">lst2 = copy.deepcopy(lst1)</span><br><span class="line"></span><br><span class="line">print(id(lst1))  # 1236356428872</span><br><span class="line">print(id(lst2))  # 1236356430152</span><br><span class="line"></span><br><span class="line">lst1[3].append(&quot;hello&quot;)</span><br><span class="line"></span><br><span class="line">print(lst1) # [11, 22, 33, [44, 55, &#x27;hello&#x27;]]</span><br><span class="line">print(lst2) # [11, 22, 33, [44, 55]]</span><br></pre></td></tr></table></figure>
 ]]></content>
       <categories>
         <category>Python</category>
@@ -6408,6 +6408,111 @@
       </tags>
   </entry>
   <entry>
+    <title>迭代器</title>
+    <url>/2019/03/16/python-%E8%BF%AD%E4%BB%A3%E5%99%A8/</url>
+    <content><![CDATA[<h2 id="迭代器"><a href="#迭代器" class="headerlink" title="迭代器"></a>迭代器</h2><ul>
+<li>Iterable：可迭代对象，内部包含__iter__()函数</li>
+<li>Iterator：迭代器，内部包含__iter__()和__next__()函数</li>
+</ul>
+<p>特点：</p>
+<ul>
+<li>节省内存</li>
+<li>惰性机制</li>
+<li>不能反复，只能向下执行</li>
+</ul>
+<h3 id="可迭代对象"><a href="#可迭代对象" class="headerlink" title="可迭代对象"></a>可迭代对象</h3><h4 id="判断一个对象是否为可迭代对象"><a href="#判断一个对象是否为可迭代对象" class="headerlink" title="判断一个对象是否为可迭代对象"></a>判断一个对象是否为可迭代对象</h4><ul>
+<li>通过dir函数来查看类中定义的方法中是否有__iter__方法</li>
+</ul>
+<p>如果__iter__能找到，那么这个类的对象就是一个可迭代对象。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">print</span>(<span class="built_in">dir</span>(<span class="built_in">str</span>))<span class="built_in">print</span>(<span class="built_in">dir</span>(<span class="built_in">list</span>))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">结果：</span><br><span class="line">[<span class="string">&#x27;__add__&#x27;</span>, <span class="string">&#x27;__class__&#x27;</span>, <span class="string">&#x27;__contains__&#x27;</span>, <span class="string">&#x27;__delattr__&#x27;</span>, <span class="string">&#x27;__dir__&#x27;</span>, <span class="string">&#x27;__doc__&#x27;</span>, <span class="string">&#x27;__eq__&#x27;</span>, <span class="string">&#x27;__format__&#x27;</span>, <span class="string">&#x27;__ge__&#x27;</span>, <span class="string">&#x27;__getattribute__&#x27;</span>, <span class="string">&#x27;__getitem__&#x27;</span>, <span class="string">&#x27;__getnewargs__&#x27;</span>, <span class="string">&#x27;__gt__&#x27;</span>, <span class="string">&#x27;__hash__&#x27;</span>, <span class="string">&#x27;__init__&#x27;</span>, <span class="string">&#x27;__init_subclass__&#x27;</span>, <span class="string">&#x27;__iter__&#x27;</span>, <span class="string">&#x27;__le__&#x27;</span>, <span class="string">&#x27;__len__&#x27;</span>, <span class="string">&#x27;__lt__&#x27;</span>, <span class="string">&#x27;__mod__&#x27;</span>, <span class="string">&#x27;__mul__&#x27;</span>, <span class="string">&#x27;__ne__&#x27;</span>, <span class="string">&#x27;__new__&#x27;</span>, <span class="string">&#x27;__reduce__&#x27;</span>, <span class="string">&#x27;__reduce_ex__&#x27;</span>, <span class="string">&#x27;__repr__&#x27;</span>, <span class="string">&#x27;__rmod__&#x27;</span>, <span class="string">&#x27;__rmul__&#x27;</span>, <span class="string">&#x27;__setattr__&#x27;</span>, <span class="string">&#x27;__sizeof__&#x27;</span>, <span class="string">&#x27;__str__&#x27;</span>, <span class="string">&#x27;__subclasshook__&#x27;</span>, <span class="string">&#x27;capitalize&#x27;</span>, <span class="string">&#x27;casefold&#x27;</span>, <span class="string">&#x27;center&#x27;</span>, <span class="string">&#x27;count&#x27;</span>, <span class="string">&#x27;encode&#x27;</span>, <span class="string">&#x27;endswith&#x27;</span>, <span class="string">&#x27;expandtabs&#x27;</span>, <span class="string">&#x27;find&#x27;</span>, <span class="string">&#x27;format&#x27;</span>, <span class="string">&#x27;format_map&#x27;</span>, <span class="string">&#x27;index&#x27;</span>, <span class="string">&#x27;isalnum&#x27;</span>, <span class="string">&#x27;isalpha&#x27;</span>, <span class="string">&#x27;isdecimal&#x27;</span>, <span class="string">&#x27;isdigit&#x27;</span>, <span class="string">&#x27;isidentifier&#x27;</span>, <span class="string">&#x27;islower&#x27;</span>, <span class="string">&#x27;isnumeric&#x27;</span>, <span class="string">&#x27;isprintable&#x27;</span>, <span class="string">&#x27;isspace&#x27;</span>, <span class="string">&#x27;istitle&#x27;</span>, <span class="string">&#x27;isupper&#x27;</span>, <span class="string">&#x27;join&#x27;</span>, <span class="string">&#x27;ljust&#x27;</span>, <span class="string">&#x27;lower&#x27;</span>, <span class="string">&#x27;lstrip&#x27;</span>, <span class="string">&#x27;maketrans&#x27;</span>, <span class="string">&#x27;partition&#x27;</span>, <span class="string">&#x27;replace&#x27;</span>, <span class="string">&#x27;rfind&#x27;</span>, <span class="string">&#x27;rindex&#x27;</span>, <span class="string">&#x27;rjust&#x27;</span>, <span class="string">&#x27;rpartition&#x27;</span>, <span class="string">&#x27;rsplit&#x27;</span>, <span class="string">&#x27;rstrip&#x27;</span>, <span class="string">&#x27;split&#x27;</span>, <span class="string">&#x27;splitlines&#x27;</span>, <span class="string">&#x27;startswith&#x27;</span>, <span class="string">&#x27;strip&#x27;</span>, <span class="string">&#x27;swapcase&#x27;</span>, <span class="string">&#x27;title&#x27;</span>, <span class="string">&#x27;translate&#x27;</span>, <span class="string">&#x27;upper&#x27;</span>, <span class="string">&#x27;zfill&#x27;</span>][<span class="string">&#x27;__add__&#x27;</span>, <span class="string">&#x27;__class__&#x27;</span>, <span class="string">&#x27;__contains__&#x27;</span>, <span class="string">&#x27;__delattr__&#x27;</span>, <span class="string">&#x27;__delitem__&#x27;</span>, <span class="string">&#x27;__dir__&#x27;</span>, <span class="string">&#x27;__doc__&#x27;</span>, <span class="string">&#x27;__eq__&#x27;</span>, <span class="string">&#x27;__format__&#x27;</span>, <span class="string">&#x27;__ge__&#x27;</span>, <span class="string">&#x27;__getattribute__&#x27;</span>, <span class="string">&#x27;__getitem__&#x27;</span>, <span class="string">&#x27;__gt__&#x27;</span>, <span class="string">&#x27;__hash__&#x27;</span>, <span class="string">&#x27;__iadd__&#x27;</span>, <span class="string">&#x27;__imul__&#x27;</span>, <span class="string">&#x27;__init__&#x27;</span>, <span class="string">&#x27;__init_subclass__&#x27;</span>, <span class="string">&#x27;__iter__&#x27;</span>, <span class="string">&#x27;__le__&#x27;</span>, <span class="string">&#x27;__len__&#x27;</span>, <span class="string">&#x27;__lt__&#x27;</span>, <span class="string">&#x27;__mul__&#x27;</span>, <span class="string">&#x27;__ne__&#x27;</span>, <span class="string">&#x27;__new__&#x27;</span>, <span class="string">&#x27;__reduce__&#x27;</span>, <span class="string">&#x27;__reduce_ex__&#x27;</span>, <span class="string">&#x27;__repr__&#x27;</span>, <span class="string">&#x27;__reversed__&#x27;</span>, <span class="string">&#x27;__rmul__&#x27;</span>, <span class="string">&#x27;__setattr__&#x27;</span>, <span class="string">&#x27;__setitem__&#x27;</span>, <span class="string">&#x27;__sizeof__&#x27;</span>, <span class="string">&#x27;__str__&#x27;</span>, <span class="string">&#x27;__subclasshook__&#x27;</span>, <span class="string">&#x27;append&#x27;</span>, <span class="string">&#x27;clear&#x27;</span>, <span class="string">&#x27;copy&#x27;</span>, <span class="string">&#x27;count&#x27;</span>, <span class="string">&#x27;extend&#x27;</span>, <span class="string">&#x27;index&#x27;</span>, <span class="string">&#x27;insert&#x27;</span>, <span class="string">&#x27;pop&#x27;</span>, <span class="string">&#x27;remove&#x27;</span>, <span class="string">&#x27;reverse&#x27;</span>, <span class="string">&#x27;sort&#x27;</span>]</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>通过isinstance()函数</li>
+</ul>
+<p>如果返回值为True,则该对象为可迭代对象，否则不是。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">from collections import Iterable</span><br><span class="line"></span><br><span class="line">lst = [11, 22, 33]</span><br><span class="line"></span><br><span class="line">print(isinstance(lst, Iterable))  # True</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="迭代器-1"><a href="#迭代器-1" class="headerlink" title="迭代器"></a>迭代器</h3><ul>
+<li>迭代器本身是可迭代的，所以类中有__iter__方法。</li>
+</ul>
+<h4 id="判断一个对象是否为迭代器"><a href="#判断一个对象是否为迭代器" class="headerlink" title="判断一个对象是否为迭代器"></a>判断一个对象是否为迭代器</h4><ul>
+<li>通过dir函数来查看类中定义的方法中是否有__next__方法</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lst = [11, 22, 33]</span><br><span class="line">ret = lst.__iter__()</span><br><span class="line"></span><br><span class="line">print(&quot;__next__&quot; in dir(ret))  # True</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>通过isinstance()函数</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">from collections import Iterator</span><br><span class="line"></span><br><span class="line">lst = [11, 22, 33]</span><br><span class="line">ret = lst.__iter__()</span><br><span class="line"></span><br><span class="line">print(isinstance(ret, Iterator))  # True</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="迭代器取值"><a href="#迭代器取值" class="headerlink" title="迭代器取值"></a>迭代器取值</h4><p>  通过__next__获取迭代器数据</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lst = [11, 22, 33]</span><br><span class="line">ret = lst.__iter__()</span><br><span class="line"></span><br><span class="line">print(ret.__next__())</span><br><span class="line">print(ret.__next__())</span><br><span class="line">print(ret.__next__())</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">结果：</span><br><span class="line">11</span><br><span class="line">22</span><br><span class="line">33</span><br></pre></td></tr></table></figure>
+
+<p>  如果获取元素个数超过迭代器元素的长度，则报错StopIteration</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lst = [11, 22, 33]</span><br><span class="line">ret = lst.__iter__()</span><br><span class="line"></span><br><span class="line">print(ret.__next__())</span><br><span class="line">print(ret.__next__())</span><br><span class="line">print(ret.__next__())</span><br><span class="line">print(ret.__next__())  # StopIteration</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="for循环内部代码"><a href="#for循环内部代码" class="headerlink" title="for循环内部代码"></a>for循环内部代码</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ret = lst.__iter__()</span><br><span class="line"></span><br><span class="line">while 1:</span><br><span class="line">    try:</span><br><span class="line">        el = ret.__next__()</span><br><span class="line">        print(el)</span><br><span class="line">    except StopIteration:</span><br><span class="line">        break</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="可迭代对象-—–-迭代器"><a href="#可迭代对象-—–-迭代器" class="headerlink" title="可迭代对象 —–&gt; 迭代器"></a>可迭代对象 —–&gt; 迭代器</h3><ul>
+<li>可迭代对象不一定是迭代器，但可通过__iter__方法转换成迭代器</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lst = [11, 22, 33]</span><br><span class="line">ret = lst.__iter__()</span><br><span class="line"></span><br><span class="line">print(&quot;__next__&quot; in dir(ret))  # True</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>Python</category>
+      </categories>
+      <tags>
+        <tag>Python</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>递归函数</title>
+    <url>/2019/03/16/python-%E9%80%92%E5%BD%92%E5%87%BD%E6%95%B0/</url>
+    <content><![CDATA[<h2 id="递归函数"><a href="#递归函数" class="headerlink" title="递归函数"></a>递归函数</h2><h3 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h3><ul>
+<li>在函数中调用函数本身，就是递归</li>
+<li>在python中递归的深度最大为1000，但实际达不到1000</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">def func():</span><br><span class="line">    print(&quot;-----func-----&quot;)</span><br><span class="line">    func()</span><br><span class="line"></span><br><span class="line">func()</span><br></pre></td></tr></table></figure>
+
+<h3 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h3><ul>
+<li>可以使用递归来遍历各种树形结构，比如文件夹系统：可以使用递归来遍历该文件夹中的所有文件</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">import os</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def func(filepath, n):</span><br><span class="line">    files_list = os.listdir(filepath)  # 获取当前文件夹中的所有文件</span><br><span class="line">    for file in files_list:</span><br><span class="line">        file_d = os.path.join(filepath, file)  # 拼接文件的真实路径</span><br><span class="line">        if os.path.isdir(file_d):  # 递归入口  判断文件是否为文件夹</span><br><span class="line">            print(&quot;\t&quot;*n, file)</span><br><span class="line">            func(file_d, n+1)  #</span><br><span class="line">        else:</span><br><span class="line">            print(&quot;\t&quot;*n, file)  # 递归出口</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="二分查找"><a href="#二分查找" class="headerlink" title="二分查找"></a>二分查找</h2><ul>
+<li>优点：每次能够除掉一半的数据，查找效率高</li>
+<li>要求：查找的序列必须是有序序列</li>
+</ul>
+<h3 id="非递归算法"><a href="#非递归算法" class="headerlink" title="非递归算法"></a>非递归算法</h3><h4 id="利用索引"><a href="#利用索引" class="headerlink" title="利用索引"></a>利用索引</h4><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 让用户输入一个数n. 判断这个n是否出现在lst中</span></span><br><span class="line">lst = [<span class="number">4</span>, <span class="number">56</span>, <span class="number">178</span>, <span class="number">253</span>, <span class="number">625</span>, <span class="number">1475</span>, <span class="number">2580</span>, <span class="number">3574</span>, <span class="number">15963</span>]</span><br><span class="line"></span><br><span class="line">left = <span class="number">0</span></span><br><span class="line">right = <span class="built_in">len</span>(lst) - <span class="number">1</span></span><br><span class="line"></span><br><span class="line">num = <span class="built_in">int</span>(<span class="built_in">input</span>(<span class="string">&quot;请输入一个数n：&quot;</span>))</span><br><span class="line"><span class="keyword">while</span> left &lt;= right:</span><br><span class="line">    mid = (left + right) // <span class="number">2</span></span><br><span class="line">    <span class="keyword">if</span> lst[mid] &gt; num:</span><br><span class="line">        right = mid - <span class="number">1</span></span><br><span class="line">    <span class="keyword">elif</span> lst[mid] &lt; num:</span><br><span class="line">        left = mid + <span class="number">1</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;这个数在lst中&quot;</span>)</span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;这个数不在lst中&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="递归算法"><a href="#递归算法" class="headerlink" title="递归算法"></a>递归算法</h3><h4 id="利用索引-1"><a href="#利用索引-1" class="headerlink" title="利用索引"></a>利用索引</h4><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 让用户输入一个数n. 判断这个n是否出现在lst中</span></span><br><span class="line">lst = [<span class="number">4</span>, <span class="number">56</span>, <span class="number">178</span>, <span class="number">253</span>, <span class="number">625</span>, <span class="number">1475</span>, <span class="number">2580</span>, <span class="number">3574</span>, <span class="number">15963</span>]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">binary_search</span>(<span class="params">lst, num, left, right</span>):</span><br><span class="line">    <span class="keyword">if</span> left &gt; right:</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">    mid = (left + right) // <span class="number">2</span></span><br><span class="line">    <span class="keyword">if</span> lst[mid] &gt; num:</span><br><span class="line">        right = mid - <span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span> binary_search(lst, num, left, right)</span><br><span class="line">    <span class="keyword">elif</span> lst[mid] &lt; num:</span><br><span class="line">        left = mid + <span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span> binary_search(lst, num, left, right)</span><br><span class="line">    <span class="keyword">else</span>:<span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line"></span><br><span class="line">num = <span class="built_in">int</span>(<span class="built_in">input</span>(<span class="string">&quot;请输入一个数n：&quot;</span>))</span><br><span class="line">ret = binary_search(lst, num, <span class="number">0</span>, <span class="built_in">len</span>(lst)-<span class="number">1</span>)</span><br><span class="line"><span class="built_in">print</span>(ret)</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="切换列表"><a href="#切换列表" class="headerlink" title="切换列表"></a>切换列表</h4><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 让用户输入一个数n. 判断这个n是否出现在lst中</span></span><br><span class="line">lst = [<span class="number">4</span>, <span class="number">56</span>, <span class="number">178</span>, <span class="number">253</span>, <span class="number">625</span>, <span class="number">1475</span>, <span class="number">2580</span>, <span class="number">3574</span>, <span class="number">15963</span>]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">binary_search</span>(<span class="params">lst, num</span>):</span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">len</span>(lst) == <span class="number">0</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">    mid = (<span class="built_in">len</span>(lst) - <span class="number">1</span>) // <span class="number">2</span></span><br><span class="line">    <span class="keyword">if</span> num &gt; lst[mid]:</span><br><span class="line">        <span class="keyword">return</span> binary_search(lst[mid+<span class="number">1</span>:], num)</span><br><span class="line">    <span class="keyword">elif</span> num &lt; lst[mid]:</span><br><span class="line">        <span class="keyword">return</span> binary_search(lst[:mid], num)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;这个数在lst中&quot;</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">num = <span class="built_in">int</span>(<span class="built_in">input</span>(<span class="string">&quot;请输入一个数n：&quot;</span>))</span><br><span class="line"></span><br><span class="line">ret = binary_search(lst, num)</span><br><span class="line"><span class="built_in">print</span>(ret)</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>Python</category>
+      </categories>
+      <tags>
+        <tag>Python</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>python基础</title>
     <url>/2019/03/15/python%E5%9F%BA%E7%A1%80/</url>
     <content><![CDATA[<h2 id="python简介"><a href="#python简介" class="headerlink" title="python简介"></a>python简介</h2><p> python是一门动态、解释型、强类型高级开发编程语言</p>
@@ -6516,111 +6621,6 @@
 <li>执行顺序：当条件成立时执行循环体，当条件不成立时执行else里的代码。</li>
 <li>如果循环是通过break退出的，那么while后的else将不会执行，只有在while条件判断是假的时候才会执行这个else。</li>
 </ul>
-]]></content>
-      <categories>
-        <category>Python</category>
-      </categories>
-      <tags>
-        <tag>Python</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>迭代器</title>
-    <url>/2019/03/16/python-%E8%BF%AD%E4%BB%A3%E5%99%A8/</url>
-    <content><![CDATA[<h2 id="迭代器"><a href="#迭代器" class="headerlink" title="迭代器"></a>迭代器</h2><ul>
-<li>Iterable：可迭代对象，内部包含__iter__()函数</li>
-<li>Iterator：迭代器，内部包含__iter__()和__next__()函数</li>
-</ul>
-<p>特点：</p>
-<ul>
-<li>节省内存</li>
-<li>惰性机制</li>
-<li>不能反复，只能向下执行</li>
-</ul>
-<h3 id="可迭代对象"><a href="#可迭代对象" class="headerlink" title="可迭代对象"></a>可迭代对象</h3><h4 id="判断一个对象是否为可迭代对象"><a href="#判断一个对象是否为可迭代对象" class="headerlink" title="判断一个对象是否为可迭代对象"></a>判断一个对象是否为可迭代对象</h4><ul>
-<li>通过dir函数来查看类中定义的方法中是否有__iter__方法</li>
-</ul>
-<p>如果__iter__能找到，那么这个类的对象就是一个可迭代对象。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">print</span>(<span class="built_in">dir</span>(<span class="built_in">str</span>))<span class="built_in">print</span>(<span class="built_in">dir</span>(<span class="built_in">list</span>))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">结果：</span><br><span class="line">[<span class="string">&#x27;__add__&#x27;</span>, <span class="string">&#x27;__class__&#x27;</span>, <span class="string">&#x27;__contains__&#x27;</span>, <span class="string">&#x27;__delattr__&#x27;</span>, <span class="string">&#x27;__dir__&#x27;</span>, <span class="string">&#x27;__doc__&#x27;</span>, <span class="string">&#x27;__eq__&#x27;</span>, <span class="string">&#x27;__format__&#x27;</span>, <span class="string">&#x27;__ge__&#x27;</span>, <span class="string">&#x27;__getattribute__&#x27;</span>, <span class="string">&#x27;__getitem__&#x27;</span>, <span class="string">&#x27;__getnewargs__&#x27;</span>, <span class="string">&#x27;__gt__&#x27;</span>, <span class="string">&#x27;__hash__&#x27;</span>, <span class="string">&#x27;__init__&#x27;</span>, <span class="string">&#x27;__init_subclass__&#x27;</span>, <span class="string">&#x27;__iter__&#x27;</span>, <span class="string">&#x27;__le__&#x27;</span>, <span class="string">&#x27;__len__&#x27;</span>, <span class="string">&#x27;__lt__&#x27;</span>, <span class="string">&#x27;__mod__&#x27;</span>, <span class="string">&#x27;__mul__&#x27;</span>, <span class="string">&#x27;__ne__&#x27;</span>, <span class="string">&#x27;__new__&#x27;</span>, <span class="string">&#x27;__reduce__&#x27;</span>, <span class="string">&#x27;__reduce_ex__&#x27;</span>, <span class="string">&#x27;__repr__&#x27;</span>, <span class="string">&#x27;__rmod__&#x27;</span>, <span class="string">&#x27;__rmul__&#x27;</span>, <span class="string">&#x27;__setattr__&#x27;</span>, <span class="string">&#x27;__sizeof__&#x27;</span>, <span class="string">&#x27;__str__&#x27;</span>, <span class="string">&#x27;__subclasshook__&#x27;</span>, <span class="string">&#x27;capitalize&#x27;</span>, <span class="string">&#x27;casefold&#x27;</span>, <span class="string">&#x27;center&#x27;</span>, <span class="string">&#x27;count&#x27;</span>, <span class="string">&#x27;encode&#x27;</span>, <span class="string">&#x27;endswith&#x27;</span>, <span class="string">&#x27;expandtabs&#x27;</span>, <span class="string">&#x27;find&#x27;</span>, <span class="string">&#x27;format&#x27;</span>, <span class="string">&#x27;format_map&#x27;</span>, <span class="string">&#x27;index&#x27;</span>, <span class="string">&#x27;isalnum&#x27;</span>, <span class="string">&#x27;isalpha&#x27;</span>, <span class="string">&#x27;isdecimal&#x27;</span>, <span class="string">&#x27;isdigit&#x27;</span>, <span class="string">&#x27;isidentifier&#x27;</span>, <span class="string">&#x27;islower&#x27;</span>, <span class="string">&#x27;isnumeric&#x27;</span>, <span class="string">&#x27;isprintable&#x27;</span>, <span class="string">&#x27;isspace&#x27;</span>, <span class="string">&#x27;istitle&#x27;</span>, <span class="string">&#x27;isupper&#x27;</span>, <span class="string">&#x27;join&#x27;</span>, <span class="string">&#x27;ljust&#x27;</span>, <span class="string">&#x27;lower&#x27;</span>, <span class="string">&#x27;lstrip&#x27;</span>, <span class="string">&#x27;maketrans&#x27;</span>, <span class="string">&#x27;partition&#x27;</span>, <span class="string">&#x27;replace&#x27;</span>, <span class="string">&#x27;rfind&#x27;</span>, <span class="string">&#x27;rindex&#x27;</span>, <span class="string">&#x27;rjust&#x27;</span>, <span class="string">&#x27;rpartition&#x27;</span>, <span class="string">&#x27;rsplit&#x27;</span>, <span class="string">&#x27;rstrip&#x27;</span>, <span class="string">&#x27;split&#x27;</span>, <span class="string">&#x27;splitlines&#x27;</span>, <span class="string">&#x27;startswith&#x27;</span>, <span class="string">&#x27;strip&#x27;</span>, <span class="string">&#x27;swapcase&#x27;</span>, <span class="string">&#x27;title&#x27;</span>, <span class="string">&#x27;translate&#x27;</span>, <span class="string">&#x27;upper&#x27;</span>, <span class="string">&#x27;zfill&#x27;</span>][<span class="string">&#x27;__add__&#x27;</span>, <span class="string">&#x27;__class__&#x27;</span>, <span class="string">&#x27;__contains__&#x27;</span>, <span class="string">&#x27;__delattr__&#x27;</span>, <span class="string">&#x27;__delitem__&#x27;</span>, <span class="string">&#x27;__dir__&#x27;</span>, <span class="string">&#x27;__doc__&#x27;</span>, <span class="string">&#x27;__eq__&#x27;</span>, <span class="string">&#x27;__format__&#x27;</span>, <span class="string">&#x27;__ge__&#x27;</span>, <span class="string">&#x27;__getattribute__&#x27;</span>, <span class="string">&#x27;__getitem__&#x27;</span>, <span class="string">&#x27;__gt__&#x27;</span>, <span class="string">&#x27;__hash__&#x27;</span>, <span class="string">&#x27;__iadd__&#x27;</span>, <span class="string">&#x27;__imul__&#x27;</span>, <span class="string">&#x27;__init__&#x27;</span>, <span class="string">&#x27;__init_subclass__&#x27;</span>, <span class="string">&#x27;__iter__&#x27;</span>, <span class="string">&#x27;__le__&#x27;</span>, <span class="string">&#x27;__len__&#x27;</span>, <span class="string">&#x27;__lt__&#x27;</span>, <span class="string">&#x27;__mul__&#x27;</span>, <span class="string">&#x27;__ne__&#x27;</span>, <span class="string">&#x27;__new__&#x27;</span>, <span class="string">&#x27;__reduce__&#x27;</span>, <span class="string">&#x27;__reduce_ex__&#x27;</span>, <span class="string">&#x27;__repr__&#x27;</span>, <span class="string">&#x27;__reversed__&#x27;</span>, <span class="string">&#x27;__rmul__&#x27;</span>, <span class="string">&#x27;__setattr__&#x27;</span>, <span class="string">&#x27;__setitem__&#x27;</span>, <span class="string">&#x27;__sizeof__&#x27;</span>, <span class="string">&#x27;__str__&#x27;</span>, <span class="string">&#x27;__subclasshook__&#x27;</span>, <span class="string">&#x27;append&#x27;</span>, <span class="string">&#x27;clear&#x27;</span>, <span class="string">&#x27;copy&#x27;</span>, <span class="string">&#x27;count&#x27;</span>, <span class="string">&#x27;extend&#x27;</span>, <span class="string">&#x27;index&#x27;</span>, <span class="string">&#x27;insert&#x27;</span>, <span class="string">&#x27;pop&#x27;</span>, <span class="string">&#x27;remove&#x27;</span>, <span class="string">&#x27;reverse&#x27;</span>, <span class="string">&#x27;sort&#x27;</span>]</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>通过isinstance()函数</li>
-</ul>
-<p>如果返回值为True,则该对象为可迭代对象，否则不是。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">from collections import Iterable</span><br><span class="line"></span><br><span class="line">lst = [11, 22, 33]</span><br><span class="line"></span><br><span class="line">print(isinstance(lst, Iterable))  # True</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="迭代器-1"><a href="#迭代器-1" class="headerlink" title="迭代器"></a>迭代器</h3><ul>
-<li>迭代器本身是可迭代的，所以类中有__iter__方法。</li>
-</ul>
-<h4 id="判断一个对象是否为迭代器"><a href="#判断一个对象是否为迭代器" class="headerlink" title="判断一个对象是否为迭代器"></a>判断一个对象是否为迭代器</h4><ul>
-<li>通过dir函数来查看类中定义的方法中是否有__next__方法</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lst = [11, 22, 33]</span><br><span class="line">ret = lst.__iter__()</span><br><span class="line"></span><br><span class="line">print(&quot;__next__&quot; in dir(ret))  # True</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>通过isinstance()函数</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">from collections import Iterator</span><br><span class="line"></span><br><span class="line">lst = [11, 22, 33]</span><br><span class="line">ret = lst.__iter__()</span><br><span class="line"></span><br><span class="line">print(isinstance(ret, Iterator))  # True</span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="迭代器取值"><a href="#迭代器取值" class="headerlink" title="迭代器取值"></a>迭代器取值</h4><p>  通过__next__获取迭代器数据</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lst = [11, 22, 33]</span><br><span class="line">ret = lst.__iter__()</span><br><span class="line"></span><br><span class="line">print(ret.__next__())</span><br><span class="line">print(ret.__next__())</span><br><span class="line">print(ret.__next__())</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">结果：</span><br><span class="line">11</span><br><span class="line">22</span><br><span class="line">33</span><br></pre></td></tr></table></figure>
-
-<p>  如果获取元素个数超过迭代器元素的长度，则报错StopIteration</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lst = [11, 22, 33]</span><br><span class="line">ret = lst.__iter__()</span><br><span class="line"></span><br><span class="line">print(ret.__next__())</span><br><span class="line">print(ret.__next__())</span><br><span class="line">print(ret.__next__())</span><br><span class="line">print(ret.__next__())  # StopIteration</span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="for循环内部代码"><a href="#for循环内部代码" class="headerlink" title="for循环内部代码"></a>for循环内部代码</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ret = lst.__iter__()</span><br><span class="line"></span><br><span class="line">while 1:</span><br><span class="line">    try:</span><br><span class="line">        el = ret.__next__()</span><br><span class="line">        print(el)</span><br><span class="line">    except StopIteration:</span><br><span class="line">        break</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="可迭代对象-—–-迭代器"><a href="#可迭代对象-—–-迭代器" class="headerlink" title="可迭代对象 —–&gt; 迭代器"></a>可迭代对象 —–&gt; 迭代器</h3><ul>
-<li>可迭代对象不一定是迭代器，但可通过__iter__方法转换成迭代器</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lst = [11, 22, 33]</span><br><span class="line">ret = lst.__iter__()</span><br><span class="line"></span><br><span class="line">print(&quot;__next__&quot; in dir(ret))  # True</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>Python</category>
-      </categories>
-      <tags>
-        <tag>Python</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>递归函数</title>
-    <url>/2019/03/16/python-%E9%80%92%E5%BD%92%E5%87%BD%E6%95%B0/</url>
-    <content><![CDATA[<h2 id="递归函数"><a href="#递归函数" class="headerlink" title="递归函数"></a>递归函数</h2><h3 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h3><ul>
-<li>在函数中调用函数本身，就是递归</li>
-<li>在python中递归的深度最大为1000，但实际达不到1000</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">def func():</span><br><span class="line">    print(&quot;-----func-----&quot;)</span><br><span class="line">    func()</span><br><span class="line"></span><br><span class="line">func()</span><br></pre></td></tr></table></figure>
-
-<h3 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h3><ul>
-<li>可以使用递归来遍历各种树形结构，比如文件夹系统：可以使用递归来遍历该文件夹中的所有文件</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">import os</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def func(filepath, n):</span><br><span class="line">    files_list = os.listdir(filepath)  # 获取当前文件夹中的所有文件</span><br><span class="line">    for file in files_list:</span><br><span class="line">        file_d = os.path.join(filepath, file)  # 拼接文件的真实路径</span><br><span class="line">        if os.path.isdir(file_d):  # 递归入口  判断文件是否为文件夹</span><br><span class="line">            print(&quot;\t&quot;*n, file)</span><br><span class="line">            func(file_d, n+1)  #</span><br><span class="line">        else:</span><br><span class="line">            print(&quot;\t&quot;*n, file)  # 递归出口</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="二分查找"><a href="#二分查找" class="headerlink" title="二分查找"></a>二分查找</h2><ul>
-<li>优点：每次能够除掉一半的数据，查找效率高</li>
-<li>要求：查找的序列必须是有序序列</li>
-</ul>
-<h3 id="非递归算法"><a href="#非递归算法" class="headerlink" title="非递归算法"></a>非递归算法</h3><h4 id="利用索引"><a href="#利用索引" class="headerlink" title="利用索引"></a>利用索引</h4><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 让用户输入一个数n. 判断这个n是否出现在lst中</span></span><br><span class="line">lst = [<span class="number">4</span>, <span class="number">56</span>, <span class="number">178</span>, <span class="number">253</span>, <span class="number">625</span>, <span class="number">1475</span>, <span class="number">2580</span>, <span class="number">3574</span>, <span class="number">15963</span>]</span><br><span class="line"></span><br><span class="line">left = <span class="number">0</span></span><br><span class="line">right = <span class="built_in">len</span>(lst) - <span class="number">1</span></span><br><span class="line"></span><br><span class="line">num = <span class="built_in">int</span>(<span class="built_in">input</span>(<span class="string">&quot;请输入一个数n：&quot;</span>))</span><br><span class="line"><span class="keyword">while</span> left &lt;= right:</span><br><span class="line">    mid = (left + right) // <span class="number">2</span></span><br><span class="line">    <span class="keyword">if</span> lst[mid] &gt; num:</span><br><span class="line">        right = mid - <span class="number">1</span></span><br><span class="line">    <span class="keyword">elif</span> lst[mid] &lt; num:</span><br><span class="line">        left = mid + <span class="number">1</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;这个数在lst中&quot;</span>)</span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;这个数不在lst中&quot;</span>)</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="递归算法"><a href="#递归算法" class="headerlink" title="递归算法"></a>递归算法</h3><h4 id="利用索引-1"><a href="#利用索引-1" class="headerlink" title="利用索引"></a>利用索引</h4><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 让用户输入一个数n. 判断这个n是否出现在lst中</span></span><br><span class="line">lst = [<span class="number">4</span>, <span class="number">56</span>, <span class="number">178</span>, <span class="number">253</span>, <span class="number">625</span>, <span class="number">1475</span>, <span class="number">2580</span>, <span class="number">3574</span>, <span class="number">15963</span>]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">binary_search</span>(<span class="params">lst, num, left, right</span>):</span><br><span class="line">    <span class="keyword">if</span> left &gt; right:</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">    mid = (left + right) // <span class="number">2</span></span><br><span class="line">    <span class="keyword">if</span> lst[mid] &gt; num:</span><br><span class="line">        right = mid - <span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span> binary_search(lst, num, left, right)</span><br><span class="line">    <span class="keyword">elif</span> lst[mid] &lt; num:</span><br><span class="line">        left = mid + <span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span> binary_search(lst, num, left, right)</span><br><span class="line">    <span class="keyword">else</span>:<span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line"></span><br><span class="line">num = <span class="built_in">int</span>(<span class="built_in">input</span>(<span class="string">&quot;请输入一个数n：&quot;</span>))</span><br><span class="line">ret = binary_search(lst, num, <span class="number">0</span>, <span class="built_in">len</span>(lst)-<span class="number">1</span>)</span><br><span class="line"><span class="built_in">print</span>(ret)</span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="切换列表"><a href="#切换列表" class="headerlink" title="切换列表"></a>切换列表</h4><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 让用户输入一个数n. 判断这个n是否出现在lst中</span></span><br><span class="line">lst = [<span class="number">4</span>, <span class="number">56</span>, <span class="number">178</span>, <span class="number">253</span>, <span class="number">625</span>, <span class="number">1475</span>, <span class="number">2580</span>, <span class="number">3574</span>, <span class="number">15963</span>]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">binary_search</span>(<span class="params">lst, num</span>):</span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">len</span>(lst) == <span class="number">0</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">    mid = (<span class="built_in">len</span>(lst) - <span class="number">1</span>) // <span class="number">2</span></span><br><span class="line">    <span class="keyword">if</span> num &gt; lst[mid]:</span><br><span class="line">        <span class="keyword">return</span> binary_search(lst[mid+<span class="number">1</span>:], num)</span><br><span class="line">    <span class="keyword">elif</span> num &lt; lst[mid]:</span><br><span class="line">        <span class="keyword">return</span> binary_search(lst[:mid], num)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;这个数在lst中&quot;</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">num = <span class="built_in">int</span>(<span class="built_in">input</span>(<span class="string">&quot;请输入一个数n：&quot;</span>))</span><br><span class="line"></span><br><span class="line">ret = binary_search(lst, num)</span><br><span class="line"><span class="built_in">print</span>(ret)</span><br></pre></td></tr></table></figure>
-
 ]]></content>
       <categories>
         <category>Python</category>
@@ -7193,426 +7193,6 @@
 <p>绝大多数系统错误都可以通过单用户模式进行修复，理论上是只要能够进入单用户模式，那么系统错误就可以被单用户模式修复。当然意判断系统到底是哪里出现了问题，是需要不断地经验积累。</p>
 </li>
 </ul>
-]]></content>
-      <categories>
-        <category>Linux</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>服务管理</title>
-    <url>/2025/03/05/%E6%9C%8D%E5%8A%A1%E7%AE%A1%E7%90%86/</url>
-    <content><![CDATA[<h2 id="服务的简介与分类"><a href="#服务的简介与分类" class="headerlink" title="服务的简介与分类"></a>服务的简介与分类</h2><h3 id="服务的分类"><a href="#服务的分类" class="headerlink" title="服务的分类"></a>服务的分类</h3><p>Linux服务：</p>
-<ul>
-<li><p>RPM包默认安装的服务</p>
-<ul>
-<li><p>独立的服务</p>
-<p>就是独立启动的意思，这类型的服务可以自行启动，而不用依赖其他的管理服务。不依赖其他管理服务，那么当客户端请求访问时，独立的服务响应请求更迅速。Linux中目前大多数服务都是独立的服务，比如apache服务，FTP服务，Samba服务等。</p>
-</li>
-<li><p>基于xinetd服务</p>
-<p>这种服务就不能独立启动了，而是要依靠管理服务来调用这种服务。这个负责管理的服务就是xinetd服务，xinetd服务是系统的超级守护进程。xinetd服务的作用就是管理不能独立启动的服务，当有客户端请求时，先请求xinetd服务，由xinetd服务云唤醒相对应的服务。当客户端请求结束后，被唤醒的服务会关闭并释放资源。这样做的好处是只需要持续启动xinetd服务，而其他基于xinetd的服务只有在需要时才启动，不会占用过多的服务器资源。但是这种服务由于在有客户端靖求时才会被唤醒，所以响应时间相对较慢。</p>
-</li>
-</ul>
-</li>
-<li><p>源码包安装的服务</p>
-</li>
-</ul>
-<h3 id="查询已经安装的服务"><a href="#查询已经安装的服务" class="headerlink" title="查询已经安装的服务"></a>查询已经安装的服务</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# chkconfig --list [服务名]</span><br><span class="line">选项：</span><br><span class="line">  --list: 列出所有RPM默认安装服务的自启动状态</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="RPM包默认安装的服务管理"><a href="#RPM包默认安装的服务管理" class="headerlink" title="RPM包默认安装的服务管理"></a>RPM包默认安装的服务管理</h2><h3 id="独立服务管理"><a href="#独立服务管理" class="headerlink" title="独立服务管理"></a>独立服务管理</h3><h4 id="独立服务的启动管理"><a href="#独立服务的启动管理" class="headerlink" title="独立服务的启动管理"></a>独立服务的启动管理</h4><ul>
-<li><p>使用&#x2F;etc&#x2F;init.d&#x2F;目录中的启动脚本启动服务</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# /etc/init.d/httpd start</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>使用service命令来启动独立的服务</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# service [独立服务名] start|stop|restart|...</span><br></pre></td></tr></table></figure></li>
-</ul>
-<h4 id="独立服务的自启动管理"><a href="#独立服务的自启动管理" class="headerlink" title="独立服务的自启动管理"></a>独立服务的自启动管理</h4><ul>
-<li><p>使用chkconfig服务自启动管理命令</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# chkconfig [--level 运行级别] [独立服务名] [on|off]</span><br><span class="line">选项：</span><br><span class="line">  --level:    设定在哪个运行级别中开机自启动(on)，或是关闭自启动(off)</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# chkconfig --level 2345 httpd on</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>修改&#x2F;etc&#x2F;rc.d&#x2F;rc.local文件，设置服务自启动</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# vim /etc/rc.d/rc.local</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/bash</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"></span></span><br><span class="line"><span class="language-bash"><span class="comment"># This script will be executed *after* all the other init scripts.</span></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">You can put your own initialization stuff <span class="keyword">in</span> here <span class="keyword">if</span> you don<span class="string">&#x27;t</span></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash"><span class="string">want to do the full Sys V style init stuff.</span></span></span><br><span class="line"></span><br><span class="line">touch /var/lock/subsys/local</span><br><span class="line">/etc/rc.d/init.d/httpd start</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>使用ntsysv命令管理自启动</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# ntsysv [--level 运行级别]</span><br><span class="line">选项：</span><br><span class="line">  --level 运行级别:  可以指定设定自启动的运行级别</span><br></pre></td></tr></table></figure>
-
-<p>这个命令的操作是这样的：</p>
-<ul>
-<li>上下键：在不同服务之间移动</li>
-<li>空格键：选定或取消服务的自启动，就是在服务之前是否打入“*”</li>
-<li>tab键：在不同项目间切换</li>
-<li>F1键：显示服务的说明</li>
-</ul>
-</li>
-</ul>
-<h3 id="基于xinetd服务的管理"><a href="#基于xinetd服务的管理" class="headerlink" title="基于xinetd服务的管理"></a>基于xinetd服务的管理</h3><h4 id="基于xinetd服务的启动"><a href="#基于xinetd服务的启动" class="headerlink" title="基于xinetd服务的启动"></a>基于xinetd服务的启动</h4><p>以telnet服务为例，telnet服务是用来进行系统远程管理的，端口是23。不过需要注意的是telnet的远程管理数据在网络中是明文传输，非常不安全。在生产服务器上不建议启动telnet服务。在生产服务器上，远程管理使用的是ssh协议，ssh是加密的，更加安全。</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# vim /etc/xinetd.d/telnet</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">default: on</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">description: The telnet server serves telnet sessions: it uses \</span></span><br><span class="line"><span class="language-bash"><span class="comment">#       unencrypted username/password pairs for authentication.</span></span></span><br><span class="line">service telnet                                     # 服务的名称为telnet</span><br><span class="line">&#123;</span><br><span class="line">	flags				= REUSE                    # 标志为REUSE，设定TCP/IP socket可重用</span><br><span class="line">	socket_type         = stream                   # 使用TCP协议数据包</span><br><span class="line">	wait				= no					   # 允许多个连接同时连接</span><br><span class="line">	user				= root					   # 启动服务的用户为root</span><br><span class="line">	server				= /usr/sbin/in.telnetd     # 服务的启动程序</span><br><span class="line">	log_on_failure		+= USERID                  # 登录失败后，记录用户的ID</span><br><span class="line">	disable				= yes					   # 服务不启动</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# vim /etc/xinetd.d/telnet</span><br><span class="line">service telnet</span><br><span class="line">&#123;</span><br><span class="line">	...</span><br><span class="line">	disable				= no</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">[root@localhost ~]# service xinetd restart</span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="基于xinetd服务的自启动"><a href="#基于xinetd服务的自启动" class="headerlink" title="基于xinetd服务的自启动"></a>基于xinetd服务的自启动</h4><ul>
-<li><p>使用chkconfig命令管理自启动</p>
-</li>
-<li><p>使用ntsysv命令管理自启动</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# chkconfig 服务名 on|off</span><br></pre></td></tr></table></figure></li>
-</ul>
-<h2 id="源码包安装的服务管理"><a href="#源码包安装的服务管理" class="headerlink" title="源码包安装的服务管理"></a>源码包安装的服务管理</h2><h3 id="源码包服务的启动管理"><a href="#源码包服务的启动管理" class="headerlink" title="源码包服务的启动管理"></a>源码包服务的启动管理</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# /usr/local/apache2/bin/apachectl start|stop|restart|...</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="源码包服务的自启动管理"><a href="#源码包服务的自启动管理" class="headerlink" title="源码包服务的自启动管理"></a>源码包服务的自启动管理</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# vim /etc/rc.d/rc.local</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/bash</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"></span></span><br><span class="line"><span class="language-bash"><span class="comment"># This script will be executed *after* all the other init scripts.</span></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">You can put your own initialization stuff <span class="keyword">in</span> here <span class="keyword">if</span> you don<span class="string">&#x27;t</span></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash"><span class="string">want to do the full Sys V style init stuff.</span></span></span><br><span class="line"></span><br><span class="line">touch /var/lock/subsys/local</span><br><span class="line">/usr/local/apache2/bin/apachectl start</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="Linux中常见服务的作用"><a href="#Linux中常见服务的作用" class="headerlink" title="Linux中常见服务的作用"></a>Linux中常见服务的作用</h2><table>
-<thead>
-<tr>
-<th>服务名称</th>
-<th>功能简介</th>
-<th>建议</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>acpid</td>
-<td>电源管理接口。如果是笔记本用户建立开启，可以监听内核层的相关电源事件</td>
-<td>on</td>
-</tr>
-<tr>
-<td>anacron</td>
-<td>系统的定时任务程序。cron的一个子系统，如果定时任务错过了执行时间，可以通过anacron继续唤醒执行。</td>
-<td>off</td>
-</tr>
-<tr>
-<td>alsasound</td>
-<td>Alsa声卡驱动。如果使用alsa声卡，开启</td>
-<td>off</td>
-</tr>
-<tr>
-<td>apmd</td>
-<td>电源管理模块。如果支持acpid，就不需要apmd，可以关闭</td>
-<td>off</td>
-</tr>
-<tr>
-<td>atd</td>
-<td>指定系统在特定时间执行某个任务，只能执行一次。如果需要则开启，但我们一般使用crond来进行循环定时任务。</td>
-<td>off</td>
-</tr>
-<tr>
-<td>auditd</td>
-<td>审核子系统。如果开启了此服务，SELinux的审核信息会写入&#x2F;var&#x2F;log&#x2F;audit&#x2F;audit.log文件，如果不开启，审核信息会记录在syslog中</td>
-<td>on</td>
-</tr>
-<tr>
-<td>autofs</td>
-<td>让服务器可以自动挂载网络中的其他服务器的共享数据，一般用来自动挂载NFS服务。如果没有NFS服务建立关闭</td>
-<td>off</td>
-</tr>
-<tr>
-<td>avahi-daemon</td>
-<td>Avahi是zeroconf协议的实现。它可以在没有DNS服务的局域网里发现基于zeroconf协议的设备和服务。除非有兼容设备或使用zeroconf协议，否则关闭</td>
-<td>off</td>
-</tr>
-<tr>
-<td>bluetooth</td>
-<td>蓝牙设备支持。一般不会在服务器上启用蓝牙设备。</td>
-<td>off</td>
-</tr>
-<tr>
-<td>capi</td>
-<td>仅对使用ISND设备的用户有用。</td>
-<td>off</td>
-</tr>
-<tr>
-<td>chargen-dgram</td>
-<td>使用UDP协议的chargen server。主要功能是提供类似远程打字的功能。</td>
-<td>off</td>
-</tr>
-<tr>
-<td>chargen-stream</td>
-<td>同上</td>
-<td>off</td>
-</tr>
-<tr>
-<td>cpuspeed</td>
-<td>可以用来调整CPU的频率。当闲置时可以自动降低CPU频率来节省电量</td>
-<td>on</td>
-</tr>
-<tr>
-<td>crond</td>
-<td>系统的定时任务，一般的Linux服务器都需要定时任务帮助系统维护</td>
-<td>on</td>
-</tr>
-<tr>
-<td>cvs</td>
-<td>一个版本控制系统</td>
-<td>off</td>
-</tr>
-<tr>
-<td>daytime-dgram</td>
-<td>daytime使用TCP协议的Daytime守护进程，该协议为客户机实现从远程服务器获取日期和时间的功能。</td>
-<td>off</td>
-</tr>
-<tr>
-<td>daytime-stream</td>
-<td>同上</td>
-<td>off</td>
-</tr>
-<tr>
-<td>dovecot</td>
-<td>邮件服务中POP3&#x2F;IMAP服务的守护进程。主要用来接收信件，如果启动了邮件服务则开启，否则关闭</td>
-<td>off</td>
-</tr>
-<tr>
-<td>echo-dgram</td>
-<td>服务器回显客户服务的进程。</td>
-<td>off</td>
-</tr>
-<tr>
-<td>echo-stream</td>
-<td>同上。</td>
-<td>off</td>
-</tr>
-<tr>
-<td>firstboot</td>
-<td>系统安装完成之后，有个欢迎界面，需要对系统进程初始设定，就是这个进程的作用。既然不是第一次启动，可以关闭</td>
-<td>off</td>
-</tr>
-<tr>
-<td>gpm</td>
-<td>在字符终端(tty1-tty6)中可以使用鼠标复制和粘贴。就是这个服务的功能。</td>
-<td>on</td>
-</tr>
-<tr>
-<td>haldaemon</td>
-<td>检测盒支持USB设备。如果是服务器可以关闭，个人建议关闭</td>
-<td>off</td>
-</tr>
-<tr>
-<td>hidd</td>
-<td>蓝牙鼠标、键盘等蓝牙设备检测。必须启动bluetooth服务。</td>
-<td>off</td>
-</tr>
-<tr>
-<td>hplip</td>
-<td>HP打印机支持，如果没有HP打印机则关闭</td>
-<td>off</td>
-</tr>
-<tr>
-<td>httpd</td>
-<td>apache服务的守护进程。如果需要启动apache，则开启</td>
-<td>on</td>
-</tr>
-<tr>
-<td>ip6tables</td>
-<td>IPv6防火墙，目前IPv6协议并没有使用，可以关闭</td>
-<td>off</td>
-</tr>
-<tr>
-<td>iptables</td>
-<td>防火墙功能，Linux中防火墙是内核支持功能，这是服务器的主要防护手段，必须开启</td>
-<td>on</td>
-</tr>
-<tr>
-<td>irda</td>
-<td>IrDA提供红外线设备(笔记本、PDA’s，手机，计算器等等)间的通讯支持。</td>
-<td>off</td>
-</tr>
-<tr>
-<td>irqbalance</td>
-<td>支持多核处理器，让CPU可以自动分配系统中断(IRQ)，提高系统性能。</td>
-<td>on</td>
-</tr>
-<tr>
-<td>isdn</td>
-<td>使用ISDN设备连接网络。目前主流的联网方式是光纤接入和ADSL，ISDN已经非常少见</td>
-<td>off</td>
-</tr>
-<tr>
-<td>kudzu</td>
-<td>该服务可以在开机时进行硬件检测，并会调用相关的设置软件。</td>
-<td>off</td>
-</tr>
-<tr>
-<td>lvm2-monitor</td>
-<td>该服务可以让系统支持LVM逻辑卷组，如果分区采用的是LVM方式，那么应该开启</td>
-<td>on</td>
-</tr>
-<tr>
-<td>mcstrans</td>
-<td>SELinux的支持服务</td>
-<td>on</td>
-</tr>
-<tr>
-<td>mdmonitor</td>
-<td>该服务用来监测Software RAID或LVM的信息。不是必须服务</td>
-<td>off</td>
-</tr>
-<tr>
-<td>mdmpd</td>
-<td>该服务用来监测Multi-Path设备</td>
-<td>off</td>
-</tr>
-<tr>
-<td>messagebus</td>
-<td>这是Linuxr IPC（Interprocess Communication, 进程间通讯）服务，用来在各个软件中交换信息</td>
-<td>off</td>
-</tr>
-<tr>
-<td>microcode_ctl</td>
-<td>Intel系列的CPU可以通过这个服务支持额外的微指令集。</td>
-<td>off</td>
-</tr>
-<tr>
-<td>mysqld</td>
-<td>mysql数据库服务器。如果需要就开启，</td>
-<td>off</td>
-</tr>
-<tr>
-<td>named</td>
-<td>DNS服务的守护进程，用来进行域名解析。如果是DNS服务器则开启</td>
-<td>off</td>
-</tr>
-<tr>
-<td>netfs</td>
-<td>该服务用于在系统启动时自动挂载网络中的共享文件空间，比如：NFS, Samba等。需要则开启</td>
-<td>off</td>
-</tr>
-<tr>
-<td>network</td>
-<td>提供网络设置功能。通过这个服务来管理网络</td>
-<td>on</td>
-</tr>
-<tr>
-<td>nfs</td>
-<td>NFS（Network File System）服务，Linux与Linux之间的文件共享服务。需要就开启</td>
-<td>off</td>
-</tr>
-<tr>
-<td>nfslock</td>
-<td>在Linux中如果使用了NFS服务，为了避免同一个文件被不同的用户编辑，所以有了这个锁服务。有NFS是开启</td>
-<td>off</td>
-</tr>
-<tr>
-<td>ntpd</td>
-<td>该服务可以通过互联网自动更新系统时间，使系统时间永远都准确。需要则开启</td>
-<td>off</td>
-</tr>
-<tr>
-<td>pcscd</td>
-<td>智能卡检测服务</td>
-<td>off</td>
-</tr>
-<tr>
-<td>portmap</td>
-<td>用在远程过程调用（RPC）的服务，如果没有任何RPC服务时，可以关闭，主要是NFS和NIS服务需要</td>
-<td>off</td>
-</tr>
-<tr>
-<td>psacct</td>
-<td>该守护进程支持几个监控进程活动的工具。</td>
-<td>off</td>
-</tr>
-<tr>
-<td>rdisc</td>
-<td>客户端ICMP路由协议</td>
-<td>off</td>
-</tr>
-<tr>
-<td>readahead_early</td>
-<td>在系统开机的时候，先将某些进程加载如内存整理，可以加快一点启动速度。</td>
-<td>off</td>
-</tr>
-<tr>
-<td>readahead_later</td>
-<td>同上</td>
-<td>off</td>
-</tr>
-<tr>
-<td>restorecond</td>
-<td>用于给SELinux监测和重新加载正确的文件上下文。如果开启SELinux则需要开启。</td>
-<td>off</td>
-</tr>
-<tr>
-<td>rpcgssd</td>
-<td>与NFS有关的客户端功能</td>
-<td>off</td>
-</tr>
-<tr>
-<td>rpcidmapd</td>
-<td>同上</td>
-<td>off</td>
-</tr>
-<tr>
-<td>rsync</td>
-<td>远程数据备份守护进程</td>
-<td>off</td>
-</tr>
-<tr>
-<td>sendmail</td>
-<td>sendmail邮件服务的守护进程。如果有邮件服务就开启</td>
-<td>off</td>
-</tr>
-<tr>
-<td>setroubleshoot</td>
-<td>该服务用于将SELinux相关信息记录在日志&#x2F;var&#x2F;log&#x2F;messages中</td>
-<td>on</td>
-</tr>
-<tr>
-<td>smartd</td>
-<td>该服务用于自动检则硬盘状态</td>
-<td>on</td>
-</tr>
-<tr>
-<td>smb</td>
-<td>网络服务samba守护进程。可以让Linux和Windows之间共享数据。如果需要则开启</td>
-<td>off</td>
-</tr>
-<tr>
-<td>squid</td>
-<td>代理服务的守护进程。</td>
-<td>off</td>
-</tr>
-<tr>
-<td>sshd</td>
-<td>ssh加密远程登录管理的服务。</td>
-<td>on</td>
-</tr>
-<tr>
-<td>syslog</td>
-<td>日志的守护进程。</td>
-<td>on</td>
-</tr>
-<tr>
-<td>vsftpd</td>
-<td>vsftpd服务的守护进程。如果需要FTP服务则开启</td>
-<td>off</td>
-</tr>
-<tr>
-<td>xfs</td>
-<td>这个是X Window的字体守护进程。为图形界面提供字体服务，如果不启动图形界面就不用开启</td>
-<td>off</td>
-</tr>
-<tr>
-<td>xinetd</td>
-<td>超级守护进程。如果有依赖xinetd的服务就必须开启</td>
-<td>off</td>
-</tr>
-<tr>
-<td>ypbind</td>
-<td>为NIS(网络信息系统)客户机激活ypbind服务进程。</td>
-<td>off</td>
-</tr>
-<tr>
-<td>yum-updatesd</td>
-<td>yum的在线升级服务</td>
-<td>off</td>
-</tr>
-</tbody></table>
 ]]></content>
       <categories>
         <category>Linux</category>
@@ -8296,7 +7876,7 @@
 </tr>
 <tr>
 <td>mail address</td>
-<td>当日志轮替时，输出内容通过邮件发送到指定的邮件地址。如mail <a href="mailto:&#x61;&#97;&#x61;&#x40;&#49;&#54;&#x33;&#46;&#x63;&#x6f;&#x6d;">aaa@163.com</a></td>
+<td>当日志轮替时，输出内容通过邮件发送到指定的邮件地址。如mail <a href="mailto:&#x61;&#x61;&#97;&#x40;&#49;&#x36;&#51;&#46;&#99;&#111;&#109;">aaa@163.com</a></td>
 </tr>
 <tr>
 <td>missingok</td>
@@ -8354,6 +7934,603 @@
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# logrotate -vf /etc/logrotate.conf</span><br><span class="line">...</span><br><span class="line">rotating pattern: /var/log/wtmp  forced from command line (1 rotations)</span><br><span class="line">empty log files are rotated, only log files &gt;= 1048576 bytes are rotated, old logs are removed</span><br><span class="line">switching euid from 0 to 0 and egid from 0 to 4 (pid 40773)</span><br><span class="line">considering log /var/log/wtmp</span><br><span class="line">  Now: 2025-03-10 19:48</span><br><span class="line">  Last rotated at 2024-08-26 09:05</span><br><span class="line">  log needs rotating                                 # 日志需要轮替</span><br><span class="line">rotating log /var/log/wtmp, log-&gt;rotateCount is 1</span><br><span class="line">dateext suffix &#x27;-20250310&#x27;                           # 提取日期参数</span><br><span class="line">glob pattern &#x27;-[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]&#x27;</span><br><span class="line">renaming /var/log/wtmp.1 to /var/log/wtmp.2 (rotatecount 1, logstart 1, i 1), </span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">旧的日志被重命名</span></span><br><span class="line">renaming /var/log/wtmp to /var/log/wtmp.1</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">创建新日志文件</span></span><br><span class="line">creating new /var/log/wtmp mode = 0664 uid = 0 gid = 43</span><br><span class="line">removing old log /var/log/wtmp.2</span><br><span class="line">switching euid from 0 to 0 and egid from 4 to 0 (pid 40773)</span><br></pre></td></tr></table></figure>
 
 <p>logrotate命令使用“-f”选项之后，就不管日志是否已经符合了日志轮替条件，而强制把所有的日志都进行了轮替。</p>
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>服务管理</title>
+    <url>/2025/03/05/%E6%9C%8D%E5%8A%A1%E7%AE%A1%E7%90%86/</url>
+    <content><![CDATA[<h2 id="服务的简介与分类"><a href="#服务的简介与分类" class="headerlink" title="服务的简介与分类"></a>服务的简介与分类</h2><h3 id="服务的分类"><a href="#服务的分类" class="headerlink" title="服务的分类"></a>服务的分类</h3><p>Linux服务：</p>
+<ul>
+<li><p>RPM包默认安装的服务</p>
+<ul>
+<li><p>独立的服务</p>
+<p>就是独立启动的意思，这类型的服务可以自行启动，而不用依赖其他的管理服务。不依赖其他管理服务，那么当客户端请求访问时，独立的服务响应请求更迅速。Linux中目前大多数服务都是独立的服务，比如apache服务，FTP服务，Samba服务等。</p>
+</li>
+<li><p>基于xinetd服务</p>
+<p>这种服务就不能独立启动了，而是要依靠管理服务来调用这种服务。这个负责管理的服务就是xinetd服务，xinetd服务是系统的超级守护进程。xinetd服务的作用就是管理不能独立启动的服务，当有客户端请求时，先请求xinetd服务，由xinetd服务云唤醒相对应的服务。当客户端请求结束后，被唤醒的服务会关闭并释放资源。这样做的好处是只需要持续启动xinetd服务，而其他基于xinetd的服务只有在需要时才启动，不会占用过多的服务器资源。但是这种服务由于在有客户端靖求时才会被唤醒，所以响应时间相对较慢。</p>
+</li>
+</ul>
+</li>
+<li><p>源码包安装的服务</p>
+</li>
+</ul>
+<h3 id="查询已经安装的服务"><a href="#查询已经安装的服务" class="headerlink" title="查询已经安装的服务"></a>查询已经安装的服务</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# chkconfig --list [服务名]</span><br><span class="line">选项：</span><br><span class="line">  --list: 列出所有RPM默认安装服务的自启动状态</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="RPM包默认安装的服务管理"><a href="#RPM包默认安装的服务管理" class="headerlink" title="RPM包默认安装的服务管理"></a>RPM包默认安装的服务管理</h2><h3 id="独立服务管理"><a href="#独立服务管理" class="headerlink" title="独立服务管理"></a>独立服务管理</h3><h4 id="独立服务的启动管理"><a href="#独立服务的启动管理" class="headerlink" title="独立服务的启动管理"></a>独立服务的启动管理</h4><ul>
+<li><p>使用&#x2F;etc&#x2F;init.d&#x2F;目录中的启动脚本启动服务</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# /etc/init.d/httpd start</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用service命令来启动独立的服务</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# service [独立服务名] start|stop|restart|...</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="独立服务的自启动管理"><a href="#独立服务的自启动管理" class="headerlink" title="独立服务的自启动管理"></a>独立服务的自启动管理</h4><ul>
+<li><p>使用chkconfig服务自启动管理命令</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# chkconfig [--level 运行级别] [独立服务名] [on|off]</span><br><span class="line">选项：</span><br><span class="line">  --level:    设定在哪个运行级别中开机自启动(on)，或是关闭自启动(off)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# chkconfig --level 2345 httpd on</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>修改&#x2F;etc&#x2F;rc.d&#x2F;rc.local文件，设置服务自启动</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# vim /etc/rc.d/rc.local</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/bash</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"></span></span><br><span class="line"><span class="language-bash"><span class="comment"># This script will be executed *after* all the other init scripts.</span></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">You can put your own initialization stuff <span class="keyword">in</span> here <span class="keyword">if</span> you don<span class="string">&#x27;t</span></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash"><span class="string">want to do the full Sys V style init stuff.</span></span></span><br><span class="line"></span><br><span class="line">touch /var/lock/subsys/local</span><br><span class="line">/etc/rc.d/init.d/httpd start</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用ntsysv命令管理自启动</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# ntsysv [--level 运行级别]</span><br><span class="line">选项：</span><br><span class="line">  --level 运行级别:  可以指定设定自启动的运行级别</span><br></pre></td></tr></table></figure>
+
+<p>这个命令的操作是这样的：</p>
+<ul>
+<li>上下键：在不同服务之间移动</li>
+<li>空格键：选定或取消服务的自启动，就是在服务之前是否打入“*”</li>
+<li>tab键：在不同项目间切换</li>
+<li>F1键：显示服务的说明</li>
+</ul>
+</li>
+</ul>
+<h3 id="基于xinetd服务的管理"><a href="#基于xinetd服务的管理" class="headerlink" title="基于xinetd服务的管理"></a>基于xinetd服务的管理</h3><h4 id="基于xinetd服务的启动"><a href="#基于xinetd服务的启动" class="headerlink" title="基于xinetd服务的启动"></a>基于xinetd服务的启动</h4><p>以telnet服务为例，telnet服务是用来进行系统远程管理的，端口是23。不过需要注意的是telnet的远程管理数据在网络中是明文传输，非常不安全。在生产服务器上不建议启动telnet服务。在生产服务器上，远程管理使用的是ssh协议，ssh是加密的，更加安全。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# vim /etc/xinetd.d/telnet</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">default: on</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">description: The telnet server serves telnet sessions: it uses \</span></span><br><span class="line"><span class="language-bash"><span class="comment">#       unencrypted username/password pairs for authentication.</span></span></span><br><span class="line">service telnet                                     # 服务的名称为telnet</span><br><span class="line">&#123;</span><br><span class="line">	flags				= REUSE                    # 标志为REUSE，设定TCP/IP socket可重用</span><br><span class="line">	socket_type         = stream                   # 使用TCP协议数据包</span><br><span class="line">	wait				= no					   # 允许多个连接同时连接</span><br><span class="line">	user				= root					   # 启动服务的用户为root</span><br><span class="line">	server				= /usr/sbin/in.telnetd     # 服务的启动程序</span><br><span class="line">	log_on_failure		+= USERID                  # 登录失败后，记录用户的ID</span><br><span class="line">	disable				= yes					   # 服务不启动</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# vim /etc/xinetd.d/telnet</span><br><span class="line">service telnet</span><br><span class="line">&#123;</span><br><span class="line">	...</span><br><span class="line">	disable				= no</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">[root@localhost ~]# service xinetd restart</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="基于xinetd服务的自启动"><a href="#基于xinetd服务的自启动" class="headerlink" title="基于xinetd服务的自启动"></a>基于xinetd服务的自启动</h4><ul>
+<li><p>使用chkconfig命令管理自启动</p>
+</li>
+<li><p>使用ntsysv命令管理自启动</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# chkconfig 服务名 on|off</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="源码包安装的服务管理"><a href="#源码包安装的服务管理" class="headerlink" title="源码包安装的服务管理"></a>源码包安装的服务管理</h2><h3 id="源码包服务的启动管理"><a href="#源码包服务的启动管理" class="headerlink" title="源码包服务的启动管理"></a>源码包服务的启动管理</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# /usr/local/apache2/bin/apachectl start|stop|restart|...</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="源码包服务的自启动管理"><a href="#源码包服务的自启动管理" class="headerlink" title="源码包服务的自启动管理"></a>源码包服务的自启动管理</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# vim /etc/rc.d/rc.local</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/bash</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"></span></span><br><span class="line"><span class="language-bash"><span class="comment"># This script will be executed *after* all the other init scripts.</span></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">You can put your own initialization stuff <span class="keyword">in</span> here <span class="keyword">if</span> you don<span class="string">&#x27;t</span></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash"><span class="string">want to do the full Sys V style init stuff.</span></span></span><br><span class="line"></span><br><span class="line">touch /var/lock/subsys/local</span><br><span class="line">/usr/local/apache2/bin/apachectl start</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="Linux中常见服务的作用"><a href="#Linux中常见服务的作用" class="headerlink" title="Linux中常见服务的作用"></a>Linux中常见服务的作用</h2><table>
+<thead>
+<tr>
+<th>服务名称</th>
+<th>功能简介</th>
+<th>建议</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>acpid</td>
+<td>电源管理接口。如果是笔记本用户建立开启，可以监听内核层的相关电源事件</td>
+<td>on</td>
+</tr>
+<tr>
+<td>anacron</td>
+<td>系统的定时任务程序。cron的一个子系统，如果定时任务错过了执行时间，可以通过anacron继续唤醒执行。</td>
+<td>off</td>
+</tr>
+<tr>
+<td>alsasound</td>
+<td>Alsa声卡驱动。如果使用alsa声卡，开启</td>
+<td>off</td>
+</tr>
+<tr>
+<td>apmd</td>
+<td>电源管理模块。如果支持acpid，就不需要apmd，可以关闭</td>
+<td>off</td>
+</tr>
+<tr>
+<td>atd</td>
+<td>指定系统在特定时间执行某个任务，只能执行一次。如果需要则开启，但我们一般使用crond来进行循环定时任务。</td>
+<td>off</td>
+</tr>
+<tr>
+<td>auditd</td>
+<td>审核子系统。如果开启了此服务，SELinux的审核信息会写入&#x2F;var&#x2F;log&#x2F;audit&#x2F;audit.log文件，如果不开启，审核信息会记录在syslog中</td>
+<td>on</td>
+</tr>
+<tr>
+<td>autofs</td>
+<td>让服务器可以自动挂载网络中的其他服务器的共享数据，一般用来自动挂载NFS服务。如果没有NFS服务建立关闭</td>
+<td>off</td>
+</tr>
+<tr>
+<td>avahi-daemon</td>
+<td>Avahi是zeroconf协议的实现。它可以在没有DNS服务的局域网里发现基于zeroconf协议的设备和服务。除非有兼容设备或使用zeroconf协议，否则关闭</td>
+<td>off</td>
+</tr>
+<tr>
+<td>bluetooth</td>
+<td>蓝牙设备支持。一般不会在服务器上启用蓝牙设备。</td>
+<td>off</td>
+</tr>
+<tr>
+<td>capi</td>
+<td>仅对使用ISND设备的用户有用。</td>
+<td>off</td>
+</tr>
+<tr>
+<td>chargen-dgram</td>
+<td>使用UDP协议的chargen server。主要功能是提供类似远程打字的功能。</td>
+<td>off</td>
+</tr>
+<tr>
+<td>chargen-stream</td>
+<td>同上</td>
+<td>off</td>
+</tr>
+<tr>
+<td>cpuspeed</td>
+<td>可以用来调整CPU的频率。当闲置时可以自动降低CPU频率来节省电量</td>
+<td>on</td>
+</tr>
+<tr>
+<td>crond</td>
+<td>系统的定时任务，一般的Linux服务器都需要定时任务帮助系统维护</td>
+<td>on</td>
+</tr>
+<tr>
+<td>cvs</td>
+<td>一个版本控制系统</td>
+<td>off</td>
+</tr>
+<tr>
+<td>daytime-dgram</td>
+<td>daytime使用TCP协议的Daytime守护进程，该协议为客户机实现从远程服务器获取日期和时间的功能。</td>
+<td>off</td>
+</tr>
+<tr>
+<td>daytime-stream</td>
+<td>同上</td>
+<td>off</td>
+</tr>
+<tr>
+<td>dovecot</td>
+<td>邮件服务中POP3&#x2F;IMAP服务的守护进程。主要用来接收信件，如果启动了邮件服务则开启，否则关闭</td>
+<td>off</td>
+</tr>
+<tr>
+<td>echo-dgram</td>
+<td>服务器回显客户服务的进程。</td>
+<td>off</td>
+</tr>
+<tr>
+<td>echo-stream</td>
+<td>同上。</td>
+<td>off</td>
+</tr>
+<tr>
+<td>firstboot</td>
+<td>系统安装完成之后，有个欢迎界面，需要对系统进程初始设定，就是这个进程的作用。既然不是第一次启动，可以关闭</td>
+<td>off</td>
+</tr>
+<tr>
+<td>gpm</td>
+<td>在字符终端(tty1-tty6)中可以使用鼠标复制和粘贴。就是这个服务的功能。</td>
+<td>on</td>
+</tr>
+<tr>
+<td>haldaemon</td>
+<td>检测盒支持USB设备。如果是服务器可以关闭，个人建议关闭</td>
+<td>off</td>
+</tr>
+<tr>
+<td>hidd</td>
+<td>蓝牙鼠标、键盘等蓝牙设备检测。必须启动bluetooth服务。</td>
+<td>off</td>
+</tr>
+<tr>
+<td>hplip</td>
+<td>HP打印机支持，如果没有HP打印机则关闭</td>
+<td>off</td>
+</tr>
+<tr>
+<td>httpd</td>
+<td>apache服务的守护进程。如果需要启动apache，则开启</td>
+<td>on</td>
+</tr>
+<tr>
+<td>ip6tables</td>
+<td>IPv6防火墙，目前IPv6协议并没有使用，可以关闭</td>
+<td>off</td>
+</tr>
+<tr>
+<td>iptables</td>
+<td>防火墙功能，Linux中防火墙是内核支持功能，这是服务器的主要防护手段，必须开启</td>
+<td>on</td>
+</tr>
+<tr>
+<td>irda</td>
+<td>IrDA提供红外线设备(笔记本、PDA’s，手机，计算器等等)间的通讯支持。</td>
+<td>off</td>
+</tr>
+<tr>
+<td>irqbalance</td>
+<td>支持多核处理器，让CPU可以自动分配系统中断(IRQ)，提高系统性能。</td>
+<td>on</td>
+</tr>
+<tr>
+<td>isdn</td>
+<td>使用ISDN设备连接网络。目前主流的联网方式是光纤接入和ADSL，ISDN已经非常少见</td>
+<td>off</td>
+</tr>
+<tr>
+<td>kudzu</td>
+<td>该服务可以在开机时进行硬件检测，并会调用相关的设置软件。</td>
+<td>off</td>
+</tr>
+<tr>
+<td>lvm2-monitor</td>
+<td>该服务可以让系统支持LVM逻辑卷组，如果分区采用的是LVM方式，那么应该开启</td>
+<td>on</td>
+</tr>
+<tr>
+<td>mcstrans</td>
+<td>SELinux的支持服务</td>
+<td>on</td>
+</tr>
+<tr>
+<td>mdmonitor</td>
+<td>该服务用来监测Software RAID或LVM的信息。不是必须服务</td>
+<td>off</td>
+</tr>
+<tr>
+<td>mdmpd</td>
+<td>该服务用来监测Multi-Path设备</td>
+<td>off</td>
+</tr>
+<tr>
+<td>messagebus</td>
+<td>这是Linuxr IPC（Interprocess Communication, 进程间通讯）服务，用来在各个软件中交换信息</td>
+<td>off</td>
+</tr>
+<tr>
+<td>microcode_ctl</td>
+<td>Intel系列的CPU可以通过这个服务支持额外的微指令集。</td>
+<td>off</td>
+</tr>
+<tr>
+<td>mysqld</td>
+<td>mysql数据库服务器。如果需要就开启，</td>
+<td>off</td>
+</tr>
+<tr>
+<td>named</td>
+<td>DNS服务的守护进程，用来进行域名解析。如果是DNS服务器则开启</td>
+<td>off</td>
+</tr>
+<tr>
+<td>netfs</td>
+<td>该服务用于在系统启动时自动挂载网络中的共享文件空间，比如：NFS, Samba等。需要则开启</td>
+<td>off</td>
+</tr>
+<tr>
+<td>network</td>
+<td>提供网络设置功能。通过这个服务来管理网络</td>
+<td>on</td>
+</tr>
+<tr>
+<td>nfs</td>
+<td>NFS（Network File System）服务，Linux与Linux之间的文件共享服务。需要就开启</td>
+<td>off</td>
+</tr>
+<tr>
+<td>nfslock</td>
+<td>在Linux中如果使用了NFS服务，为了避免同一个文件被不同的用户编辑，所以有了这个锁服务。有NFS是开启</td>
+<td>off</td>
+</tr>
+<tr>
+<td>ntpd</td>
+<td>该服务可以通过互联网自动更新系统时间，使系统时间永远都准确。需要则开启</td>
+<td>off</td>
+</tr>
+<tr>
+<td>pcscd</td>
+<td>智能卡检测服务</td>
+<td>off</td>
+</tr>
+<tr>
+<td>portmap</td>
+<td>用在远程过程调用（RPC）的服务，如果没有任何RPC服务时，可以关闭，主要是NFS和NIS服务需要</td>
+<td>off</td>
+</tr>
+<tr>
+<td>psacct</td>
+<td>该守护进程支持几个监控进程活动的工具。</td>
+<td>off</td>
+</tr>
+<tr>
+<td>rdisc</td>
+<td>客户端ICMP路由协议</td>
+<td>off</td>
+</tr>
+<tr>
+<td>readahead_early</td>
+<td>在系统开机的时候，先将某些进程加载如内存整理，可以加快一点启动速度。</td>
+<td>off</td>
+</tr>
+<tr>
+<td>readahead_later</td>
+<td>同上</td>
+<td>off</td>
+</tr>
+<tr>
+<td>restorecond</td>
+<td>用于给SELinux监测和重新加载正确的文件上下文。如果开启SELinux则需要开启。</td>
+<td>off</td>
+</tr>
+<tr>
+<td>rpcgssd</td>
+<td>与NFS有关的客户端功能</td>
+<td>off</td>
+</tr>
+<tr>
+<td>rpcidmapd</td>
+<td>同上</td>
+<td>off</td>
+</tr>
+<tr>
+<td>rsync</td>
+<td>远程数据备份守护进程</td>
+<td>off</td>
+</tr>
+<tr>
+<td>sendmail</td>
+<td>sendmail邮件服务的守护进程。如果有邮件服务就开启</td>
+<td>off</td>
+</tr>
+<tr>
+<td>setroubleshoot</td>
+<td>该服务用于将SELinux相关信息记录在日志&#x2F;var&#x2F;log&#x2F;messages中</td>
+<td>on</td>
+</tr>
+<tr>
+<td>smartd</td>
+<td>该服务用于自动检则硬盘状态</td>
+<td>on</td>
+</tr>
+<tr>
+<td>smb</td>
+<td>网络服务samba守护进程。可以让Linux和Windows之间共享数据。如果需要则开启</td>
+<td>off</td>
+</tr>
+<tr>
+<td>squid</td>
+<td>代理服务的守护进程。</td>
+<td>off</td>
+</tr>
+<tr>
+<td>sshd</td>
+<td>ssh加密远程登录管理的服务。</td>
+<td>on</td>
+</tr>
+<tr>
+<td>syslog</td>
+<td>日志的守护进程。</td>
+<td>on</td>
+</tr>
+<tr>
+<td>vsftpd</td>
+<td>vsftpd服务的守护进程。如果需要FTP服务则开启</td>
+<td>off</td>
+</tr>
+<tr>
+<td>xfs</td>
+<td>这个是X Window的字体守护进程。为图形界面提供字体服务，如果不启动图形界面就不用开启</td>
+<td>off</td>
+</tr>
+<tr>
+<td>xinetd</td>
+<td>超级守护进程。如果有依赖xinetd的服务就必须开启</td>
+<td>off</td>
+</tr>
+<tr>
+<td>ypbind</td>
+<td>为NIS(网络信息系统)客户机激活ypbind服务进程。</td>
+<td>off</td>
+</tr>
+<tr>
+<td>yum-updatesd</td>
+<td>yum的在线升级服务</td>
+<td>off</td>
+</tr>
+</tbody></table>
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>权限管理</title>
+    <url>/2025/02/25/%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86/</url>
+    <content><![CDATA[<h1 id="权限管理"><a href="#权限管理" class="headerlink" title="权限管理"></a>权限管理</h1><h2 id="1-ACL权限"><a href="#1-ACL权限" class="headerlink" title="1. ACL权限"></a>1. ACL权限</h2><h3 id="1）ACL概述"><a href="#1）ACL概述" class="headerlink" title="1）ACL概述"></a>1）ACL概述</h3><p>ACL是用于解决用户对文件身份不足问题的。</p>
+<h3 id="2）开启ACL"><a href="#2）开启ACL" class="headerlink" title="2）开启ACL"></a>2）开启ACL</h3><p>查询acl是否开启：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">dumpe2fs命令是查询指定分区详细文件系统信息的命令</span></span><br><span class="line">dumpe2fs -h &lt;根分区&gt;</span><br><span class="line">选项：</span><br><span class="line">  -h:    仅显示超级地中信息，而不显示磁盘块组的详细信息。</span><br><span class="line"> </span><br><span class="line"> ...</span><br><span class="line"> Default mount options:     user_xattr acl</span><br><span class="line"> ...</span><br></pre></td></tr></table></figure>
+
+<p>如果没有开启，手工开启分区的ACL权限：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">重新挂载根分区，并挂载加入acl权限</span></span><br><span class="line">mount -o remount,acl /</span><br></pre></td></tr></table></figure>
+
+<p>也可以通过修改&#x2F;etc&#x2F;fstab文件，永久开启ACL权限：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">vim /etc/fstab</span><br><span class="line">UUID=6f9a4f35-3b8f-425e-b8f3-4d46dbca87ad /               ext4       defaults.acl 0       1</span><br></pre></td></tr></table></figure>
+
+<p>验证目录ACL权限存在</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ls -ahl /</span><br><span class="line">drwxrwx---+   2 sc   tg         4096  2月 14 20:19 www/</span><br><span class="line"># “+”代表有ACL权限</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="3）ACL基本命令"><a href="#3）ACL基本命令" class="headerlink" title="3）ACL基本命令"></a>3）ACL基本命令</h3><p>a）查询文件的ACL权限</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">getfacl 文件名</span><br></pre></td></tr></table></figure>
+
+
+
+<p>b）设定ACL权限</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">setfacl [选项] 文件名</span><br><span class="line">选项：</span><br><span class="line">  -m    设定ACL权限</span><br><span class="line">  -b    删除ACL权限</span><br><span class="line">  -x    删除单个用户的ACL权限</span><br><span class="line">  -R    递归(只能赋予目录，且只对已经存在的文件生效)</span><br><span class="line"></span><br><span class="line">setfacl -m u:用户名:权限(1|2|4|5|7) 文件名</span><br><span class="line">setfacl -m g:组名:权限(1|2|4|5|7) 文件名</span><br><span class="line"></span><br><span class="line"># 赋予ACL默认权限。默认权限只能赋予目录，且只对以后新建的文件生效</span><br><span class="line">setfacl -m d:u:用户名|组名:权限(1|2|4|5|7) 目录</span><br></pre></td></tr></table></figure>
+
+<p>示例：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 给test目录赋予aa用户读写执行的ACL权限</span><br><span class="line">setfacl -m u:aa:rwx /test</span><br><span class="line"></span><br><span class="line"># 赋予递归ACL权限</span><br><span class="line">setfacl -m u:cc:rx -R soft/</span><br><span class="line"></span><br><span class="line"># ACL默认权限</span><br><span class="line">setfacl -m d:u:aa:rwx -R soft/</span><br></pre></td></tr></table></figure>
+
+<p>**注意：**ACL权限，一旦递归后，不可避免的出现权限溢出。因为x权限对目录来说相当于cd，而对文件是最大权限。所以ACL权限能不用则不用。</p>
+<h3 id="4）最大有效权限-mask"><a href="#4）最大有效权限-mask" class="headerlink" title="4）最大有效权限(mask)"></a>4）最大有效权限(mask)</h3><p>即最大ACL权限。设定用户或组ACL权限后，该用户或组最终权限是最大ACL权限(mask权限)与该用户或组权限逻辑与的结果的权限。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 设定mask权限为r-x,使用“m:权限”格式</span><br><span class="line">setfacl -m m:rx project/</span><br><span class="line"></span><br><span class="line"># 查询project/目录权限</span><br><span class="line"># file: project/</span><br><span class="line"># owner: root</span><br><span class="line"># group: tgroup</span><br><span class="line">user::rwx              #effective:r-x</span><br><span class="line">group::rwx             #effective:r-x</span><br><span class="line">mask::r-x</span><br><span class="line">other::---</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="5）删除ACL权限"><a href="#5）删除ACL权限" class="headerlink" title="5）删除ACL权限"></a>5）删除ACL权限</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 删除指定用户和用户组的ACL权限</span><br><span class="line">setfacl -x u:st /project/</span><br><span class="line"></span><br><span class="line"># 删除文件的所有ACL权限</span><br><span class="line">setfacl -b /project/</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="2-sudo授权"><a href="#2-sudo授权" class="headerlink" title="2. sudo授权"></a>2. sudo授权</h2><p>给普通用户赋予部分管理员权限。</p>
+<p>在&#x2F;sbin&#x2F;和&#x2F;usr&#x2F;sbin&#x2F;目录下的命令只有超级用户才能使用。</p>
+<h3 id="1）root身份"><a href="#1）root身份" class="headerlink" title="1）root身份"></a>1）root身份</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 执行visudo命令，赋予普通用户权限命令，命令执行后和vi一样使用</span><br><span class="line">visudo</span><br><span class="line"></span><br><span class="line">root     ALL=(ALL)                         ALL</span><br><span class="line">#用户名   被管理主机的地址=(可使用的身份)       授权命令(绝对路径)</span><br><span class="line"># %wheel        ALL=(ALL)                              ALL</span><br><span class="line">#%组名           被管理主机的地址=(可使用的身份)            授权命令(绝对路径)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>用户名&#x2F;组名：代表root给哪个用户或用户组赋予命令，注意组名前加“%”。</p>
+</li>
+<li><p>用户可以用指定的命令管理指定IP地址的服务器。如果写ALL，代表可以管理任务主机，如果写固定IP，代表用户可以管理指定的服务器。(这里的IP指定的是用户可以管理哪个IP地址的服务器，那么如果你是一台独立的服务器，这里写ALL和你服务器的IP地址，作用是一样的。而写入网段，只有对NIS服务这样用户和密码集中管理的服务器才有意义)。如果我们这里写本机的IP地址，不代表只允许本机的用户使用指定命令，而代表指定的用户可以从任何IP地址来管理当前服务器。</p>
+</li>
+<li><p>可使用身份：就是把来源用户切换成什么身份使用，(ALL)代表可以切换成任意身份。这个字段可以省略。</p>
+</li>
+<li><p>授权命令：代表root把什么命令授权给普通用户。默认是ALL，代表任何命令，这个当然不行，如果需要给哪个命令授权，写入命令名即可。不过需要注意一定要命令写成绝对路径。</p>
+</li>
+</ul>
+<p>【示例1】：授权用户user1可以重启服务器。</p>
+<p>则由root用户添加如下行：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# visudo</span><br><span class="line">user1         ALL=/sbin/shutdown -r now</span><br><span class="line"></span><br><span class="line"># 查看可用的授权</span><br><span class="line">[user1@localhost ~]$ sudo -l</span><br><span class="line"></span><br><span class="line"># 执行授权命令</span><br><span class="line">[user1@localhost ~]$ sudo /sbin/shutdown -r now</span><br></pre></td></tr></table></figure>
+
+
+
+<p>【示例2】：授权一个用户管理web服务器。</p>
+<p>首先要分析授权用户管理Apache至少要实现哪些基本授权：</p>
+<ul>
+<li>可以使用Apache管理脚本</li>
+<li>可以修改Apache配置文件</li>
+<li>可以更新网页内容</li>
+</ul>
+<p>假设Apache管理脚本程序为&#x2F;etc&#x2F;rc.d&#x2F;init.d&#x2F;httpd。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># visudo授权</span><br><span class="line">[root@loaclhost ~]# visudo</span><br><span class="line">user1      192.168.0.156=/etc/rc.d/init.d/httpd reload,/etc/rc.d/init.d/httpd configtest</span><br></pre></td></tr></table></figure>
+
+<p>授权用户user1可以连接192.168.0.156上的Apache服务器，通过Apache管理脚本重新读取配置文件让更改的设置生效(reload)和可以检测Apache配置文件语法错误(configtest)。</p>
+<p>为满足条件二：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# visudo</span><br><span class="line">user1      192.168.0.156=/usr/bin/vim /etc/httpd/conf/httpd.conf</span><br></pre></td></tr></table></figure>
+
+<p>授权用户user1可以用root身份使用vi编辑Apache配置文件。</p>
+<p>为满足条件三，假设网页存放目录为&#x2F;var&#x2F;www&#x2F;html，则只需要授权user1对此目录具有写权限或者索性更改目录所有者为user1即可。如果需要，还可以设置user1可以通过FTP等文件共享服务更新网页。</p>
+<p>【示例3】：授权aa用户可以添加其他普通用户。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# visudo</span><br><span class="line">aa    ALL=/usr/sbin/useradd</span><br><span class="line">aa    ALL=/usr/bin/passwd [A-Za-z]*, !/usr/bin/passwd &quot;&quot;, !/usr/bin/passwd root    # 不能改root用户密码</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="3-文件特殊权限"><a href="#3-文件特殊权限" class="headerlink" title="3.文件特殊权限"></a>3.文件特殊权限</h2><h3 id="1）SetUID"><a href="#1）SetUID" class="headerlink" title="1）SetUID"></a>1）SetUID</h3><p>a）SetUID概念</p>
+<p>SetUID的功能可以这样理解：</p>
+<ul>
+<li>只有可以执行的文件才能设定SUID权限</li>
+<li>命令执行者要对该程序拥有x（执行）权限</li>
+<li>命令执行者在执行该程序时获得该程序文件属主的身份(在执行程序的过程中灵魂附体为文件的属主)</li>
+<li>SetUID权限只在该程序执行过程中有效，也就是说身份改变只在程序执行过程中有效</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# ll /etc/passwd</span><br><span class="line">-rw-r--r-- 1 root root 3626  2月 15 11:38 /etc/passwd</span><br><span class="line"></span><br><span class="line">[root@localhost ~]# ll /etc/shadow</span><br><span class="line">-rw-r----- 1 root shadow 2092  2月 15 11:37 /etc/shadow</span><br><span class="line"></span><br><span class="line">[root@localhost ~]# ll /usr/bin/passwd</span><br><span class="line">-rwsr-xr-x 1 root root 64152  5月 30  2024 /usr/bin/passwd</span><br></pre></td></tr></table></figure>
+
+<p>&#x2F;usr&#x2F;bin&#x2F;passwd命令拥有特殊权限SetUID，也就是在属主的权限位的执行权限上是s。可以这样来理解它：当一个具有执行权限的文件设置SetUID权限后，用户执行这个文件时将以文件所有者的身份执行。&#x2F;usr&#x2F;bin&#x2F;passwd命令具有SetUID权限，所有者为root（Linux中的命令默认所有者都是root），也就是说当普通用户使用passwd更改自己密码的时候，那一瞬间突然灵魂附体了，实际是用passwd命令所有者root的身份在执行passwd命令，root当然可以将密码写入&#x2F;etc&#x2F;shadow文件，所以普通用户也可以修改&#x2F;etc&#x2F;shadow文件，命令执行完成后该身份也随之消失。如果取消SetUID权限，则普通用户就不能修改自己的密码了。</p>
+<p>b）设置SetUID权限</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 设置SetUID权限</span><br><span class="line">[root@localhost ~]# chmod u+s /usr/bin/vim      # 极其危险，意味着把服务器送给别人了，别人可以打开、修改任何文件了</span><br><span class="line"></span><br><span class="line"># 查看SetUID权限</span><br><span class="line">[root@localhost ~]# ll /usr/bin/vim</span><br><span class="line">-rwsr-xr-x 1 root root 1847752 4月 5 2012 /usr/bin/vim </span><br></pre></td></tr></table></figure>
+
+
+
+<p>c）建议</p>
+<ul>
+<li>关键目录应严格控制写权限，比如“&#x2F;”、“&#x2F;usr”等；</li>
+<li>用户的密码设置要严格遵守密码三原则；</li>
+<li>对系统中默认应该具有SetUID权限的文件作一列表，定时检查有没有这之外的文件被设置了SetUID权限。</li>
+</ul>
+<p>d）检测SetUID的脚本</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/bash</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Author: ben (E-main: 326525276@qq.com)</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">搜索系统中所有拥有SUID和SGID的文件，并保存到临时目录中</span></span><br><span class="line">find / -perm -4000 -o -perm -2000 &gt; /tmp/setuid.check</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">做循环，每次循环取出临时文件中的文件名</span></span><br><span class="line">for i in $(cat /tmp/setuid.check)</span><br><span class="line">do</span><br><span class="line"><span class="meta prompt_">	# </span><span class="language-bash">比对这个文件名是否在模板文件中</span></span><br><span class="line">	grep $i /root/suid.list &gt; /dev/null</span><br><span class="line">	if [&quot;$?&quot; != &quot;0&quot;]</span><br><span class="line"><span class="meta prompt_">		# </span><span class="language-bash">如果在，不报错</span></span><br><span class="line">	then</span><br><span class="line"><span class="meta prompt_">		# </span><span class="language-bash">如果文件不在模板文件中，则报错，并把报错存在日志中</span></span><br><span class="line">		echo &quot;$i isn&#x27;t in listfile!&quot; &gt;&gt; /root/suid_log_$(date +%F)</span><br><span class="line">	fi</span><br><span class="line">done</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">删除临时文件</span></span><br><span class="line">rm -rf /tmp/setuid.check</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="2）SetGID"><a href="#2）SetGID" class="headerlink" title="2）SetGID"></a>2）SetGID</h3><p>SGID既可以针对文件生效，也可以针对目录生效。这和SUID明显不同。</p>
+<p>a）针对文件的作用</p>
+<p>针对文件，SGID的含义如下：</p>
+<ul>
+<li>只有可执行的文件才能设置SGID权限</li>
+<li>命令执行者要对该文件拥有x（执行）权限</li>
+<li>命令执行者在执行文件的时候，组身份升级为该文件的属组</li>
+<li>SetGID权限同样只在该文件执行过程中有效，也就是说组身份改变只在文件执行过程中有效</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# ll /var/lib/mlocate/mlocate.db</span><br><span class="line">-rw-r----- 1 root slocate 1838850 1月    20 04：29 /var/lib/mlocate/mlocate.db</span><br></pre></td></tr></table></figure>
+
+<p>属主权限是r、w，属组权限是r，其他人权限是0；</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# ll /usr/bin/locate</span><br><span class="line">-rwx--s--x. 1 root slocate 38464  8月 24 2010 /usr/bin/locate    # 所属组s代表SetGID权限</span><br></pre></td></tr></table></figure>
+
+<p>当普通用户user1执行locate命令时，会发生如下事情：</p>
+<ul>
+<li>&#x2F;usr&#x2F;bin&#x2F;locate是可执行二进制程序，可以赋予SGID</li>
+<li>执行用户user1对&#x2F;usr&#x2F;bin&#x2F;locate命令拥有执行权限</li>
+<li>执行&#x2F;usr&#x2F;bin&#x2F;locate命令时，组身份会升级为slocate组，而slocate组对&#x2F;var&#x2F;lib&#x2F;mlocate&#x2F;mlocate.db数据库拥有r权限，所以普通用户可以使用locate</li>
+</ul>
+<p>命令查询mlocate.db数据库</p>
+<ul>
+<li>命令结束，user1用户的组身份返回为user1组</li>
+</ul>
+<p>b）针对目录的作用</p>
+<p>如果SGID针对目录设置，含义如下：</p>
+<ul>
+<li>普通用户必须对此目录拥有r和x权限，才能进入此目录</li>
+<li>普通用户在此目录中的有效组会变成此目录的属组</li>
+<li>若普通用户对此目录拥有w权限时，新建的文件的默认属组就是这个目录的属组</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 进入临时目录</span><br><span class="line">[root@localhost ~]# cd /tmp</span><br><span class="line"># 建立测试目录</span><br><span class="line">[root@localhost tmp]# mkdir dtest</span><br><span class="line"># 给测试目录赋予SGID</span><br><span class="line">[root@localhost tmp]# chmod g+s dtest</span><br><span class="line"># 查询SGID是否生效</span><br><span class="line">[root@localhost tmp]# ll -d dtest/</span><br><span class="line">drwxr-sr-x 2 root root 4096 1月 20 06：04 dtest/</span><br><span class="line"># 给测试目录权限，让普通用户可以写</span><br><span class="line">[root@localhost tmp]# chmod 777 dtest/</span><br><span class="line"># 切换成普通用户user1</span><br><span class="line">[root@localhost tmp]# su - user1</span><br><span class="line"># 普通用户进入测试目录</span><br><span class="line">[user1@localhost ~]$ cd /tmp/dtest/</span><br><span class="line"># 普通用户建立abc文件</span><br><span class="line">[user1@localhost ~]$ touch abc</span><br><span class="line"># abc文件的默认属组是root, 说明SGID生效</span><br><span class="line">[user1@localhost ~]$ ll</span><br><span class="line">总用量 0</span><br><span class="line">-rw-rw-r-- 1 user1 root 0 1月 20 06：07 abc</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="3）Sticky-BIT"><a href="#3）Sticky-BIT" class="headerlink" title="3）Sticky BIT"></a>3）Sticky BIT</h3><p>Sticky BIT粘着位，也简称为SBIT，SBIT目前仅针对目录有效。</p>
+<p>SBIT作用如下：</p>
+<ul>
+<li>粘着位目录只对目录有效</li>
+<li>普通用户对该目录拥有w和x权限，即普通用户可以在此目录拥有写入权限</li>
+<li>如果没有粘着位，因为普通用户拥有w权限，所以可以删除此目录下所有文件，包括其他用户建立的文件，一旦赋予了粘着位，除了root可以删除所有文件，普通用户就算拥有w权限，也只能删除自己建立的文件，但是不能删除其他用户建立的文件。</li>
+</ul>
+<h3 id="4）设定文件特殊权限"><a href="#4）设定文件特殊权限" class="headerlink" title="4）设定文件特殊权限"></a>4）设定文件特殊权限</h3><p>特殊权限：</p>
+<ul>
+<li>4代表SUID</li>
+<li>2代表SGID</li>
+<li>1代表SBIT</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 赋予SUID权限</span><br><span class="line">[root@localhost ~]# chmod 4755 ftest              # 或者chmod u+s ftest</span><br><span class="line"></span><br><span class="line"># 赋予SGID权限</span><br><span class="line">[root@localhost ~]# chmod 2755 ftest              # 或者chmod g+s ftest</span><br><span class="line"></span><br><span class="line"># 赋予SBIT权限</span><br><span class="line">[root@localhost ~]# mkdir dtest</span><br><span class="line">[root@localhost ~]# chmod 1755 dtest/             # 或者chmod o+t ftest</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="4-文件系统属性chattr权限"><a href="#4-文件系统属性chattr权限" class="headerlink" title="4. 文件系统属性chattr权限"></a>4. 文件系统属性chattr权限</h2><p>a）命令格式</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]chattr [+-=] [选项] 文件或目录名</span><br><span class="line">选项：</span><br><span class="line">  +：    增加权限</span><br><span class="line">  -：    删除权限</span><br><span class="line">  =：    等于某权限</span><br><span class="line">  i：    如果对文件设置i属性，那么不允许对文件进行删除、改名，也不能添加和修改数据；如果对目录设置i属性，那么只能修改目录下文件的数据，但不允许建立和          删除文件</span><br><span class="line">  a：    如果对文件设置a属性，那么只能在文件中增加数据，但是不能删除也不能修改数据；如果对目录设置a属性，那么只允许在目录中建立和修改文件，但是不允许          删除</span><br><span class="line">  e：    Linux中绝大多数的文件都默认拥有e属性。表示该文件是使用ext文件系统进行存储的，而且不能使用“chattr -e”命令取消e属性</span><br><span class="line">  </span><br></pre></td></tr></table></figure>
+
+<p>示例：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 赋予文件i属性</span><br><span class="line">chattr +i abc</span><br><span class="line"></span><br><span class="line"># 取消文件i属性</span><br><span class="line">chattr -i abc</span><br><span class="line"></span><br><span class="line"># 赋予目录i属性</span><br><span class="line">chattr +i bcd/</span><br><span class="line"></span><br><span class="line"># 取消目录i属性</span><br><span class="line">chattr -i bcd/</span><br></pre></td></tr></table></figure>
+
+
+
+<p>b) 查看文件系统属性(lsattr)</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# lsattr 选项 文件名</span><br><span class="line">选项：</span><br><span class="line">  -a:    显示所有文件和目录</span><br><span class="line">  -d:    若目标是目录，仅列出目录本身的属性，而不是子文件</span><br></pre></td></tr></table></figure>
+
+
+
 ]]></content>
       <categories>
         <category>Linux</category>
@@ -8565,501 +8742,6 @@
 
 <h3 id="5-组权限实验"><a href="#5-组权限实验" class="headerlink" title="5. 组权限实验"></a>5. 组权限实验</h3><p>根目录下创建个www目录，属主为teacher, 学生st1，st2可以往这个目录提交作业。</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 创建www目录</span><br><span class="line">mkdir /www</span><br><span class="line"></span><br><span class="line"># 创建teacher用户</span><br><span class="line">useradd -m teacher</span><br><span class="line"></span><br><span class="line"># 设置teacher用户密码</span><br><span class="line">passwd teacher</span><br><span class="line"></span><br><span class="line"># 创建st1,st2用户并设置密码</span><br><span class="line">useradd -m st1</span><br><span class="line">useradd -m st2</span><br><span class="line"></span><br><span class="line"># 创建tg组</span><br><span class="line">groupadd tg</span><br><span class="line"></span><br><span class="line"># 将st1, st2加入tg组</span><br><span class="line">gpasswd -a st1 tg</span><br><span class="line">gpasswd -a st2 tg</span><br><span class="line"></span><br><span class="line"># 设置www目录属主和属组</span><br><span class="line">chown teacher:tg /www/</span><br><span class="line"></span><br><span class="line"># 设置www目录权限</span><br><span class="line">chmod 770 /www/</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>Linux</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>权限管理</title>
-    <url>/2025/02/25/%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86/</url>
-    <content><![CDATA[<h1 id="权限管理"><a href="#权限管理" class="headerlink" title="权限管理"></a>权限管理</h1><h2 id="1-ACL权限"><a href="#1-ACL权限" class="headerlink" title="1. ACL权限"></a>1. ACL权限</h2><h3 id="1）ACL概述"><a href="#1）ACL概述" class="headerlink" title="1）ACL概述"></a>1）ACL概述</h3><p>ACL是用于解决用户对文件身份不足问题的。</p>
-<h3 id="2）开启ACL"><a href="#2）开启ACL" class="headerlink" title="2）开启ACL"></a>2）开启ACL</h3><p>查询acl是否开启：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">dumpe2fs命令是查询指定分区详细文件系统信息的命令</span></span><br><span class="line">dumpe2fs -h &lt;根分区&gt;</span><br><span class="line">选项：</span><br><span class="line">  -h:    仅显示超级地中信息，而不显示磁盘块组的详细信息。</span><br><span class="line"> </span><br><span class="line"> ...</span><br><span class="line"> Default mount options:     user_xattr acl</span><br><span class="line"> ...</span><br></pre></td></tr></table></figure>
-
-<p>如果没有开启，手工开启分区的ACL权限：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">重新挂载根分区，并挂载加入acl权限</span></span><br><span class="line">mount -o remount,acl /</span><br></pre></td></tr></table></figure>
-
-<p>也可以通过修改&#x2F;etc&#x2F;fstab文件，永久开启ACL权限：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">vim /etc/fstab</span><br><span class="line">UUID=6f9a4f35-3b8f-425e-b8f3-4d46dbca87ad /               ext4       defaults.acl 0       1</span><br></pre></td></tr></table></figure>
-
-<p>验证目录ACL权限存在</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ls -ahl /</span><br><span class="line">drwxrwx---+   2 sc   tg         4096  2月 14 20:19 www/</span><br><span class="line"># “+”代表有ACL权限</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="3）ACL基本命令"><a href="#3）ACL基本命令" class="headerlink" title="3）ACL基本命令"></a>3）ACL基本命令</h3><p>a）查询文件的ACL权限</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">getfacl 文件名</span><br></pre></td></tr></table></figure>
-
-
-
-<p>b）设定ACL权限</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">setfacl [选项] 文件名</span><br><span class="line">选项：</span><br><span class="line">  -m    设定ACL权限</span><br><span class="line">  -b    删除ACL权限</span><br><span class="line">  -x    删除单个用户的ACL权限</span><br><span class="line">  -R    递归(只能赋予目录，且只对已经存在的文件生效)</span><br><span class="line"></span><br><span class="line">setfacl -m u:用户名:权限(1|2|4|5|7) 文件名</span><br><span class="line">setfacl -m g:组名:权限(1|2|4|5|7) 文件名</span><br><span class="line"></span><br><span class="line"># 赋予ACL默认权限。默认权限只能赋予目录，且只对以后新建的文件生效</span><br><span class="line">setfacl -m d:u:用户名|组名:权限(1|2|4|5|7) 目录</span><br></pre></td></tr></table></figure>
-
-<p>示例：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 给test目录赋予aa用户读写执行的ACL权限</span><br><span class="line">setfacl -m u:aa:rwx /test</span><br><span class="line"></span><br><span class="line"># 赋予递归ACL权限</span><br><span class="line">setfacl -m u:cc:rx -R soft/</span><br><span class="line"></span><br><span class="line"># ACL默认权限</span><br><span class="line">setfacl -m d:u:aa:rwx -R soft/</span><br></pre></td></tr></table></figure>
-
-<p>**注意：**ACL权限，一旦递归后，不可避免的出现权限溢出。因为x权限对目录来说相当于cd，而对文件是最大权限。所以ACL权限能不用则不用。</p>
-<h3 id="4）最大有效权限-mask"><a href="#4）最大有效权限-mask" class="headerlink" title="4）最大有效权限(mask)"></a>4）最大有效权限(mask)</h3><p>即最大ACL权限。设定用户或组ACL权限后，该用户或组最终权限是最大ACL权限(mask权限)与该用户或组权限逻辑与的结果的权限。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 设定mask权限为r-x,使用“m:权限”格式</span><br><span class="line">setfacl -m m:rx project/</span><br><span class="line"></span><br><span class="line"># 查询project/目录权限</span><br><span class="line"># file: project/</span><br><span class="line"># owner: root</span><br><span class="line"># group: tgroup</span><br><span class="line">user::rwx              #effective:r-x</span><br><span class="line">group::rwx             #effective:r-x</span><br><span class="line">mask::r-x</span><br><span class="line">other::---</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="5）删除ACL权限"><a href="#5）删除ACL权限" class="headerlink" title="5）删除ACL权限"></a>5）删除ACL权限</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 删除指定用户和用户组的ACL权限</span><br><span class="line">setfacl -x u:st /project/</span><br><span class="line"></span><br><span class="line"># 删除文件的所有ACL权限</span><br><span class="line">setfacl -b /project/</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="2-sudo授权"><a href="#2-sudo授权" class="headerlink" title="2. sudo授权"></a>2. sudo授权</h2><p>给普通用户赋予部分管理员权限。</p>
-<p>在&#x2F;sbin&#x2F;和&#x2F;usr&#x2F;sbin&#x2F;目录下的命令只有超级用户才能使用。</p>
-<h3 id="1）root身份"><a href="#1）root身份" class="headerlink" title="1）root身份"></a>1）root身份</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 执行visudo命令，赋予普通用户权限命令，命令执行后和vi一样使用</span><br><span class="line">visudo</span><br><span class="line"></span><br><span class="line">root     ALL=(ALL)                         ALL</span><br><span class="line">#用户名   被管理主机的地址=(可使用的身份)       授权命令(绝对路径)</span><br><span class="line"># %wheel        ALL=(ALL)                              ALL</span><br><span class="line">#%组名           被管理主机的地址=(可使用的身份)            授权命令(绝对路径)</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p>用户名&#x2F;组名：代表root给哪个用户或用户组赋予命令，注意组名前加“%”。</p>
-</li>
-<li><p>用户可以用指定的命令管理指定IP地址的服务器。如果写ALL，代表可以管理任务主机，如果写固定IP，代表用户可以管理指定的服务器。(这里的IP指定的是用户可以管理哪个IP地址的服务器，那么如果你是一台独立的服务器，这里写ALL和你服务器的IP地址，作用是一样的。而写入网段，只有对NIS服务这样用户和密码集中管理的服务器才有意义)。如果我们这里写本机的IP地址，不代表只允许本机的用户使用指定命令，而代表指定的用户可以从任何IP地址来管理当前服务器。</p>
-</li>
-<li><p>可使用身份：就是把来源用户切换成什么身份使用，(ALL)代表可以切换成任意身份。这个字段可以省略。</p>
-</li>
-<li><p>授权命令：代表root把什么命令授权给普通用户。默认是ALL，代表任何命令，这个当然不行，如果需要给哪个命令授权，写入命令名即可。不过需要注意一定要命令写成绝对路径。</p>
-</li>
-</ul>
-<p>【示例1】：授权用户user1可以重启服务器。</p>
-<p>则由root用户添加如下行：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# visudo</span><br><span class="line">user1         ALL=/sbin/shutdown -r now</span><br><span class="line"></span><br><span class="line"># 查看可用的授权</span><br><span class="line">[user1@localhost ~]$ sudo -l</span><br><span class="line"></span><br><span class="line"># 执行授权命令</span><br><span class="line">[user1@localhost ~]$ sudo /sbin/shutdown -r now</span><br></pre></td></tr></table></figure>
-
-
-
-<p>【示例2】：授权一个用户管理web服务器。</p>
-<p>首先要分析授权用户管理Apache至少要实现哪些基本授权：</p>
-<ul>
-<li>可以使用Apache管理脚本</li>
-<li>可以修改Apache配置文件</li>
-<li>可以更新网页内容</li>
-</ul>
-<p>假设Apache管理脚本程序为&#x2F;etc&#x2F;rc.d&#x2F;init.d&#x2F;httpd。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># visudo授权</span><br><span class="line">[root@loaclhost ~]# visudo</span><br><span class="line">user1      192.168.0.156=/etc/rc.d/init.d/httpd reload,/etc/rc.d/init.d/httpd configtest</span><br></pre></td></tr></table></figure>
-
-<p>授权用户user1可以连接192.168.0.156上的Apache服务器，通过Apache管理脚本重新读取配置文件让更改的设置生效(reload)和可以检测Apache配置文件语法错误(configtest)。</p>
-<p>为满足条件二：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# visudo</span><br><span class="line">user1      192.168.0.156=/usr/bin/vim /etc/httpd/conf/httpd.conf</span><br></pre></td></tr></table></figure>
-
-<p>授权用户user1可以用root身份使用vi编辑Apache配置文件。</p>
-<p>为满足条件三，假设网页存放目录为&#x2F;var&#x2F;www&#x2F;html，则只需要授权user1对此目录具有写权限或者索性更改目录所有者为user1即可。如果需要，还可以设置user1可以通过FTP等文件共享服务更新网页。</p>
-<p>【示例3】：授权aa用户可以添加其他普通用户。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# visudo</span><br><span class="line">aa    ALL=/usr/sbin/useradd</span><br><span class="line">aa    ALL=/usr/bin/passwd [A-Za-z]*, !/usr/bin/passwd &quot;&quot;, !/usr/bin/passwd root    # 不能改root用户密码</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="3-文件特殊权限"><a href="#3-文件特殊权限" class="headerlink" title="3.文件特殊权限"></a>3.文件特殊权限</h2><h3 id="1）SetUID"><a href="#1）SetUID" class="headerlink" title="1）SetUID"></a>1）SetUID</h3><p>a）SetUID概念</p>
-<p>SetUID的功能可以这样理解：</p>
-<ul>
-<li>只有可以执行的文件才能设定SUID权限</li>
-<li>命令执行者要对该程序拥有x（执行）权限</li>
-<li>命令执行者在执行该程序时获得该程序文件属主的身份(在执行程序的过程中灵魂附体为文件的属主)</li>
-<li>SetUID权限只在该程序执行过程中有效，也就是说身份改变只在程序执行过程中有效</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# ll /etc/passwd</span><br><span class="line">-rw-r--r-- 1 root root 3626  2月 15 11:38 /etc/passwd</span><br><span class="line"></span><br><span class="line">[root@localhost ~]# ll /etc/shadow</span><br><span class="line">-rw-r----- 1 root shadow 2092  2月 15 11:37 /etc/shadow</span><br><span class="line"></span><br><span class="line">[root@localhost ~]# ll /usr/bin/passwd</span><br><span class="line">-rwsr-xr-x 1 root root 64152  5月 30  2024 /usr/bin/passwd</span><br></pre></td></tr></table></figure>
-
-<p>&#x2F;usr&#x2F;bin&#x2F;passwd命令拥有特殊权限SetUID，也就是在属主的权限位的执行权限上是s。可以这样来理解它：当一个具有执行权限的文件设置SetUID权限后，用户执行这个文件时将以文件所有者的身份执行。&#x2F;usr&#x2F;bin&#x2F;passwd命令具有SetUID权限，所有者为root（Linux中的命令默认所有者都是root），也就是说当普通用户使用passwd更改自己密码的时候，那一瞬间突然灵魂附体了，实际是用passwd命令所有者root的身份在执行passwd命令，root当然可以将密码写入&#x2F;etc&#x2F;shadow文件，所以普通用户也可以修改&#x2F;etc&#x2F;shadow文件，命令执行完成后该身份也随之消失。如果取消SetUID权限，则普通用户就不能修改自己的密码了。</p>
-<p>b）设置SetUID权限</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 设置SetUID权限</span><br><span class="line">[root@localhost ~]# chmod u+s /usr/bin/vim      # 极其危险，意味着把服务器送给别人了，别人可以打开、修改任何文件了</span><br><span class="line"></span><br><span class="line"># 查看SetUID权限</span><br><span class="line">[root@localhost ~]# ll /usr/bin/vim</span><br><span class="line">-rwsr-xr-x 1 root root 1847752 4月 5 2012 /usr/bin/vim </span><br></pre></td></tr></table></figure>
-
-
-
-<p>c）建议</p>
-<ul>
-<li>关键目录应严格控制写权限，比如“&#x2F;”、“&#x2F;usr”等；</li>
-<li>用户的密码设置要严格遵守密码三原则；</li>
-<li>对系统中默认应该具有SetUID权限的文件作一列表，定时检查有没有这之外的文件被设置了SetUID权限。</li>
-</ul>
-<p>d）检测SetUID的脚本</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/bash</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Author: ben (E-main: 326525276@qq.com)</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">搜索系统中所有拥有SUID和SGID的文件，并保存到临时目录中</span></span><br><span class="line">find / -perm -4000 -o -perm -2000 &gt; /tmp/setuid.check</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">做循环，每次循环取出临时文件中的文件名</span></span><br><span class="line">for i in $(cat /tmp/setuid.check)</span><br><span class="line">do</span><br><span class="line"><span class="meta prompt_">	# </span><span class="language-bash">比对这个文件名是否在模板文件中</span></span><br><span class="line">	grep $i /root/suid.list &gt; /dev/null</span><br><span class="line">	if [&quot;$?&quot; != &quot;0&quot;]</span><br><span class="line"><span class="meta prompt_">		# </span><span class="language-bash">如果在，不报错</span></span><br><span class="line">	then</span><br><span class="line"><span class="meta prompt_">		# </span><span class="language-bash">如果文件不在模板文件中，则报错，并把报错存在日志中</span></span><br><span class="line">		echo &quot;$i isn&#x27;t in listfile!&quot; &gt;&gt; /root/suid_log_$(date +%F)</span><br><span class="line">	fi</span><br><span class="line">done</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">删除临时文件</span></span><br><span class="line">rm -rf /tmp/setuid.check</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="2）SetGID"><a href="#2）SetGID" class="headerlink" title="2）SetGID"></a>2）SetGID</h3><p>SGID既可以针对文件生效，也可以针对目录生效。这和SUID明显不同。</p>
-<p>a）针对文件的作用</p>
-<p>针对文件，SGID的含义如下：</p>
-<ul>
-<li>只有可执行的文件才能设置SGID权限</li>
-<li>命令执行者要对该文件拥有x（执行）权限</li>
-<li>命令执行者在执行文件的时候，组身份升级为该文件的属组</li>
-<li>SetGID权限同样只在该文件执行过程中有效，也就是说组身份改变只在文件执行过程中有效</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# ll /var/lib/mlocate/mlocate.db</span><br><span class="line">-rw-r----- 1 root slocate 1838850 1月    20 04：29 /var/lib/mlocate/mlocate.db</span><br></pre></td></tr></table></figure>
-
-<p>属主权限是r、w，属组权限是r，其他人权限是0；</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# ll /usr/bin/locate</span><br><span class="line">-rwx--s--x. 1 root slocate 38464  8月 24 2010 /usr/bin/locate    # 所属组s代表SetGID权限</span><br></pre></td></tr></table></figure>
-
-<p>当普通用户user1执行locate命令时，会发生如下事情：</p>
-<ul>
-<li>&#x2F;usr&#x2F;bin&#x2F;locate是可执行二进制程序，可以赋予SGID</li>
-<li>执行用户user1对&#x2F;usr&#x2F;bin&#x2F;locate命令拥有执行权限</li>
-<li>执行&#x2F;usr&#x2F;bin&#x2F;locate命令时，组身份会升级为slocate组，而slocate组对&#x2F;var&#x2F;lib&#x2F;mlocate&#x2F;mlocate.db数据库拥有r权限，所以普通用户可以使用locate</li>
-</ul>
-<p>命令查询mlocate.db数据库</p>
-<ul>
-<li>命令结束，user1用户的组身份返回为user1组</li>
-</ul>
-<p>b）针对目录的作用</p>
-<p>如果SGID针对目录设置，含义如下：</p>
-<ul>
-<li>普通用户必须对此目录拥有r和x权限，才能进入此目录</li>
-<li>普通用户在此目录中的有效组会变成此目录的属组</li>
-<li>若普通用户对此目录拥有w权限时，新建的文件的默认属组就是这个目录的属组</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 进入临时目录</span><br><span class="line">[root@localhost ~]# cd /tmp</span><br><span class="line"># 建立测试目录</span><br><span class="line">[root@localhost tmp]# mkdir dtest</span><br><span class="line"># 给测试目录赋予SGID</span><br><span class="line">[root@localhost tmp]# chmod g+s dtest</span><br><span class="line"># 查询SGID是否生效</span><br><span class="line">[root@localhost tmp]# ll -d dtest/</span><br><span class="line">drwxr-sr-x 2 root root 4096 1月 20 06：04 dtest/</span><br><span class="line"># 给测试目录权限，让普通用户可以写</span><br><span class="line">[root@localhost tmp]# chmod 777 dtest/</span><br><span class="line"># 切换成普通用户user1</span><br><span class="line">[root@localhost tmp]# su - user1</span><br><span class="line"># 普通用户进入测试目录</span><br><span class="line">[user1@localhost ~]$ cd /tmp/dtest/</span><br><span class="line"># 普通用户建立abc文件</span><br><span class="line">[user1@localhost ~]$ touch abc</span><br><span class="line"># abc文件的默认属组是root, 说明SGID生效</span><br><span class="line">[user1@localhost ~]$ ll</span><br><span class="line">总用量 0</span><br><span class="line">-rw-rw-r-- 1 user1 root 0 1月 20 06：07 abc</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="3）Sticky-BIT"><a href="#3）Sticky-BIT" class="headerlink" title="3）Sticky BIT"></a>3）Sticky BIT</h3><p>Sticky BIT粘着位，也简称为SBIT，SBIT目前仅针对目录有效。</p>
-<p>SBIT作用如下：</p>
-<ul>
-<li>粘着位目录只对目录有效</li>
-<li>普通用户对该目录拥有w和x权限，即普通用户可以在此目录拥有写入权限</li>
-<li>如果没有粘着位，因为普通用户拥有w权限，所以可以删除此目录下所有文件，包括其他用户建立的文件，一旦赋予了粘着位，除了root可以删除所有文件，普通用户就算拥有w权限，也只能删除自己建立的文件，但是不能删除其他用户建立的文件。</li>
-</ul>
-<h3 id="4）设定文件特殊权限"><a href="#4）设定文件特殊权限" class="headerlink" title="4）设定文件特殊权限"></a>4）设定文件特殊权限</h3><p>特殊权限：</p>
-<ul>
-<li>4代表SUID</li>
-<li>2代表SGID</li>
-<li>1代表SBIT</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 赋予SUID权限</span><br><span class="line">[root@localhost ~]# chmod 4755 ftest              # 或者chmod u+s ftest</span><br><span class="line"></span><br><span class="line"># 赋予SGID权限</span><br><span class="line">[root@localhost ~]# chmod 2755 ftest              # 或者chmod g+s ftest</span><br><span class="line"></span><br><span class="line"># 赋予SBIT权限</span><br><span class="line">[root@localhost ~]# mkdir dtest</span><br><span class="line">[root@localhost ~]# chmod 1755 dtest/             # 或者chmod o+t ftest</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="4-文件系统属性chattr权限"><a href="#4-文件系统属性chattr权限" class="headerlink" title="4. 文件系统属性chattr权限"></a>4. 文件系统属性chattr权限</h2><p>a）命令格式</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]chattr [+-=] [选项] 文件或目录名</span><br><span class="line">选项：</span><br><span class="line">  +：    增加权限</span><br><span class="line">  -：    删除权限</span><br><span class="line">  =：    等于某权限</span><br><span class="line">  i：    如果对文件设置i属性，那么不允许对文件进行删除、改名，也不能添加和修改数据；如果对目录设置i属性，那么只能修改目录下文件的数据，但不允许建立和          删除文件</span><br><span class="line">  a：    如果对文件设置a属性，那么只能在文件中增加数据，但是不能删除也不能修改数据；如果对目录设置a属性，那么只允许在目录中建立和修改文件，但是不允许          删除</span><br><span class="line">  e：    Linux中绝大多数的文件都默认拥有e属性。表示该文件是使用ext文件系统进行存储的，而且不能使用“chattr -e”命令取消e属性</span><br><span class="line">  </span><br></pre></td></tr></table></figure>
-
-<p>示例：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 赋予文件i属性</span><br><span class="line">chattr +i abc</span><br><span class="line"></span><br><span class="line"># 取消文件i属性</span><br><span class="line">chattr -i abc</span><br><span class="line"></span><br><span class="line"># 赋予目录i属性</span><br><span class="line">chattr +i bcd/</span><br><span class="line"></span><br><span class="line"># 取消目录i属性</span><br><span class="line">chattr -i bcd/</span><br></pre></td></tr></table></figure>
-
-
-
-<p>b) 查看文件系统属性(lsattr)</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# lsattr 选项 文件名</span><br><span class="line">选项：</span><br><span class="line">  -a:    显示所有文件和目录</span><br><span class="line">  -d:    若目标是目录，仅列出目录本身的属性，而不是子文件</span><br></pre></td></tr></table></figure>
-
-
-
-]]></content>
-      <categories>
-        <category>Linux</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>软件包安装</title>
-    <url>/2025/02/25/%E8%BD%AF%E4%BB%B6%E5%8C%85%E5%AE%89%E8%A3%85/</url>
-    <content><![CDATA[<h1 id="软件包安装"><a href="#软件包安装" class="headerlink" title="软件包安装"></a>软件包安装</h1><h2 id="1-软件包分类"><a href="#1-软件包分类" class="headerlink" title="1. 软件包分类"></a>1. 软件包分类</h2><ul>
-<li>源码包</li>
-<li>二进制包</li>
-</ul>
-<h2 id="2-源码包"><a href="#2-源码包" class="headerlink" title="2. 源码包"></a>2. 源码包</h2><h3 id="1）源码包优点"><a href="#1）源码包优点" class="headerlink" title="1）源码包优点"></a>1）源码包优点</h3><ul>
-<li>开源，如果有足够的能力，可以修改源码包。</li>
-<li>可以自由选择所需的功能</li>
-<li>软件是编译安装，所以更加适合自己的系统，更加稳定也效率更高</li>
-<li>卸载方便</li>
-</ul>
-<h3 id="2）源码包缺点"><a href="#2）源码包缺点" class="headerlink" title="2）源码包缺点"></a>2）源码包缺点</h3><ul>
-<li>安装过程步骤较多，尤其安装较大的软件集合时(如LAMP环境搭建)，容易出现拼写错误</li>
-<li>编译过程时间较长，安装比二进制安装时间长</li>
-<li>因为是编译安装，安装过程中一旦报错新手很难解决</li>
-</ul>
-<h2 id="3-二进制包"><a href="#3-二进制包" class="headerlink" title="3. 二进制包"></a>3. 二进制包</h2><p>Linux系列：Debian和RedHat。</p>
-<h3 id="1）二进制包分类"><a href="#1）二进制包分类" class="headerlink" title="1）二进制包分类"></a>1）二进制包分类</h3><p>a）DPKG包</p>
-<p>是由Debian Linux所开发出来的包管理机制，通过DPKG包，Debian Linux就可以进行软件包管理。主要应用在Debian和Ubuntu中。</p>
-<p>b）RPM包</p>
-<p>是由Red Hat公司所开发的包管理系统。功能强大，安装、升级、查询和卸载都非常简单和方便。目前很多Linux都在使用这种包管理方式，包括Fedora、CentOS、SuSE等。</p>
-<h3 id="2）RPM包特点"><a href="#2）RPM包特点" class="headerlink" title="2）RPM包特点"></a>2）RPM包特点</h3><p>RPM包优点：</p>
-<ul>
-<li>包管理系统简单，只通过几个命令就可以实现包的安装、升级、查询和卸载</li>
-<li>安装速度比源码包安装快的多</li>
-</ul>
-<p>RPM包缺点：</p>
-<ul>
-<li>经过编译，不再可以看到源代码</li>
-<li>功能选择不如源码包灵活</li>
-<li>依赖性。有时我们会发现需要安装软件包a时需要先安装b和c，而安装b时需要安装d和e。这时需要先安装d和e，再安装b和c，最后才能安装a包。</li>
-</ul>
-<h3 id="3）RPM包依赖"><a href="#3）RPM包依赖" class="headerlink" title="3）RPM包依赖"></a>3）RPM包依赖</h3><p>a）树形依赖</p>
-<p>a——&gt;b——&gt;c</p>
-<p>b）环形依赖</p>
-<p>a——&gt;b——&gt;c——&gt;a</p>
-<p>c）模块依赖</p>
-<p>什么是模块依赖？例如：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -ivh mysql-connector-odbc-5.2.5-7.el7.x86_64.rpm</span><br><span class="line">错误：依赖检测失败：</span><br><span class="line">    libodbc.so.2()(64bit) 被 mysql-connector-odbc-5.2.5-7.el7.x86_64 需要</span><br><span class="line">    libodbcinst.so.2()(64bit) 被 mysql-connector-odbc-5.2.5-7.el7.x86_64 需要</span><br></pre></td></tr></table></figure>
-
-<p>发现报错，需要安装”libodbc.so.2”函数库文件，这时会发现在光盘中根本找不到这个文件，那是因为函数库没有单独成包，是包含在某一个软件包中的，而如果知道在哪个软件包中，需要查询网站<a href="http://www.rpmfind.net./">www.rpmfind.net。</a></p>
-<h3 id="4）RPM包安装方法"><a href="#4）RPM包安装方法" class="headerlink" title="4）RPM包安装方法"></a>4）RPM包安装方法</h3><ul>
-<li>手工安装</li>
-<li>yum在线安装</li>
-</ul>
-<h2 id="4-软件包选择建议"><a href="#4-软件包选择建议" class="headerlink" title="4. 软件包选择建议"></a>4. 软件包选择建议</h2><ul>
-<li>源码包：如果软件包是给大量客户端提供访问，建议使用源码包安装，源码包效率更高(LAMP)。</li>
-<li>RPM包：如果软件包是给Linux底层使用，或只给少量客户访问，建议使用RPM包安装，因为RPM包简单。</li>
-</ul>
-<h2 id="5-RPM手工安装"><a href="#5-RPM手工安装" class="headerlink" title="5. RPM手工安装"></a>5. RPM手工安装</h2><p>rpm数据库路径：&#x2F;var&#x2F;lib&#x2F;rpm&#x2F;</p>
-<h3 id="1）RPM包命名规则"><a href="#1）RPM包命名规则" class="headerlink" title="1）RPM包命名规则"></a>1）RPM包命名规则</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">httpd-2.2.15-15.el6.centos.1.i686.rpm</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>httpd：软件包名</li>
-<li>2.2.15：软件版本</li>
-<li>15：软件发布的次数</li>
-<li>el6：软件发行商。el6是RedHat公司发布，适合RHEL6.x(Red Hat Enterprise Linux)和CentOS6.x下使用</li>
-<li>i686：适合的硬件平台。RPM包可以在不同的硬件平台安装，选择适合不同CPU的软件版本，可以最大化的发挥CPU性能，所以出现了所谓的i386（386以上计算机都可以安装）、i586（586以上的计算机都可以安装）、i686（奔腾II以上计算机都可以安装，目前所有的CPU都是奔腾II以上，所以这个软件版本居多）、x86_64（64位CPU可以安装）和noarch（没有硬件限制）等文件名了。</li>
-<li>rpm：rpm包的扩展名，我们说过Linux下文件不是靠扩展名区分文件类型，也就是Linux中扩展名没有任何意义。可是这里怎么又出现了扩展名呢？如果RPM包不用“rpm”作为扩展名，系统可以正确识别没有问题，可是管理员很难识别这是个什么样的软件。</li>
-</ul>
-<h3 id="2）RPM包手工命令安装"><a href="#2）RPM包手工命令安装" class="headerlink" title="2）RPM包手工命令安装"></a>2）RPM包手工命令安装</h3><p>a）默认安装位置</p>
-<table>
-<thead>
-<tr>
-<th>路径</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>&#x2F;etc&#x2F;</td>
-<td>配置文件安装目录</td>
-</tr>
-<tr>
-<td>&#x2F;usr&#x2F;bin&#x2F;</td>
-<td>可执行的命令安装目录</td>
-</tr>
-<tr>
-<td>&#x2F;usr&#x2F;lib&#x2F;</td>
-<td>程序所使用的函数库保存位置</td>
-</tr>
-<tr>
-<td>&#x2F;usr&#x2F;share&#x2F;doc&#x2F;</td>
-<td>基本的软件使用手册保存位置</td>
-</tr>
-<tr>
-<td>&#x2F;usr&#x2F;share&#x2F;man&#x2F;</td>
-<td>帮助文件保存位置</td>
-</tr>
-</tbody></table>
-<p>b）安装命令</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -ivh 包全名</span><br><span class="line">选项：</span><br><span class="line">  -i    install安装(install)</span><br><span class="line">  -v    显示更详细的信息(verbose)</span><br><span class="line">  -h    打印#显示安装进度(hash)</span><br></pre></td></tr></table></figure>
-
-<p>其他选项：</p>
-<ul>
-<li>–nodeps：不检测依赖性安装。安装软件时会检测依赖性，确定所需的底层软件是否安装。如果没有安装则会报错。如果我不管依赖性，想强行安装，可以使用这个选项。这样不检测依赖性安装的软件是不能使用的，所以不建议这样做。</li>
-<li>–replacefiles：替换文件安装。如果安装软件包，可是包中部分文件已经存在，那么正常安装时，会报错”某个文件已经存在”从而导致软件无法安装，使用这个选项可以忽视这个报错，而覆盖安装。</li>
-<li>–replacepkgs：替换软件包安装。如果软件包已经安装，此选项可以把软件包重复安装一遍。</li>
-<li>–force：强制安装。不管是否已经安装，都重新安装。就是–replacefiles和–replacepkgs的综合。</li>
-<li>–test：测试安装。不会实际安装，只是检测一下依赖性。</li>
-<li>–prefix：指定安装路径。为安装软件指定安装路径，而不使用默认安装路径。如果指定了安装路径，软件没有安装到系统默认路径中的话，系统会找不到这些安装的软件，需要进行手工配置才能被系统识别。所以rpm包我们一般都采用默认路径安装：1）默认安装位置是系统的习惯位置。2）RPM包管理系统是有卸载命令的(数据库记录安装位置)</li>
-</ul>
-<p>c）服务启动</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># service启动</span><br><span class="line">service 服务名 start|stop|restart|status</span><br><span class="line">参数：</span><br><span class="line">  start:    启动服务</span><br><span class="line">  stop:     停止服务</span><br><span class="line">  restart:  重启服务</span><br><span class="line">  status:   查看服务状态</span><br><span class="line">  </span><br><span class="line">  # 标准启动</span><br><span class="line">  /etc/init.d/服务名 start|stop|restart|status</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="3）RPM包升级"><a href="#3）RPM包升级" class="headerlink" title="3）RPM包升级"></a>3）RPM包升级</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -Uvh 包全名</span><br><span class="line">选项：</span><br><span class="line">  -U      升级安装，如果没有安装过，系统直接安装。如果安装过的版本较旧，则升级到新版本(upgrade)</span><br><span class="line"> </span><br><span class="line">rpm -Fvh 包全名</span><br><span class="line">选项：</span><br><span class="line">  -F      升级安装，如果没有安装过，则不会安装，必须安装有较旧版本，才能升级(freshen)</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="4）RPM包卸载"><a href="#4）RPM包卸载" class="headerlink" title="4）RPM包卸载"></a>4）RPM包卸载</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -e 包名</span><br><span class="line">选项：</span><br><span class="line">  --nodeps      不检查依赖性</span><br><span class="line">  -e            卸载</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="5）RPM包查询"><a href="#5）RPM包查询" class="headerlink" title="5）RPM包查询"></a>5）RPM包查询</h3><p>a）查询软件包是否安装</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -q 包名</span><br><span class="line">选项：</span><br><span class="line">  -q：查询(query)</span><br></pre></td></tr></table></figure>
-
-
-
-<p>b）查询系统中的所有安装软件包</p>
-<p>可以查询Linux系统中所有已经安装的软件包。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -qa</span><br><span class="line">选项：</span><br><span class="line">  -a：所有(all)</span><br></pre></td></tr></table></figure>
-
-<p>可以用管道符来查看所需内容</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -qa | grep 包名</span><br></pre></td></tr></table></figure>
-
-
-
-<p>c）查询软件包的详细信息</p>
-<p>可以查询已经安装的某个软件包的详细信息</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -qi 包名</span><br><span class="line">选项：</span><br><span class="line">  -i：查询软件信息(information)</span><br></pre></td></tr></table></figure>
-
-<p>也可以查询还没有安装的软件包的详细信息</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -qip 包全名</span><br><span class="line">选项：</span><br><span class="line">  -p：查询没有安装的软件包(package)</span><br></pre></td></tr></table></figure>
-
-
-
-<p>d）查询软件包中的文件列表</p>
-<p>可以查询已经安装的软件包中的文件列表和安装的完整目录</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -ql 包名</span><br><span class="line">选项：</span><br><span class="line">  -l：列出软件包中所有的文件列表和软件所安装的目录(list)</span><br></pre></td></tr></table></figure>
-
-<p>查询未安装的软件包中的文件列表和打算安装的位置</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -qlp 包全名</span><br><span class="line">选项：</span><br><span class="line">  -p：查询没有安装的软件包信息(package)</span><br></pre></td></tr></table></figure>
-
-
-
-<p>e）查询系统文件属于哪个RPM包</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -qf 系统文件名</span><br><span class="line">选项：</span><br><span class="line">  -f：查询系统文件属于哪个软件包(file)</span><br></pre></td></tr></table></figure>
-
-
-
-<p>f）查询软件包所依赖的软件包</p>
-<p>查询系统中和已经安装的软件包有依赖关系的软件包</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -qR 包名</span><br><span class="line">选项：</span><br><span class="line">  -R：查询软件包的依赖性(requires)</span><br></pre></td></tr></table></figure>
-
-<p>查询未安装的软件包的依赖包</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -qRp 包全名</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="6）验证"><a href="#6）验证" class="headerlink" title="6）验证"></a>6）验证</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">校验本机已经安装的所有软件包</span></span><br><span class="line">rpm -Va</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">校验指定RPM包中的文件(verify)</span></span><br><span class="line">rpm -V 已安装的名包</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">校验某个系统文件是否被修改</span></span><br><span class="line">rpm -Vf 系统文件名</span><br></pre></td></tr></table></figure>
-
-<p>示例：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -V httpd</span><br><span class="line">S.5....T.    c             /etc/httpd/conf/httpd.conf</span><br><span class="line">验证内容    文件类型          文件名</span><br></pre></td></tr></table></figure>
-
-<p>验证内容详情：</p>
-<ul>
-<li>S：文件大小是否改变</li>
-<li>M：文件的类型或文件的权限(rwx)是否被改变</li>
-<li>5：文件MD5校验和是否改变(可以看成文件内容是否改变)</li>
-<li>D：设备的主从代码是否改变</li>
-<li>L：文件路径是否改变</li>
-<li>U：文件的属主(所有者)是否改变</li>
-<li>G：文件的属组是否改变</li>
-<li>T：文件的修改时间是否改变</li>
-</ul>
-<p>文件类型：</p>
-<ul>
-<li>c：配置文件(config file)</li>
-<li>d：普通文档(documention)</li>
-<li>g：“鬼”文件(ghost file)，很少见，就是该文件不应该被这个RPM包包含 </li>
-<li>l：授权文件(license file)</li>
-<li>r：描述文件(readme)</li>
-</ul>
-<h3 id="7）数字证书"><a href="#7）数字证书" class="headerlink" title="7）数字证书"></a>7）数字证书</h3><p>前面的校验方法只能对已经安装的RPM包中的文件进行校验，但是如果RPM包本身就被动过手脚，那么校验就不能解决问题了，我们就必须使用数字证书验证了。</p>
-<p>数字证书特点：</p>
-<ul>
-<li>首先必须找到原厂的公钥文件，然后进行安装</li>
-<li>再安装RPM包时会提取RPM包中的证书信息，然后和本机安装的原厂证书进行验证</li>
-<li>如果验证通过，则允许安装；如果验证不通过，则不允许安装并警告</li>
-</ul>
-<p> a）数字证书导入</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm --import 数字证书文件</span><br><span class="line">选项：</span><br><span class="line">  --import：导入数字证书</span><br></pre></td></tr></table></figure>
-
-
-
-<p>b）查询系统中安装好的数字证书</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -qa | grep gpg-pubkey</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="8）RPM包中文件的提取"><a href="#8）RPM包中文件的提取" class="headerlink" title="8）RPM包中文件的提取"></a>8）RPM包中文件的提取</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm2cpio 包全名 | cpio -idv . 文件的绝对路径</span><br></pre></td></tr></table></figure>
-
-<p>rpm2cpio：将rpm包转换为cpio格式的命令。</p>
-<p>cpio：是一个标准工具，它用于创建软件档案文件和从档案文件中提取文件。</p>
-<h2 id="6-RPM包在线安装-yum"><a href="#6-RPM包在线安装-yum" class="headerlink" title="6. RPM包在线安装(yum)"></a>6. RPM包在线安装(yum)</h2><h3 id="1）yum源文件解析"><a href="#1）yum源文件解析" class="headerlink" title="1）yum源文件解析"></a>1）yum源文件解析</h3><p>yum源配置文件保存在&#x2F;etc&#x2F;yum.repos.d&#x2F;目录中，文件的扩展名一定是”*.repo”。也就是说，yum源配置文件只要扩展名是”*.repo”就会生效。</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">ls /etc/yum.repos.d/</span><br><span class="line">CentOS-Base.repo    CentOS-Debuginfo.repo    CentOS-fasttrack.repo    CentOS-Media.repo    CentOS-Vault.repo</span><br></pre></td></tr></table></figure>
-
-<p>这个目录中有5个yum源配置文件，默认情况下CentOS-Base.repo文件生效。</p>
-<p>CentOS-Base.repo中有5个yum源容器，以base容器解释其内容详情：</p>
-<ul>
-<li>[base]：容器名称，一定要放在[]中。</li>
-<li>name：容器说明，可以自己随便写。</li>
-<li>mirrorlist：镜像站点，这个可以注释掉。</li>
-<li>baseurl：yum源服务器的地址。默认是CentOS官方的yum源服务器，是可以使用的。如果觉得慢，可以改成国内yum源地址。</li>
-<li>enabled：此容器是否生效，如果不写或写成enabled&#x3D;1则表示此容器生效，写成enabled&#x3D;0则表示此容器不生效。</li>
-<li>gpgcheck：如果为1则表示RPM的数字证书生效，如果为0则表示RPM的数字证书不生效。</li>
-<li>gpgkey：数字证书的公钥文件保存位置，不用修改。</li>
-</ul>
-<h3 id="2）搭建本地光盘yum源"><a href="#2）搭建本地光盘yum源" class="headerlink" title="2）搭建本地光盘yum源"></a>2）搭建本地光盘yum源</h3><p>a）放入CentOS安装光盘，并挂载光盘到指定位置。</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">创建cdrom目录，作为光盘的挂载点</span></span><br><span class="line">mkdir /mnt/cdrom</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">挂载光盘到/mnt/cdrom</span></span><br><span class="line">mount /dev/cdrom /mnt/cdrom/</span><br></pre></td></tr></table></figure>
-
-<p>b）修改其他几个yum源配置文件的扩展名，让它们失效，因为只有扩展名是”*.repo”的文件才能作为yum源配置文件。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">cd /etc/yum.repo.d</span><br><span class="line">mv CentOS-Base.repo CentOS-Base.repo.bak</span><br></pre></td></tr></table></figure>
-
-<p>c）修改光盘yum源配置文件CentOS-Media.repo</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">vim CentOS-Media.repo</span><br><span class="line">[c6-media]</span><br><span class="line">name=CentOS-$releasever - Media</span><br><span class="line">baseurl=file:///mnt/cdrom/</span><br><span class="line">gpgcheck=1</span><br><span class="line">enabled=1   # 让配置生效</span><br><span class="line">gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-6</span><br></pre></td></tr></table></figure>
-
-<p>d）查看是否生效</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查询yum源所有可安装的软件包列表</span></span><br><span class="line">yum list</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="3）yum命令"><a href="#3）yum命令" class="headerlink" title="3）yum命令"></a>3）yum命令</h3><p>a）查询</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查询yum所有安装包</span></span><br><span class="line">yum list</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查询yum源服务器中是否包含某个软件包</span></span><br><span class="line">yum list 包名</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">搜索yum源服务器上所有和关键字相关的软件包</span></span><br><span class="line">yum search 关键字</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查询指定软件包的信息</span></span><br><span class="line">yum info samba</span><br></pre></td></tr></table></figure>
-
-<p>yum search搜索可以用于确定某个软件在哪个相关包当中。</p>
-<p>b）安装</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">yum -y install 包名</span><br><span class="line">选项：</span><br><span class="line">  install：    安装</span><br><span class="line">  -y：         自动回答yes。如果不加-y，那么每个安装的软件都需要手工回答yes</span><br></pre></td></tr></table></figure>
-
-
-
-<p>c）升级</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">yum -y update 包名</span><br><span class="line">选项：</span><br><span class="line">  update:    升级</span><br><span class="line">  -y：       自动回答yes</span><br><span class="line"><span class="meta prompt_">  </span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">升级本机所有软件包（包括内核，不常用）</span></span><br><span class="line">yum -y update</span><br></pre></td></tr></table></figure>
-
-
-
-<p>d）卸载</p>
-<p>除非你确定卸载的软件的依赖包不会对系统产生影响，否则不要执行yum的卸载，因为很有可能在卸载软件包的同时卸载的依赖包也是重要的系统文件，这就可能导致系统崩溃。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">yum remove 包名</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="4）yum组管理命令"><a href="#4）yum组管理命令" class="headerlink" title="4）yum组管理命令"></a>4）yum组管理命令</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">列出所有可用的软件组列表</span></span><br><span class="line">yum grouplist</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">列出软件组中包含的软件</span></span><br><span class="line">yum groupinfo 软件组名</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">安装指定软件组</span></span><br><span class="line">yum groupinstall 软件组名</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">卸载指定软件组</span></span><br><span class="line">yum groupremove 软件组名</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="7-源码包安装"><a href="#7-源码包安装" class="headerlink" title="7.源码包安装"></a>7.源码包安装</h2><h3 id="1）注意事项"><a href="#1）注意事项" class="headerlink" title="1）注意事项"></a>1）注意事项</h3><p>a）源码包是从哪里来的？</p>
-<p>源码包是通过官方网站下载的，如果需要使用，是需要单独下载的。</p>
-<p>b）是否可以在系统中既安装rpm包的Apache，又安装源码包的Apache？</p>
-<p>可以，因为两种安装方法安装的Apache，安装位置是不一样的：</p>
-<ul>
-<li>源码包必须指定安装位置(源码包没有安装数据库，没有删除命令)</li>
-<li>RPM包不建议指定安装位置，建议安装在默认位置(RPM包安装的服务有标准卸载命令，不怕文件到处安装)</li>
-</ul>
-<h3 id="2）安装过程"><a href="#2）安装过程" class="headerlink" title="2）安装过程"></a>2）安装过程</h3><p>a）下载软件包</p>
-<p>b）解压缩</p>
-<p>c）进入解压目录</p>
-<p>d）.&#x2F;configure（编译前准备）</p>
-<p>这一步主要有三个作用：</p>
-<ul>
-<li>在安装之前需要检测系统环境是否符合安装要求。</li>
-<li>定义需要的功能选项。”.&#x2F;configure”支持的功能选项较多，可以执行“.&#x2F;configure –help”命令查询其支持的功能，一般都会通过”.&#x2F;configure –prefix&#x3D;安装路径”来指定安装路径。</li>
-<li>把系统环境的检测结果和定义好的功能选项写入Makefile文件，后续的编译和安装需要依赖这个文件的内容。</li>
-</ul>
-<p>需要注意的是，configure不是系统命令，而是源码包软件自带的一个脚本程序，所以必须采用“.&#x2F;configure”方式执行。</p>
-<p>e）make（编译）</p>
-<p>make会调用gcc编译器，并读取Makefile文件中的信息进行系统软件编译。编译的目的就是把源码程序转变为能被Linux识别的可执行文件，这些可执行文件保存在当前目录下。编译过程较为耗时，需要有足够的耐心。</p>
-<p>f）make clean（清空编译内容，非必需步骤）</p>
-<p>如果在”.&#x2F;configure”或“make”编译中报错，那么我们在重新执行命令前一定要记得执行make clean命令，它会清空Makefile文件或编译产生的“.o”文件。</p>
-<p>g）make install（编译安装）</p>
-<p>这才是真正的安装过程，一般会写清楚程序的安装位置。如果忘记指定安装目录，则可以把这个命令的执行过程保存下来，以备将来删除使用。</p>
-<h3 id="3）删除"><a href="#3）删除" class="headerlink" title="3）删除"></a>3）删除</h3><p>源码包没有删除命令，如果需要删除，直接删除安装目录即可。</p>
-<h3 id="4）打入补丁"><a href="#4）打入补丁" class="headerlink" title="4）打入补丁"></a>4）打入补丁</h3><p>a）补丁的生成</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 比较old和new文件的不同</span><br><span class="line">diff 选项 old new</span><br><span class="line">选项：</span><br><span class="line">  -a    将任何文档当做文本文档处理</span><br><span class="line">  -b    忽略空格造成的不同</span><br><span class="line">  -B    忽略空白行造成的不同</span><br><span class="line">  -I    忽略大小写造成的不同</span><br><span class="line">  -N    当比较两个目录时，如果某个文件只在一个目录中，则另一个目录中视作空文件。</span><br><span class="line">  -r    当比较目录时，递归比较子目录</span><br><span class="line">  -u    使用统一的输出格式</span><br></pre></td></tr></table></figure>
-
-<p>比较两个文件的不同，并生成补丁文件”txt.patch”：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 比较两个文件的不同，同时生成txt.patch补丁文件</span><br><span class="line">diff -Naur /root/test/old.txt /root/test/new.txt &gt; txt.patch</span><br></pre></td></tr></table></figure>
-
-
-
-<p>b）打入补丁</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 按照补丁文件进行更新</span><br><span class="line">patch -pn &lt; 补丁文件</span><br><span class="line">选项：</span><br><span class="line">  -pn    n为数字。代表按照补丁文件中的路径，指定更新文件的位置。</span><br></pre></td></tr></table></figure>
-
-<p>“-pn”不好理解，补丁文件是要打入旧文件的，但是你当前所在的目录和补丁文件中的记录是不一定匹配的，所以就需要”-pn”来同步两个目录。</p>
-<p>比如我当前在“&#x2F;root&#x2F;test”目录下，补丁文件中记录的文件目录是为“&#x2F;root&#x2F;test&#x2F;old.txt”。这时如果写入“p1”，那么补丁文件就会打入”&#x2F;root&#x2F;test&#x2F;root&#x2F;test&#x2F;old.txt”。如果写入的是“p2”，那么补丁文件就会打入”&#x2F;root&#x2F;test&#x2F;test&#x2F;old.txt”。如果写入的是“p3”，那么补丁文件就会打入”&#x2F;root&#x2F;test&#x2F;old.txt”。即n表示删除补丁文件中记录的文件目录的路径。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">patch -p3 &lt; txt.patch</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="8-脚本安装程序"><a href="#8-脚本安装程序" class="headerlink" title="8. 脚本安装程序"></a>8. 脚本安装程序</h2><p>以Webmin安装为例。</p>
-<p>a）下载webmin软件，地址：<a href="http://sourceforge.net/projects/webadmin/files/webmin/">http://sourceforge.net/projects/webadmin/files/webmin/</a></p>
-<p>b）解压软件</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">tar -zxvf webmin-1.610.tar.gz</span><br></pre></td></tr></table></figure>
-
-<p>c）进入解压目录</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">cd webmin-1.610</span><br></pre></td></tr></table></figure>
-
-<p>d）执行安装程序setup.sh，并指定功能选项。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">./setup.sh</span><br></pre></td></tr></table></figure>
 
 ]]></content>
       <categories>
@@ -9665,6 +9347,324 @@
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# vim /etc/crontab</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">/etc/crontab: system-wide crontab</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Unlike any other crontab you don<span class="string">&#x27;t have to run the `crontab&#x27;</span></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash"><span class="built_in">command</span> to install the new version when you edit this file</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">and files <span class="keyword">in</span> /etc/cron.d. These files also have username fields,</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">that none of the other crontabs <span class="keyword">do</span>.</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">标识使用哪种shell</span></span><br><span class="line">SHELL=/bin/sh</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">You can also override PATH, but by default, newer versions inherit it from the environment</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Example of job definition:</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">.---------------- minute (0 - 59)</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">|  .------------- hour (0 - 23)</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">|  |  .---------- day of month (1 - 31)</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">|  |  |  .------- month (1 - 12) OR jan,feb,mar,apr ...</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">|  |  |  |  .---- day of week (0 - 6) (Sunday=0 or 7) OR sun,mon,tue,wed,thu,fri,sat</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">|  |  |  |  |</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">*  *  *  *  * user-name <span class="built_in">command</span> to be executed</span></span><br><span class="line">17 *	* * *	root	cd / &amp;&amp; run-parts --report /etc/cron.hourly</span><br><span class="line">25 6	* * *	root	test -x /usr/sbin/anacron || &#123; cd / &amp;&amp; run-parts --report /etc/cron.daily; &#125;</span><br><span class="line">47 6	* * 7	root	test -x /usr/sbin/anacron || &#123; cd / &amp;&amp; run-parts --report /etc/cron.weekly; &#125;</span><br><span class="line">52 6	1 * *	root	test -x /usr/sbin/anacron || &#123; cd / &amp;&amp; run-parts --report /etc/cron.monthly; &#125;</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">使用run-parts脚本调用并执行/root/cron/目录中所有的可执行文件</span></span><br><span class="line">* * * * *       root    run-parts /root/cron/</span><br></pre></td></tr></table></figure>
 
 <p>只要保存&#x2F;etc&#x2F;crontab文件，这个定时任务就可以执行了，当然要确定crond服务是运行的。</p>
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>软件包安装</title>
+    <url>/2025/02/25/%E8%BD%AF%E4%BB%B6%E5%8C%85%E5%AE%89%E8%A3%85/</url>
+    <content><![CDATA[<h1 id="软件包安装"><a href="#软件包安装" class="headerlink" title="软件包安装"></a>软件包安装</h1><h2 id="1-软件包分类"><a href="#1-软件包分类" class="headerlink" title="1. 软件包分类"></a>1. 软件包分类</h2><ul>
+<li>源码包</li>
+<li>二进制包</li>
+</ul>
+<h2 id="2-源码包"><a href="#2-源码包" class="headerlink" title="2. 源码包"></a>2. 源码包</h2><h3 id="1）源码包优点"><a href="#1）源码包优点" class="headerlink" title="1）源码包优点"></a>1）源码包优点</h3><ul>
+<li>开源，如果有足够的能力，可以修改源码包。</li>
+<li>可以自由选择所需的功能</li>
+<li>软件是编译安装，所以更加适合自己的系统，更加稳定也效率更高</li>
+<li>卸载方便</li>
+</ul>
+<h3 id="2）源码包缺点"><a href="#2）源码包缺点" class="headerlink" title="2）源码包缺点"></a>2）源码包缺点</h3><ul>
+<li>安装过程步骤较多，尤其安装较大的软件集合时(如LAMP环境搭建)，容易出现拼写错误</li>
+<li>编译过程时间较长，安装比二进制安装时间长</li>
+<li>因为是编译安装，安装过程中一旦报错新手很难解决</li>
+</ul>
+<h2 id="3-二进制包"><a href="#3-二进制包" class="headerlink" title="3. 二进制包"></a>3. 二进制包</h2><p>Linux系列：Debian和RedHat。</p>
+<h3 id="1）二进制包分类"><a href="#1）二进制包分类" class="headerlink" title="1）二进制包分类"></a>1）二进制包分类</h3><p>a）DPKG包</p>
+<p>是由Debian Linux所开发出来的包管理机制，通过DPKG包，Debian Linux就可以进行软件包管理。主要应用在Debian和Ubuntu中。</p>
+<p>b）RPM包</p>
+<p>是由Red Hat公司所开发的包管理系统。功能强大，安装、升级、查询和卸载都非常简单和方便。目前很多Linux都在使用这种包管理方式，包括Fedora、CentOS、SuSE等。</p>
+<h3 id="2）RPM包特点"><a href="#2）RPM包特点" class="headerlink" title="2）RPM包特点"></a>2）RPM包特点</h3><p>RPM包优点：</p>
+<ul>
+<li>包管理系统简单，只通过几个命令就可以实现包的安装、升级、查询和卸载</li>
+<li>安装速度比源码包安装快的多</li>
+</ul>
+<p>RPM包缺点：</p>
+<ul>
+<li>经过编译，不再可以看到源代码</li>
+<li>功能选择不如源码包灵活</li>
+<li>依赖性。有时我们会发现需要安装软件包a时需要先安装b和c，而安装b时需要安装d和e。这时需要先安装d和e，再安装b和c，最后才能安装a包。</li>
+</ul>
+<h3 id="3）RPM包依赖"><a href="#3）RPM包依赖" class="headerlink" title="3）RPM包依赖"></a>3）RPM包依赖</h3><p>a）树形依赖</p>
+<p>a——&gt;b——&gt;c</p>
+<p>b）环形依赖</p>
+<p>a——&gt;b——&gt;c——&gt;a</p>
+<p>c）模块依赖</p>
+<p>什么是模块依赖？例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -ivh mysql-connector-odbc-5.2.5-7.el7.x86_64.rpm</span><br><span class="line">错误：依赖检测失败：</span><br><span class="line">    libodbc.so.2()(64bit) 被 mysql-connector-odbc-5.2.5-7.el7.x86_64 需要</span><br><span class="line">    libodbcinst.so.2()(64bit) 被 mysql-connector-odbc-5.2.5-7.el7.x86_64 需要</span><br></pre></td></tr></table></figure>
+
+<p>发现报错，需要安装”libodbc.so.2”函数库文件，这时会发现在光盘中根本找不到这个文件，那是因为函数库没有单独成包，是包含在某一个软件包中的，而如果知道在哪个软件包中，需要查询网站<a href="http://www.rpmfind.net./">www.rpmfind.net。</a></p>
+<h3 id="4）RPM包安装方法"><a href="#4）RPM包安装方法" class="headerlink" title="4）RPM包安装方法"></a>4）RPM包安装方法</h3><ul>
+<li>手工安装</li>
+<li>yum在线安装</li>
+</ul>
+<h2 id="4-软件包选择建议"><a href="#4-软件包选择建议" class="headerlink" title="4. 软件包选择建议"></a>4. 软件包选择建议</h2><ul>
+<li>源码包：如果软件包是给大量客户端提供访问，建议使用源码包安装，源码包效率更高(LAMP)。</li>
+<li>RPM包：如果软件包是给Linux底层使用，或只给少量客户访问，建议使用RPM包安装，因为RPM包简单。</li>
+</ul>
+<h2 id="5-RPM手工安装"><a href="#5-RPM手工安装" class="headerlink" title="5. RPM手工安装"></a>5. RPM手工安装</h2><p>rpm数据库路径：&#x2F;var&#x2F;lib&#x2F;rpm&#x2F;</p>
+<h3 id="1）RPM包命名规则"><a href="#1）RPM包命名规则" class="headerlink" title="1）RPM包命名规则"></a>1）RPM包命名规则</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">httpd-2.2.15-15.el6.centos.1.i686.rpm</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>httpd：软件包名</li>
+<li>2.2.15：软件版本</li>
+<li>15：软件发布的次数</li>
+<li>el6：软件发行商。el6是RedHat公司发布，适合RHEL6.x(Red Hat Enterprise Linux)和CentOS6.x下使用</li>
+<li>i686：适合的硬件平台。RPM包可以在不同的硬件平台安装，选择适合不同CPU的软件版本，可以最大化的发挥CPU性能，所以出现了所谓的i386（386以上计算机都可以安装）、i586（586以上的计算机都可以安装）、i686（奔腾II以上计算机都可以安装，目前所有的CPU都是奔腾II以上，所以这个软件版本居多）、x86_64（64位CPU可以安装）和noarch（没有硬件限制）等文件名了。</li>
+<li>rpm：rpm包的扩展名，我们说过Linux下文件不是靠扩展名区分文件类型，也就是Linux中扩展名没有任何意义。可是这里怎么又出现了扩展名呢？如果RPM包不用“rpm”作为扩展名，系统可以正确识别没有问题，可是管理员很难识别这是个什么样的软件。</li>
+</ul>
+<h3 id="2）RPM包手工命令安装"><a href="#2）RPM包手工命令安装" class="headerlink" title="2）RPM包手工命令安装"></a>2）RPM包手工命令安装</h3><p>a）默认安装位置</p>
+<table>
+<thead>
+<tr>
+<th>路径</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>&#x2F;etc&#x2F;</td>
+<td>配置文件安装目录</td>
+</tr>
+<tr>
+<td>&#x2F;usr&#x2F;bin&#x2F;</td>
+<td>可执行的命令安装目录</td>
+</tr>
+<tr>
+<td>&#x2F;usr&#x2F;lib&#x2F;</td>
+<td>程序所使用的函数库保存位置</td>
+</tr>
+<tr>
+<td>&#x2F;usr&#x2F;share&#x2F;doc&#x2F;</td>
+<td>基本的软件使用手册保存位置</td>
+</tr>
+<tr>
+<td>&#x2F;usr&#x2F;share&#x2F;man&#x2F;</td>
+<td>帮助文件保存位置</td>
+</tr>
+</tbody></table>
+<p>b）安装命令</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -ivh 包全名</span><br><span class="line">选项：</span><br><span class="line">  -i    install安装(install)</span><br><span class="line">  -v    显示更详细的信息(verbose)</span><br><span class="line">  -h    打印#显示安装进度(hash)</span><br></pre></td></tr></table></figure>
+
+<p>其他选项：</p>
+<ul>
+<li>–nodeps：不检测依赖性安装。安装软件时会检测依赖性，确定所需的底层软件是否安装。如果没有安装则会报错。如果我不管依赖性，想强行安装，可以使用这个选项。这样不检测依赖性安装的软件是不能使用的，所以不建议这样做。</li>
+<li>–replacefiles：替换文件安装。如果安装软件包，可是包中部分文件已经存在，那么正常安装时，会报错”某个文件已经存在”从而导致软件无法安装，使用这个选项可以忽视这个报错，而覆盖安装。</li>
+<li>–replacepkgs：替换软件包安装。如果软件包已经安装，此选项可以把软件包重复安装一遍。</li>
+<li>–force：强制安装。不管是否已经安装，都重新安装。就是–replacefiles和–replacepkgs的综合。</li>
+<li>–test：测试安装。不会实际安装，只是检测一下依赖性。</li>
+<li>–prefix：指定安装路径。为安装软件指定安装路径，而不使用默认安装路径。如果指定了安装路径，软件没有安装到系统默认路径中的话，系统会找不到这些安装的软件，需要进行手工配置才能被系统识别。所以rpm包我们一般都采用默认路径安装：1）默认安装位置是系统的习惯位置。2）RPM包管理系统是有卸载命令的(数据库记录安装位置)</li>
+</ul>
+<p>c）服务启动</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># service启动</span><br><span class="line">service 服务名 start|stop|restart|status</span><br><span class="line">参数：</span><br><span class="line">  start:    启动服务</span><br><span class="line">  stop:     停止服务</span><br><span class="line">  restart:  重启服务</span><br><span class="line">  status:   查看服务状态</span><br><span class="line">  </span><br><span class="line">  # 标准启动</span><br><span class="line">  /etc/init.d/服务名 start|stop|restart|status</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="3）RPM包升级"><a href="#3）RPM包升级" class="headerlink" title="3）RPM包升级"></a>3）RPM包升级</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -Uvh 包全名</span><br><span class="line">选项：</span><br><span class="line">  -U      升级安装，如果没有安装过，系统直接安装。如果安装过的版本较旧，则升级到新版本(upgrade)</span><br><span class="line"> </span><br><span class="line">rpm -Fvh 包全名</span><br><span class="line">选项：</span><br><span class="line">  -F      升级安装，如果没有安装过，则不会安装，必须安装有较旧版本，才能升级(freshen)</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="4）RPM包卸载"><a href="#4）RPM包卸载" class="headerlink" title="4）RPM包卸载"></a>4）RPM包卸载</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -e 包名</span><br><span class="line">选项：</span><br><span class="line">  --nodeps      不检查依赖性</span><br><span class="line">  -e            卸载</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="5）RPM包查询"><a href="#5）RPM包查询" class="headerlink" title="5）RPM包查询"></a>5）RPM包查询</h3><p>a）查询软件包是否安装</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -q 包名</span><br><span class="line">选项：</span><br><span class="line">  -q：查询(query)</span><br></pre></td></tr></table></figure>
+
+
+
+<p>b）查询系统中的所有安装软件包</p>
+<p>可以查询Linux系统中所有已经安装的软件包。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -qa</span><br><span class="line">选项：</span><br><span class="line">  -a：所有(all)</span><br></pre></td></tr></table></figure>
+
+<p>可以用管道符来查看所需内容</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -qa | grep 包名</span><br></pre></td></tr></table></figure>
+
+
+
+<p>c）查询软件包的详细信息</p>
+<p>可以查询已经安装的某个软件包的详细信息</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -qi 包名</span><br><span class="line">选项：</span><br><span class="line">  -i：查询软件信息(information)</span><br></pre></td></tr></table></figure>
+
+<p>也可以查询还没有安装的软件包的详细信息</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -qip 包全名</span><br><span class="line">选项：</span><br><span class="line">  -p：查询没有安装的软件包(package)</span><br></pre></td></tr></table></figure>
+
+
+
+<p>d）查询软件包中的文件列表</p>
+<p>可以查询已经安装的软件包中的文件列表和安装的完整目录</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -ql 包名</span><br><span class="line">选项：</span><br><span class="line">  -l：列出软件包中所有的文件列表和软件所安装的目录(list)</span><br></pre></td></tr></table></figure>
+
+<p>查询未安装的软件包中的文件列表和打算安装的位置</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -qlp 包全名</span><br><span class="line">选项：</span><br><span class="line">  -p：查询没有安装的软件包信息(package)</span><br></pre></td></tr></table></figure>
+
+
+
+<p>e）查询系统文件属于哪个RPM包</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -qf 系统文件名</span><br><span class="line">选项：</span><br><span class="line">  -f：查询系统文件属于哪个软件包(file)</span><br></pre></td></tr></table></figure>
+
+
+
+<p>f）查询软件包所依赖的软件包</p>
+<p>查询系统中和已经安装的软件包有依赖关系的软件包</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -qR 包名</span><br><span class="line">选项：</span><br><span class="line">  -R：查询软件包的依赖性(requires)</span><br></pre></td></tr></table></figure>
+
+<p>查询未安装的软件包的依赖包</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -qRp 包全名</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="6）验证"><a href="#6）验证" class="headerlink" title="6）验证"></a>6）验证</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">校验本机已经安装的所有软件包</span></span><br><span class="line">rpm -Va</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">校验指定RPM包中的文件(verify)</span></span><br><span class="line">rpm -V 已安装的名包</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">校验某个系统文件是否被修改</span></span><br><span class="line">rpm -Vf 系统文件名</span><br></pre></td></tr></table></figure>
+
+<p>示例：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -V httpd</span><br><span class="line">S.5....T.    c             /etc/httpd/conf/httpd.conf</span><br><span class="line">验证内容    文件类型          文件名</span><br></pre></td></tr></table></figure>
+
+<p>验证内容详情：</p>
+<ul>
+<li>S：文件大小是否改变</li>
+<li>M：文件的类型或文件的权限(rwx)是否被改变</li>
+<li>5：文件MD5校验和是否改变(可以看成文件内容是否改变)</li>
+<li>D：设备的主从代码是否改变</li>
+<li>L：文件路径是否改变</li>
+<li>U：文件的属主(所有者)是否改变</li>
+<li>G：文件的属组是否改变</li>
+<li>T：文件的修改时间是否改变</li>
+</ul>
+<p>文件类型：</p>
+<ul>
+<li>c：配置文件(config file)</li>
+<li>d：普通文档(documention)</li>
+<li>g：“鬼”文件(ghost file)，很少见，就是该文件不应该被这个RPM包包含 </li>
+<li>l：授权文件(license file)</li>
+<li>r：描述文件(readme)</li>
+</ul>
+<h3 id="7）数字证书"><a href="#7）数字证书" class="headerlink" title="7）数字证书"></a>7）数字证书</h3><p>前面的校验方法只能对已经安装的RPM包中的文件进行校验，但是如果RPM包本身就被动过手脚，那么校验就不能解决问题了，我们就必须使用数字证书验证了。</p>
+<p>数字证书特点：</p>
+<ul>
+<li>首先必须找到原厂的公钥文件，然后进行安装</li>
+<li>再安装RPM包时会提取RPM包中的证书信息，然后和本机安装的原厂证书进行验证</li>
+<li>如果验证通过，则允许安装；如果验证不通过，则不允许安装并警告</li>
+</ul>
+<p> a）数字证书导入</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm --import 数字证书文件</span><br><span class="line">选项：</span><br><span class="line">  --import：导入数字证书</span><br></pre></td></tr></table></figure>
+
+
+
+<p>b）查询系统中安装好的数字证书</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -qa | grep gpg-pubkey</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="8）RPM包中文件的提取"><a href="#8）RPM包中文件的提取" class="headerlink" title="8）RPM包中文件的提取"></a>8）RPM包中文件的提取</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm2cpio 包全名 | cpio -idv . 文件的绝对路径</span><br></pre></td></tr></table></figure>
+
+<p>rpm2cpio：将rpm包转换为cpio格式的命令。</p>
+<p>cpio：是一个标准工具，它用于创建软件档案文件和从档案文件中提取文件。</p>
+<h2 id="6-RPM包在线安装-yum"><a href="#6-RPM包在线安装-yum" class="headerlink" title="6. RPM包在线安装(yum)"></a>6. RPM包在线安装(yum)</h2><h3 id="1）yum源文件解析"><a href="#1）yum源文件解析" class="headerlink" title="1）yum源文件解析"></a>1）yum源文件解析</h3><p>yum源配置文件保存在&#x2F;etc&#x2F;yum.repos.d&#x2F;目录中，文件的扩展名一定是”*.repo”。也就是说，yum源配置文件只要扩展名是”*.repo”就会生效。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">ls /etc/yum.repos.d/</span><br><span class="line">CentOS-Base.repo    CentOS-Debuginfo.repo    CentOS-fasttrack.repo    CentOS-Media.repo    CentOS-Vault.repo</span><br></pre></td></tr></table></figure>
+
+<p>这个目录中有5个yum源配置文件，默认情况下CentOS-Base.repo文件生效。</p>
+<p>CentOS-Base.repo中有5个yum源容器，以base容器解释其内容详情：</p>
+<ul>
+<li>[base]：容器名称，一定要放在[]中。</li>
+<li>name：容器说明，可以自己随便写。</li>
+<li>mirrorlist：镜像站点，这个可以注释掉。</li>
+<li>baseurl：yum源服务器的地址。默认是CentOS官方的yum源服务器，是可以使用的。如果觉得慢，可以改成国内yum源地址。</li>
+<li>enabled：此容器是否生效，如果不写或写成enabled&#x3D;1则表示此容器生效，写成enabled&#x3D;0则表示此容器不生效。</li>
+<li>gpgcheck：如果为1则表示RPM的数字证书生效，如果为0则表示RPM的数字证书不生效。</li>
+<li>gpgkey：数字证书的公钥文件保存位置，不用修改。</li>
+</ul>
+<h3 id="2）搭建本地光盘yum源"><a href="#2）搭建本地光盘yum源" class="headerlink" title="2）搭建本地光盘yum源"></a>2）搭建本地光盘yum源</h3><p>a）放入CentOS安装光盘，并挂载光盘到指定位置。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">创建cdrom目录，作为光盘的挂载点</span></span><br><span class="line">mkdir /mnt/cdrom</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">挂载光盘到/mnt/cdrom</span></span><br><span class="line">mount /dev/cdrom /mnt/cdrom/</span><br></pre></td></tr></table></figure>
+
+<p>b）修改其他几个yum源配置文件的扩展名，让它们失效，因为只有扩展名是”*.repo”的文件才能作为yum源配置文件。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">cd /etc/yum.repo.d</span><br><span class="line">mv CentOS-Base.repo CentOS-Base.repo.bak</span><br></pre></td></tr></table></figure>
+
+<p>c）修改光盘yum源配置文件CentOS-Media.repo</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">vim CentOS-Media.repo</span><br><span class="line">[c6-media]</span><br><span class="line">name=CentOS-$releasever - Media</span><br><span class="line">baseurl=file:///mnt/cdrom/</span><br><span class="line">gpgcheck=1</span><br><span class="line">enabled=1   # 让配置生效</span><br><span class="line">gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-6</span><br></pre></td></tr></table></figure>
+
+<p>d）查看是否生效</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查询yum源所有可安装的软件包列表</span></span><br><span class="line">yum list</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="3）yum命令"><a href="#3）yum命令" class="headerlink" title="3）yum命令"></a>3）yum命令</h3><p>a）查询</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查询yum所有安装包</span></span><br><span class="line">yum list</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查询yum源服务器中是否包含某个软件包</span></span><br><span class="line">yum list 包名</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">搜索yum源服务器上所有和关键字相关的软件包</span></span><br><span class="line">yum search 关键字</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查询指定软件包的信息</span></span><br><span class="line">yum info samba</span><br></pre></td></tr></table></figure>
+
+<p>yum search搜索可以用于确定某个软件在哪个相关包当中。</p>
+<p>b）安装</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">yum -y install 包名</span><br><span class="line">选项：</span><br><span class="line">  install：    安装</span><br><span class="line">  -y：         自动回答yes。如果不加-y，那么每个安装的软件都需要手工回答yes</span><br></pre></td></tr></table></figure>
+
+
+
+<p>c）升级</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">yum -y update 包名</span><br><span class="line">选项：</span><br><span class="line">  update:    升级</span><br><span class="line">  -y：       自动回答yes</span><br><span class="line"><span class="meta prompt_">  </span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">升级本机所有软件包（包括内核，不常用）</span></span><br><span class="line">yum -y update</span><br></pre></td></tr></table></figure>
+
+
+
+<p>d）卸载</p>
+<p>除非你确定卸载的软件的依赖包不会对系统产生影响，否则不要执行yum的卸载，因为很有可能在卸载软件包的同时卸载的依赖包也是重要的系统文件，这就可能导致系统崩溃。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">yum remove 包名</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="4）yum组管理命令"><a href="#4）yum组管理命令" class="headerlink" title="4）yum组管理命令"></a>4）yum组管理命令</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">列出所有可用的软件组列表</span></span><br><span class="line">yum grouplist</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">列出软件组中包含的软件</span></span><br><span class="line">yum groupinfo 软件组名</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">安装指定软件组</span></span><br><span class="line">yum groupinstall 软件组名</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">卸载指定软件组</span></span><br><span class="line">yum groupremove 软件组名</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="7-源码包安装"><a href="#7-源码包安装" class="headerlink" title="7.源码包安装"></a>7.源码包安装</h2><h3 id="1）注意事项"><a href="#1）注意事项" class="headerlink" title="1）注意事项"></a>1）注意事项</h3><p>a）源码包是从哪里来的？</p>
+<p>源码包是通过官方网站下载的，如果需要使用，是需要单独下载的。</p>
+<p>b）是否可以在系统中既安装rpm包的Apache，又安装源码包的Apache？</p>
+<p>可以，因为两种安装方法安装的Apache，安装位置是不一样的：</p>
+<ul>
+<li>源码包必须指定安装位置(源码包没有安装数据库，没有删除命令)</li>
+<li>RPM包不建议指定安装位置，建议安装在默认位置(RPM包安装的服务有标准卸载命令，不怕文件到处安装)</li>
+</ul>
+<h3 id="2）安装过程"><a href="#2）安装过程" class="headerlink" title="2）安装过程"></a>2）安装过程</h3><p>a）下载软件包</p>
+<p>b）解压缩</p>
+<p>c）进入解压目录</p>
+<p>d）.&#x2F;configure（编译前准备）</p>
+<p>这一步主要有三个作用：</p>
+<ul>
+<li>在安装之前需要检测系统环境是否符合安装要求。</li>
+<li>定义需要的功能选项。”.&#x2F;configure”支持的功能选项较多，可以执行“.&#x2F;configure –help”命令查询其支持的功能，一般都会通过”.&#x2F;configure –prefix&#x3D;安装路径”来指定安装路径。</li>
+<li>把系统环境的检测结果和定义好的功能选项写入Makefile文件，后续的编译和安装需要依赖这个文件的内容。</li>
+</ul>
+<p>需要注意的是，configure不是系统命令，而是源码包软件自带的一个脚本程序，所以必须采用“.&#x2F;configure”方式执行。</p>
+<p>e）make（编译）</p>
+<p>make会调用gcc编译器，并读取Makefile文件中的信息进行系统软件编译。编译的目的就是把源码程序转变为能被Linux识别的可执行文件，这些可执行文件保存在当前目录下。编译过程较为耗时，需要有足够的耐心。</p>
+<p>f）make clean（清空编译内容，非必需步骤）</p>
+<p>如果在”.&#x2F;configure”或“make”编译中报错，那么我们在重新执行命令前一定要记得执行make clean命令，它会清空Makefile文件或编译产生的“.o”文件。</p>
+<p>g）make install（编译安装）</p>
+<p>这才是真正的安装过程，一般会写清楚程序的安装位置。如果忘记指定安装目录，则可以把这个命令的执行过程保存下来，以备将来删除使用。</p>
+<h3 id="3）删除"><a href="#3）删除" class="headerlink" title="3）删除"></a>3）删除</h3><p>源码包没有删除命令，如果需要删除，直接删除安装目录即可。</p>
+<h3 id="4）打入补丁"><a href="#4）打入补丁" class="headerlink" title="4）打入补丁"></a>4）打入补丁</h3><p>a）补丁的生成</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 比较old和new文件的不同</span><br><span class="line">diff 选项 old new</span><br><span class="line">选项：</span><br><span class="line">  -a    将任何文档当做文本文档处理</span><br><span class="line">  -b    忽略空格造成的不同</span><br><span class="line">  -B    忽略空白行造成的不同</span><br><span class="line">  -I    忽略大小写造成的不同</span><br><span class="line">  -N    当比较两个目录时，如果某个文件只在一个目录中，则另一个目录中视作空文件。</span><br><span class="line">  -r    当比较目录时，递归比较子目录</span><br><span class="line">  -u    使用统一的输出格式</span><br></pre></td></tr></table></figure>
+
+<p>比较两个文件的不同，并生成补丁文件”txt.patch”：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 比较两个文件的不同，同时生成txt.patch补丁文件</span><br><span class="line">diff -Naur /root/test/old.txt /root/test/new.txt &gt; txt.patch</span><br></pre></td></tr></table></figure>
+
+
+
+<p>b）打入补丁</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 按照补丁文件进行更新</span><br><span class="line">patch -pn &lt; 补丁文件</span><br><span class="line">选项：</span><br><span class="line">  -pn    n为数字。代表按照补丁文件中的路径，指定更新文件的位置。</span><br></pre></td></tr></table></figure>
+
+<p>“-pn”不好理解，补丁文件是要打入旧文件的，但是你当前所在的目录和补丁文件中的记录是不一定匹配的，所以就需要”-pn”来同步两个目录。</p>
+<p>比如我当前在“&#x2F;root&#x2F;test”目录下，补丁文件中记录的文件目录是为“&#x2F;root&#x2F;test&#x2F;old.txt”。这时如果写入“p1”，那么补丁文件就会打入”&#x2F;root&#x2F;test&#x2F;root&#x2F;test&#x2F;old.txt”。如果写入的是“p2”，那么补丁文件就会打入”&#x2F;root&#x2F;test&#x2F;test&#x2F;old.txt”。如果写入的是“p3”，那么补丁文件就会打入”&#x2F;root&#x2F;test&#x2F;old.txt”。即n表示删除补丁文件中记录的文件目录的路径。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">patch -p3 &lt; txt.patch</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="8-脚本安装程序"><a href="#8-脚本安装程序" class="headerlink" title="8. 脚本安装程序"></a>8. 脚本安装程序</h2><p>以Webmin安装为例。</p>
+<p>a）下载webmin软件，地址：<a href="http://sourceforge.net/projects/webadmin/files/webmin/">http://sourceforge.net/projects/webadmin/files/webmin/</a></p>
+<p>b）解压软件</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">tar -zxvf webmin-1.610.tar.gz</span><br></pre></td></tr></table></figure>
+
+<p>c）进入解压目录</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">cd webmin-1.610</span><br></pre></td></tr></table></figure>
+
+<p>d）执行安装程序setup.sh，并指定功能选项。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">./setup.sh</span><br></pre></td></tr></table></figure>
+
 ]]></content>
       <categories>
         <category>Linux</category>
