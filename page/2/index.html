@@ -160,7 +160,7 @@
             
 	<div class="tag-cloud">
 	  <div class="tag-cloud-tags" id="tags">
-		<a href="/tags/DataBase/" style="font-size: 16px; color: #fff">DataBase</a> <a href="/tags/DevOps/" style="font-size: 16px; color: #fff">DevOps</a> <a href="/tags/Kubernetes/" style="font-size: 16px; color: #fff">Kubernetes</a> <a href="/tags/Linux/" style="font-size: 16px; color: #fff">Linux</a> <a href="/tags/Python/" style="font-size: 16px; color: #fff">Python</a>
+		<a href="/tags/DataBase/" style="font-size: 16px; color: #fff">DataBase</a> <a href="/tags/DevOps/" style="font-size: 16px; color: #fff">DevOps</a> <a href="/tags/Kubernetes/" style="font-size: 16px; color: #fff">Kubernetes</a> <a href="/tags/Linux/" style="font-size: 16px; color: #fff">Linux</a> <a href="/tags/Python/" style="font-size: 16px; color: #fff">Python</a> <a href="/tags/Redis/" style="font-size: 16px; color: #fff">Redis</a>
 	  </div>
 	</div>
 	<br>
@@ -201,6 +201,152 @@
   }
 </style>
 
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://bentech8.github.io/2025/03/04/%E5%90%AF%E5%8A%A8%E5%BC%95%E5%AF%BC%E4%B8%8E%E4%BF%AE%E5%A4%8D/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Ben">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ben's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/03/04/%E5%90%AF%E5%8A%A8%E5%BC%95%E5%AF%BC%E4%B8%8E%E4%BF%AE%E5%A4%8D/" class="post-title-link" itemprop="url">启动引导与修复</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-03-04 15:32:41" itemprop="dateCreated datePublished" datetime="2025-03-04T15:32:41+08:00">2025-03-04</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-03-05 17:27:30" itemprop="dateModified" datetime="2025-03-05T17:27:30+08:00">2025-03-05</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2025/03/04/%E5%90%AF%E5%8A%A8%E5%BC%95%E5%AF%BC%E4%B8%8E%E4%BF%AE%E5%A4%8D/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2025/03/04/%E5%90%AF%E5%8A%A8%E5%BC%95%E5%AF%BC%E4%B8%8E%E4%BF%AE%E5%A4%8D/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>5.5k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>10 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="系统运行级别"><a href="#系统运行级别" class="headerlink" title="系统运行级别"></a>系统运行级别</h2><h3 id="运行级别"><a href="#运行级别" class="headerlink" title="运行级别"></a>运行级别</h3><p>Linux默认有7个运行级别</p>
+<table>
+<thead>
+<tr>
+<th>运行级别</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td>关机</td>
+</tr>
+<tr>
+<td>1</td>
+<td>单用户模式，可以想象为windows的安全模式，主要用于系统修复</td>
+</tr>
+<tr>
+<td>2</td>
+<td>不完全的命令行模式，不含NFS服务</td>
+</tr>
+<tr>
+<td>3</td>
+<td>完全的命令行模式，就是标准字符界面</td>
+</tr>
+<tr>
+<td>4</td>
+<td>系统保留</td>
+</tr>
+<tr>
+<td>5</td>
+<td>图形模式</td>
+</tr>
+<tr>
+<td>6</td>
+<td>重启动</td>
+</tr>
+</tbody></table>
+<p>在Linux系统中可以使用runlevel命令来查看系统的运行级别：</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2025/03/04/%E5%90%AF%E5%8A%A8%E5%BC%95%E5%AF%BC%E4%B8%8E%E4%BF%AE%E5%A4%8D/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
 
       
   
@@ -1195,169 +1341,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://bentech8.github.io/2025/02/25/Shell%E5%9F%BA%E7%A1%80/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Ben">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Ben's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/02/25/Shell%E5%9F%BA%E7%A1%80/" class="post-title-link" itemprop="url">Shell基础</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2025-02-25 12:16:28" itemprop="dateCreated datePublished" datetime="2025-02-25T12:16:28+08:00">2025-02-25</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-02-26 22:50:07" itemprop="dateModified" datetime="2025-02-26T22:50:07+08:00">2025-02-26</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Shell/" itemprop="url" rel="index"><span itemprop="name">Shell</span></a>
-                </span>
-            </span>
-
-          
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2025/02/25/Shell%E5%9F%BA%E7%A1%80/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2025/02/25/Shell%E5%9F%BA%E7%A1%80/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>26k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>48 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="Shell概述"><a href="#Shell概述" class="headerlink" title="Shell概述"></a>Shell概述</h2><h3 id="Shell分类"><a href="#Shell分类" class="headerlink" title="Shell分类"></a>Shell分类</h3><table>
-<thead>
-<tr>
-<th>Shell类别</th>
-<th>易学性</th>
-<th>可移植性</th>
-<th>编辑性</th>
-<th>快捷性</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>Bourne Shell（sh）</td>
-<td>容易</td>
-<td>好</td>
-<td>较差</td>
-<td>较差</td>
-</tr>
-<tr>
-<td>Korn Shell（ksh）</td>
-<td>较难</td>
-<td>较好</td>
-<td>好</td>
-<td>较好</td>
-</tr>
-<tr>
-<td>Bourne Again（Bash）</td>
-<td>难</td>
-<td>较好</td>
-<td>好</td>
-<td>好</td>
-</tr>
-<tr>
-<td>POSIX Shell（psh）</td>
-<td>较难</td>
-<td>好</td>
-<td>好</td>
-<td>较好</td>
-</tr>
-<tr>
-<td>C Shell（csh）</td>
-<td>较难</td>
-<td>差</td>
-<td>较好</td>
-<td>较好</td>
-</tr>
-<tr>
-<td>TC Shell（tcsh）</td>
-<td>难</td>
-<td>差</td>
-<td>好</td>
-<td>好</td>
-</tr>
-</tbody></table>
-<p>Shell的两种主语法类型有Bourne和C，这两种语法彼此不兼容。Bourne家族主要包括sh、ksh、Bash、psh、zsh；C家族主要包括：csh、tcsh（Bash和zsh在不同程度上支持csh的语法）。</p>
-<p>可以通过&#x2F;etc&#x2F;shells文件来查询Linux支持的Shell：</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2025/02/25/Shell%E5%9F%BA%E7%A1%80/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1427,20 +1410,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">63</span>
+          <span class="site-state-item-count">64</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-count">8</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-count">6</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -1479,12 +1462,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">275k</span>
+    <span title="站点总字数">278k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">8:20</span>
+    <span title="站点阅读时长">8:26</span>
 </div>
 <!--
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
