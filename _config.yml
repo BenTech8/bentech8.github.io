@@ -3,9 +3,9 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: Ben
-subtitle: '个人学习笔记'
-description: 'E-mail:17620170099@163.com'
+title: Ben's Blog
+subtitle: ''
+description: ''
 keywords:
 author: Ben
 language: zh-CN
@@ -111,3 +111,13 @@ excerpt:			# 一定要顶格写，注意格式
   excerpt_excludes: []
   more_excludes: []
   hideWholePostExcerpts: true
+
+symbols_count_time:
+  symbols: true
+  time: true
+  total_symbols: true
+  total_time: true
+  exclude_codeblock: false
+  awl: 2    
+  wpm: 275
+  suffix: "mins."
