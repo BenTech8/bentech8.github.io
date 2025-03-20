@@ -28,7 +28,7 @@
 <meta property="og:description" content="Redis作为内存数据库，具有非常高的性能，单个实例的OPS能够达到10W左右。 确认是否Redis本身响应慢如果你发现你的业务服务API响应延迟变长，首先你需要先排查服务内部，究竟是哪个环境拖慢了整个服务。比较高效的做法是在服务内部集成链路追踪。 如果发现确实是操作Redis的这条链路耗时变长了，那么此刻需要把焦点关注在业务服务到Redis这条链路上。 从你的业务服务到Redis这条链路变慢的原">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-03-20T12:39:21.000Z">
-<meta property="article:modified_time" content="2025-03-20T13:46:52.940Z">
+<meta property="article:modified_time" content="2025-03-20T13:48:50.664Z">
 <meta property="article:author" content="Ben">
 <meta property="article:tag" content="Redis">
 <meta name="twitter:card" content="summary">
@@ -192,7 +192,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2025-03-20 20:39:21 / 修改时间：21:46:52" itemprop="dateCreated datePublished" datetime="2025-03-20T20:39:21+08:00">2025-03-20</time>
+              <time title="创建时间：2025-03-20 20:39:21 / 修改时间：21:48:50" itemprop="dateCreated datePublished" datetime="2025-03-20T20:39:21+08:00">2025-03-20</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -300,7 +300,7 @@
 <p>第二种情况导致变慢的原因在于，Redis一次需要返回给客户端的数据过多，更多时间花费在数据协议的组装和网络传输过程中。</p>
 <p>另外，我们还可以从资源使用率层面来分析，如果你的应用程序操作Redis的OPS不是很大，但Redis实例的CPU使用率却很高，那么很有可能是使用了复杂度过高的命令导致的。</p>
 <p>除此之外，我们都知道，Redis是单线程处理客户端请求的，如果你经常使用以上命令，那么当Redis处理客户端请求时，一旦前面某个命令发生耗时，就会导致后面的请求发生排队，对于客户端来说，响应延迟也会变长。</p>
-<p>解决办法</p>
+<p>如何解决？</p>
 <ul>
 <li>尽量不使用O(N)以上复杂度过高的命令，对于数据的聚合操作，放在客户端做。</li>
 <li>执行O(N)命令，保证N尽量小(推荐N&lt;&#x3D;300)，每次获取尽量少的数据，让Redis可以及时处理返回。</li>

@@ -1020,7 +1020,7 @@
 <p>第二种情况导致变慢的原因在于，Redis一次需要返回给客户端的数据过多，更多时间花费在数据协议的组装和网络传输过程中。</p>
 <p>另外，我们还可以从资源使用率层面来分析，如果你的应用程序操作Redis的OPS不是很大，但Redis实例的CPU使用率却很高，那么很有可能是使用了复杂度过高的命令导致的。</p>
 <p>除此之外，我们都知道，Redis是单线程处理客户端请求的，如果你经常使用以上命令，那么当Redis处理客户端请求时，一旦前面某个命令发生耗时，就会导致后面的请求发生排队，对于客户端来说，响应延迟也会变长。</p>
-<p>解决办法</p>
+<p>如何解决？</p>
 <ul>
 <li>尽量不使用O(N)以上复杂度过高的命令，对于数据的聚合操作，放在客户端做。</li>
 <li>执行O(N)命令，保证N尽量小(推荐N&lt;&#x3D;300)，每次获取尽量少的数据，让Redis可以及时处理返回。</li>
@@ -4920,59 +4920,6 @@
       </tags>
   </entry>
   <entry>
-    <title>初识面向象</title>
-    <url>/2019/03/20/python-%E5%88%9D%E8%AF%86%E9%9D%A2%E5%90%91%E8%B1%A1/</url>
-    <content><![CDATA[<h2 id="面向对象与面向过程"><a href="#面向对象与面向过程" class="headerlink" title="面向对象与面向过程"></a>面向对象与面向过程</h2><h3 id="面向过程"><a href="#面向过程" class="headerlink" title="面向过程"></a>面向过程</h3><ul>
-<li>特点：一切以事物的流程为核心</li>
-<li>优点：负责的问题流程化，编写相对简单</li>
-<li>缺点：可扩展性差</li>
-</ul>
-<h3 id="面向对象"><a href="#面向对象" class="headerlink" title="面向对象"></a>面向对象</h3><ul>
-<li>特点：一切以对象为中心</li>
-<li>优点：可扩展性强</li>
-<li>缺点：编程的复杂度高于面向过程</li>
-</ul>
-<h2 id="类与对象"><a href="#类与对象" class="headerlink" title="类与对象"></a>类与对象</h2><h3 id="类"><a href="#类" class="headerlink" title="类"></a>类</h3><ul>
-<li>类是对事物的总结，抽象的概念，类用来描述对象</li>
-<li><strong>init</strong>():称为初始化方法，对对象进行初始化操作，创建对象的时候自动调用这个方法</li>
-</ul>
-<h3 id="对象"><a href="#对象" class="headerlink" title="对象"></a>对象</h3><ul>
-<li>对象是类的实例化的结果</li>
-<li>对象能执行哪些方法，都由类来决定，类中定义了什么，对象就拥有什么</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">class User(object):</span><br><span class="line">    def __init__(self, username, password):</span><br><span class="line">        self.username = username</span><br><span class="line">        self.password = password</span><br><span class="line"></span><br><span class="line">    def login(self, uname, pwd):</span><br><span class="line">        if self.username == uname and self.password == pwd:</span><br><span class="line">            return True</span><br><span class="line">        else:</span><br><span class="line">            return False</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">u1 = User(&quot;尝试了就好&quot;, &quot;123&quot;)</span><br><span class="line">ret = u1.login(input(&quot;username:&quot;).strip(), input(&quot;password:&quot;).strip())</span><br><span class="line">print(ret)</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="创建对象"><a href="#创建对象" class="headerlink" title="创建对象"></a>创建对象</h3><p>xxx &#x3D; 类名()</p>
-<ul>
-<li>先自动执行__new__()来开辟内存，此时新开辟出来的内存区域是空的</li>
-<li>再自动调用__init__()来完成对象的初始化工作</li>
-</ul>
-<h2 id="面向对象三大特征"><a href="#面向对象三大特征" class="headerlink" title="面向对象三大特征"></a>面向对象三大特征</h2><h3 id="封装"><a href="#封装" class="headerlink" title="封装"></a>封装</h3><ul>
-<li>在面向对象思想中，是把一些看似无关紧要的内容组合到一起统一进行存储和使用。面向对象中表现为对属性和方法进行封装</li>
-</ul>
-<h3 id="继承"><a href="#继承" class="headerlink" title="继承"></a>继承</h3><ul>
-<li>子类可以自动拥有父类中除了私有属性外的其他所有内容</li>
-<li>一个类可以同时继承多个父类</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">class Animal(object):</span><br><span class="line"></span><br><span class="line">    def run(self):</span><br><span class="line">        print(&quot;----run----&quot;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Cat(Animal):</span><br><span class="line">    pass</span><br><span class="line"></span><br><span class="line">cat = Cat()</span><br><span class="line">cat.run()  # ----run----</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="多态"><a href="#多态" class="headerlink" title="多态"></a>多态</h3><ul>
-<li>同一个对象，多种形态</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">class Animal(object):</span><br><span class="line">    def run(self):</span><br><span class="line">        print(&quot;Animal is running...&quot;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Dog(Animal):</span><br><span class="line">    def run(self):</span><br><span class="line">        print(&quot;Dog is running...&quot;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Cat(Animal):</span><br><span class="line">    def run(self):</span><br><span class="line">        print(&quot;Cat is running...&quot;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Observer():</span><br><span class="line">    def observe(self, animal):</span><br><span class="line">        animal.run()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">dg = Dog()</span><br><span class="line">ct = Cat()</span><br><span class="line"></span><br><span class="line">ob = Observer()</span><br><span class="line">ob.observe(dg)</span><br><span class="line">ob.observe(ct)</span><br><span class="line"></span><br><span class="line">结果：</span><br><span class="line">Dog is running...</span><br><span class="line">Cat is running...</span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>Python</category>
-      </categories>
-      <tags>
-        <tag>Python</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>初识函数</title>
     <url>/2019/03/16/python-%E5%88%9D%E8%AF%86%E5%87%BD%E6%95%B0/</url>
     <content><![CDATA[<h2 id="函数定义及调用"><a href="#函数定义及调用" class="headerlink" title="函数定义及调用"></a>函数定义及调用</h2><ul>
@@ -5157,6 +5104,59 @@
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">def outer():</span><br><span class="line">    name = &quot;Tom&quot;</span><br><span class="line">    def inner():</span><br><span class="line">        print(name)</span><br><span class="line">    return inner</span><br><span class="line"></span><br><span class="line">ret = outer()</span><br><span class="line">ret()  # Tom</span><br></pre></td></tr></table></figure>
 
 <p>   如果一个函数执行完毕，则这个函数中的变量以及局部命名空间中的内容都将会被销毁。但由于外界可以通过ret()去访问内部函数。那这个时候内部函数访问的时间和时机就不一定了。如果此时，闭包中变量被销毁了，那么内部函数将不能正常执行。所以，Python规定，如果在内部函数中访问了外层函数的变量，那么这个么变量将不会消亡。</p>
+]]></content>
+      <categories>
+        <category>Python</category>
+      </categories>
+      <tags>
+        <tag>Python</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>初识面向象</title>
+    <url>/2019/03/20/python-%E5%88%9D%E8%AF%86%E9%9D%A2%E5%90%91%E8%B1%A1/</url>
+    <content><![CDATA[<h2 id="面向对象与面向过程"><a href="#面向对象与面向过程" class="headerlink" title="面向对象与面向过程"></a>面向对象与面向过程</h2><h3 id="面向过程"><a href="#面向过程" class="headerlink" title="面向过程"></a>面向过程</h3><ul>
+<li>特点：一切以事物的流程为核心</li>
+<li>优点：负责的问题流程化，编写相对简单</li>
+<li>缺点：可扩展性差</li>
+</ul>
+<h3 id="面向对象"><a href="#面向对象" class="headerlink" title="面向对象"></a>面向对象</h3><ul>
+<li>特点：一切以对象为中心</li>
+<li>优点：可扩展性强</li>
+<li>缺点：编程的复杂度高于面向过程</li>
+</ul>
+<h2 id="类与对象"><a href="#类与对象" class="headerlink" title="类与对象"></a>类与对象</h2><h3 id="类"><a href="#类" class="headerlink" title="类"></a>类</h3><ul>
+<li>类是对事物的总结，抽象的概念，类用来描述对象</li>
+<li><strong>init</strong>():称为初始化方法，对对象进行初始化操作，创建对象的时候自动调用这个方法</li>
+</ul>
+<h3 id="对象"><a href="#对象" class="headerlink" title="对象"></a>对象</h3><ul>
+<li>对象是类的实例化的结果</li>
+<li>对象能执行哪些方法，都由类来决定，类中定义了什么，对象就拥有什么</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">class User(object):</span><br><span class="line">    def __init__(self, username, password):</span><br><span class="line">        self.username = username</span><br><span class="line">        self.password = password</span><br><span class="line"></span><br><span class="line">    def login(self, uname, pwd):</span><br><span class="line">        if self.username == uname and self.password == pwd:</span><br><span class="line">            return True</span><br><span class="line">        else:</span><br><span class="line">            return False</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">u1 = User(&quot;尝试了就好&quot;, &quot;123&quot;)</span><br><span class="line">ret = u1.login(input(&quot;username:&quot;).strip(), input(&quot;password:&quot;).strip())</span><br><span class="line">print(ret)</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="创建对象"><a href="#创建对象" class="headerlink" title="创建对象"></a>创建对象</h3><p>xxx &#x3D; 类名()</p>
+<ul>
+<li>先自动执行__new__()来开辟内存，此时新开辟出来的内存区域是空的</li>
+<li>再自动调用__init__()来完成对象的初始化工作</li>
+</ul>
+<h2 id="面向对象三大特征"><a href="#面向对象三大特征" class="headerlink" title="面向对象三大特征"></a>面向对象三大特征</h2><h3 id="封装"><a href="#封装" class="headerlink" title="封装"></a>封装</h3><ul>
+<li>在面向对象思想中，是把一些看似无关紧要的内容组合到一起统一进行存储和使用。面向对象中表现为对属性和方法进行封装</li>
+</ul>
+<h3 id="继承"><a href="#继承" class="headerlink" title="继承"></a>继承</h3><ul>
+<li>子类可以自动拥有父类中除了私有属性外的其他所有内容</li>
+<li>一个类可以同时继承多个父类</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">class Animal(object):</span><br><span class="line"></span><br><span class="line">    def run(self):</span><br><span class="line">        print(&quot;----run----&quot;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Cat(Animal):</span><br><span class="line">    pass</span><br><span class="line"></span><br><span class="line">cat = Cat()</span><br><span class="line">cat.run()  # ----run----</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="多态"><a href="#多态" class="headerlink" title="多态"></a>多态</h3><ul>
+<li>同一个对象，多种形态</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">class Animal(object):</span><br><span class="line">    def run(self):</span><br><span class="line">        print(&quot;Animal is running...&quot;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Dog(Animal):</span><br><span class="line">    def run(self):</span><br><span class="line">        print(&quot;Dog is running...&quot;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Cat(Animal):</span><br><span class="line">    def run(self):</span><br><span class="line">        print(&quot;Cat is running...&quot;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Observer():</span><br><span class="line">    def observe(self, animal):</span><br><span class="line">        animal.run()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">dg = Dog()</span><br><span class="line">ct = Cat()</span><br><span class="line"></span><br><span class="line">ob = Observer()</span><br><span class="line">ob.observe(dg)</span><br><span class="line">ob.observe(ct)</span><br><span class="line"></span><br><span class="line">结果：</span><br><span class="line">Dog is running...</span><br><span class="line">Cat is running...</span><br></pre></td></tr></table></figure>
 ]]></content>
       <categories>
         <category>Python</category>
@@ -5358,6 +5358,38 @@
       </tags>
   </entry>
   <entry>
+    <title>异常</title>
+    <url>/2019/03/20/python-%E5%BC%82%E5%B8%B8/</url>
+    <content><![CDATA[<h2 id="异常"><a href="#异常" class="headerlink" title="异常"></a>异常</h2><h3 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h3><ul>
+<li>程序在运行过程中产生的错误</li>
+</ul>
+<h3 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h3><ul>
+<li>产生异常：python解释器调用代码，出现错误，系统自动产生一个异常对象，并把错误返回给调用方</li>
+<li>捕获异常：通过try…except可以对系统产生的异常进行捕获</li>
+<li>处理异常：如果except捕获到了相对应的异常，则在except代码块里处理异常，否则python解释器将错误返回调用者</li>
+<li>别名：指接收到的异常对象</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">try:</span><br><span class="line">    代码块</span><br><span class="line">except 异常名称 as 别名: </span><br><span class="line">    代码块</span><br><span class="line">except 异常名称 as 别名:</span><br><span class="line">    代码块</span><br><span class="line">...</span><br><span class="line">else:</span><br><span class="line">    不产生异常时执行这里的代码</span><br><span class="line">finally:</span><br><span class="line">    不管有无异常，都执行这里的代码</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="Exception"><a href="#Exception" class="headerlink" title="Exception"></a>Exception</h3><p>  Exception是所有异常的基类。换句话说，所有的错误都是Exception的子类对象。</p>
+<h2 id="抛出异常（raise）"><a href="#抛出异常（raise）" class="headerlink" title="抛出异常（raise）"></a>抛出异常（raise）</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> traceback</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">cul</span>(<span class="params">a, b</span>):</span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">type</span>(a) == <span class="built_in">int</span> <span class="keyword">or</span> <span class="built_in">type</span>(a) == <span class="built_in">float</span>) <span class="keyword">and</span> (<span class="built_in">type</span>(b) == <span class="built_in">int</span> <span class="keyword">or</span> <span class="built_in">type</span>(b) == <span class="built_in">float</span>):</span><br><span class="line">        <span class="keyword">return</span> a + b</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">raise</span> Exception(<span class="string">&quot;参数数据类型有误&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    <span class="built_in">print</span>(cul(<span class="number">1</span>, <span class="string">&quot;a&quot;</span>))</span><br><span class="line"><span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">    <span class="built_in">print</span>(e)  <span class="comment"># 参数数据类型有误</span></span><br><span class="line">    <span class="built_in">print</span>(traceback.format_exc())  <span class="comment"># 获取堆栈信息</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;出现了错误&quot;</span>)  <span class="comment"># 出现了错误</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># print(traceback.format_exc())结果：</span></span><br><span class="line">Traceback (most recent call last):</span><br><span class="line">  File <span class="string">&quot;E:/python_个人/day 019/临时.py&quot;</span>, line <span class="number">11</span>, <span class="keyword">in</span> &lt;module&gt;</span><br><span class="line">    <span class="built_in">print</span>(cul(<span class="number">1</span>, <span class="string">&quot;a&quot;</span>))</span><br><span class="line">  File <span class="string">&quot;E:/python_个人/day 019/临时.py&quot;</span>, line <span class="number">8</span>, <span class="keyword">in</span> cul</span><br><span class="line">    <span class="keyword">raise</span> Exception(<span class="string">&quot;参数数据类型有误&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<h2 id="自定义异常（慎用）"><a href="#自定义异常（慎用）" class="headerlink" title="自定义异常（慎用）"></a>自定义异常（慎用）</h2><ul>
+<li>自定义一个类，并继承Exception类，类中内容全部继承Exception。就自定义了一个异常</li>
+<li>名字须符合规范</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">GenderError</span>(<span class="title class_ inherited__">Exception</span>):</span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Person</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, name, gender</span>):</span><br><span class="line">        <span class="variable language_">self</span>.name = name</span><br><span class="line">        <span class="variable language_">self</span>.gender = gender</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">gender_judge</span>(<span class="params">obj</span>):</span><br><span class="line">    <span class="keyword">if</span> obj.gender != <span class="string">&quot;男&quot;</span>:</span><br><span class="line">        <span class="keyword">raise</span> GenderError(<span class="string">&quot;性别不对&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">p1 = Person(<span class="string">&quot;Tom&quot;</span>, <span class="string">&quot;男&quot;</span>)</span><br><span class="line">p2 = Person(<span class="string">&quot;Linda&quot;</span>, <span class="string">&quot;女&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    gender_judge(p1)</span><br><span class="line">    gender_judge(p2)</span><br><span class="line"><span class="keyword">except</span> GenderError <span class="keyword">as</span> e:</span><br><span class="line">    <span class="built_in">print</span>(e)  <span class="comment"># 性别不对</span></span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>Python</category>
+      </categories>
+      <tags>
+        <tag>Python</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>小数据池</title>
     <url>/2019/03/15/python-%E5%B0%8F%E6%95%B0%E6%8D%AE%E6%B1%A0/</url>
     <content><![CDATA[<h2 id="小数据池"><a href="#小数据池" class="headerlink" title="小数据池"></a>小数据池</h2><h3 id="代码块"><a href="#代码块" class="headerlink" title="代码块"></a>代码块</h3><p>  python程序是由代码块构成的，一个代码块的文本作为pythont程序执行的单元</p>
@@ -5436,38 +5468,6 @@
       <categories>
         <category>Python</category>
       </categories>
-  </entry>
-  <entry>
-    <title>异常</title>
-    <url>/2019/03/20/python-%E5%BC%82%E5%B8%B8/</url>
-    <content><![CDATA[<h2 id="异常"><a href="#异常" class="headerlink" title="异常"></a>异常</h2><h3 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h3><ul>
-<li>程序在运行过程中产生的错误</li>
-</ul>
-<h3 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h3><ul>
-<li>产生异常：python解释器调用代码，出现错误，系统自动产生一个异常对象，并把错误返回给调用方</li>
-<li>捕获异常：通过try…except可以对系统产生的异常进行捕获</li>
-<li>处理异常：如果except捕获到了相对应的异常，则在except代码块里处理异常，否则python解释器将错误返回调用者</li>
-<li>别名：指接收到的异常对象</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">try:</span><br><span class="line">    代码块</span><br><span class="line">except 异常名称 as 别名: </span><br><span class="line">    代码块</span><br><span class="line">except 异常名称 as 别名:</span><br><span class="line">    代码块</span><br><span class="line">...</span><br><span class="line">else:</span><br><span class="line">    不产生异常时执行这里的代码</span><br><span class="line">finally:</span><br><span class="line">    不管有无异常，都执行这里的代码</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="Exception"><a href="#Exception" class="headerlink" title="Exception"></a>Exception</h3><p>  Exception是所有异常的基类。换句话说，所有的错误都是Exception的子类对象。</p>
-<h2 id="抛出异常（raise）"><a href="#抛出异常（raise）" class="headerlink" title="抛出异常（raise）"></a>抛出异常（raise）</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> traceback</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">cul</span>(<span class="params">a, b</span>):</span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">type</span>(a) == <span class="built_in">int</span> <span class="keyword">or</span> <span class="built_in">type</span>(a) == <span class="built_in">float</span>) <span class="keyword">and</span> (<span class="built_in">type</span>(b) == <span class="built_in">int</span> <span class="keyword">or</span> <span class="built_in">type</span>(b) == <span class="built_in">float</span>):</span><br><span class="line">        <span class="keyword">return</span> a + b</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">raise</span> Exception(<span class="string">&quot;参数数据类型有误&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    <span class="built_in">print</span>(cul(<span class="number">1</span>, <span class="string">&quot;a&quot;</span>))</span><br><span class="line"><span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">    <span class="built_in">print</span>(e)  <span class="comment"># 参数数据类型有误</span></span><br><span class="line">    <span class="built_in">print</span>(traceback.format_exc())  <span class="comment"># 获取堆栈信息</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;出现了错误&quot;</span>)  <span class="comment"># 出现了错误</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># print(traceback.format_exc())结果：</span></span><br><span class="line">Traceback (most recent call last):</span><br><span class="line">  File <span class="string">&quot;E:/python_个人/day 019/临时.py&quot;</span>, line <span class="number">11</span>, <span class="keyword">in</span> &lt;module&gt;</span><br><span class="line">    <span class="built_in">print</span>(cul(<span class="number">1</span>, <span class="string">&quot;a&quot;</span>))</span><br><span class="line">  File <span class="string">&quot;E:/python_个人/day 019/临时.py&quot;</span>, line <span class="number">8</span>, <span class="keyword">in</span> cul</span><br><span class="line">    <span class="keyword">raise</span> Exception(<span class="string">&quot;参数数据类型有误&quot;</span>)</span><br></pre></td></tr></table></figure>
-
-<h2 id="自定义异常（慎用）"><a href="#自定义异常（慎用）" class="headerlink" title="自定义异常（慎用）"></a>自定义异常（慎用）</h2><ul>
-<li>自定义一个类，并继承Exception类，类中内容全部继承Exception。就自定义了一个异常</li>
-<li>名字须符合规范</li>
-</ul>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">GenderError</span>(<span class="title class_ inherited__">Exception</span>):</span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Person</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, name, gender</span>):</span><br><span class="line">        <span class="variable language_">self</span>.name = name</span><br><span class="line">        <span class="variable language_">self</span>.gender = gender</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">gender_judge</span>(<span class="params">obj</span>):</span><br><span class="line">    <span class="keyword">if</span> obj.gender != <span class="string">&quot;男&quot;</span>:</span><br><span class="line">        <span class="keyword">raise</span> GenderError(<span class="string">&quot;性别不对&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">p1 = Person(<span class="string">&quot;Tom&quot;</span>, <span class="string">&quot;男&quot;</span>)</span><br><span class="line">p2 = Person(<span class="string">&quot;Linda&quot;</span>, <span class="string">&quot;女&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    gender_judge(p1)</span><br><span class="line">    gender_judge(p2)</span><br><span class="line"><span class="keyword">except</span> GenderError <span class="keyword">as</span> e:</span><br><span class="line">    <span class="built_in">print</span>(e)  <span class="comment"># 性别不对</span></span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>Python</category>
-      </categories>
-      <tags>
-        <tag>Python</tag>
-      </tags>
   </entry>
   <entry>
     <title>推导式</title>
@@ -5696,89 +5696,6 @@
       </tags>
   </entry>
   <entry>
-    <title>正则表达式</title>
-    <url>/2019/03/20/python-%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/</url>
-    <content><![CDATA[<h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><ul>
-<li>正则表达式是对字符串操作的一种逻辑公式，一般使用正则表达式对字符串进行匹配和过滤</li>
-<li>正则表达式由普通字符和元字符组成</li>
-<li>优点：灵活，功能性强，逻辑性强</li>
-<li>缺点：上手难，一旦上手，会爱上这个东西</li>
-<li>工具：各大文本编辑器一般都有正则匹配功能。在线测试网址：<a href="http://tool.chinaz.com/regex/">http://tool.chinaz.com/regex/</a></li>
-</ul>
-<h2 id="普通字符"><a href="#普通字符" class="headerlink" title="普通字符"></a>普通字符</h2><p>  普通字符包含大小写字母、数字。在匹配普通字符时直接写就好。比如”abc”匹配的就是”abc”</p>
-<h2 id="元字符"><a href="#元字符" class="headerlink" title="元字符"></a>元字符</h2><h3 id="字符组"><a href="#字符组" class="headerlink" title="字符组"></a>字符组</h3><p>  用[ ]括起来，在[ ]中出现的内容会被匹配。例如：[abc]匹配a或b或c</p>
-<ul>
-<li>[a-z]：匹配a到z之间的一个字母</li>
-<li>[0-9]：匹配所有阿拉伯数字的一个</li>
-<li>[a-zA-Z0-9]：匹配a-z或A-Z或0-9其中的一个</li>
-</ul>
-<h3 id="简单元字符"><a href="#简单元字符" class="headerlink" title="简单元字符"></a>简单元字符</h3><ul>
-<li><strong>.</strong>：匹配换行符以外的任意字符</li>
-<li>\w：匹配字母或数字或下划线</li>
-<li>\s：匹配任意的空白符</li>
-<li>\d：匹配数字</li>
-<li>\n：匹配一个换行符</li>
-<li>\t：匹配一个制表符</li>
-<li>\b：匹配一个单词的结尾</li>
-<li>^：匹配字符串的开始</li>
-<li>$：匹配字符串的结尾</li>
-<li>\W：匹配非字母或数字或下划线</li>
-<li>\D：匹配非数字</li>
-<li>\S：匹配非空白符</li>
-<li>a|b：匹配字符a或字符b</li>
-<li>()：匹配括号内的表达式，也表示一个组</li>
-<li>[…]：匹配字符组中的字符</li>
-<li>[^…]：匹配除了字符中字符的所有字符</li>
-</ul>
-<h3 id="量词"><a href="#量词" class="headerlink" title="量词"></a>量词</h3><ul>
-<li>*：重复0次或更多次</li>
-<li>+：重复一次或更多次</li>
-<li>？：重复0次或一次</li>
-<li>{n}：重复n次</li>
-<li>{n, }：重复n次或更多次</li>
-<li>{n, m}：重复n到m次</li>
-</ul>
-<h2 id="贪婪匹配与惰性匹配"><a href="#贪婪匹配与惰性匹配" class="headerlink" title="贪婪匹配与惰性匹配"></a>贪婪匹配与惰性匹配</h2><h3 id="贪婪匹配"><a href="#贪婪匹配" class="headerlink" title="贪婪匹配"></a>贪婪匹配</h3><p>  量词中的*，+，{}都属于贪婪匹配，就是尽可能多的匹配到结果</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">str</span>：hello world</span><br><span class="line">reg: h.*</span><br><span class="line">此时匹配的结果：hello world</span><br><span class="line"><span class="built_in">str</span>：&lt;div&gt;hello&lt;/div&gt;</span><br><span class="line">reg：&lt;.*&gt;</span><br><span class="line">此时匹配的结果：&lt;div&gt;hello&lt;/div&gt;</span><br></pre></td></tr></table></figure>
-
-<h3 id="惰性匹配"><a href="#惰性匹配" class="headerlink" title="惰性匹配"></a>惰性匹配</h3><p>  在使用.*后面如果加了”?”则是尽可能的少匹配</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">str</span>：hello world</span><br><span class="line">reg：h.*?</span><br><span class="line">此时匹配的结果：h</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">str</span>：&lt;div&gt;hello&lt;/div&gt;</span><br><span class="line">reg：&lt;.*?&gt;</span><br><span class="line">此时匹配的结果：</span><br><span class="line">&lt;div&gt;</span><br><span class="line">&lt;/div&gt;</span><br></pre></td></tr></table></figure>
-
-<h2 id="分组"><a href="#分组" class="headerlink" title="分组"></a>分组</h2><p>  在正则中使用()进行分组。</p>
-<p>  例如要匹配一个相对复杂的身份证号。身份证号分成两种。老的身份证号有15位，而新的身份证号有18位。并且新身份证号结尾可能是x</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">正则为：</span><br><span class="line">^([1-9]\d&#123;16&#125;[0-9x]|[1-9]\d&#123;14&#125;)$</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="转义"><a href="#转义" class="headerlink" title="转义"></a>转义</h2><p>  在正则表达式中，有很多有特殊意义的元字符，比如\n和\s等。如果要在正则中匹配正常的”\n”而不是换行就需要对”&quot;进行转义。</p>
-<p>  同理，在python中，对于\n,\s等也是有特殊意义的，如果要得到”\n”也需要对”&quot;进行转义，所以，如果需要匹配字符\n，在正则表达及python表达中需要写成如下表格形式。</p>
-<table>
-<thead>
-<tr>
-<th><strong>目标</strong></th>
-<th><strong>正则</strong></th>
-<th><strong>python</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td>\n</td>
-<td>\n</td>
-<td>\\n</td>
-</tr>
-</tbody></table>
-<p>表1 “\n”转义</p>
-<p>  此时可以利用r”\n”不转义，即上表中python中正则表达可写为：r”\n”</p>
-]]></content>
-      <categories>
-        <category>Python</category>
-      </categories>
-      <tags>
-        <tag>Python</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>模块语法</title>
     <url>/2019/03/20/python-%E6%A8%A1%E5%9D%97%E8%AF%AD%E6%B3%95/</url>
     <content><![CDATA[<h2 id="模块"><a href="#模块" class="headerlink" title="模块"></a>模块</h2><p>  模块就是一个包含python定义和声明的文件，文件名就是模块的名字加上.py后缀。换句话说，所有的py文件都可以看成是一个模块。</p>
@@ -5862,6 +5779,89 @@
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># test模块</span></span><br><span class="line">__all__ = [<span class="string">&quot;x&quot;</span>, <span class="string">&quot;y&quot;</span>]</span><br><span class="line">x = <span class="number">2</span></span><br><span class="line">y = <span class="number">3</span></span><br><span class="line">z = <span class="number">5</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">test</span>():</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;-----test-----&quot;</span>)</span><br></pre></td></tr></table></figure>
 
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 调用方</span></span><br><span class="line"><span class="keyword">from</span> test <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(x)  <span class="comment"># 2</span></span><br><span class="line"><span class="built_in">print</span>(z)  <span class="comment"># NameError: name &#x27;z&#x27; is not defined</span></span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>Python</category>
+      </categories>
+      <tags>
+        <tag>Python</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>正则表达式</title>
+    <url>/2019/03/20/python-%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/</url>
+    <content><![CDATA[<h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><ul>
+<li>正则表达式是对字符串操作的一种逻辑公式，一般使用正则表达式对字符串进行匹配和过滤</li>
+<li>正则表达式由普通字符和元字符组成</li>
+<li>优点：灵活，功能性强，逻辑性强</li>
+<li>缺点：上手难，一旦上手，会爱上这个东西</li>
+<li>工具：各大文本编辑器一般都有正则匹配功能。在线测试网址：<a href="http://tool.chinaz.com/regex/">http://tool.chinaz.com/regex/</a></li>
+</ul>
+<h2 id="普通字符"><a href="#普通字符" class="headerlink" title="普通字符"></a>普通字符</h2><p>  普通字符包含大小写字母、数字。在匹配普通字符时直接写就好。比如”abc”匹配的就是”abc”</p>
+<h2 id="元字符"><a href="#元字符" class="headerlink" title="元字符"></a>元字符</h2><h3 id="字符组"><a href="#字符组" class="headerlink" title="字符组"></a>字符组</h3><p>  用[ ]括起来，在[ ]中出现的内容会被匹配。例如：[abc]匹配a或b或c</p>
+<ul>
+<li>[a-z]：匹配a到z之间的一个字母</li>
+<li>[0-9]：匹配所有阿拉伯数字的一个</li>
+<li>[a-zA-Z0-9]：匹配a-z或A-Z或0-9其中的一个</li>
+</ul>
+<h3 id="简单元字符"><a href="#简单元字符" class="headerlink" title="简单元字符"></a>简单元字符</h3><ul>
+<li><strong>.</strong>：匹配换行符以外的任意字符</li>
+<li>\w：匹配字母或数字或下划线</li>
+<li>\s：匹配任意的空白符</li>
+<li>\d：匹配数字</li>
+<li>\n：匹配一个换行符</li>
+<li>\t：匹配一个制表符</li>
+<li>\b：匹配一个单词的结尾</li>
+<li>^：匹配字符串的开始</li>
+<li>$：匹配字符串的结尾</li>
+<li>\W：匹配非字母或数字或下划线</li>
+<li>\D：匹配非数字</li>
+<li>\S：匹配非空白符</li>
+<li>a|b：匹配字符a或字符b</li>
+<li>()：匹配括号内的表达式，也表示一个组</li>
+<li>[…]：匹配字符组中的字符</li>
+<li>[^…]：匹配除了字符中字符的所有字符</li>
+</ul>
+<h3 id="量词"><a href="#量词" class="headerlink" title="量词"></a>量词</h3><ul>
+<li>*：重复0次或更多次</li>
+<li>+：重复一次或更多次</li>
+<li>？：重复0次或一次</li>
+<li>{n}：重复n次</li>
+<li>{n, }：重复n次或更多次</li>
+<li>{n, m}：重复n到m次</li>
+</ul>
+<h2 id="贪婪匹配与惰性匹配"><a href="#贪婪匹配与惰性匹配" class="headerlink" title="贪婪匹配与惰性匹配"></a>贪婪匹配与惰性匹配</h2><h3 id="贪婪匹配"><a href="#贪婪匹配" class="headerlink" title="贪婪匹配"></a>贪婪匹配</h3><p>  量词中的*，+，{}都属于贪婪匹配，就是尽可能多的匹配到结果</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">str</span>：hello world</span><br><span class="line">reg: h.*</span><br><span class="line">此时匹配的结果：hello world</span><br><span class="line"><span class="built_in">str</span>：&lt;div&gt;hello&lt;/div&gt;</span><br><span class="line">reg：&lt;.*&gt;</span><br><span class="line">此时匹配的结果：&lt;div&gt;hello&lt;/div&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="惰性匹配"><a href="#惰性匹配" class="headerlink" title="惰性匹配"></a>惰性匹配</h3><p>  在使用.*后面如果加了”?”则是尽可能的少匹配</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">str</span>：hello world</span><br><span class="line">reg：h.*?</span><br><span class="line">此时匹配的结果：h</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">str</span>：&lt;div&gt;hello&lt;/div&gt;</span><br><span class="line">reg：&lt;.*?&gt;</span><br><span class="line">此时匹配的结果：</span><br><span class="line">&lt;div&gt;</span><br><span class="line">&lt;/div&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="分组"><a href="#分组" class="headerlink" title="分组"></a>分组</h2><p>  在正则中使用()进行分组。</p>
+<p>  例如要匹配一个相对复杂的身份证号。身份证号分成两种。老的身份证号有15位，而新的身份证号有18位。并且新身份证号结尾可能是x</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">正则为：</span><br><span class="line">^([1-9]\d&#123;16&#125;[0-9x]|[1-9]\d&#123;14&#125;)$</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="转义"><a href="#转义" class="headerlink" title="转义"></a>转义</h2><p>  在正则表达式中，有很多有特殊意义的元字符，比如\n和\s等。如果要在正则中匹配正常的”\n”而不是换行就需要对”&quot;进行转义。</p>
+<p>  同理，在python中，对于\n,\s等也是有特殊意义的，如果要得到”\n”也需要对”&quot;进行转义，所以，如果需要匹配字符\n，在正则表达及python表达中需要写成如下表格形式。</p>
+<table>
+<thead>
+<tr>
+<th><strong>目标</strong></th>
+<th><strong>正则</strong></th>
+<th><strong>python</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>\n</td>
+<td>\n</td>
+<td>\\n</td>
+</tr>
+</tbody></table>
+<p>表1 “\n”转义</p>
+<p>  此时可以利用r”\n”不转义，即上表中python中正则表达可写为：r”\n”</p>
 ]]></content>
       <categories>
         <category>Python</category>
@@ -6002,6 +6002,47 @@
 <p>此代码相当于：</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">def add(a, b):</span><br><span class="line">    return a + b</span><br><span class="line"></span><br><span class="line">def test():</span><br><span class="line">    for r_i in range(4):</span><br><span class="line">        yield r_i</span><br><span class="line"></span><br><span class="line">g1 = test()</span><br><span class="line"></span><br><span class="line">n = 2</span><br><span class="line">g2 = (add(n, i) for i in g1)</span><br><span class="line"></span><br><span class="line">n = 10</span><br><span class="line">g3 = (add(n, i) for i in g2)</span><br><span class="line"></span><br><span class="line">print(list(g3)) # n = 10, g3 = (add(n, i) for i in (add(n, i) for i in g1))</span><br></pre></td></tr></table></figure>
 
+]]></content>
+      <categories>
+        <category>Python</category>
+      </categories>
+      <tags>
+        <tag>Python</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>类与类之间的关系</title>
+    <url>/2019/03/20/python-%E7%B1%BB%E4%B8%8E%E7%B1%BB%E4%B9%8B%E9%97%B4%E7%9A%84%E5%85%B3%E7%B3%BB/</url>
+    <content><![CDATA[<h2 id="依赖关系"><a href="#依赖关系" class="headerlink" title="依赖关系"></a>依赖关系</h2><ul>
+<li>在方法中给方法传递一个对象</li>
+<li>此种关系，类与类之间的关系是最轻的</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 植物大战僵尸</span><br><span class="line">class Plant(object):</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    植物类</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    def __init__(self, name, attack, hp):</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        初始化</span><br><span class="line">        :param name:植物名</span><br><span class="line">        :param attack: 攻击力</span><br><span class="line">        :param hp: 血量</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        self.name = name</span><br><span class="line">        self.attack = attack</span><br><span class="line">        self.hp = hp</span><br><span class="line"></span><br><span class="line">    def fight(self, zombie):</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        攻击js,使js掉血</span><br><span class="line">        :param js: 攻击对象</span><br><span class="line">        :return: None</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        zombie.hp -= self.attack</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Zombie(object):</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    僵尸类</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    def __init__(self, name, hp, attack):</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        初始化</span><br><span class="line">        :param name: 僵尸名</span><br><span class="line">        :param hp: 血量</span><br><span class="line">        :param attack: 攻击力</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        self.name = name</span><br><span class="line">        self.hp = hp</span><br><span class="line">        self.attack = attack</span><br><span class="line"></span><br><span class="line">    def eat(self, plant):</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        僵尸吃plant</span><br><span class="line">        :param plant: 吃的对象</span><br><span class="line">        :return: None</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        plant.hp -= self.attack</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">lvluo = Plant(&quot;绿萝&quot;, 20, 100)</span><br><span class="line">js1 = Zombie(&quot;僵尸1号&quot;, 100, 5)</span><br><span class="line"></span><br><span class="line">lvluo.fight(js1)</span><br><span class="line">js1.eat(lvluo)</span><br><span class="line"></span><br><span class="line">print(lvluo.hp)  # 95</span><br><span class="line">print(js1.hp)    # 80</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="关联关系"><a href="#关联关系" class="headerlink" title="关联关系"></a>关联关系</h2><ul>
+<li>两种事物必须是互相关联的，但是在某些特殊情况下是可以更改和更换的</li>
+<li>一对多：一的一方埋集合，多的一方埋实体</li>
+</ul>
+<h3 id="一对一关系"><a href="#一对一关系" class="headerlink" title="一对一关系"></a>一对一关系</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">class Person(object):</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    Person类</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    def __init__(self, name, id=None):</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        初始化</span><br><span class="line">        :param name: 姓名</span><br><span class="line">        :param id: 身份证号码</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        self.name = name</span><br><span class="line">        self.id = id</span><br><span class="line"></span><br><span class="line">    def display(self):</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        展示有无身份证</span><br><span class="line">        :return: None</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        if self.id:</span><br><span class="line">            print(&quot;我叫%s, 我的身份证号码为%s&quot; % (self.name, self.id))</span><br><span class="line">        else:</span><br><span class="line">            print(&quot;我未成年，没有身份证！！！&quot;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Id(object):</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    Id类</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    def __init__(self, name, num):</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        初始化</span><br><span class="line">        :param name: 姓名</span><br><span class="line">        :param num: 身份证号</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        self.name = name</span><br><span class="line">        self.num = num</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">p_id = Id(&quot;Tom&quot;, 123456789)</span><br><span class="line">p1 = Person(&quot;Tom&quot;, p_id.num)</span><br><span class="line">p1.display()  # 我叫Tom, 我的身份证号码为123456789</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="一对多关系"><a href="#一对多关系" class="headerlink" title="一对多关系"></a>一对多关系</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">class Teacher(object):</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    Teacher类</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    def __init__(self, name, lst=None):</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        初始化</span><br><span class="line">        :param name: 姓名</span><br><span class="line">        :param lst: 学生列表</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        self.name = name</span><br><span class="line">        if lst == None:</span><br><span class="line">            self.lst = []</span><br><span class="line">        else:</span><br><span class="line">            self.lst = lst</span><br><span class="line"></span><br><span class="line">    def add(self, student):</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        添加学生</span><br><span class="line">        :param student: 学生对象</span><br><span class="line">        :return: None</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        self.lst.append(student)</span><br><span class="line"></span><br><span class="line">    def display(self):</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        打印学生姓名</span><br><span class="line">        :return: None</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        for el in self.lst:</span><br><span class="line">            print(el.name)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Student(object):</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    Student类</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    def __init__(self, name, num):</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        初始化</span><br><span class="line">        :param name: 姓名</span><br><span class="line">        :param num: 学号</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        self.name = name</span><br><span class="line">        self.num = num</span><br><span class="line"></span><br><span class="line"># 创建对象</span><br><span class="line">t = Teacher(&quot;Tom&quot;)</span><br><span class="line">s1 = Student(&quot;andy&quot;, 1)</span><br><span class="line">s2 = Student(&quot;Linda&quot;, 2)</span><br><span class="line"></span><br><span class="line"># 把学生添加给老师</span><br><span class="line">t.add(s1)</span><br><span class="line">t.add(s2)</span><br><span class="line"></span><br><span class="line">t.display()</span><br><span class="line"></span><br><span class="line">结果：</span><br><span class="line">andy</span><br><span class="line">Linda</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="继承关系"><a href="#继承关系" class="headerlink" title="继承关系"></a>继承关系</h2><ul>
+<li>在具体继承关系中，访问方法时，self永远都是指向创建对象时的对象。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">class Base(object):</span><br><span class="line">    def __init__(self, num):</span><br><span class="line">        self.num = num</span><br><span class="line">    </span><br><span class="line">    def func1(self):</span><br><span class="line">        print(self.num)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Foo(Base):</span><br><span class="line">    pass</span><br><span class="line"></span><br><span class="line">obj = Foo(123)  # 调用__init__方法，自己没有，找父类</span><br><span class="line">obj.func1()  # 123</span><br></pre></td></tr></table></figure>
+
+<p> Next：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">class Base(object):</span><br><span class="line">    def __init__(self, num):</span><br><span class="line">        self.num = num</span><br><span class="line"></span><br><span class="line">    def func1(self):</span><br><span class="line">        print(self.num)</span><br><span class="line">        self.func2()</span><br><span class="line"></span><br><span class="line">    def func2(self):</span><br><span class="line">        print(&quot;Base.func2&quot;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Foo(Base):</span><br><span class="line"></span><br><span class="line">    def func2(self):</span><br><span class="line">        print(&quot;Foo.func2&quot;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">obj = Foo(123)</span><br><span class="line">obj.func1()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">结果：</span><br><span class="line">123</span><br><span class="line">Foo.func</span><br></pre></td></tr></table></figure>
+
+<p> Next：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">class Base(object):</span><br><span class="line">    def __init__(self, num):</span><br><span class="line">        self.num = num</span><br><span class="line"></span><br><span class="line">    def func1(self):</span><br><span class="line">        print(self.num)</span><br><span class="line">        self.func2()</span><br><span class="line"></span><br><span class="line">    def func2(self):</span><br><span class="line">        print(111, self.num)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Foo(Base):</span><br><span class="line"></span><br><span class="line">    def func2(self):</span><br><span class="line">        print(222, self.num)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">lst = [Base(1), Base(2), Foo(3)]</span><br><span class="line">for obj in lst:</span><br><span class="line">    obj.func1()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">结果：</span><br><span class="line">1</span><br><span class="line">111 1</span><br><span class="line">2</span><br><span class="line">111 2</span><br><span class="line">3</span><br><span class="line">222 3</span><br></pre></td></tr></table></figure>
 ]]></content>
       <categories>
         <category>Python</category>
@@ -6158,47 +6199,6 @@
 <h3 id="ge"><a href="#ge" class="headerlink" title="_ge_()"></a><strong>_<em>ge</em>_()</strong></h3><ul>
 <li>触发：<strong>对象1 &gt;&#x3D; 对象2</strong></li>
 </ul>
-]]></content>
-      <categories>
-        <category>Python</category>
-      </categories>
-      <tags>
-        <tag>Python</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>类与类之间的关系</title>
-    <url>/2019/03/20/python-%E7%B1%BB%E4%B8%8E%E7%B1%BB%E4%B9%8B%E9%97%B4%E7%9A%84%E5%85%B3%E7%B3%BB/</url>
-    <content><![CDATA[<h2 id="依赖关系"><a href="#依赖关系" class="headerlink" title="依赖关系"></a>依赖关系</h2><ul>
-<li>在方法中给方法传递一个对象</li>
-<li>此种关系，类与类之间的关系是最轻的</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 植物大战僵尸</span><br><span class="line">class Plant(object):</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    植物类</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    def __init__(self, name, attack, hp):</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        初始化</span><br><span class="line">        :param name:植物名</span><br><span class="line">        :param attack: 攻击力</span><br><span class="line">        :param hp: 血量</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        self.name = name</span><br><span class="line">        self.attack = attack</span><br><span class="line">        self.hp = hp</span><br><span class="line"></span><br><span class="line">    def fight(self, zombie):</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        攻击js,使js掉血</span><br><span class="line">        :param js: 攻击对象</span><br><span class="line">        :return: None</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        zombie.hp -= self.attack</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Zombie(object):</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    僵尸类</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    def __init__(self, name, hp, attack):</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        初始化</span><br><span class="line">        :param name: 僵尸名</span><br><span class="line">        :param hp: 血量</span><br><span class="line">        :param attack: 攻击力</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        self.name = name</span><br><span class="line">        self.hp = hp</span><br><span class="line">        self.attack = attack</span><br><span class="line"></span><br><span class="line">    def eat(self, plant):</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        僵尸吃plant</span><br><span class="line">        :param plant: 吃的对象</span><br><span class="line">        :return: None</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        plant.hp -= self.attack</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">lvluo = Plant(&quot;绿萝&quot;, 20, 100)</span><br><span class="line">js1 = Zombie(&quot;僵尸1号&quot;, 100, 5)</span><br><span class="line"></span><br><span class="line">lvluo.fight(js1)</span><br><span class="line">js1.eat(lvluo)</span><br><span class="line"></span><br><span class="line">print(lvluo.hp)  # 95</span><br><span class="line">print(js1.hp)    # 80</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="关联关系"><a href="#关联关系" class="headerlink" title="关联关系"></a>关联关系</h2><ul>
-<li>两种事物必须是互相关联的，但是在某些特殊情况下是可以更改和更换的</li>
-<li>一对多：一的一方埋集合，多的一方埋实体</li>
-</ul>
-<h3 id="一对一关系"><a href="#一对一关系" class="headerlink" title="一对一关系"></a>一对一关系</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">class Person(object):</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    Person类</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    def __init__(self, name, id=None):</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        初始化</span><br><span class="line">        :param name: 姓名</span><br><span class="line">        :param id: 身份证号码</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        self.name = name</span><br><span class="line">        self.id = id</span><br><span class="line"></span><br><span class="line">    def display(self):</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        展示有无身份证</span><br><span class="line">        :return: None</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        if self.id:</span><br><span class="line">            print(&quot;我叫%s, 我的身份证号码为%s&quot; % (self.name, self.id))</span><br><span class="line">        else:</span><br><span class="line">            print(&quot;我未成年，没有身份证！！！&quot;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Id(object):</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    Id类</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    def __init__(self, name, num):</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        初始化</span><br><span class="line">        :param name: 姓名</span><br><span class="line">        :param num: 身份证号</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        self.name = name</span><br><span class="line">        self.num = num</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">p_id = Id(&quot;Tom&quot;, 123456789)</span><br><span class="line">p1 = Person(&quot;Tom&quot;, p_id.num)</span><br><span class="line">p1.display()  # 我叫Tom, 我的身份证号码为123456789</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="一对多关系"><a href="#一对多关系" class="headerlink" title="一对多关系"></a>一对多关系</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">class Teacher(object):</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    Teacher类</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    def __init__(self, name, lst=None):</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        初始化</span><br><span class="line">        :param name: 姓名</span><br><span class="line">        :param lst: 学生列表</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        self.name = name</span><br><span class="line">        if lst == None:</span><br><span class="line">            self.lst = []</span><br><span class="line">        else:</span><br><span class="line">            self.lst = lst</span><br><span class="line"></span><br><span class="line">    def add(self, student):</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        添加学生</span><br><span class="line">        :param student: 学生对象</span><br><span class="line">        :return: None</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        self.lst.append(student)</span><br><span class="line"></span><br><span class="line">    def display(self):</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        打印学生姓名</span><br><span class="line">        :return: None</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        for el in self.lst:</span><br><span class="line">            print(el.name)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Student(object):</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    Student类</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    def __init__(self, name, num):</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        初始化</span><br><span class="line">        :param name: 姓名</span><br><span class="line">        :param num: 学号</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        self.name = name</span><br><span class="line">        self.num = num</span><br><span class="line"></span><br><span class="line"># 创建对象</span><br><span class="line">t = Teacher(&quot;Tom&quot;)</span><br><span class="line">s1 = Student(&quot;andy&quot;, 1)</span><br><span class="line">s2 = Student(&quot;Linda&quot;, 2)</span><br><span class="line"></span><br><span class="line"># 把学生添加给老师</span><br><span class="line">t.add(s1)</span><br><span class="line">t.add(s2)</span><br><span class="line"></span><br><span class="line">t.display()</span><br><span class="line"></span><br><span class="line">结果：</span><br><span class="line">andy</span><br><span class="line">Linda</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="继承关系"><a href="#继承关系" class="headerlink" title="继承关系"></a>继承关系</h2><ul>
-<li>在具体继承关系中，访问方法时，self永远都是指向创建对象时的对象。</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">class Base(object):</span><br><span class="line">    def __init__(self, num):</span><br><span class="line">        self.num = num</span><br><span class="line">    </span><br><span class="line">    def func1(self):</span><br><span class="line">        print(self.num)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Foo(Base):</span><br><span class="line">    pass</span><br><span class="line"></span><br><span class="line">obj = Foo(123)  # 调用__init__方法，自己没有，找父类</span><br><span class="line">obj.func1()  # 123</span><br></pre></td></tr></table></figure>
-
-<p> Next：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">class Base(object):</span><br><span class="line">    def __init__(self, num):</span><br><span class="line">        self.num = num</span><br><span class="line"></span><br><span class="line">    def func1(self):</span><br><span class="line">        print(self.num)</span><br><span class="line">        self.func2()</span><br><span class="line"></span><br><span class="line">    def func2(self):</span><br><span class="line">        print(&quot;Base.func2&quot;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Foo(Base):</span><br><span class="line"></span><br><span class="line">    def func2(self):</span><br><span class="line">        print(&quot;Foo.func2&quot;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">obj = Foo(123)</span><br><span class="line">obj.func1()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">结果：</span><br><span class="line">123</span><br><span class="line">Foo.func</span><br></pre></td></tr></table></figure>
-
-<p> Next：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">class Base(object):</span><br><span class="line">    def __init__(self, num):</span><br><span class="line">        self.num = num</span><br><span class="line"></span><br><span class="line">    def func1(self):</span><br><span class="line">        print(self.num)</span><br><span class="line">        self.func2()</span><br><span class="line"></span><br><span class="line">    def func2(self):</span><br><span class="line">        print(111, self.num)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Foo(Base):</span><br><span class="line"></span><br><span class="line">    def func2(self):</span><br><span class="line">        print(222, self.num)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">lst = [Base(1), Base(2), Foo(3)]</span><br><span class="line">for obj in lst:</span><br><span class="line">    obj.func1()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">结果：</span><br><span class="line">1</span><br><span class="line">111 1</span><br><span class="line">2</span><br><span class="line">111 2</span><br><span class="line">3</span><br><span class="line">222 3</span><br></pre></td></tr></table></figure>
 ]]></content>
       <categories>
         <category>Python</category>
@@ -7942,7 +7942,7 @@
 </tr>
 <tr>
 <td>mail address</td>
-<td>当日志轮替时，输出内容通过邮件发送到指定的邮件地址。如mail <a href="mailto:&#x61;&#x61;&#97;&#64;&#49;&#54;&#51;&#46;&#x63;&#111;&#x6d;">aaa@163.com</a></td>
+<td>当日志轮替时，输出内容通过邮件发送到指定的邮件地址。如mail <a href="mailto:&#97;&#97;&#x61;&#x40;&#49;&#x36;&#51;&#46;&#99;&#111;&#109;">aaa@163.com</a></td>
 </tr>
 <tr>
 <td>missingok</td>
