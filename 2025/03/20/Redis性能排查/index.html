@@ -28,7 +28,7 @@
 <meta property="og:description" content="Redis作为内存数据库，具有非常高的性能，单个实例的OPS能够达到10W左右。 确认是否Redis本身响应慢如果你发现你的业务服务API响应延迟变长，首先你需要先排查服务内部，究竟是哪个环境拖慢了整个服务。比较高效的做法是在服务内部集成链路追踪。 如果发现确实是操作Redis的这条链路耗时变长了，那么此刻需要把焦点关注在业务服务到Redis这条链路上。 从你的业务服务到Redis这条链路变慢的原">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-03-20T12:39:21.000Z">
-<meta property="article:modified_time" content="2025-03-20T13:36:58.656Z">
+<meta property="article:modified_time" content="2025-03-20T13:46:52.940Z">
 <meta property="article:author" content="Ben">
 <meta property="article:tag" content="Redis">
 <meta name="twitter:card" content="summary">
@@ -192,7 +192,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2025-03-20 20:39:21 / 修改时间：21:36:58" itemprop="dateCreated datePublished" datetime="2025-03-20T20:39:21+08:00">2025-03-20</time>
+              <time title="创建时间：2025-03-20 20:39:21 / 修改时间：21:46:52" itemprop="dateCreated datePublished" datetime="2025-03-20T20:39:21+08:00">2025-03-20</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -280,8 +280,8 @@
 <li>找到你认为可能变慢的Redis实例，测试这个实例的基准性能。</li>
 <li>如果观察到，这个可能变慢的Redis实例的运行延迟是正常Redis基准性能的2倍以上，即可认为这个Redis实例确实变慢了。</li>
 </ul>
-<h2 id="Redis变慢的因素"><a href="#Redis变慢的因素" class="headerlink" title="Redis变慢的因素"></a>Redis变慢的因素</h2><h3 id="使用复杂度过高的命令"><a href="#使用复杂度过高的命令" class="headerlink" title="使用复杂度过高的命令"></a>使用复杂度过高的命令</h3><p>Redis慢日志</p>
-<p>Redis提供了慢日志命令统计功能，它记录了有哪些命令在执行时耗时比较久。</p>
+<h2 id="Redis变慢的因素"><a href="#Redis变慢的因素" class="headerlink" title="Redis变慢的因素"></a>Redis变慢的因素</h2><h3 id="使用复杂度过高的命令"><a href="#使用复杂度过高的命令" class="headerlink" title="使用复杂度过高的命令"></a>使用复杂度过高的命令</h3><p>如何发现耗时长的命令？</p>
+<p>Redis提供了慢日志(slowlog)命令统计功能，它记录了有哪些命令在执行时耗时比较久。</p>
 <p>查看Redis慢日志前，你需要设置慢日志的阈值。如设置慢日志的阈值为5ms，并且保留最近500条慢日志记录：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">命令执行耗时超过5ms，记录慢日志</span></span><br><span class="line">CONFIG SET slowlog-log-slower-than 5000</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">只保留最近500条慢日志</span></span><br><span class="line">CONFIG SET slowlog-max-len 500</span><br></pre></td></tr></table></figure>
 
@@ -290,7 +290,7 @@
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; SLOWLOG get 5</span><br><span class="line">1) 1) (integer) 32693       # 慢日志ID</span><br><span class="line">   2) (integer) 1593763337  # 执行时间戳</span><br><span class="line">   3) (integer) 5299        # 执行耗时(微秒)</span><br><span class="line">   4) 1) &quot;LRANGE&quot;           # 具体执行的命令和参数</span><br><span class="line">      2) &quot;user_list:2000&quot;</span><br><span class="line">      3) &quot;0&quot;</span><br><span class="line">      4) &quot;-1&quot;</span><br><span class="line">2) 1) (integer) 32692</span><br><span class="line">   2) (integer) 1593763337</span><br><span class="line">   3) (integer) 5044</span><br><span class="line">   4) 1) &quot;GET&quot;</span><br><span class="line">      2) &quot;user_info:1000&quot;</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
 
 <p>通过查看慢日志，就可以知道在什么时间间，执行了哪些命令比较耗时。</p>
-<p>使用复杂度过高命令的场景</p>
+<p>使用复杂度过高命令的场景有哪些？</p>
 <p>如果你的应用程序执行的Redis命令有以下特点，那么可能会导致操作延迟变大：</p>
 <ul>
 <li>经常使用O(N)以上复杂度的命令，例如SORT、SUNION、ZUNIONSTORE聚合类命令</li>
