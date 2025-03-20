@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"bentech8.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":5,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="os模块  所有和操作系统相关的内容都在os模块中 相关功能os.makedirs(“dirname1&#x2F;dirname2”) 可生成多层递归目录">
+<meta property="og:type" content="article">
+<meta property="og:title" content="os模块">
+<meta property="og:url" content="https://bentech8.github.io/2019/03/20/python-os%E6%A8%A1%E5%9D%97/index.html">
+<meta property="og:site_name" content="Ben">
+<meta property="og:description" content="os模块  所有和操作系统相关的内容都在os模块中 相关功能os.makedirs(“dirname1&#x2F;dirname2”) 可生成多层递归目录">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2019-03-20T09:37:48.000Z">
+<meta property="article:modified_time" content="2025-03-20T09:39:50.082Z">
+<meta property="article:author" content="Ben">
+<meta property="article:tag" content="Python">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://bentech8.github.io/2019/03/20/python-os%E6%A8%A1%E5%9D%97/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>os模块 | Ben</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Ben" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Ben</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">个人学习笔记</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/BenTech8/bentech8.github.io.git" class="github-corner" title="BenTech8 GitHub" aria-label="BenTech8 GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://bentech8.github.io/2019/03/20/python-os%E6%A8%A1%E5%9D%97/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Ben">
+      <meta itemprop="description" content="E-mail:17620170099@163.com">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ben">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          os模块
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-03-20 17:37:48" itemprop="dateCreated datePublished" datetime="2019-03-20T17:37:48+08:00">2019-03-20</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-03-20 17:39:50" itemprop="dateModified" datetime="2025-03-20T17:39:50+08:00">2025-03-20</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="os模块"><a href="#os模块" class="headerlink" title="os模块"></a>os模块</h2><p>  所有和操作系统相关的内容都在os模块中</p>
+<h2 id="相关功能"><a href="#相关功能" class="headerlink" title="相关功能"></a>相关功能</h2><h3 id="os-makedirs-“dirname1-dirname2”"><a href="#os-makedirs-“dirname1-dirname2”" class="headerlink" title="os.makedirs(“dirname1&#x2F;dirname2”)"></a>os.makedirs(“dirname1&#x2F;dirname2”)</h3><ul>
+<li>可生成多层递归目录</li>
+</ul>
+<h3 id="os-removedirs-“dirname”"><a href="#os-removedirs-“dirname”" class="headerlink" title="os.removedirs(“dirname”)"></a>os.removedirs(“dirname”)</h3><ul>
+<li>如果目录为空，则删除，并递归到上一级目录，如果上一级目录也为空，则删除，以此类推</li>
+</ul>
+<h3 id="os-mkdir-“driname”"><a href="#os-mkdir-“driname”" class="headerlink" title="os.mkdir(“driname”)"></a>os.mkdir(“driname”)</h3><ul>
+<li>生成单级目录，相当于shell中mkdir driname</li>
+</ul>
+<h3 id="os-rmdir-“dirname”"><a href="#os-rmdir-“dirname”" class="headerlink" title="os.rmdir(“dirname”)"></a>os.rmdir(“dirname”)</h3><ul>
+<li>删除单级目录，如果目录不为空则无法删除，报错；相当于shell中rmdir dirname</li>
+</ul>
+<h3 id="os-listdir-“dirname”"><a href="#os-listdir-“dirname”" class="headerlink" title="os.listdir(“dirname”)"></a>os.listdir(“dirname”)</h3><ul>
+<li>列出指定目录下的所有文件和子目录，包括隐藏文件，并以列表方式打印</li>
+</ul>
+<h3 id="os-remove-“filename”"><a href="#os-remove-“filename”" class="headerlink" title="os.remove(“filename”)"></a>os.remove(“filename”)</h3><ul>
+<li>删除一个文件</li>
+</ul>
+<h3 id="os-rename-“oldname”-“newname”"><a href="#os-rename-“oldname”-“newname”" class="headerlink" title="os.rename(“oldname”, “newname”)"></a>os.rename(“oldname”, “newname”)</h3><ul>
+<li>重命名文件&#x2F;目录</li>
+</ul>
+<h3 id="os-stat-“path-filename”"><a href="#os-stat-“path-filename”" class="headerlink" title="os.stat(“path&#x2F;filename”)"></a>os.stat(“path&#x2F;filename”)</h3><ul>
+<li>获取文件&#x2F;目录信息</li>
+</ul>
+<p>属性解读：</p>
+<p>stat 结构：</p>
+<ul>
+<li>st_mode: inode 保护模式</li>
+<li>st_ino: inode 节点号</li>
+<li>st_dev: inode 驻留的设备</li>
+<li>st_uid: 所有者的用户ID</li>
+<li>st_gid: 所有者的组ID</li>
+<li>st_size: 普通文件以字节为单位的大小；包含等待某些特殊文件的数据</li>
+<li>st_atime: 上次访问的时间</li>
+<li>st_mtime: 最后一次修改的时间</li>
+<li>st_ctime: 由操作系统报告的”ctime”。在某些系统上(Unix)是最新的元数据更改的时间，在其它系统上（如Windows）是创建时间（详细信息参见平台的文档）</li>
+</ul>
+<h3 id="os-system-“bash-command”"><a href="#os-system-“bash-command”" class="headerlink" title="os.system(“bash command”)"></a>os.system(“bash command”)</h3><ul>
+<li>运行shell命令，直接显示</li>
+</ul>
+<h3 id="os-popen-“bash-command”-read"><a href="#os-popen-“bash-command”-read" class="headerlink" title="os.popen(“bash command”).read()"></a>os.popen(“bash command”).read()</h3><ul>
+<li>运行shell命令，获取执行结果</li>
+</ul>
+<h3 id="os-getcwd"><a href="#os-getcwd" class="headerlink" title="os.getcwd()"></a>os.getcwd()</h3><ul>
+<li>获取当前工作目录，即当前python脚本工作的目录路径</li>
+</ul>
+<h3 id="os-chdir-“dirname”"><a href="#os-chdir-“dirname”" class="headerlink" title="os.chdir(“dirname”)"></a>os.chdir(“dirname”)</h3><ul>
+<li>改变当前脚本工作目录；相当于shell 下cd</li>
+</ul>
+<h3 id="os-urandom-n"><a href="#os-urandom-n" class="headerlink" title="os.urandom(n)"></a>os.urandom(n)</h3><ul>
+<li>随机生成bytes类型的32个字节长度字符串的方法</li>
+</ul>
+<h2 id="os-path"><a href="#os-path" class="headerlink" title="os.path"></a>os.path</h2><h3 id="os-path-abspath-path"><a href="#os-path-abspath-path" class="headerlink" title="os.path.abspath(path)"></a>os.path.abspath(path)</h3><ul>
+<li>返回path规范化的绝对路径</li>
+</ul>
+<h3 id="os-path-split-path"><a href="#os-path-split-path" class="headerlink" title="os.path.split(path)"></a>os.path.split(path)</h3><ul>
+<li>将path分割成目录和文件名，以元组返回</li>
+</ul>
+<h3 id="os-path-dirname-path"><a href="#os-path-dirname-path" class="headerlink" title="os.path.dirname(path)"></a>os.path.dirname(path)</h3><ul>
+<li>返回path的目录。其实就是os.path.split(path)的第一个元素</li>
+</ul>
+<h3 id="os-path-basename-path"><a href="#os-path-basename-path" class="headerlink" title="os.path.basename(path)"></a>os.path.basename(path)</h3><ul>
+<li>返回path最后的文件名。如果path以&#x2F;或\结尾，那么就会返回空值。即os.path.split(path)的第二个元素</li>
+</ul>
+<h3 id="os-path-exists-path"><a href="#os-path-exists-path" class="headerlink" title="os .path.exists(path)"></a>os .path.exists(path)</h3><ul>
+<li>如果path存在，返回True，如果path不存在，返回False</li>
+</ul>
+<h3 id="os-path-isabs-path"><a href="#os-path-isabs-path" class="headerlink" title="os.path.isabs(path)"></a>os.path.isabs(path)</h3><ul>
+<li>如果path是绝对路径，返回True</li>
+</ul>
+<h3 id="os-path-isfile-path"><a href="#os-path-isfile-path" class="headerlink" title="os.path.isfile(path)"></a>os.path.isfile(path)</h3><ul>
+<li>如果path是一个存在的文件，返回True, 否则返回False</li>
+</ul>
+<h3 id="os-path-isdir-path"><a href="#os-path-isdir-path" class="headerlink" title="os .path.isdir(path)"></a>os .path.isdir(path)</h3><ul>
+<li>如果path是一个存在的目录，则返回True, 否则返回False</li>
+</ul>
+<h3 id="os-path-join-path1-path2-…"><a href="#os-path-join-path1-path2-…" class="headerlink" title="os.path.join(path1[, path2[,…]])"></a>os.path.join(path1[, path2[,…]])</h3><ul>
+<li>将多个路径组合后返回，第一个绝对路径之前的参数初被忽略</li>
+</ul>
+<h3 id="os-path-getatime-path"><a href="#os-path-getatime-path" class="headerlink" title="os.path.getatime(path)"></a>os.path.getatime(path)</h3><ul>
+<li>返回path所指向的文件或者目录的最后访问时间</li>
+</ul>
+<h3 id="os-path-getmtime-path"><a href="#os-path-getmtime-path" class="headerlink" title="os.path.getmtime(path)"></a>os.path.getmtime(path)</h3><ul>
+<li>返回path所指向的文件或目录的最后修改时间</li>
+</ul>
+<h3 id="os-path-getsize-path"><a href="#os-path-getsize-path" class="headerlink" title="os.path.getsize(path)"></a>os.path.getsize(path)</h3><ul>
+<li>返回path的大小</li>
+</ul>
+<h2 id="os特殊属性"><a href="#os特殊属性" class="headerlink" title="os特殊属性"></a>os特殊属性</h2><h3 id="os-sep"><a href="#os-sep" class="headerlink" title="os.sep"></a>os.sep</h3><ul>
+<li>输出操作系统特定的路径分隔符，win下为”\“, Linux下为”&#x2F;“</li>
+</ul>
+<h3 id="os-linesep"><a href="#os-linesep" class="headerlink" title="os.linesep"></a>os.linesep</h3><ul>
+<li>输出当前平台使用的行终止符，win下为”\r\n”, Linux下为”\n”</li>
+</ul>
+<h3 id="os-pathsep"><a href="#os-pathsep" class="headerlink" title="os.pathsep"></a>os.pathsep</h3><ul>
+<li>输出用于分割文件路径的字符串，win下为”;”, Linux下为”：”</li>
+</ul>
+<h3 id="os-name"><a href="#os-name" class="headerlink" title="os.name"></a>os.name</h3><ul>
+<li>输出字符串指示当前使用来台。win -&gt;”nt”; Linux -&gt;”posix”</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Python/" rel="tag"># Python</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2019/03/20/python-random%E6%A8%A1%E5%9D%97/" rel="prev" title="random模块">
+      <i class="fa fa-chevron-left"></i> random模块
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2019/03/20/python-sys%E6%A8%A1%E5%9D%97/" rel="next" title="sys模块">
+      sys模块 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#os%E6%A8%A1%E5%9D%97"><span class="nav-number">1.</span> <span class="nav-text">os模块</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%B8%E5%85%B3%E5%8A%9F%E8%83%BD"><span class="nav-number">2.</span> <span class="nav-text">相关功能</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#os-makedirs-%E2%80%9Cdirname1-dirname2%E2%80%9D"><span class="nav-number">2.1.</span> <span class="nav-text">os.makedirs(“dirname1&#x2F;dirname2”)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#os-removedirs-%E2%80%9Cdirname%E2%80%9D"><span class="nav-number">2.2.</span> <span class="nav-text">os.removedirs(“dirname”)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#os-mkdir-%E2%80%9Cdriname%E2%80%9D"><span class="nav-number">2.3.</span> <span class="nav-text">os.mkdir(“driname”)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#os-rmdir-%E2%80%9Cdirname%E2%80%9D"><span class="nav-number">2.4.</span> <span class="nav-text">os.rmdir(“dirname”)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#os-listdir-%E2%80%9Cdirname%E2%80%9D"><span class="nav-number">2.5.</span> <span class="nav-text">os.listdir(“dirname”)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#os-remove-%E2%80%9Cfilename%E2%80%9D"><span class="nav-number">2.6.</span> <span class="nav-text">os.remove(“filename”)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#os-rename-%E2%80%9Coldname%E2%80%9D-%E2%80%9Cnewname%E2%80%9D"><span class="nav-number">2.7.</span> <span class="nav-text">os.rename(“oldname”, “newname”)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#os-stat-%E2%80%9Cpath-filename%E2%80%9D"><span class="nav-number">2.8.</span> <span class="nav-text">os.stat(“path&#x2F;filename”)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#os-system-%E2%80%9Cbash-command%E2%80%9D"><span class="nav-number">2.9.</span> <span class="nav-text">os.system(“bash command”)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#os-popen-%E2%80%9Cbash-command%E2%80%9D-read"><span class="nav-number">2.10.</span> <span class="nav-text">os.popen(“bash command”).read()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#os-getcwd"><span class="nav-number">2.11.</span> <span class="nav-text">os.getcwd()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#os-chdir-%E2%80%9Cdirname%E2%80%9D"><span class="nav-number">2.12.</span> <span class="nav-text">os.chdir(“dirname”)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#os-urandom-n"><span class="nav-number">2.13.</span> <span class="nav-text">os.urandom(n)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#os-path"><span class="nav-number">3.</span> <span class="nav-text">os.path</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#os-path-abspath-path"><span class="nav-number">3.1.</span> <span class="nav-text">os.path.abspath(path)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#os-path-split-path"><span class="nav-number">3.2.</span> <span class="nav-text">os.path.split(path)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#os-path-dirname-path"><span class="nav-number">3.3.</span> <span class="nav-text">os.path.dirname(path)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#os-path-basename-path"><span class="nav-number">3.4.</span> <span class="nav-text">os.path.basename(path)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#os-path-exists-path"><span class="nav-number">3.5.</span> <span class="nav-text">os .path.exists(path)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#os-path-isabs-path"><span class="nav-number">3.6.</span> <span class="nav-text">os.path.isabs(path)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#os-path-isfile-path"><span class="nav-number">3.7.</span> <span class="nav-text">os.path.isfile(path)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#os-path-isdir-path"><span class="nav-number">3.8.</span> <span class="nav-text">os .path.isdir(path)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#os-path-join-path1-path2-%E2%80%A6"><span class="nav-number">3.9.</span> <span class="nav-text">os.path.join(path1[, path2[,…]])</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#os-path-getatime-path"><span class="nav-number">3.10.</span> <span class="nav-text">os.path.getatime(path)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#os-path-getmtime-path"><span class="nav-number">3.11.</span> <span class="nav-text">os.path.getmtime(path)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#os-path-getsize-path"><span class="nav-number">3.12.</span> <span class="nav-text">os.path.getsize(path)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#os%E7%89%B9%E6%AE%8A%E5%B1%9E%E6%80%A7"><span class="nav-number">4.</span> <span class="nav-text">os特殊属性</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#os-sep"><span class="nav-number">4.1.</span> <span class="nav-text">os.sep</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#os-linesep"><span class="nav-number">4.2.</span> <span class="nav-text">os.linesep</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#os-pathsep"><span class="nav-number">4.3.</span> <span class="nav-text">os.pathsep</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#os-name"><span class="nav-number">4.4.</span> <span class="nav-text">os.name</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Ben</p>
+  <div class="site-description" itemprop="description">E-mail:17620170099@163.com</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">63</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ben</span>
+</div>
+<!--
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+-->
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
