@@ -2717,32 +2717,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Argo Rollouts</title>
-    <url>/2025/03/14/argo-rollouts/</url>
-    <content><![CDATA[<h2 id="Argo-Rollouts简介"><a href="#Argo-Rollouts简介" class="headerlink" title="Argo Rollouts简介"></a>Argo Rollouts简介</h2><p>Argo Rollouts是一个Kubernetes Operator实现，它为Kubernetes提供更加高级的部署能力，如蓝绿、金丝雀、金丝雀分析、实验和渐进式交付功能，为云原生应用和服务实现自动化、基于GitOps的逐步交付。</p>
-<p>支持如下特性：</p>
-<ul>
-<li>蓝绿更新策略</li>
-<li>金丝雀更新策略</li>
-<li>更加细粒度、加权流量拆分</li>
-<li>自动回滚</li>
-<li>手动判断</li>
-<li>可定制的指标查询和业务KPI分析</li>
-<li>Ingress控制器集成：NGINX，ALB</li>
-<li>Metrics指标集成：Prometheus、Wavefront、Kayenta、Web、Kubernetes Jobs、Datadog、New Relic、Graphite、InfluxDB</li>
-</ul>
-<h2 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h2><p>与Deployment对象类似，Argo Rollout控制器将管理ReplicaSets的创建、缩放和删除，这些ReplicaSet由Rollout资源中的spec.template定义，使用与Deployment对象相同的pod模板。</p>
-<p>当spec.template变更时，这会向Argo Rollouts控制器发出信号，表示将引入新的ReplicaSet，控制器将使用spec.strategy字段内的策略来确定从旧ReplicaSet到新ReplicaSet的rollout将如何进行，一旦这个新的ReplicaSet被放大(可以选择通过一个Analysis)，控制器会将其标记为稳定。</p>
-<p>如果在spec.template从稳定的ReplicaSet过渡到新的ReplicaSet的过程中发生另一次变更(即在发布过程中更改了应用程序版本)，那么之前的新ReplicaSet将缩小，并且控制器将尝试反映更新spec.template字段的ReplicaSet。</p>
-]]></content>
-      <categories>
-        <category>Kubernetes</category>
-      </categories>
-      <tags>
-        <tag>Kubernetes</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Argo Events</title>
     <url>/2023/03/14/argo-events/</url>
     <content><![CDATA[<h2 id="Argo-Events概述"><a href="#Argo-Events概述" class="headerlink" title="Argo Events概述"></a>Argo Events概述</h2><p>在kubernetes集群中，工作流程的触发通常依赖于特定事件的发生，而Argo Events则提供了一种强大的方式来监控外部事件，并将这些事件映射到集群内的操作或任务执行。Argo Events是Argo项目中的一部分，它与Argo Workflows一起使用，能够在事件发生时启动工作流，形成自动化的DevOps流程。</p>
@@ -2808,6 +2782,32 @@
 <h2 id="链接"><a href="#链接" class="headerlink" title="链接"></a>链接</h2><ul>
 <li>官方文档：<a href="https://argoproj.github.io/argo-events/">https://argoproj.github.io/argo-events/</a></li>
 </ul>
+]]></content>
+      <categories>
+        <category>Kubernetes</category>
+      </categories>
+      <tags>
+        <tag>Kubernetes</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Argo Rollouts</title>
+    <url>/2025/03/14/argo-rollouts/</url>
+    <content><![CDATA[<h2 id="Argo-Rollouts简介"><a href="#Argo-Rollouts简介" class="headerlink" title="Argo Rollouts简介"></a>Argo Rollouts简介</h2><p>Argo Rollouts是一个Kubernetes Operator实现，它为Kubernetes提供更加高级的部署能力，如蓝绿、金丝雀、金丝雀分析、实验和渐进式交付功能，为云原生应用和服务实现自动化、基于GitOps的逐步交付。</p>
+<p>支持如下特性：</p>
+<ul>
+<li>蓝绿更新策略</li>
+<li>金丝雀更新策略</li>
+<li>更加细粒度、加权流量拆分</li>
+<li>自动回滚</li>
+<li>手动判断</li>
+<li>可定制的指标查询和业务KPI分析</li>
+<li>Ingress控制器集成：NGINX，ALB</li>
+<li>Metrics指标集成：Prometheus、Wavefront、Kayenta、Web、Kubernetes Jobs、Datadog、New Relic、Graphite、InfluxDB</li>
+</ul>
+<h2 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h2><p>与Deployment对象类似，Argo Rollout控制器将管理ReplicaSets的创建、缩放和删除，这些ReplicaSet由Rollout资源中的spec.template定义，使用与Deployment对象相同的pod模板。</p>
+<p>当spec.template变更时，这会向Argo Rollouts控制器发出信号，表示将引入新的ReplicaSet，控制器将使用spec.strategy字段内的策略来确定从旧ReplicaSet到新ReplicaSet的rollout将如何进行，一旦这个新的ReplicaSet被放大(可以选择通过一个Analysis)，控制器会将其标记为稳定。</p>
+<p>如果在spec.template从稳定的ReplicaSet过渡到新的ReplicaSet的过程中发生另一次变更(即在发布过程中更改了应用程序版本)，那么之前的新ReplicaSet将缩小，并且控制器将尝试反映更新spec.template字段的ReplicaSet。</p>
 ]]></content>
       <categories>
         <category>Kubernetes</category>
@@ -7876,7 +7876,7 @@
 </tr>
 <tr>
 <td>mail address</td>
-<td>当日志轮替时，输出内容通过邮件发送到指定的邮件地址。如mail <a href="mailto:&#x61;&#x61;&#97;&#x40;&#49;&#x36;&#51;&#46;&#99;&#111;&#109;">aaa@163.com</a></td>
+<td>当日志轮替时，输出内容通过邮件发送到指定的邮件地址。如mail <a href="mailto:&#97;&#x61;&#x61;&#x40;&#49;&#54;&#51;&#x2e;&#99;&#111;&#x6d;">aaa@163.com</a></td>
 </tr>
 <tr>
 <td>missingok</td>
