@@ -6262,7 +6262,7 @@
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">A</span>:</span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">B</span>(<span class="title class_ inherited__">A</span>):</span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">C</span>(<span class="title class_ inherited__">A</span>):</span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">D</span>(B, C):</span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">E</span>:</span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">F</span>(E, B):</span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">G</span>(F, D):</span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">H</span>:</span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Foo</span>(H, G):</span><br><span class="line">    <span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
 
 <p> 继承关系图如下：</p>
-<p> <img src="/2019/03/20/python-%E7%BB%A7%E6%89%BF/1427763-20181113194621417-491962360.png" alt="1427763-20181113194621417-491962360"></p>
+<p> <img src="1427763-20181113194621417-491962360.png" alt="1427763-20181113194621417-491962360"></p>
 <p>​                                                                                                                                     图1 继承关系图</p>
 <p><strong>类的MRO：Foo —&gt; H —&gt; G —&gt; F —&gt; E —&gt; B —&gt; A —&gt;D —&gt; C</strong></p>
 <h3 id="新式类的MRO—C3算法"><a href="#新式类的MRO—C3算法" class="headerlink" title="新式类的MRO—C3算法"></a>新式类的MRO—C3算法</h3><p>官方网址：<a href="https://www.python.org/download/releases/2.3/mro/?tdsourcetag=s_pctim_aiomsg">https://www.python.org/download/releases/2.3/mro/?tdsourcetag=s_pctim_aiomsg</a></p>
@@ -6699,7 +6699,7 @@
     <title>test</title>
     <url>/2025/03/21/test/</url>
     <content><![CDATA[<h2 id="test"><a href="#test" class="headerlink" title="test"></a>test</h2><p>test</p>
-<img src="/2025/03/21/test/03/21/test/1427763-20181113194621417-491962360-17425522077561.png" class title="1427763-20181113194621417-491962360">
+<img src="03/21/test/1427763-20181113194621417-491962360-17425522077561.png" class title="1427763-20181113194621417-491962360">
 ]]></content>
   </entry>
   <entry>
@@ -7949,7 +7949,7 @@
 </tr>
 <tr>
 <td>mail address</td>
-<td>当日志轮替时，输出内容通过邮件发送到指定的邮件地址。如mail <a href="mailto:&#97;&#97;&#x61;&#x40;&#49;&#54;&#51;&#46;&#99;&#x6f;&#x6d;">aaa@163.com</a></td>
+<td>当日志轮替时，输出内容通过邮件发送到指定的邮件地址。如mail <a href="mailto:&#97;&#x61;&#x61;&#64;&#49;&#x36;&#51;&#46;&#99;&#x6f;&#x6d;">aaa@163.com</a></td>
 </tr>
 <tr>
 <td>missingok</td>
