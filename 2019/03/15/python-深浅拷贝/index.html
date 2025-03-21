@@ -256,7 +256,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id><a href="#" class="headerlink" title="&#x3D;"></a>&#x3D;</h2><ul>
+        <h2 id=""><a href="#" class="headerlink" title="&#x3D;"></a>&#x3D;</h2><ul>
 <li>没有产生新对象，都是内存地址的赋值</li>
 </ul>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">lst1 = [11, 22, 33, 44]</span><br><span class="line">lst2 = lst1print(id(lst1)) # 1916361712712print(id(lst2)) # 1916361712712</span><br><span class="line"></span><br><span class="line">lst1.append(&quot;hello&quot;)</span><br><span class="line">print(lst1)  # [11, 22, 33, 44, &#x27;hello&#x27;]</span><br><span class="line">print(lst2)  # [11, 22, 33, 44, &#x27;hello&#x27;]</span><br></pre></td></tr></table></figure>
