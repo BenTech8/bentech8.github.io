@@ -27,11 +27,13 @@
 <meta property="og:site_name" content="Ben&#39;s Blog">
 <meta property="og:description" content="Redis作为内存数据库，具有非常高的性能，单个实例的OPS能够达到10W左右。 确认是否Redis本身响应慢如果你发现你的业务服务API响应延迟变长，首先你需要先排查服务内部，究竟是哪个环境拖慢了整个服务。比较高效的做法是在服务内部集成链路追踪。 如果发现确实是操作Redis的这条链路耗时变长了，那么此刻需要把焦点关注在业务服务到Redis这条链路上。 从你的业务服务到Redis这条链路变慢的原">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://bentech8.github.io/2025/03/20/Redis%E6%80%A7%E8%83%BD%E6%8E%92%E6%9F%A5/16113834681422.jpg">
 <meta property="article:published_time" content="2025-03-20T12:39:21.000Z">
-<meta property="article:modified_time" content="2025-03-21T11:20:23.495Z">
+<meta property="article:modified_time" content="2025-03-21T11:58:05.704Z">
 <meta property="article:author" content="Ben">
 <meta property="article:tag" content="Redis">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://bentech8.github.io/2025/03/20/Redis%E6%80%A7%E8%83%BD%E6%8E%92%E6%9F%A5/16113834681422.jpg">
 
 <link rel="canonical" href="https://bentech8.github.io/2025/03/20/Redis%E6%80%A7%E8%83%BD%E6%8E%92%E6%9F%A5/">
 
@@ -198,7 +200,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-03-21 19:20:23" itemprop="dateModified" datetime="2025-03-21T19:20:23+08:00">2025-03-21</time>
+                <time title="修改时间：2025-03-21 19:58:05" itemprop="dateModified" datetime="2025-03-21T19:58:05+08:00">2025-03-21</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -237,14 +239,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>5.1k</span>
+              <span>6.4k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>9 分钟</span>
+              <span>12 分钟</span>
             </span>
 
         </div>
@@ -333,6 +335,32 @@
 <li>如果使用的Redis是4.0以上版本，用UNLINK命令替代DEL，此命令可以把释放key内存的操作，放到后台线程中去执行，从而降低对Redis的影响。如果使用的Redis是6.0以上版本，可以开启lazy-free机制(lazyfree-lazy-user-del &#x3D; yes)，在执行DEL命令时，释放内存也会放到后线程中执行。</li>
 </ul>
 <p>但即便可以使用方案二，也不建议在实例中存入bigkey。因为bigkey在很多场景下，依旧会产生性能问题。例如bigkey在分片集群模式下，对于数据的迁移也会有性能影响，以及数据过期、数据淘汰、透明大页等都会受到bigkey的影响。</p>
+<h3 id="集中过期"><a href="#集中过期" class="headerlink" title="集中过期"></a>集中过期</h3><p>如果你发现，平时在操作Redis时，并没有延迟很大的情况发生，但在某个时间点突然出现一波延时，其现象表现为：<strong>变慢的时间点很有规律，例如某个整点，或者每间隔一段时间就会发生一波延迟。</strong></p>
+<p>如果出现这种情况，那么就需要排查一下业务代码中是否存在设置大量key集中过期的情况。如果有大量的key在某个固定时间点集中过期，在这个时间点访问Redis时，就有可能导致延时变大。</p>
+<p>为何集中过期会导致Redis延迟变大？</p>
+<p>这就需要了解Redis的过期策略是怎样的，Redis的过期数据采用被动过期+主动过期两种策略：</p>
+<ul>
+<li><strong>被动过期</strong>：只有当访问某个key时，才判断这个key是否已过期，如果已过期，则从实例中删除。</li>
+<li><strong>主动过期</strong>：Redis内部维护了一个定时任务，默认每隔100ms(1秒10次)就会从全局的过期哈希表中随机取出20个key，然后删除其中过期的key，如果过期key的比例超过了25%，则继续重复此过程，直到过期key的比例下降到25%以下，或者这次任务的执行耗时超过了25ms，才会退出循环。</li>
+</ul>
+<p>**这个主动过期key的定时任务，是在Redis主线程中执行的。**也就是说如果在执行主动过期的过程中，出现了需要大量删除过期key的情况，那么此时应用程序在访问Redis时，必须要等待这个过期任务执行结束，Redis才可以响应这个客户端的请求。此时就会出现应用访问Redis延时变大。</p>
+<p>如果此时需要过期删除的是一个bigkey，那么这个耗时会更久。而且，**这个操作延迟的命令并不会记录在慢日志中。**所以此时你会看到慢日志中没有操作耗时的命令，但我们的应用程序却感知到了延迟变大，其实时间都花费在了删除过期key上，这种情况需要尤为注意。</p>
+<img src="/2025/03/20/Redis%E6%80%A7%E8%83%BD%E6%8E%92%E6%9F%A5/16113834681422.jpg" class="" width="16113834681422">
+
+<p>如何排查？</p>
+<p>1）你需要检查你的业务代码，是否存在集中过期key的逻辑。</p>
+<p>一般集中过期使用的是expireat&#x2F;pexpireat命令，你需要在代码中搜索这个关键字。</p>
+<p>2）通过运维手段及时发现问题</p>
+<p>运维层面，你需要把Redis的各项运行状态数据监控起来，在Redis上执行INFO命令就可以拿到这个实例所有的运行状态数据。在这里我们需要重点关注expired_keys这一项，它代表整个实例到目前为止，累计删除过期key的数量。当这个指标在很短时间内出现了突增，需要及时报警出来，然后与业务应用报慢的时间点进行对比分析，确认时间是否一致，如果一致，则可以确认确实是因为集中过期key导致的延迟变大。</p>
+<p>如何解决？</p>
+<p>排查代码后，如果确实存在集中过期key的逻辑存在，但这种逻辑又是业务所必须的，那此时如何优化，同时又不对Redis产生性能影响，一般有两种方案来规避这个问题：</p>
+<ul>
+<li><p>集中过期key增加一个随机过期时间，把集中过期的时间打散，降低Redis清理过期key的压力。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 在过期时间点之后的5分钟内随机过期掉</span><br><span class="line">redis.expireat(key, expire_time + random(300))</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>如果你使用的的Redis是4.0以上的版本，可以开启lazy-free机制，当删除过期key时，把释放内存的操作放到后台线程中执行，避免阻塞主线程。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 释放过期key的内存，放到后台线程执行</span><br><span class="line">lazyfree-lazy-expire yes</span><br></pre></td></tr></table></figure></li>
+</ul>
 
     </div>
 
@@ -432,7 +460,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A1%AE%E8%AE%A4%E6%98%AF%E5%90%A6Redis%E6%9C%AC%E8%BA%AB%E5%93%8D%E5%BA%94%E6%85%A2"><span class="nav-number">1.</span> <span class="nav-text">确认是否Redis本身响应慢</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Redis%E5%9F%BA%E5%87%86%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95"><span class="nav-number">2.</span> <span class="nav-text">Redis基准性能测试</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Redis%E5%8F%98%E6%85%A2%E7%9A%84%E5%9B%A0%E7%B4%A0"><span class="nav-number">3.</span> <span class="nav-text">Redis变慢的因素</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E5%A4%8D%E6%9D%82%E5%BA%A6%E8%BF%87%E9%AB%98%E7%9A%84%E5%91%BD%E4%BB%A4"><span class="nav-number">3.1.</span> <span class="nav-text">使用复杂度过高的命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%93%8D%E4%BD%9Cbigkey"><span class="nav-number">3.2.</span> <span class="nav-text">操作bigkey</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A1%AE%E8%AE%A4%E6%98%AF%E5%90%A6Redis%E6%9C%AC%E8%BA%AB%E5%93%8D%E5%BA%94%E6%85%A2"><span class="nav-number">1.</span> <span class="nav-text">确认是否Redis本身响应慢</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Redis%E5%9F%BA%E5%87%86%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95"><span class="nav-number">2.</span> <span class="nav-text">Redis基准性能测试</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Redis%E5%8F%98%E6%85%A2%E7%9A%84%E5%9B%A0%E7%B4%A0"><span class="nav-number">3.</span> <span class="nav-text">Redis变慢的因素</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E5%A4%8D%E6%9D%82%E5%BA%A6%E8%BF%87%E9%AB%98%E7%9A%84%E5%91%BD%E4%BB%A4"><span class="nav-number">3.1.</span> <span class="nav-text">使用复杂度过高的命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%93%8D%E4%BD%9Cbigkey"><span class="nav-number">3.2.</span> <span class="nav-text">操作bigkey</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9B%86%E4%B8%AD%E8%BF%87%E6%9C%9F"><span class="nav-number">3.3.</span> <span class="nav-text">集中过期</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -498,12 +526,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">313k</span>
+    <span title="站点总字数">314k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">9:29</span>
+    <span title="站点阅读时长">9:31</span>
 </div>
 <!--
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
