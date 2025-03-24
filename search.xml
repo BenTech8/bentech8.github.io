@@ -1073,6 +1073,81 @@
 <li><p>如果你使用的的Redis是4.0以上的版本，可以开启lazy-free机制，当删除过期key时，把释放内存的操作放到后台线程中执行，避免阻塞主线程。</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 释放过期key的内存，放到后台线程执行</span><br><span class="line">lazyfree-lazy-expire yes</span><br></pre></td></tr></table></figure></li>
 </ul>
+<h3 id="实例内存达到上限"><a href="#实例内存达到上限" class="headerlink" title="实例内存达到上限"></a>实例内存达到上限</h3><p>如果你的Redis实例设置了内存上限maxmemory，那么也可能导致Redis变慢。</p>
+<p>当我们把Redis当做纯缓存使用时，通常会给这个实例设置一个内存上限maxmemory，然后设置一个数据淘汰策略。而当实例的内存达到了maxmemory后，你可能会发现，在此之后每次写入新数据，操作延迟变大了。</p>
+<p>为什么延迟变大？</p>
+<p>原因在于，当Redis内存达到maxmemory后，每次写入新的数据之前，Redis必须先从实例中踢出一部分数据，让整个实例的内存维持在maxmemory之下，然后才能把新数据写进来。</p>
+<p>这个踢出旧数据的逻辑也是需要消耗时间的，而具体耗时的长短，要取决于你配置的淘汰策略：</p>
+<ul>
+<li>allkeys-lru：不管key是否设置了过期，淘汰最近最少访问的key</li>
+<li>volatile-lru：只淘汰最近最少访问、并设置了过期时间的key</li>
+<li>allkeys-random：不管key是否设置了过期，随机淘汰key</li>
+<li>volatile-random: 只随机淘汰设置了过期时间的key</li>
+<li>volatile-ttl: 不管key是否设置了过期，淘汰即将过期的key</li>
+<li>noeviction: 不淘汰任何key，实例内存达到maxmemory后，再写入新数据直接返回错误</li>
+<li>allkeys-lfu: 不管key是否设置了过期，淘汰访问频率最低的key（4.0+版本支持）</li>
+<li>volatile-lfu: 只淘汰访问频率最低、并设置了过期时间key（4.0+版本支持）</li>
+</ul>
+<p>具体使用哪种策略，我们需要根据具体的业务场景来配置。</p>
+<p>一般最常用的是allkeys-lru和volatile-lru淘汰策略，它们的处理逻辑是，每次从实例中随机取出一批key（这个数量可配置），然后淘汰一个最少访问的key，之后把剩下的key暂存到一个池子中，继续随机取一批key，并与之前池子中的key比较，再淘汰一个最少访问的key。以此往复，直到实例内存降到maxmemory之下。</p>
+<p>需要注意的是，Redis的淘汰数据的逻辑与删除过期key的逻辑一样，<strong>也是在命令真正执行之前执行的</strong>，也就是说它也会增加我们操作Redis的延迟，而且，写OPS越高，延迟也会越明显。</p>
+<p>另外，如果此时你的Redis实例中还存储了bigkey，那么在<strong>淘汰删除bigkey释放内存时，也会耗时比较久</strong>。</p>
+<img src="/2025/03/20/Redis%E6%80%A7%E8%83%BD%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/16113834681427.jpg" class="">
+
+<p>bigkey的危害到处都是，所以尽量不存储bigkey。</p>
+<p>如何解决？</p>
+<p>四个优化建议：</p>
+<ul>
+<li>避免存储bigkey，降低释放内存的耗时</li>
+<li>淘汰策略改为随机淘汰，随机淘汰比LRU要快很多(视业务情况调整)</li>
+<li>拆分实例，把淘汰key的压力分摊到多个实例上</li>
+<li>如果使用的是Redis 4.0以上版本，开启lazy-free机制，把淘汰key释放内存的操作放到后台线程中执行(配置lazyfree-lazy-eviction&#x3D;yes)</li>
+</ul>
+<h3 id="fork耗时严重"><a href="#fork耗时严重" class="headerlink" title="fork耗时严重"></a>fork耗时严重</h3><p>为了保证Redis数据的安全性，我们可能会开启后台定时RDB和AOF rewrite功能。</p>
+<p>但如果你发现，<strong>操作Redis延迟变大，都发生在Redis后台RDB和AOF rewrite期间</strong>，那你就需要排查，在这期间有可能导致变量的情况。</p>
+<p>当Redis开启了后台RDB和AOF rewrite后，在执行时，它们都需要主进程创建出一个子进程进行数据的持久化。</p>
+<p>主进程创建子进程，会调用操作系统提供的fork函数。</p>
+<p>而fork在执行过程中，<strong>主进程需要拷贝自己的内存页表给子进程</strong>，如果这个实例很大，那么这个拷贝的过程也会比较耗时。而且这个fork过程会消耗大量的CPU资源，在完成fork之前，整个Redis实例会被阻塞住，无法处理任何客户端请求。</p>
+<p>如果此时你的CPU资源本来就很紧张，那么fork的耗时会更长，甚至达到秒级，这会严重影响Redis的性能。</p>
+<p>你可以在Redis上执行INFO命令，查看latest_fork_usec项，单位微稍。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 上一次fork耗时，单位微秒</span><br><span class="line">latest_fork_usec:59477</span><br></pre></td></tr></table></figure>
+
+<p>这个时间就是主进程在fork子进程期间，整个实例阻塞无法处理客户端请求的时间。</p>
+<p>如果你发现这个耗时很久，就要警惕起来了，这意味着在这期间，你的整个Redis实例都处于不可用的状态。</p>
+<p>除了数据持久化会生成RDB之外，当主从节点第一次建立数据同步时，主节点也创建子进程生成RDB，然后发给从节点进行一次全量同步，所以，这个过程也会对Redis产生性能影响。</p>
+<img src="/2025/03/20/Redis%E6%80%A7%E8%83%BD%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/16113834681431.jpg" class="">
+
+<p>如何解决？</p>
+<p>要想避免这种情况，你可以采取以下方案进行优化：</p>
+<ul>
+<li>控制Redis实例的内存：尽量在10G以下，执行fork的耗时与实例大小有关，实例越大，耗时越久</li>
+<li>合理配置数据持久化策略：在slave节点执行RDB备份，推荐在低峰期执行，而对于丢失数据不敏感的业务(例如把Redis当做纯缓存使用)，可以关闭AOF和AOF rewrite</li>
+<li>Redis实例不要部署在虚拟机上：fork的耗时也与系统有关，虚拟机比物理机耗时更久</li>
+<li>降低主从库全量同步的概率：适当调大repl-backlog-size参数，避免主从全量同步</li>
+</ul>
+<h3 id="开启内存大页"><a href="#开启内存大页" class="headerlink" title="开启内存大页"></a>开启内存大页</h3><p>子进程RDB和AOF rewrite期间，除了fork耗时导致的延迟变大之外，还有一个方面也会导致性能问题，这就是操作系统是否开启了内存大页机制。</p>
+<p>什么是内存大页？</p>
+<p>我们都知道，应用程序向操作系统申请内存时，是按内存页进行申请的，而常规的内存页大小是4KB。</p>
+<p>Linux内核从2.6.38开始，支持了内存大页机制，该机制允许应用程序以2MB大小为单位，向操作系统申请内存。</p>
+<p>应用程序每次向操作系统申请的内存单位变大了，但这也意味着申请内存的耗时变长。</p>
+<p>这对Redis会有什么影响？</p>
+<p>当Redis在执行后台RDB和AOF rewrite时，采用fork子进程的方式来处理。但主进程fork子进程后，此时的<strong>主进程依旧是可以接收写请求的</strong>，而进来的写请求，会采用Copy On Write(写时复制)的方式操作内存数据。</p>
+<p>也就是说，主进程一旦有数据需要修改，Redis并不会直接修改现有内存中的数据，而是<strong>先将这块内存数据拷贝出来，再修改这块新内存的数据</strong>，这就是所谓的<strong>写时复制</strong>。可以理解成谁需要发生写操作，谁就需要先拷贝，再修改。</p>
+<p>这样做的好处是，父进程有任何写操作，并不会影响子进程的数据持久化(子进程只持久化fork这一瞬间整个实例中的所有数据即可，不关心新的数据变更，因为子进程只需要一份内存快照，然后持久化到磁盘上)。</p>
+<p>但是请注意，主进程在拷贝内存数据时，这个阶段就涉及到新内存的申请，如果此时操作系统开启了内存大页，那么在此期间，客户端即便只修改10B的数据，<strong>Redis在申请内存时也会以2MB为单位向操作系统申请，申请内存的耗时变长，进而导致每个写请求的延迟增加，影响到Redis性能</strong>。</p>
+<p>同样地，如果这个写请求操作的是一个bigkey，那么主进程在拷贝这个bigkey内存块时，一次申请的内存会更大，时间也会更久。可见，bigkey在这里又一次影响到了性能。</p>
+<img src="/2025/03/20/Redis%E6%80%A7%E8%83%BD%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/16113834681437.jpg" class="">
+
+<p>如何解决？</p>
+<p>很简单，你只需要关闭内存大页机制就可以了。</p>
+<p>首先，你需要查看Redis机器是否开启了内存大页：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">cat</span> /sys/kernel/mm/transparent_hugepage/enabled</span></span><br><span class="line">[always] madvise never</span><br></pre></td></tr></table></figure>
+
+<p>如果输出选项是always，就表示目前开启了内存大页机制，我们需要关闭它：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">echo</span> never &gt; /sys/kernel/mm/transparent_hugepage/enabled</span></span><br></pre></td></tr></table></figure>
+
+<p>其实，操作系统提供的内存大页机制，其优势是，可以在一定程度上降低应用程序申请内存的次数。</p>
+<p>但是对于Redis这种对性能和延迟极其敏感的数据库来说，我们希望Redis在每次申请内存时，耗时尽量短，所以不建议在Redis机器上开启这个机制。</p>
 ]]></content>
       <categories>
         <category>Redis</category>
@@ -5486,6 +5561,72 @@
       </categories>
   </entry>
   <entry>
+    <title>异常</title>
+    <url>/2019/03/20/python-%E5%BC%82%E5%B8%B8/</url>
+    <content><![CDATA[<h2 id="异常"><a href="#异常" class="headerlink" title="异常"></a>异常</h2><h3 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h3><ul>
+<li>程序在运行过程中产生的错误</li>
+</ul>
+<h3 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h3><ul>
+<li>产生异常：python解释器调用代码，出现错误，系统自动产生一个异常对象，并把错误返回给调用方</li>
+<li>捕获异常：通过try…except可以对系统产生的异常进行捕获</li>
+<li>处理异常：如果except捕获到了相对应的异常，则在except代码块里处理异常，否则python解释器将错误返回调用者</li>
+<li>别名：指接收到的异常对象</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">try:</span><br><span class="line">    代码块</span><br><span class="line">except 异常名称 as 别名: </span><br><span class="line">    代码块</span><br><span class="line">except 异常名称 as 别名:</span><br><span class="line">    代码块</span><br><span class="line">...</span><br><span class="line">else:</span><br><span class="line">    不产生异常时执行这里的代码</span><br><span class="line">finally:</span><br><span class="line">    不管有无异常，都执行这里的代码</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="Exception"><a href="#Exception" class="headerlink" title="Exception"></a>Exception</h3><p>  Exception是所有异常的基类。换句话说，所有的错误都是Exception的子类对象。</p>
+<h2 id="抛出异常（raise）"><a href="#抛出异常（raise）" class="headerlink" title="抛出异常（raise）"></a>抛出异常（raise）</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> traceback</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">cul</span>(<span class="params">a, b</span>):</span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">type</span>(a) == <span class="built_in">int</span> <span class="keyword">or</span> <span class="built_in">type</span>(a) == <span class="built_in">float</span>) <span class="keyword">and</span> (<span class="built_in">type</span>(b) == <span class="built_in">int</span> <span class="keyword">or</span> <span class="built_in">type</span>(b) == <span class="built_in">float</span>):</span><br><span class="line">        <span class="keyword">return</span> a + b</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">raise</span> Exception(<span class="string">&quot;参数数据类型有误&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    <span class="built_in">print</span>(cul(<span class="number">1</span>, <span class="string">&quot;a&quot;</span>))</span><br><span class="line"><span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">    <span class="built_in">print</span>(e)  <span class="comment"># 参数数据类型有误</span></span><br><span class="line">    <span class="built_in">print</span>(traceback.format_exc())  <span class="comment"># 获取堆栈信息</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;出现了错误&quot;</span>)  <span class="comment"># 出现了错误</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># print(traceback.format_exc())结果：</span></span><br><span class="line">Traceback (most recent call last):</span><br><span class="line">  File <span class="string">&quot;E:/python_个人/day 019/临时.py&quot;</span>, line <span class="number">11</span>, <span class="keyword">in</span> &lt;module&gt;</span><br><span class="line">    <span class="built_in">print</span>(cul(<span class="number">1</span>, <span class="string">&quot;a&quot;</span>))</span><br><span class="line">  File <span class="string">&quot;E:/python_个人/day 019/临时.py&quot;</span>, line <span class="number">8</span>, <span class="keyword">in</span> cul</span><br><span class="line">    <span class="keyword">raise</span> Exception(<span class="string">&quot;参数数据类型有误&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<h2 id="自定义异常（慎用）"><a href="#自定义异常（慎用）" class="headerlink" title="自定义异常（慎用）"></a>自定义异常（慎用）</h2><ul>
+<li>自定义一个类，并继承Exception类，类中内容全部继承Exception。就自定义了一个异常</li>
+<li>名字须符合规范</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">GenderError</span>(<span class="title class_ inherited__">Exception</span>):</span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Person</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, name, gender</span>):</span><br><span class="line">        <span class="variable language_">self</span>.name = name</span><br><span class="line">        <span class="variable language_">self</span>.gender = gender</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">gender_judge</span>(<span class="params">obj</span>):</span><br><span class="line">    <span class="keyword">if</span> obj.gender != <span class="string">&quot;男&quot;</span>:</span><br><span class="line">        <span class="keyword">raise</span> GenderError(<span class="string">&quot;性别不对&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">p1 = Person(<span class="string">&quot;Tom&quot;</span>, <span class="string">&quot;男&quot;</span>)</span><br><span class="line">p2 = Person(<span class="string">&quot;Linda&quot;</span>, <span class="string">&quot;女&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    gender_judge(p1)</span><br><span class="line">    gender_judge(p2)</span><br><span class="line"><span class="keyword">except</span> GenderError <span class="keyword">as</span> e:</span><br><span class="line">    <span class="built_in">print</span>(e)  <span class="comment"># 性别不对</span></span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>Python</category>
+      </categories>
+      <tags>
+        <tag>Python</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>推导式</title>
+    <url>/2019/03/16/python-%E6%8E%A8%E5%AF%BC%E5%BC%8F/</url>
+    <content><![CDATA[<h2 id="列表推导式"><a href="#列表推导式" class="headerlink" title="列表推导式"></a>列表推导式</h2><ul>
+<li>写点：[结果 for 变量 in 可迭代对象 if 判断]</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lst = [i for i in range(1, 20) if i % 2 == 0]</span><br><span class="line">print(lst) # [2, 4, 6, 8, 10, 12, 14, 16, 18]</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="字典推导式"><a href="#字典推导式" class="headerlink" title="字典推导式"></a>字典推导式</h2><ul>
+<li>写法：[结果 for 变量 in 可迭代对象 if 判断]</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lst = [11, 22, 33]</span><br><span class="line">dic = &#123;i: lst[i] for i in range(len(lst))&#125;</span><br><span class="line">print(dic)  # &#123;0: 11, 1: 22, 2: 33&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="集合推导式"><a href="#集合推导式" class="headerlink" title="集合推导式"></a>集合推导式</h2><ul>
+<li>写法：[结果 for 变量 in 可迭代对象 if 判断]</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lst = [1, 8, 33, 44, -1, -8, 12]</span><br><span class="line">s = &#123;abs(i) for i in lst&#125;</span><br><span class="line">print(s)  # &#123;1, 33, 8, 44, 12&#125;</span><br></pre></td></tr></table></figure>
+
+<p>结论：</p>
+<ul>
+<li>推导式比较耗内存。一次加载。而生成器表达式几乎不占用内存。使用的时候才分配和使用内存。</li>
+</ul>
+]]></content>
+      <categories>
+        <category>Python</category>
+      </categories>
+      <tags>
+        <tag>Python</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>文件操作</title>
     <url>/2019/03/15/python-%E6%96%87%E4%BB%B6%E6%93%8D%E4%BD%9C/</url>
     <content><![CDATA[<h2 id="基本用法"><a href="#基本用法" class="headerlink" title="基本用法"></a>基本用法</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">f = open(&quot;文件操作.txt&quot;, mode=&#x27;r&#x27;, encoding=&quot;utf-8&quot;)</span><br><span class="line">...</span><br><span class="line">f.close()</span><br></pre></td></tr></table></figure>
@@ -5642,40 +5783,6 @@
       </tags>
   </entry>
   <entry>
-    <title>推导式</title>
-    <url>/2019/03/16/python-%E6%8E%A8%E5%AF%BC%E5%BC%8F/</url>
-    <content><![CDATA[<h2 id="列表推导式"><a href="#列表推导式" class="headerlink" title="列表推导式"></a>列表推导式</h2><ul>
-<li>写点：[结果 for 变量 in 可迭代对象 if 判断]</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lst = [i for i in range(1, 20) if i % 2 == 0]</span><br><span class="line">print(lst) # [2, 4, 6, 8, 10, 12, 14, 16, 18]</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="字典推导式"><a href="#字典推导式" class="headerlink" title="字典推导式"></a>字典推导式</h2><ul>
-<li>写法：[结果 for 变量 in 可迭代对象 if 判断]</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lst = [11, 22, 33]</span><br><span class="line">dic = &#123;i: lst[i] for i in range(len(lst))&#125;</span><br><span class="line">print(dic)  # &#123;0: 11, 1: 22, 2: 33&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="集合推导式"><a href="#集合推导式" class="headerlink" title="集合推导式"></a>集合推导式</h2><ul>
-<li>写法：[结果 for 变量 in 可迭代对象 if 判断]</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lst = [1, 8, 33, 44, -1, -8, 12]</span><br><span class="line">s = &#123;abs(i) for i in lst&#125;</span><br><span class="line">print(s)  # &#123;1, 33, 8, 44, 12&#125;</span><br></pre></td></tr></table></figure>
-
-<p>结论：</p>
-<ul>
-<li>推导式比较耗内存。一次加载。而生成器表达式几乎不占用内存。使用的时候才分配和使用内存。</li>
-</ul>
-]]></content>
-      <categories>
-        <category>Python</category>
-      </categories>
-      <tags>
-        <tag>Python</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>日志</title>
     <url>/2019/03/20/python-%E6%97%A5%E5%BF%97/</url>
     <content><![CDATA[<h2 id="basicConfig"><a href="#basicConfig" class="headerlink" title="basicConfig"></a>basicConfig</h2><ul>
@@ -5804,29 +5911,80 @@
       </tags>
   </entry>
   <entry>
-    <title>异常</title>
-    <url>/2019/03/20/python-%E5%BC%82%E5%B8%B8/</url>
-    <content><![CDATA[<h2 id="异常"><a href="#异常" class="headerlink" title="异常"></a>异常</h2><h3 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h3><ul>
-<li>程序在运行过程中产生的错误</li>
+    <title>正则表达式</title>
+    <url>/2019/03/20/python-%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/</url>
+    <content><![CDATA[<h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><ul>
+<li>正则表达式是对字符串操作的一种逻辑公式，一般使用正则表达式对字符串进行匹配和过滤</li>
+<li>正则表达式由普通字符和元字符组成</li>
+<li>优点：灵活，功能性强，逻辑性强</li>
+<li>缺点：上手难，一旦上手，会爱上这个东西</li>
+<li>工具：各大文本编辑器一般都有正则匹配功能。在线测试网址：<a href="http://tool.chinaz.com/regex/">http://tool.chinaz.com/regex/</a></li>
 </ul>
-<h3 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h3><ul>
-<li>产生异常：python解释器调用代码，出现错误，系统自动产生一个异常对象，并把错误返回给调用方</li>
-<li>捕获异常：通过try…except可以对系统产生的异常进行捕获</li>
-<li>处理异常：如果except捕获到了相对应的异常，则在except代码块里处理异常，否则python解释器将错误返回调用者</li>
-<li>别名：指接收到的异常对象</li>
+<h2 id="普通字符"><a href="#普通字符" class="headerlink" title="普通字符"></a>普通字符</h2><p>  普通字符包含大小写字母、数字。在匹配普通字符时直接写就好。比如”abc”匹配的就是”abc”</p>
+<h2 id="元字符"><a href="#元字符" class="headerlink" title="元字符"></a>元字符</h2><h3 id="字符组"><a href="#字符组" class="headerlink" title="字符组"></a>字符组</h3><p>  用[ ]括起来，在[ ]中出现的内容会被匹配。例如：[abc]匹配a或b或c</p>
+<ul>
+<li>[a-z]：匹配a到z之间的一个字母</li>
+<li>[0-9]：匹配所有阿拉伯数字的一个</li>
+<li>[a-zA-Z0-9]：匹配a-z或A-Z或0-9其中的一个</li>
 </ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">try:</span><br><span class="line">    代码块</span><br><span class="line">except 异常名称 as 别名: </span><br><span class="line">    代码块</span><br><span class="line">except 异常名称 as 别名:</span><br><span class="line">    代码块</span><br><span class="line">...</span><br><span class="line">else:</span><br><span class="line">    不产生异常时执行这里的代码</span><br><span class="line">finally:</span><br><span class="line">    不管有无异常，都执行这里的代码</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="Exception"><a href="#Exception" class="headerlink" title="Exception"></a>Exception</h3><p>  Exception是所有异常的基类。换句话说，所有的错误都是Exception的子类对象。</p>
-<h2 id="抛出异常（raise）"><a href="#抛出异常（raise）" class="headerlink" title="抛出异常（raise）"></a>抛出异常（raise）</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> traceback</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">cul</span>(<span class="params">a, b</span>):</span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">type</span>(a) == <span class="built_in">int</span> <span class="keyword">or</span> <span class="built_in">type</span>(a) == <span class="built_in">float</span>) <span class="keyword">and</span> (<span class="built_in">type</span>(b) == <span class="built_in">int</span> <span class="keyword">or</span> <span class="built_in">type</span>(b) == <span class="built_in">float</span>):</span><br><span class="line">        <span class="keyword">return</span> a + b</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">raise</span> Exception(<span class="string">&quot;参数数据类型有误&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    <span class="built_in">print</span>(cul(<span class="number">1</span>, <span class="string">&quot;a&quot;</span>))</span><br><span class="line"><span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">    <span class="built_in">print</span>(e)  <span class="comment"># 参数数据类型有误</span></span><br><span class="line">    <span class="built_in">print</span>(traceback.format_exc())  <span class="comment"># 获取堆栈信息</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;出现了错误&quot;</span>)  <span class="comment"># 出现了错误</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># print(traceback.format_exc())结果：</span></span><br><span class="line">Traceback (most recent call last):</span><br><span class="line">  File <span class="string">&quot;E:/python_个人/day 019/临时.py&quot;</span>, line <span class="number">11</span>, <span class="keyword">in</span> &lt;module&gt;</span><br><span class="line">    <span class="built_in">print</span>(cul(<span class="number">1</span>, <span class="string">&quot;a&quot;</span>))</span><br><span class="line">  File <span class="string">&quot;E:/python_个人/day 019/临时.py&quot;</span>, line <span class="number">8</span>, <span class="keyword">in</span> cul</span><br><span class="line">    <span class="keyword">raise</span> Exception(<span class="string">&quot;参数数据类型有误&quot;</span>)</span><br></pre></td></tr></table></figure>
-
-<h2 id="自定义异常（慎用）"><a href="#自定义异常（慎用）" class="headerlink" title="自定义异常（慎用）"></a>自定义异常（慎用）</h2><ul>
-<li>自定义一个类，并继承Exception类，类中内容全部继承Exception。就自定义了一个异常</li>
-<li>名字须符合规范</li>
+<h3 id="简单元字符"><a href="#简单元字符" class="headerlink" title="简单元字符"></a>简单元字符</h3><ul>
+<li><strong>.</strong>：匹配换行符以外的任意字符</li>
+<li>\w：匹配字母或数字或下划线</li>
+<li>\s：匹配任意的空白符</li>
+<li>\d：匹配数字</li>
+<li>\n：匹配一个换行符</li>
+<li>\t：匹配一个制表符</li>
+<li>\b：匹配一个单词的结尾</li>
+<li>^：匹配字符串的开始</li>
+<li>$：匹配字符串的结尾</li>
+<li>\W：匹配非字母或数字或下划线</li>
+<li>\D：匹配非数字</li>
+<li>\S：匹配非空白符</li>
+<li>a|b：匹配字符a或字符b</li>
+<li>()：匹配括号内的表达式，也表示一个组</li>
+<li>[…]：匹配字符组中的字符</li>
+<li>[^…]：匹配除了字符中字符的所有字符</li>
 </ul>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">GenderError</span>(<span class="title class_ inherited__">Exception</span>):</span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Person</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, name, gender</span>):</span><br><span class="line">        <span class="variable language_">self</span>.name = name</span><br><span class="line">        <span class="variable language_">self</span>.gender = gender</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">gender_judge</span>(<span class="params">obj</span>):</span><br><span class="line">    <span class="keyword">if</span> obj.gender != <span class="string">&quot;男&quot;</span>:</span><br><span class="line">        <span class="keyword">raise</span> GenderError(<span class="string">&quot;性别不对&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">p1 = Person(<span class="string">&quot;Tom&quot;</span>, <span class="string">&quot;男&quot;</span>)</span><br><span class="line">p2 = Person(<span class="string">&quot;Linda&quot;</span>, <span class="string">&quot;女&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    gender_judge(p1)</span><br><span class="line">    gender_judge(p2)</span><br><span class="line"><span class="keyword">except</span> GenderError <span class="keyword">as</span> e:</span><br><span class="line">    <span class="built_in">print</span>(e)  <span class="comment"># 性别不对</span></span><br></pre></td></tr></table></figure>
+<h3 id="量词"><a href="#量词" class="headerlink" title="量词"></a>量词</h3><ul>
+<li>*：重复0次或更多次</li>
+<li>+：重复一次或更多次</li>
+<li>？：重复0次或一次</li>
+<li>{n}：重复n次</li>
+<li>{n, }：重复n次或更多次</li>
+<li>{n, m}：重复n到m次</li>
+</ul>
+<h2 id="贪婪匹配与惰性匹配"><a href="#贪婪匹配与惰性匹配" class="headerlink" title="贪婪匹配与惰性匹配"></a>贪婪匹配与惰性匹配</h2><h3 id="贪婪匹配"><a href="#贪婪匹配" class="headerlink" title="贪婪匹配"></a>贪婪匹配</h3><p>  量词中的*，+，{}都属于贪婪匹配，就是尽可能多的匹配到结果</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">str</span>：hello world</span><br><span class="line">reg: h.*</span><br><span class="line">此时匹配的结果：hello world</span><br><span class="line"><span class="built_in">str</span>：&lt;div&gt;hello&lt;/div&gt;</span><br><span class="line">reg：&lt;.*&gt;</span><br><span class="line">此时匹配的结果：&lt;div&gt;hello&lt;/div&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="惰性匹配"><a href="#惰性匹配" class="headerlink" title="惰性匹配"></a>惰性匹配</h3><p>  在使用.*后面如果加了”?”则是尽可能的少匹配</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">str</span>：hello world</span><br><span class="line">reg：h.*?</span><br><span class="line">此时匹配的结果：h</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">str</span>：&lt;div&gt;hello&lt;/div&gt;</span><br><span class="line">reg：&lt;.*?&gt;</span><br><span class="line">此时匹配的结果：</span><br><span class="line">&lt;div&gt;</span><br><span class="line">&lt;/div&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="分组"><a href="#分组" class="headerlink" title="分组"></a>分组</h2><p>  在正则中使用()进行分组。</p>
+<p>  例如要匹配一个相对复杂的身份证号。身份证号分成两种。老的身份证号有15位，而新的身份证号有18位。并且新身份证号结尾可能是x</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">正则为：</span><br><span class="line">^([1-9]\d&#123;16&#125;[0-9x]|[1-9]\d&#123;14&#125;)$</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="转义"><a href="#转义" class="headerlink" title="转义"></a>转义</h2><p>  在正则表达式中，有很多有特殊意义的元字符，比如\n和\s等。如果要在正则中匹配正常的”\n”而不是换行就需要对”&quot;进行转义。</p>
+<p>  同理，在python中，对于\n,\s等也是有特殊意义的，如果要得到”\n”也需要对”&quot;进行转义，所以，如果需要匹配字符\n，在正则表达及python表达中需要写成如下表格形式。</p>
+<table>
+<thead>
+<tr>
+<th><strong>目标</strong></th>
+<th><strong>正则</strong></th>
+<th><strong>python</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>\n</td>
+<td>\n</td>
+<td>\\n</td>
+</tr>
+</tbody></table>
+<p>表1 “\n”转义</p>
+<p>  此时可以利用r”\n”不转义，即上表中python中正则表达可写为：r”\n”</p>
 ]]></content>
       <categories>
         <category>Python</category>
@@ -5967,89 +6125,6 @@
 <p>此代码相当于：</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">def add(a, b):</span><br><span class="line">    return a + b</span><br><span class="line"></span><br><span class="line">def test():</span><br><span class="line">    for r_i in range(4):</span><br><span class="line">        yield r_i</span><br><span class="line"></span><br><span class="line">g1 = test()</span><br><span class="line"></span><br><span class="line">n = 2</span><br><span class="line">g2 = (add(n, i) for i in g1)</span><br><span class="line"></span><br><span class="line">n = 10</span><br><span class="line">g3 = (add(n, i) for i in g2)</span><br><span class="line"></span><br><span class="line">print(list(g3)) # n = 10, g3 = (add(n, i) for i in (add(n, i) for i in g1))</span><br></pre></td></tr></table></figure>
 
-]]></content>
-      <categories>
-        <category>Python</category>
-      </categories>
-      <tags>
-        <tag>Python</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>正则表达式</title>
-    <url>/2019/03/20/python-%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/</url>
-    <content><![CDATA[<h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><ul>
-<li>正则表达式是对字符串操作的一种逻辑公式，一般使用正则表达式对字符串进行匹配和过滤</li>
-<li>正则表达式由普通字符和元字符组成</li>
-<li>优点：灵活，功能性强，逻辑性强</li>
-<li>缺点：上手难，一旦上手，会爱上这个东西</li>
-<li>工具：各大文本编辑器一般都有正则匹配功能。在线测试网址：<a href="http://tool.chinaz.com/regex/">http://tool.chinaz.com/regex/</a></li>
-</ul>
-<h2 id="普通字符"><a href="#普通字符" class="headerlink" title="普通字符"></a>普通字符</h2><p>  普通字符包含大小写字母、数字。在匹配普通字符时直接写就好。比如”abc”匹配的就是”abc”</p>
-<h2 id="元字符"><a href="#元字符" class="headerlink" title="元字符"></a>元字符</h2><h3 id="字符组"><a href="#字符组" class="headerlink" title="字符组"></a>字符组</h3><p>  用[ ]括起来，在[ ]中出现的内容会被匹配。例如：[abc]匹配a或b或c</p>
-<ul>
-<li>[a-z]：匹配a到z之间的一个字母</li>
-<li>[0-9]：匹配所有阿拉伯数字的一个</li>
-<li>[a-zA-Z0-9]：匹配a-z或A-Z或0-9其中的一个</li>
-</ul>
-<h3 id="简单元字符"><a href="#简单元字符" class="headerlink" title="简单元字符"></a>简单元字符</h3><ul>
-<li><strong>.</strong>：匹配换行符以外的任意字符</li>
-<li>\w：匹配字母或数字或下划线</li>
-<li>\s：匹配任意的空白符</li>
-<li>\d：匹配数字</li>
-<li>\n：匹配一个换行符</li>
-<li>\t：匹配一个制表符</li>
-<li>\b：匹配一个单词的结尾</li>
-<li>^：匹配字符串的开始</li>
-<li>$：匹配字符串的结尾</li>
-<li>\W：匹配非字母或数字或下划线</li>
-<li>\D：匹配非数字</li>
-<li>\S：匹配非空白符</li>
-<li>a|b：匹配字符a或字符b</li>
-<li>()：匹配括号内的表达式，也表示一个组</li>
-<li>[…]：匹配字符组中的字符</li>
-<li>[^…]：匹配除了字符中字符的所有字符</li>
-</ul>
-<h3 id="量词"><a href="#量词" class="headerlink" title="量词"></a>量词</h3><ul>
-<li>*：重复0次或更多次</li>
-<li>+：重复一次或更多次</li>
-<li>？：重复0次或一次</li>
-<li>{n}：重复n次</li>
-<li>{n, }：重复n次或更多次</li>
-<li>{n, m}：重复n到m次</li>
-</ul>
-<h2 id="贪婪匹配与惰性匹配"><a href="#贪婪匹配与惰性匹配" class="headerlink" title="贪婪匹配与惰性匹配"></a>贪婪匹配与惰性匹配</h2><h3 id="贪婪匹配"><a href="#贪婪匹配" class="headerlink" title="贪婪匹配"></a>贪婪匹配</h3><p>  量词中的*，+，{}都属于贪婪匹配，就是尽可能多的匹配到结果</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">str</span>：hello world</span><br><span class="line">reg: h.*</span><br><span class="line">此时匹配的结果：hello world</span><br><span class="line"><span class="built_in">str</span>：&lt;div&gt;hello&lt;/div&gt;</span><br><span class="line">reg：&lt;.*&gt;</span><br><span class="line">此时匹配的结果：&lt;div&gt;hello&lt;/div&gt;</span><br></pre></td></tr></table></figure>
-
-<h3 id="惰性匹配"><a href="#惰性匹配" class="headerlink" title="惰性匹配"></a>惰性匹配</h3><p>  在使用.*后面如果加了”?”则是尽可能的少匹配</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">str</span>：hello world</span><br><span class="line">reg：h.*?</span><br><span class="line">此时匹配的结果：h</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">str</span>：&lt;div&gt;hello&lt;/div&gt;</span><br><span class="line">reg：&lt;.*?&gt;</span><br><span class="line">此时匹配的结果：</span><br><span class="line">&lt;div&gt;</span><br><span class="line">&lt;/div&gt;</span><br></pre></td></tr></table></figure>
-
-<h2 id="分组"><a href="#分组" class="headerlink" title="分组"></a>分组</h2><p>  在正则中使用()进行分组。</p>
-<p>  例如要匹配一个相对复杂的身份证号。身份证号分成两种。老的身份证号有15位，而新的身份证号有18位。并且新身份证号结尾可能是x</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">正则为：</span><br><span class="line">^([1-9]\d&#123;16&#125;[0-9x]|[1-9]\d&#123;14&#125;)$</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="转义"><a href="#转义" class="headerlink" title="转义"></a>转义</h2><p>  在正则表达式中，有很多有特殊意义的元字符，比如\n和\s等。如果要在正则中匹配正常的”\n”而不是换行就需要对”&quot;进行转义。</p>
-<p>  同理，在python中，对于\n,\s等也是有特殊意义的，如果要得到”\n”也需要对”&quot;进行转义，所以，如果需要匹配字符\n，在正则表达及python表达中需要写成如下表格形式。</p>
-<table>
-<thead>
-<tr>
-<th><strong>目标</strong></th>
-<th><strong>正则</strong></th>
-<th><strong>python</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td>\n</td>
-<td>\n</td>
-<td>\\n</td>
-</tr>
-</tbody></table>
-<p>表1 “\n”转义</p>
-<p>  此时可以利用r”\n”不转义，即上表中python中正则表达可写为：r”\n”</p>
 ]]></content>
       <categories>
         <category>Python</category>
@@ -6286,59 +6361,6 @@
       </tags>
   </entry>
   <entry>
-    <title>装饰器</title>
-    <url>/2019/03/16/python-%E8%A3%85%E9%A5%B0%E5%99%A8/</url>
-    <content><![CDATA[<h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><p>  装饰器本质上就是一个python函数，可以让其他函数在不需要做任何代码变动的前提下，增加额外的功能。装饰器的返回值也是一个函数对象。</p>
-<h2 id="装饰器种类"><a href="#装饰器种类" class="headerlink" title="装饰器种类"></a>装饰器种类</h2><h3 id="不带参数的装饰器"><a href="#不带参数的装饰器" class="headerlink" title="不带参数的装饰器"></a>不带参数的装饰器</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">timer</span>(<span class="params">func</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">inner</span>():</span><br><span class="line">        start = time.time()</span><br><span class="line">        time.sleep(<span class="number">0.2</span>)</span><br><span class="line">        func()</span><br><span class="line">        <span class="built_in">print</span>(time.time() - start)</span><br><span class="line">    <span class="keyword">return</span> inner</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@timer          </span><span class="comment"># ===&gt; func1 = timer(func1）</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">func1</span>():</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;in func1&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">func1()</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="带参数的装饰器"><a href="#带参数的装饰器" class="headerlink" title="带参数的装饰器"></a>带参数的装饰器</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">timer</span>(<span class="params">func</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">inner</span>(<span class="params">*args, **kwargs</span>):</span><br><span class="line">        start = time.time()</span><br><span class="line">        time.sleep(<span class="number">0.2</span>)</span><br><span class="line">        func(*args, **kwargs)</span><br><span class="line">        <span class="built_in">print</span>(time.time() - start)</span><br><span class="line">    <span class="keyword">return</span> inner</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@timer        </span><span class="comment"># ===&gt; func1 = timer(func1)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">func1</span>(<span class="params">a</span>):</span><br><span class="line">    <span class="built_in">print</span>(a)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">func1(<span class="string">&quot;hello&quot;</span>)</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="带返回值的装饰器"><a href="#带返回值的装饰器" class="headerlink" title="带返回值的装饰器"></a>带返回值的装饰器</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">timer</span>(<span class="params">func</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">inner</span>(<span class="params">*args, **kwargs</span>):</span><br><span class="line">        start = time.time()</span><br><span class="line">        time.sleep(<span class="number">0.2</span>)</span><br><span class="line">        ret = func(*args, **kwargs)</span><br><span class="line">        <span class="built_in">print</span>(time.time() - start)</span><br><span class="line">        <span class="keyword">return</span> ret</span><br><span class="line">    <span class="keyword">return</span> inner</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@timer        </span><span class="comment"># ===&gt; func1 = timer(func1)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">func1</span>(<span class="params">a, b</span>):</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;in func1&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@timer        </span><span class="comment"># ===&gt; func2 = timer(func2)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">func2</span>(<span class="params">a</span>):</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;in func2 and get a:%s&quot;</span> % (a))</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;func2 over&quot;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">func1(<span class="string">&quot;hello&quot;</span>, <span class="string">&quot;world&quot;</span>)</span><br><span class="line"><span class="built_in">print</span>(func2(<span class="string">&quot;aaaa&quot;</span>))</span><br></pre></td></tr></table></figure>
-
-<p>  当查看函数信息的方法时，在此处失效：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">timer</span>(<span class="params">func</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">inner</span>(<span class="params">*args, **kwargs</span>):</span><br><span class="line">        start = time.time()</span><br><span class="line">        time.sleep(<span class="number">0.2</span>)</span><br><span class="line">        ret = func(*args, **kwargs)</span><br><span class="line">        <span class="built_in">print</span>(time.time() - start)</span><br><span class="line">        <span class="keyword">return</span> ret</span><br><span class="line">    <span class="keyword">return</span> inner</span><br><span class="line"></span><br><span class="line"><span class="meta">@timer</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">index</span>():</span><br><span class="line">    <span class="string">&quot;&quot;&quot;这是一个主页信息&quot;&quot;&quot;</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;from index&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(index.__doc__)</span><br><span class="line"><span class="built_in">print</span>(index.__name__)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 结果：</span></span><br><span class="line"><span class="literal">None</span></span><br><span class="line">inner</span><br></pre></td></tr></table></figure>
-
-<p>  解决方案：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">from</span> functools <span class="keyword">import</span> wraps</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">timer</span>(<span class="params">func</span>):</span><br><span class="line"><span class="meta">    @wraps(<span class="params">func</span>)</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">inner</span>(<span class="params">*args, **kwargs</span>):</span><br><span class="line">        start = time.time()</span><br><span class="line">        time.sleep(<span class="number">0.2</span>)</span><br><span class="line">        ret = func(*args, **kwargs)</span><br><span class="line">        <span class="built_in">print</span>(time.time() - start)</span><br><span class="line">        <span class="keyword">return</span> ret</span><br><span class="line">    <span class="keyword">return</span> inner</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@timer</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">index</span>():</span><br><span class="line">    <span class="string">&quot;&quot;&quot;这是一个主页信息&quot;&quot;&quot;</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;from index&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(index.__doc__)</span><br><span class="line"><span class="built_in">print</span>(index.__name__)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 结果：</span></span><br><span class="line">这是一个主页信息</span><br><span class="line">index</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="开放封闭原则"><a href="#开放封闭原则" class="headerlink" title="开放封闭原则"></a>开放封闭原则</h2><p>  装饰器完美的遵循了 开放封闭原则</p>
-<h3 id="对扩展开放"><a href="#对扩展开放" class="headerlink" title="对扩展开放"></a>对扩展开放</h3><p>  任何一个程序，不可能在设计之初就已经想好了所有的功能并且未来不做任何更新和修改。所以必须允许代码扩展、添加新功能。</p>
-<h3 id="对修改封闭"><a href="#对修改封闭" class="headerlink" title="对修改封闭"></a>对修改封闭</h3><p>  我们写的一个函数，很有可能已经交付给其他人使用了，如果这个时候对其进行修改，很有可能影响其他已经在使用该函数的用户。</p>
-<h2 id="装饰器的固定结构"><a href="#装饰器的固定结构" class="headerlink" title="装饰器的固定结构"></a>装饰器的固定结构</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">timer</span>(<span class="params">func</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">inner</span>(<span class="params">*args, **kwargs</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;执行函数之前要做的&quot;&quot;&quot;</span></span><br><span class="line">        ret = func(*args, **kwargs)</span><br><span class="line">        <span class="string">&quot;&quot;&quot;执行函数之后要做的&quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">return</span> ret</span><br><span class="line">    <span class="keyword">return</span> inner</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> functools <span class="keyword">import</span> wraps</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">timer</span>(<span class="params">func</span>):</span><br><span class="line"><span class="meta">    @wraps(<span class="params">func</span>)</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">inner</span>(<span class="params">*args, **kwargs</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;执行函数之前要做的&quot;&quot;&quot;</span></span><br><span class="line">        ret = func(*args, **kwargs)</span><br><span class="line">        <span class="string">&quot;&quot;&quot;执行函数之后要做的&quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">return</span> ret</span><br><span class="line">    <span class="keyword">return</span> inner</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="装饰器带参数"><a href="#装饰器带参数" class="headerlink" title="装饰器带参数"></a>装饰器带参数</h2><p>  应用场景：如果有成千上万个函数使用了一个装饰器，现在想把这些装饰器取消掉</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">outer</span>(<span class="params">flag</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">timer</span>(<span class="params">func</span>):</span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">inner</span>(<span class="params">*args, **kwargs</span>):</span><br><span class="line">            <span class="keyword">if</span> flag:</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">&quot;执行函数之前要做的&quot;</span>)</span><br><span class="line">            ret = func(*args, **kwargs)</span><br><span class="line">            <span class="keyword">if</span> flag:</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">&quot;执行函数之后要做的&quot;</span>)</span><br><span class="line">            <span class="keyword">return</span> ret</span><br><span class="line">        <span class="keyword">return</span> inner</span><br><span class="line">    <span class="keyword">return</span> timer</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@outer(<span class="params"><span class="literal">False</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">func</span>():</span><br><span class="line">    <span class="built_in">print</span>(<span class="number">111</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">func()</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="多个装饰器装饰一个函数"><a href="#多个装饰器装饰一个函数" class="headerlink" title="多个装饰器装饰一个函数"></a>多个装饰器装饰一个函数</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">wrapper1</span>(<span class="params">func</span>):   <span class="comment"># func = f</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">inner1</span>():</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;wrapper1, before func&quot;</span>)</span><br><span class="line">        func()</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;wrapper1, after func&quot;</span>)</span><br><span class="line">    <span class="keyword">return</span> inner1</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">wrapper2</span>(<span class="params">func</span>):  <span class="comment"># func = inner1</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">inner2</span>():</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;wrapper2, before func&quot;</span>)</span><br><span class="line">        func()</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;wrapper2, after func&quot;</span>)</span><br><span class="line">    <span class="keyword">return</span> inner2</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@wrapper2    </span><span class="comment"># f = wrapper2(f) ===&gt; f = inner2</span></span><br><span class="line"><span class="meta">@wrapper1    </span><span class="comment"># 先装饰wrapper1 ---&gt; f = wrapper1(f) ===&gt; f = inner1</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">f</span>():</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;in f&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">f()   <span class="comment"># ===&gt; inner2()</span></span><br></pre></td></tr></table></figure>
-
-<p>  规律：</p>
-<p>  对于n个装饰器装饰同一个函数，例如靠近函数名f的为@outer_1，最上层为@outer_n，那么执行f()时，执行顺序为：</p>
-<ul>
-<li>第n个装饰器执行f()前要做的 —&gt; 第n-1个装饰器执行f()前要做的 —&gt; …—&gt;第1个装饰器执行f()前要做的 —&gt;</li>
-<li>f() —&gt;</li>
-<li>第1个装饰器执行f()要做的 —&gt; 第二个装饰器执行f()后要做的 —&gt;…—&gt;第n个装饰器执行f()后要做的</li>
-</ul>
-]]></content>
-      <categories>
-        <category>Python</category>
-      </categories>
-      <tags>
-        <tag>Python</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>继承</title>
     <url>/2019/03/20/python-%E7%BB%A7%E6%89%BF/</url>
     <content><![CDATA[<h2 id="判断继承"><a href="#判断继承" class="headerlink" title="判断继承"></a>判断继承</h2><h3 id="issubclass"><a href="#issubclass" class="headerlink" title="issubclass"></a>issubclass</h3><ul>
@@ -6412,73 +6434,6 @@
 <p><strong>MRO：</strong></p>
 <p><strong>Incr</strong>： Incr —&gt; Pro —&gt; Add2 —&gt; Mult —&gt; HaHa —&gt; Init</p>
 <p><strong>Add2</strong>： Add2 —&gt; Init</p>
-]]></content>
-      <categories>
-        <category>Python</category>
-      </categories>
-      <tags>
-        <tag>Python</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>迭代器</title>
-    <url>/2019/03/16/python-%E8%BF%AD%E4%BB%A3%E5%99%A8/</url>
-    <content><![CDATA[<h2 id="迭代器"><a href="#迭代器" class="headerlink" title="迭代器"></a>迭代器</h2><ul>
-<li>Iterable：可迭代对象，内部包含__iter__()函数</li>
-<li>Iterator：迭代器，内部包含__iter__()和__next__()函数</li>
-</ul>
-<p>特点：</p>
-<ul>
-<li>节省内存</li>
-<li>惰性机制</li>
-<li>不能反复，只能向下执行</li>
-</ul>
-<h3 id="可迭代对象"><a href="#可迭代对象" class="headerlink" title="可迭代对象"></a>可迭代对象</h3><h4 id="判断一个对象是否为可迭代对象"><a href="#判断一个对象是否为可迭代对象" class="headerlink" title="判断一个对象是否为可迭代对象"></a>判断一个对象是否为可迭代对象</h4><ul>
-<li>通过dir函数来查看类中定义的方法中是否有__iter__方法</li>
-</ul>
-<p>如果__iter__能找到，那么这个类的对象就是一个可迭代对象。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">print</span>(<span class="built_in">dir</span>(<span class="built_in">str</span>))<span class="built_in">print</span>(<span class="built_in">dir</span>(<span class="built_in">list</span>))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">结果：</span><br><span class="line">[<span class="string">&#x27;__add__&#x27;</span>, <span class="string">&#x27;__class__&#x27;</span>, <span class="string">&#x27;__contains__&#x27;</span>, <span class="string">&#x27;__delattr__&#x27;</span>, <span class="string">&#x27;__dir__&#x27;</span>, <span class="string">&#x27;__doc__&#x27;</span>, <span class="string">&#x27;__eq__&#x27;</span>, <span class="string">&#x27;__format__&#x27;</span>, <span class="string">&#x27;__ge__&#x27;</span>, <span class="string">&#x27;__getattribute__&#x27;</span>, <span class="string">&#x27;__getitem__&#x27;</span>, <span class="string">&#x27;__getnewargs__&#x27;</span>, <span class="string">&#x27;__gt__&#x27;</span>, <span class="string">&#x27;__hash__&#x27;</span>, <span class="string">&#x27;__init__&#x27;</span>, <span class="string">&#x27;__init_subclass__&#x27;</span>, <span class="string">&#x27;__iter__&#x27;</span>, <span class="string">&#x27;__le__&#x27;</span>, <span class="string">&#x27;__len__&#x27;</span>, <span class="string">&#x27;__lt__&#x27;</span>, <span class="string">&#x27;__mod__&#x27;</span>, <span class="string">&#x27;__mul__&#x27;</span>, <span class="string">&#x27;__ne__&#x27;</span>, <span class="string">&#x27;__new__&#x27;</span>, <span class="string">&#x27;__reduce__&#x27;</span>, <span class="string">&#x27;__reduce_ex__&#x27;</span>, <span class="string">&#x27;__repr__&#x27;</span>, <span class="string">&#x27;__rmod__&#x27;</span>, <span class="string">&#x27;__rmul__&#x27;</span>, <span class="string">&#x27;__setattr__&#x27;</span>, <span class="string">&#x27;__sizeof__&#x27;</span>, <span class="string">&#x27;__str__&#x27;</span>, <span class="string">&#x27;__subclasshook__&#x27;</span>, <span class="string">&#x27;capitalize&#x27;</span>, <span class="string">&#x27;casefold&#x27;</span>, <span class="string">&#x27;center&#x27;</span>, <span class="string">&#x27;count&#x27;</span>, <span class="string">&#x27;encode&#x27;</span>, <span class="string">&#x27;endswith&#x27;</span>, <span class="string">&#x27;expandtabs&#x27;</span>, <span class="string">&#x27;find&#x27;</span>, <span class="string">&#x27;format&#x27;</span>, <span class="string">&#x27;format_map&#x27;</span>, <span class="string">&#x27;index&#x27;</span>, <span class="string">&#x27;isalnum&#x27;</span>, <span class="string">&#x27;isalpha&#x27;</span>, <span class="string">&#x27;isdecimal&#x27;</span>, <span class="string">&#x27;isdigit&#x27;</span>, <span class="string">&#x27;isidentifier&#x27;</span>, <span class="string">&#x27;islower&#x27;</span>, <span class="string">&#x27;isnumeric&#x27;</span>, <span class="string">&#x27;isprintable&#x27;</span>, <span class="string">&#x27;isspace&#x27;</span>, <span class="string">&#x27;istitle&#x27;</span>, <span class="string">&#x27;isupper&#x27;</span>, <span class="string">&#x27;join&#x27;</span>, <span class="string">&#x27;ljust&#x27;</span>, <span class="string">&#x27;lower&#x27;</span>, <span class="string">&#x27;lstrip&#x27;</span>, <span class="string">&#x27;maketrans&#x27;</span>, <span class="string">&#x27;partition&#x27;</span>, <span class="string">&#x27;replace&#x27;</span>, <span class="string">&#x27;rfind&#x27;</span>, <span class="string">&#x27;rindex&#x27;</span>, <span class="string">&#x27;rjust&#x27;</span>, <span class="string">&#x27;rpartition&#x27;</span>, <span class="string">&#x27;rsplit&#x27;</span>, <span class="string">&#x27;rstrip&#x27;</span>, <span class="string">&#x27;split&#x27;</span>, <span class="string">&#x27;splitlines&#x27;</span>, <span class="string">&#x27;startswith&#x27;</span>, <span class="string">&#x27;strip&#x27;</span>, <span class="string">&#x27;swapcase&#x27;</span>, <span class="string">&#x27;title&#x27;</span>, <span class="string">&#x27;translate&#x27;</span>, <span class="string">&#x27;upper&#x27;</span>, <span class="string">&#x27;zfill&#x27;</span>][<span class="string">&#x27;__add__&#x27;</span>, <span class="string">&#x27;__class__&#x27;</span>, <span class="string">&#x27;__contains__&#x27;</span>, <span class="string">&#x27;__delattr__&#x27;</span>, <span class="string">&#x27;__delitem__&#x27;</span>, <span class="string">&#x27;__dir__&#x27;</span>, <span class="string">&#x27;__doc__&#x27;</span>, <span class="string">&#x27;__eq__&#x27;</span>, <span class="string">&#x27;__format__&#x27;</span>, <span class="string">&#x27;__ge__&#x27;</span>, <span class="string">&#x27;__getattribute__&#x27;</span>, <span class="string">&#x27;__getitem__&#x27;</span>, <span class="string">&#x27;__gt__&#x27;</span>, <span class="string">&#x27;__hash__&#x27;</span>, <span class="string">&#x27;__iadd__&#x27;</span>, <span class="string">&#x27;__imul__&#x27;</span>, <span class="string">&#x27;__init__&#x27;</span>, <span class="string">&#x27;__init_subclass__&#x27;</span>, <span class="string">&#x27;__iter__&#x27;</span>, <span class="string">&#x27;__le__&#x27;</span>, <span class="string">&#x27;__len__&#x27;</span>, <span class="string">&#x27;__lt__&#x27;</span>, <span class="string">&#x27;__mul__&#x27;</span>, <span class="string">&#x27;__ne__&#x27;</span>, <span class="string">&#x27;__new__&#x27;</span>, <span class="string">&#x27;__reduce__&#x27;</span>, <span class="string">&#x27;__reduce_ex__&#x27;</span>, <span class="string">&#x27;__repr__&#x27;</span>, <span class="string">&#x27;__reversed__&#x27;</span>, <span class="string">&#x27;__rmul__&#x27;</span>, <span class="string">&#x27;__setattr__&#x27;</span>, <span class="string">&#x27;__setitem__&#x27;</span>, <span class="string">&#x27;__sizeof__&#x27;</span>, <span class="string">&#x27;__str__&#x27;</span>, <span class="string">&#x27;__subclasshook__&#x27;</span>, <span class="string">&#x27;append&#x27;</span>, <span class="string">&#x27;clear&#x27;</span>, <span class="string">&#x27;copy&#x27;</span>, <span class="string">&#x27;count&#x27;</span>, <span class="string">&#x27;extend&#x27;</span>, <span class="string">&#x27;index&#x27;</span>, <span class="string">&#x27;insert&#x27;</span>, <span class="string">&#x27;pop&#x27;</span>, <span class="string">&#x27;remove&#x27;</span>, <span class="string">&#x27;reverse&#x27;</span>, <span class="string">&#x27;sort&#x27;</span>]</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>通过isinstance()函数</li>
-</ul>
-<p>如果返回值为True,则该对象为可迭代对象，否则不是。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">from collections import Iterable</span><br><span class="line"></span><br><span class="line">lst = [11, 22, 33]</span><br><span class="line"></span><br><span class="line">print(isinstance(lst, Iterable))  # True</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="迭代器-1"><a href="#迭代器-1" class="headerlink" title="迭代器"></a>迭代器</h3><ul>
-<li>迭代器本身是可迭代的，所以类中有__iter__方法。</li>
-</ul>
-<h4 id="判断一个对象是否为迭代器"><a href="#判断一个对象是否为迭代器" class="headerlink" title="判断一个对象是否为迭代器"></a>判断一个对象是否为迭代器</h4><ul>
-<li>通过dir函数来查看类中定义的方法中是否有__next__方法</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lst = [11, 22, 33]</span><br><span class="line">ret = lst.__iter__()</span><br><span class="line"></span><br><span class="line">print(&quot;__next__&quot; in dir(ret))  # True</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>通过isinstance()函数</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">from collections import Iterator</span><br><span class="line"></span><br><span class="line">lst = [11, 22, 33]</span><br><span class="line">ret = lst.__iter__()</span><br><span class="line"></span><br><span class="line">print(isinstance(ret, Iterator))  # True</span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="迭代器取值"><a href="#迭代器取值" class="headerlink" title="迭代器取值"></a>迭代器取值</h4><p>  通过__next__获取迭代器数据</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lst = [11, 22, 33]</span><br><span class="line">ret = lst.__iter__()</span><br><span class="line"></span><br><span class="line">print(ret.__next__())</span><br><span class="line">print(ret.__next__())</span><br><span class="line">print(ret.__next__())</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">结果：</span><br><span class="line">11</span><br><span class="line">22</span><br><span class="line">33</span><br></pre></td></tr></table></figure>
-
-<p>  如果获取元素个数超过迭代器元素的长度，则报错StopIteration</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lst = [11, 22, 33]</span><br><span class="line">ret = lst.__iter__()</span><br><span class="line"></span><br><span class="line">print(ret.__next__())</span><br><span class="line">print(ret.__next__())</span><br><span class="line">print(ret.__next__())</span><br><span class="line">print(ret.__next__())  # StopIteration</span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="for循环内部代码"><a href="#for循环内部代码" class="headerlink" title="for循环内部代码"></a>for循环内部代码</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ret = lst.__iter__()</span><br><span class="line"></span><br><span class="line">while 1:</span><br><span class="line">    try:</span><br><span class="line">        el = ret.__next__()</span><br><span class="line">        print(el)</span><br><span class="line">    except StopIteration:</span><br><span class="line">        break</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="可迭代对象-—–-迭代器"><a href="#可迭代对象-—–-迭代器" class="headerlink" title="可迭代对象 —–&gt; 迭代器"></a>可迭代对象 —–&gt; 迭代器</h3><ul>
-<li>可迭代对象不一定是迭代器，但可通过__iter__方法转换成迭代器</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lst = [11, 22, 33]</span><br><span class="line">ret = lst.__iter__()</span><br><span class="line"></span><br><span class="line">print(&quot;__next__&quot; in dir(ret))  # True</span><br></pre></td></tr></table></figure>
-
 ]]></content>
       <categories>
         <category>Python</category>
@@ -6579,6 +6534,126 @@
 
 <p>  不同编码之间的转换：</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># GBK 转换成 UTF-8</span><br><span class="line">s = &quot;我是文字&quot;</span><br><span class="line">bs = s.encode(&quot;gbk&quot;)</span><br><span class="line"></span><br><span class="line"># 把GBK转换成unicode，也就是解码</span><br><span class="line">s = bs.decode(&quot;gbk&quot;)</span><br><span class="line"></span><br><span class="line"># 重新编码成UTF-8</span><br><span class="line">bss = s.encode(&quot;utf-8&quot;)</span><br><span class="line"></span><br><span class="line">print(bss)</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>Python</category>
+      </categories>
+      <tags>
+        <tag>Python</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>装饰器</title>
+    <url>/2019/03/16/python-%E8%A3%85%E9%A5%B0%E5%99%A8/</url>
+    <content><![CDATA[<h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><p>  装饰器本质上就是一个python函数，可以让其他函数在不需要做任何代码变动的前提下，增加额外的功能。装饰器的返回值也是一个函数对象。</p>
+<h2 id="装饰器种类"><a href="#装饰器种类" class="headerlink" title="装饰器种类"></a>装饰器种类</h2><h3 id="不带参数的装饰器"><a href="#不带参数的装饰器" class="headerlink" title="不带参数的装饰器"></a>不带参数的装饰器</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">timer</span>(<span class="params">func</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">inner</span>():</span><br><span class="line">        start = time.time()</span><br><span class="line">        time.sleep(<span class="number">0.2</span>)</span><br><span class="line">        func()</span><br><span class="line">        <span class="built_in">print</span>(time.time() - start)</span><br><span class="line">    <span class="keyword">return</span> inner</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@timer          </span><span class="comment"># ===&gt; func1 = timer(func1）</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">func1</span>():</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;in func1&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">func1()</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="带参数的装饰器"><a href="#带参数的装饰器" class="headerlink" title="带参数的装饰器"></a>带参数的装饰器</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">timer</span>(<span class="params">func</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">inner</span>(<span class="params">*args, **kwargs</span>):</span><br><span class="line">        start = time.time()</span><br><span class="line">        time.sleep(<span class="number">0.2</span>)</span><br><span class="line">        func(*args, **kwargs)</span><br><span class="line">        <span class="built_in">print</span>(time.time() - start)</span><br><span class="line">    <span class="keyword">return</span> inner</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@timer        </span><span class="comment"># ===&gt; func1 = timer(func1)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">func1</span>(<span class="params">a</span>):</span><br><span class="line">    <span class="built_in">print</span>(a)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">func1(<span class="string">&quot;hello&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="带返回值的装饰器"><a href="#带返回值的装饰器" class="headerlink" title="带返回值的装饰器"></a>带返回值的装饰器</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">timer</span>(<span class="params">func</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">inner</span>(<span class="params">*args, **kwargs</span>):</span><br><span class="line">        start = time.time()</span><br><span class="line">        time.sleep(<span class="number">0.2</span>)</span><br><span class="line">        ret = func(*args, **kwargs)</span><br><span class="line">        <span class="built_in">print</span>(time.time() - start)</span><br><span class="line">        <span class="keyword">return</span> ret</span><br><span class="line">    <span class="keyword">return</span> inner</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@timer        </span><span class="comment"># ===&gt; func1 = timer(func1)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">func1</span>(<span class="params">a, b</span>):</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;in func1&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@timer        </span><span class="comment"># ===&gt; func2 = timer(func2)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">func2</span>(<span class="params">a</span>):</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;in func2 and get a:%s&quot;</span> % (a))</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;func2 over&quot;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">func1(<span class="string">&quot;hello&quot;</span>, <span class="string">&quot;world&quot;</span>)</span><br><span class="line"><span class="built_in">print</span>(func2(<span class="string">&quot;aaaa&quot;</span>))</span><br></pre></td></tr></table></figure>
+
+<p>  当查看函数信息的方法时，在此处失效：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">timer</span>(<span class="params">func</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">inner</span>(<span class="params">*args, **kwargs</span>):</span><br><span class="line">        start = time.time()</span><br><span class="line">        time.sleep(<span class="number">0.2</span>)</span><br><span class="line">        ret = func(*args, **kwargs)</span><br><span class="line">        <span class="built_in">print</span>(time.time() - start)</span><br><span class="line">        <span class="keyword">return</span> ret</span><br><span class="line">    <span class="keyword">return</span> inner</span><br><span class="line"></span><br><span class="line"><span class="meta">@timer</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">index</span>():</span><br><span class="line">    <span class="string">&quot;&quot;&quot;这是一个主页信息&quot;&quot;&quot;</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;from index&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(index.__doc__)</span><br><span class="line"><span class="built_in">print</span>(index.__name__)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 结果：</span></span><br><span class="line"><span class="literal">None</span></span><br><span class="line">inner</span><br></pre></td></tr></table></figure>
+
+<p>  解决方案：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">from</span> functools <span class="keyword">import</span> wraps</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">timer</span>(<span class="params">func</span>):</span><br><span class="line"><span class="meta">    @wraps(<span class="params">func</span>)</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">inner</span>(<span class="params">*args, **kwargs</span>):</span><br><span class="line">        start = time.time()</span><br><span class="line">        time.sleep(<span class="number">0.2</span>)</span><br><span class="line">        ret = func(*args, **kwargs)</span><br><span class="line">        <span class="built_in">print</span>(time.time() - start)</span><br><span class="line">        <span class="keyword">return</span> ret</span><br><span class="line">    <span class="keyword">return</span> inner</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@timer</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">index</span>():</span><br><span class="line">    <span class="string">&quot;&quot;&quot;这是一个主页信息&quot;&quot;&quot;</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;from index&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(index.__doc__)</span><br><span class="line"><span class="built_in">print</span>(index.__name__)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 结果：</span></span><br><span class="line">这是一个主页信息</span><br><span class="line">index</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="开放封闭原则"><a href="#开放封闭原则" class="headerlink" title="开放封闭原则"></a>开放封闭原则</h2><p>  装饰器完美的遵循了 开放封闭原则</p>
+<h3 id="对扩展开放"><a href="#对扩展开放" class="headerlink" title="对扩展开放"></a>对扩展开放</h3><p>  任何一个程序，不可能在设计之初就已经想好了所有的功能并且未来不做任何更新和修改。所以必须允许代码扩展、添加新功能。</p>
+<h3 id="对修改封闭"><a href="#对修改封闭" class="headerlink" title="对修改封闭"></a>对修改封闭</h3><p>  我们写的一个函数，很有可能已经交付给其他人使用了，如果这个时候对其进行修改，很有可能影响其他已经在使用该函数的用户。</p>
+<h2 id="装饰器的固定结构"><a href="#装饰器的固定结构" class="headerlink" title="装饰器的固定结构"></a>装饰器的固定结构</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">timer</span>(<span class="params">func</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">inner</span>(<span class="params">*args, **kwargs</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;执行函数之前要做的&quot;&quot;&quot;</span></span><br><span class="line">        ret = func(*args, **kwargs)</span><br><span class="line">        <span class="string">&quot;&quot;&quot;执行函数之后要做的&quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">return</span> ret</span><br><span class="line">    <span class="keyword">return</span> inner</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> functools <span class="keyword">import</span> wraps</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">timer</span>(<span class="params">func</span>):</span><br><span class="line"><span class="meta">    @wraps(<span class="params">func</span>)</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">inner</span>(<span class="params">*args, **kwargs</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;执行函数之前要做的&quot;&quot;&quot;</span></span><br><span class="line">        ret = func(*args, **kwargs)</span><br><span class="line">        <span class="string">&quot;&quot;&quot;执行函数之后要做的&quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">return</span> ret</span><br><span class="line">    <span class="keyword">return</span> inner</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="装饰器带参数"><a href="#装饰器带参数" class="headerlink" title="装饰器带参数"></a>装饰器带参数</h2><p>  应用场景：如果有成千上万个函数使用了一个装饰器，现在想把这些装饰器取消掉</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">outer</span>(<span class="params">flag</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">timer</span>(<span class="params">func</span>):</span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">inner</span>(<span class="params">*args, **kwargs</span>):</span><br><span class="line">            <span class="keyword">if</span> flag:</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">&quot;执行函数之前要做的&quot;</span>)</span><br><span class="line">            ret = func(*args, **kwargs)</span><br><span class="line">            <span class="keyword">if</span> flag:</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">&quot;执行函数之后要做的&quot;</span>)</span><br><span class="line">            <span class="keyword">return</span> ret</span><br><span class="line">        <span class="keyword">return</span> inner</span><br><span class="line">    <span class="keyword">return</span> timer</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@outer(<span class="params"><span class="literal">False</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">func</span>():</span><br><span class="line">    <span class="built_in">print</span>(<span class="number">111</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">func()</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="多个装饰器装饰一个函数"><a href="#多个装饰器装饰一个函数" class="headerlink" title="多个装饰器装饰一个函数"></a>多个装饰器装饰一个函数</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">wrapper1</span>(<span class="params">func</span>):   <span class="comment"># func = f</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">inner1</span>():</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;wrapper1, before func&quot;</span>)</span><br><span class="line">        func()</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;wrapper1, after func&quot;</span>)</span><br><span class="line">    <span class="keyword">return</span> inner1</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">wrapper2</span>(<span class="params">func</span>):  <span class="comment"># func = inner1</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">inner2</span>():</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;wrapper2, before func&quot;</span>)</span><br><span class="line">        func()</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;wrapper2, after func&quot;</span>)</span><br><span class="line">    <span class="keyword">return</span> inner2</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@wrapper2    </span><span class="comment"># f = wrapper2(f) ===&gt; f = inner2</span></span><br><span class="line"><span class="meta">@wrapper1    </span><span class="comment"># 先装饰wrapper1 ---&gt; f = wrapper1(f) ===&gt; f = inner1</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">f</span>():</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;in f&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">f()   <span class="comment"># ===&gt; inner2()</span></span><br></pre></td></tr></table></figure>
+
+<p>  规律：</p>
+<p>  对于n个装饰器装饰同一个函数，例如靠近函数名f的为@outer_1，最上层为@outer_n，那么执行f()时，执行顺序为：</p>
+<ul>
+<li>第n个装饰器执行f()前要做的 —&gt; 第n-1个装饰器执行f()前要做的 —&gt; …—&gt;第1个装饰器执行f()前要做的 —&gt;</li>
+<li>f() —&gt;</li>
+<li>第1个装饰器执行f()要做的 —&gt; 第二个装饰器执行f()后要做的 —&gt;…—&gt;第n个装饰器执行f()后要做的</li>
+</ul>
+]]></content>
+      <categories>
+        <category>Python</category>
+      </categories>
+      <tags>
+        <tag>Python</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>迭代器</title>
+    <url>/2019/03/16/python-%E8%BF%AD%E4%BB%A3%E5%99%A8/</url>
+    <content><![CDATA[<h2 id="迭代器"><a href="#迭代器" class="headerlink" title="迭代器"></a>迭代器</h2><ul>
+<li>Iterable：可迭代对象，内部包含__iter__()函数</li>
+<li>Iterator：迭代器，内部包含__iter__()和__next__()函数</li>
+</ul>
+<p>特点：</p>
+<ul>
+<li>节省内存</li>
+<li>惰性机制</li>
+<li>不能反复，只能向下执行</li>
+</ul>
+<h3 id="可迭代对象"><a href="#可迭代对象" class="headerlink" title="可迭代对象"></a>可迭代对象</h3><h4 id="判断一个对象是否为可迭代对象"><a href="#判断一个对象是否为可迭代对象" class="headerlink" title="判断一个对象是否为可迭代对象"></a>判断一个对象是否为可迭代对象</h4><ul>
+<li>通过dir函数来查看类中定义的方法中是否有__iter__方法</li>
+</ul>
+<p>如果__iter__能找到，那么这个类的对象就是一个可迭代对象。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">print</span>(<span class="built_in">dir</span>(<span class="built_in">str</span>))<span class="built_in">print</span>(<span class="built_in">dir</span>(<span class="built_in">list</span>))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">结果：</span><br><span class="line">[<span class="string">&#x27;__add__&#x27;</span>, <span class="string">&#x27;__class__&#x27;</span>, <span class="string">&#x27;__contains__&#x27;</span>, <span class="string">&#x27;__delattr__&#x27;</span>, <span class="string">&#x27;__dir__&#x27;</span>, <span class="string">&#x27;__doc__&#x27;</span>, <span class="string">&#x27;__eq__&#x27;</span>, <span class="string">&#x27;__format__&#x27;</span>, <span class="string">&#x27;__ge__&#x27;</span>, <span class="string">&#x27;__getattribute__&#x27;</span>, <span class="string">&#x27;__getitem__&#x27;</span>, <span class="string">&#x27;__getnewargs__&#x27;</span>, <span class="string">&#x27;__gt__&#x27;</span>, <span class="string">&#x27;__hash__&#x27;</span>, <span class="string">&#x27;__init__&#x27;</span>, <span class="string">&#x27;__init_subclass__&#x27;</span>, <span class="string">&#x27;__iter__&#x27;</span>, <span class="string">&#x27;__le__&#x27;</span>, <span class="string">&#x27;__len__&#x27;</span>, <span class="string">&#x27;__lt__&#x27;</span>, <span class="string">&#x27;__mod__&#x27;</span>, <span class="string">&#x27;__mul__&#x27;</span>, <span class="string">&#x27;__ne__&#x27;</span>, <span class="string">&#x27;__new__&#x27;</span>, <span class="string">&#x27;__reduce__&#x27;</span>, <span class="string">&#x27;__reduce_ex__&#x27;</span>, <span class="string">&#x27;__repr__&#x27;</span>, <span class="string">&#x27;__rmod__&#x27;</span>, <span class="string">&#x27;__rmul__&#x27;</span>, <span class="string">&#x27;__setattr__&#x27;</span>, <span class="string">&#x27;__sizeof__&#x27;</span>, <span class="string">&#x27;__str__&#x27;</span>, <span class="string">&#x27;__subclasshook__&#x27;</span>, <span class="string">&#x27;capitalize&#x27;</span>, <span class="string">&#x27;casefold&#x27;</span>, <span class="string">&#x27;center&#x27;</span>, <span class="string">&#x27;count&#x27;</span>, <span class="string">&#x27;encode&#x27;</span>, <span class="string">&#x27;endswith&#x27;</span>, <span class="string">&#x27;expandtabs&#x27;</span>, <span class="string">&#x27;find&#x27;</span>, <span class="string">&#x27;format&#x27;</span>, <span class="string">&#x27;format_map&#x27;</span>, <span class="string">&#x27;index&#x27;</span>, <span class="string">&#x27;isalnum&#x27;</span>, <span class="string">&#x27;isalpha&#x27;</span>, <span class="string">&#x27;isdecimal&#x27;</span>, <span class="string">&#x27;isdigit&#x27;</span>, <span class="string">&#x27;isidentifier&#x27;</span>, <span class="string">&#x27;islower&#x27;</span>, <span class="string">&#x27;isnumeric&#x27;</span>, <span class="string">&#x27;isprintable&#x27;</span>, <span class="string">&#x27;isspace&#x27;</span>, <span class="string">&#x27;istitle&#x27;</span>, <span class="string">&#x27;isupper&#x27;</span>, <span class="string">&#x27;join&#x27;</span>, <span class="string">&#x27;ljust&#x27;</span>, <span class="string">&#x27;lower&#x27;</span>, <span class="string">&#x27;lstrip&#x27;</span>, <span class="string">&#x27;maketrans&#x27;</span>, <span class="string">&#x27;partition&#x27;</span>, <span class="string">&#x27;replace&#x27;</span>, <span class="string">&#x27;rfind&#x27;</span>, <span class="string">&#x27;rindex&#x27;</span>, <span class="string">&#x27;rjust&#x27;</span>, <span class="string">&#x27;rpartition&#x27;</span>, <span class="string">&#x27;rsplit&#x27;</span>, <span class="string">&#x27;rstrip&#x27;</span>, <span class="string">&#x27;split&#x27;</span>, <span class="string">&#x27;splitlines&#x27;</span>, <span class="string">&#x27;startswith&#x27;</span>, <span class="string">&#x27;strip&#x27;</span>, <span class="string">&#x27;swapcase&#x27;</span>, <span class="string">&#x27;title&#x27;</span>, <span class="string">&#x27;translate&#x27;</span>, <span class="string">&#x27;upper&#x27;</span>, <span class="string">&#x27;zfill&#x27;</span>][<span class="string">&#x27;__add__&#x27;</span>, <span class="string">&#x27;__class__&#x27;</span>, <span class="string">&#x27;__contains__&#x27;</span>, <span class="string">&#x27;__delattr__&#x27;</span>, <span class="string">&#x27;__delitem__&#x27;</span>, <span class="string">&#x27;__dir__&#x27;</span>, <span class="string">&#x27;__doc__&#x27;</span>, <span class="string">&#x27;__eq__&#x27;</span>, <span class="string">&#x27;__format__&#x27;</span>, <span class="string">&#x27;__ge__&#x27;</span>, <span class="string">&#x27;__getattribute__&#x27;</span>, <span class="string">&#x27;__getitem__&#x27;</span>, <span class="string">&#x27;__gt__&#x27;</span>, <span class="string">&#x27;__hash__&#x27;</span>, <span class="string">&#x27;__iadd__&#x27;</span>, <span class="string">&#x27;__imul__&#x27;</span>, <span class="string">&#x27;__init__&#x27;</span>, <span class="string">&#x27;__init_subclass__&#x27;</span>, <span class="string">&#x27;__iter__&#x27;</span>, <span class="string">&#x27;__le__&#x27;</span>, <span class="string">&#x27;__len__&#x27;</span>, <span class="string">&#x27;__lt__&#x27;</span>, <span class="string">&#x27;__mul__&#x27;</span>, <span class="string">&#x27;__ne__&#x27;</span>, <span class="string">&#x27;__new__&#x27;</span>, <span class="string">&#x27;__reduce__&#x27;</span>, <span class="string">&#x27;__reduce_ex__&#x27;</span>, <span class="string">&#x27;__repr__&#x27;</span>, <span class="string">&#x27;__reversed__&#x27;</span>, <span class="string">&#x27;__rmul__&#x27;</span>, <span class="string">&#x27;__setattr__&#x27;</span>, <span class="string">&#x27;__setitem__&#x27;</span>, <span class="string">&#x27;__sizeof__&#x27;</span>, <span class="string">&#x27;__str__&#x27;</span>, <span class="string">&#x27;__subclasshook__&#x27;</span>, <span class="string">&#x27;append&#x27;</span>, <span class="string">&#x27;clear&#x27;</span>, <span class="string">&#x27;copy&#x27;</span>, <span class="string">&#x27;count&#x27;</span>, <span class="string">&#x27;extend&#x27;</span>, <span class="string">&#x27;index&#x27;</span>, <span class="string">&#x27;insert&#x27;</span>, <span class="string">&#x27;pop&#x27;</span>, <span class="string">&#x27;remove&#x27;</span>, <span class="string">&#x27;reverse&#x27;</span>, <span class="string">&#x27;sort&#x27;</span>]</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>通过isinstance()函数</li>
+</ul>
+<p>如果返回值为True,则该对象为可迭代对象，否则不是。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">from collections import Iterable</span><br><span class="line"></span><br><span class="line">lst = [11, 22, 33]</span><br><span class="line"></span><br><span class="line">print(isinstance(lst, Iterable))  # True</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="迭代器-1"><a href="#迭代器-1" class="headerlink" title="迭代器"></a>迭代器</h3><ul>
+<li>迭代器本身是可迭代的，所以类中有__iter__方法。</li>
+</ul>
+<h4 id="判断一个对象是否为迭代器"><a href="#判断一个对象是否为迭代器" class="headerlink" title="判断一个对象是否为迭代器"></a>判断一个对象是否为迭代器</h4><ul>
+<li>通过dir函数来查看类中定义的方法中是否有__next__方法</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lst = [11, 22, 33]</span><br><span class="line">ret = lst.__iter__()</span><br><span class="line"></span><br><span class="line">print(&quot;__next__&quot; in dir(ret))  # True</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>通过isinstance()函数</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">from collections import Iterator</span><br><span class="line"></span><br><span class="line">lst = [11, 22, 33]</span><br><span class="line">ret = lst.__iter__()</span><br><span class="line"></span><br><span class="line">print(isinstance(ret, Iterator))  # True</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="迭代器取值"><a href="#迭代器取值" class="headerlink" title="迭代器取值"></a>迭代器取值</h4><p>  通过__next__获取迭代器数据</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lst = [11, 22, 33]</span><br><span class="line">ret = lst.__iter__()</span><br><span class="line"></span><br><span class="line">print(ret.__next__())</span><br><span class="line">print(ret.__next__())</span><br><span class="line">print(ret.__next__())</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">结果：</span><br><span class="line">11</span><br><span class="line">22</span><br><span class="line">33</span><br></pre></td></tr></table></figure>
+
+<p>  如果获取元素个数超过迭代器元素的长度，则报错StopIteration</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lst = [11, 22, 33]</span><br><span class="line">ret = lst.__iter__()</span><br><span class="line"></span><br><span class="line">print(ret.__next__())</span><br><span class="line">print(ret.__next__())</span><br><span class="line">print(ret.__next__())</span><br><span class="line">print(ret.__next__())  # StopIteration</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="for循环内部代码"><a href="#for循环内部代码" class="headerlink" title="for循环内部代码"></a>for循环内部代码</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ret = lst.__iter__()</span><br><span class="line"></span><br><span class="line">while 1:</span><br><span class="line">    try:</span><br><span class="line">        el = ret.__next__()</span><br><span class="line">        print(el)</span><br><span class="line">    except StopIteration:</span><br><span class="line">        break</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="可迭代对象-—–-迭代器"><a href="#可迭代对象-—–-迭代器" class="headerlink" title="可迭代对象 —–&gt; 迭代器"></a>可迭代对象 —–&gt; 迭代器</h3><ul>
+<li>可迭代对象不一定是迭代器，但可通过__iter__方法转换成迭代器</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lst = [11, 22, 33]</span><br><span class="line">ret = lst.__iter__()</span><br><span class="line"></span><br><span class="line">print(&quot;__next__&quot; in dir(ret))  # True</span><br></pre></td></tr></table></figure>
 
 ]]></content>
       <categories>
@@ -7990,7 +8065,7 @@
 </tr>
 <tr>
 <td>mail address</td>
-<td>当日志轮替时，输出内容通过邮件发送到指定的邮件地址。如mail <a href="mailto:&#x61;&#97;&#97;&#64;&#49;&#54;&#x33;&#x2e;&#99;&#111;&#x6d;">aaa@163.com</a></td>
+<td>当日志轮替时，输出内容通过邮件发送到指定的邮件地址。如mail <a href="mailto:&#x61;&#x61;&#x61;&#x40;&#49;&#54;&#x33;&#x2e;&#99;&#111;&#x6d;">aaa@163.com</a></td>
 </tr>
 <tr>
 <td>missingok</td>
