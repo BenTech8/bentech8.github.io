@@ -3352,7 +3352,7 @@
 
 
 
-<h3 id="跨节点间Pod通信流程（VXLAN模式）"><a href="#跨节点间Pod通信流程（VXLAN模式）" class="headerlink" title="跨节点间Pod通信流程（VXLAN模式）"></a>跨节点间Pod通信流程（VXLAN模式）</h3> <img src="/2024/03/31/k8s-Flannel%E5%8E%9F%E7%90%86/2025-03-31_17-03.png" class="">
+<h3 id="跨节点Pod通信流程（VXLAN模式）"><a href="#跨节点Pod通信流程（VXLAN模式）" class="headerlink" title="跨节点Pod通信流程（VXLAN模式）"></a>跨节点Pod通信流程（VXLAN模式）</h3> <img src="/2024/03/31/k8s-Flannel%E5%8E%9F%E7%90%86/2025-03-31_17-03.png" class="">
 
 <p>通信步骤：</p>
 <p>1）Pod 1发起请求</p>
@@ -3362,18 +3362,34 @@
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">ip route show</span></span><br><span class="line">10.244.0.0/16 via 10.244.0.0 dev flannel.1</span><br></pre></td></tr></table></figure>
 
 <p>3）ARP解析</p>
-<p>节点1查询flannel.1的ARP表，获取目标Pod所在节点2的flannel.2设备的MAC地址。Flannel通过Kubernetes API或etcd维护节点间的ARP和FDB（Forwarding Database）表。</p>
+<p>节点1查询flannel.1的ARP表，获取目标Pod所在节点2的flannel.1设备的MAC地址。通过节点1查询FDB表可查询节点2 Fannel.1 MAC地址对应节点IP。Flannel通过Kubernetes API或etcd维护节点间的ARP和FDB（Forwarding Database）表。</p>
+<p>查看节点flannel.1的ARP表和FDB：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查看ARP表</span></span><br><span class="line">[root@localhost ~]# ip neigh show dev flannel.1</span><br><span class="line">10.244.1.0 lladdr ca:2a:a4:59:b6:55 PERMANENT</span><br><span class="line">10.244.2.0 lladdr d2:d0:1b:a7:a9:cd PERMANENT</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查看fdb表</span></span><br><span class="line">[root@localhost ~]# bridge fdb show  dev flannel.1</span><br><span class="line">d2:d0:1b:a7:a9:cd dst 192.168.31.61 self permanent</span><br><span class="line">ca:2a:a4:59:b6:55 dst 192.168.31.63 self permanent</span><br></pre></td></tr></table></figure>
+
 <p>4）VXLAN封装</p>
 <p>封装外层报文(外层源IP：192.168.31.62，外层目标IP：192.168.31.63，VXLAN Header：VNI（VXLAN Network Identifier, 默认为1）标识Flannel网络)，内层仍为pod 1至pod 2的IP报文。</p>
 <p>5）通过物理网络传输</p>
 <p>封装后的UDP报文（默认端口8472）通过节点1的物理网卡（如eth0）发出，经过底层网络（如交换机、路由器）到达节点2。</p>
 <p>6）节点2解封装</p>
-<p>节点2的flannel.1设备接收到报文，剥离外层的IP和VXLAN头，还原原始数据包(10.244.1.10-&gt;10.244.2.10)。</p>
+<p>节点2的eth0收到UDP报文(目标端口8472)，内核识别VXLAN报文（根据VNI标识），剥离外层IP&#x2F;UDP头，根据VNI将内层数据包交给flannel.1。</p>
+<p>VXLAN封包&#x2F;解封包是由VTEP设备处理的。</p>
 <p>7）路由到目标Pod 2</p>
 <p>节点2根据路由表将数据包导向cni0网桥。</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">ip route show | grep cni0</span></span><br><span class="line">10.244.2.0/24 dev cni0 proto kernel scope link src 10.244.2.1</span><br></pre></td></tr></table></figure>
 
 <p>通过cni0和veth pair将数据包转发到Pod 2的eth0。</p>
+<h3 id="跨节点Pod通信流程-Host-GW模式"><a href="#跨节点Pod通信流程-Host-GW模式" class="headerlink" title="跨节点Pod通信流程(Host-GW模式)"></a>跨节点Pod通信流程(Host-GW模式)</h3><p>Flannel的host-gw模式是一种高性能的Kubernetes网络插件工作模式，它通过主机的路由表直接转发跨节点Pod的流量，无需封装(如VXLAN或IPIP)，原理类似于静态路由配置。</p>
+<img src="/2024/03/31/k8s-Flannel%E5%8E%9F%E7%90%86/2025-04-01_12-06.png" class="">
+
+<p>通信步骤：</p>
+<p>1）Pod 1发起请求</p>
+<p>数据包从Pod 1的eth0发出(源IP：10.244.1.10，目标IP：10.244.2.10)，通过veth pair进入节点的主机网络栈。</p>
+<p>2）节点1内核路由表匹配</p>
+<p>节点1根据路由表匹配到10.244.1.0&#x2F;24的下一跳是192.168.31.63(节点2)。</p>
+<p>3）通过物理网络传输</p>
+<p>节点1通过物理网络(如eth0)直接将流量发给节点B。</p>
+<p>4）节点2内核路由表匹配</p>
+<p>节点B收到流量后，根据本地路由表将流量转发到cni0，继而转发至pod 2。</p>
 ]]></content>
       <categories>
         <category>Kubernetes</category>
@@ -4002,128 +4018,6 @@
       </tags>
   </entry>
   <entry>
-    <title>List</title>
-    <url>/2019/03/16/python-list/</url>
-    <content><![CDATA[<h2 id="列表"><a href="#列表" class="headerlink" title="列表"></a>列表</h2><p>  以[ ]括起来，每个元素用”,”隔开，且可以存放各种数据类型。</p>
-<p>  列表相比于字符串，不仅可以存放不同的数据类型，而且可存放大量的数据。32位python可以存放：536870912个元素，64位可以存放：1152921504606846975个元素。</p>
-<p>  列表是有序的(按照保存的顺序)，有索引，可以切片方便取值。</p>
-<p>  列表属于可变数据类型。</p>
-<h3 id="索引"><a href="#索引" class="headerlink" title="索引"></a>索引</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lst = [&quot;python&quot;, &quot;java&quot;, &quot;c&quot;,  &quot;c++&quot;, [11, 22,33]]</span><br><span class="line"></span><br><span class="line">print(lst[0])  # python</span><br><span class="line">print(lst[4][0]) # 11</span><br></pre></td></tr></table></figure>
-
-<h3 id="切片"><a href="#切片" class="headerlink" title="切片"></a>切片</h3><p>  列表切片后得到还是列表</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lst = [11, 22, 33, 44, 55, 66]</span><br><span class="line"></span><br><span class="line">print(lst[0:3]) # [11, 22, 33] </span><br><span class="line">print(lst[1::2]) # [22, 44, 66]</span><br><span class="line">print(lst[2::-1]) # [33,22,11]</span><br></pre></td></tr></table></figure>
-
-<h3 id="增删改查"><a href="#增删改查" class="headerlink" title="增删改查"></a>增删改查</h3><p>1).增</p>
-<ul>
-<li><p>append</p>
-<p>在列表末尾增加元素</p>
-</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lst = [11, 22, 33, 44]lst.append(55)</span><br><span class="line">print(lst) # [11, 22, 33, 44, 55]</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>insert</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lst = [11, 22,33]</span><br><span class="line">lst.insert(1, 55)</span><br><span class="line">print(lst) # [11, 55, 22, 33]</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p>extend</p>
-<p>迭代添加，增加的元素须为可迭代对象，且添加位置为末尾</p>
-</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lst = [11, 22, 33]</span><br><span class="line">lst.extend([55, 66]) # [11, 22, 33, 55, 66]</span><br><span class="line">lst.extend(&quot;python&quot;) # [11, 22, 33, 55，66， &#x27;p&#x27;, &#x27;y&#x27;, &#x27;t&#x27;, &#x27;h&#x27;, &#x27;o&#x27;, &#x27;n&#x27;]</span><br><span class="line">lst.extend(44) # 报错</span><br></pre></td></tr></table></figure>
-
-<p>2).删除</p>
-<ul>
-<li><p>pop</p>
-<p>默认删除列表末尾元素，也可删除指定位置元素，前提得提供索引。该删除有返回值，返回值为删除的元素</p>
-</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lst = [11, 22, 33,  44, 55]</span><br><span class="line">el = lst.pop() # 55</span><br><span class="line">print(lst) # [11, 22, 33, 44]</span><br><span class="line"></span><br><span class="line">lst.pop(2)</span><br><span class="line">print(lst) # [11, 22, 44]</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p>remove</p>
-<p> 根据元素内容进行删除，若列表中有多个相同的元素，则执行remove操作删除的是第一个元素</p>
-</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lst = [11, 22, 33, 44]</span><br><span class="line"></span><br><span class="line">lst.remove(44)</span><br><span class="line">print(lst) # [11, 22, 33]</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p>del</p>
-<p>切片删除</p>
-</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lst = [11, 22, 33, 44, 55, 66]</span><br><span class="line"></span><br><span class="line">del lst[0] </span><br><span class="line">print(lst) # [22, 33, 44, 55, 66]</span><br><span class="line"></span><br><span class="line">del[1:4:2] </span><br><span class="line">print(lst) # [22, 44, 66]</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p>clear</p>
-<p>清空列表</p>
-</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lst = [11, 22, 33, 44, 55]</span><br><span class="line"></span><br><span class="line">lst.clear()</span><br><span class="line">print(lst) # []</span><br></pre></td></tr></table></figure>
-
-<p> 3).修改</p>
-<p>  指定索引修改</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lst = [11, 22, 33, 44]</span><br><span class="line"></span><br><span class="line">lst[2] = 55</span><br><span class="line">print(lst) # [11, 22, 55, 44]</span><br></pre></td></tr></table></figure>
-
-<p>  根据切片修改，如果步长不是1，则修改的元素的个数与提供的元素个数须匹配。如果切片没有步长或者步长是1，则不用关心个数</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lst = [11, 22, 33, 44, 55]</span><br><span class="line"></span><br><span class="line">lst[1:4] = &#x27;编程&#x27;</span><br><span class="line">print(lst) # [11, &quot;编&quot;, &quot;程&quot;, 55]lst = [11, 22, 33, 44, 55, 66]lst[1:5:2] = &quot;编程&quot;print(lst) # [11, &quot;编&quot;, 33, &quot;程&quot;, 55, 66]</span><br></pre></td></tr></table></figure>
-
-<p> 4).查询</p>
-<p>  列表是一个可打迭代对象，所以可以进行for循环</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">for i in lst:</span><br><span class="line">    print(i)</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="其他操作"><a href="#其他操作" class="headerlink" title="其他操作"></a>其他操作</h3><ul>
-<li><p>count</p>
-<p>查询某元素出现的次数</p>
-</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lst = [11, 22, 11, 44, 55, 66]</span><br><span class="line"></span><br><span class="line">c = lst.count(11)</span><br><span class="line">print(c) # 2</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p>sort</p>
-<p>默认按升序排列，若需降序排列，只需在括号内添加reverse&#x3D;True</p>
-</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lst = [11, 44, 33, 22, 55]</span><br><span class="line"></span><br><span class="line">lst.sort()</span><br><span class="line">print(lst) # [11, 22, 33, 44, 55]</span><br><span class="line">lst.sort(reverse=True) </span><br><span class="line">print(lst) # [55, 44, 33, 22, 11]</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p>reverse</p>
-<p>翻转列表，无返回值</p>
-</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lst = [11, 33, 22, 55, 44]</span><br><span class="line"></span><br><span class="line">lst.reverse()</span><br><span class="line">print(lst) # [44, 55, 22, 33, 11]</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="列表嵌套"><a href="#列表嵌套" class="headerlink" title="列表嵌套"></a>列表嵌套</h3><p>  采用降维操作</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lst = [11, 22, [33, [&quot;python&quot;, 55]], 66]</span><br><span class="line"></span><br><span class="line">print(lst[1])  # 22</span><br><span class="line"></span><br><span class="line">print(lst[2][0]) # 33</span><br><span class="line"></span><br><span class="line">print(lst[2][1][0]) # p</span><br><span class="line"></span><br><span class="line">lst[2][1][0] = lst[2][1][0].replace(&quot;p&quot;, &quot;P&quot;)</span><br><span class="line"></span><br><span class="line">print(lst) # [11, 22, [33, [&#x27;Python&#x27;, 55]], 66]lst[2].append(77)print(lst) # [11, 22, [33, [&quot;Python&quot;, 55], 77], 66]</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="循环过程中删除列表元素问题"><a href="#循环过程中删除列表元素问题" class="headerlink" title="循环过程中删除列表元素问题"></a>循环过程中删除列表元素问题</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lst = [11, 22, 33, 44]</span><br><span class="line"></span><br><span class="line">for i in lst:</span><br><span class="line">    lst.remove(i)</span><br><span class="line">print(lst) # [22, 44]</span><br></pre></td></tr></table></figure>
-
-<p>原因：</p>
-<p>  在for的运行过程中，会有一个指针来记录当前循环的元素是哪个，一开始这个指针指向第0个，然后获取到第0个元素。紧接着删除第0个。这个时候，原来是第一个的元素会自动的变成第0个。然后指针向后移动一次，指向第1个元素。这时原来的1已经变成了0，也就不会被删除了。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lst = [11, 22, 33, 44]</span><br><span class="line">del_lst = []</span><br><span class="line"></span><br><span class="line">for i in lst:</span><br><span class="line">    del_lst.append(i)</span><br><span class="line"></span><br><span class="line">for i in del_lst:</span><br><span class="line">    lst.remove(i)</span><br><span class="line"></span><br><span class="line">print(lst)  # []</span><br></pre></td></tr></table></figure>
-
-<p> 注意：由于删除元素会导致元素的索引改变，所以容易出现问题。尽量不要在循环中直接删除元素。可以把要删除的元素添加到另一个列表中然后批量删除。</p>
-<h2 id="range"><a href="#range" class="headerlink" title="range"></a>range</h2><ul>
-<li>range(start, end, 步长)</li>
-<li>获取元素的索引和元素</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lst = [&quot;语文&quot;, &quot;数学&quot;, &quot;英语&quot;,&quot;高数&quot;,&quot;体育&quot;]</span><br><span class="line">for i in range(len(lst)):</span><br><span class="line">        print(i, lst[i])</span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>Python</category>
-      </categories>
-      <tags>
-        <tag>Python</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>os模块</title>
     <url>/2019/03/20/python-os%E6%A8%A1%E5%9D%97/</url>
     <content><![CDATA[<h2 id="os模块"><a href="#os模块" class="headerlink" title="os模块"></a>os模块</h2><p>  所有和操作系统相关的内容都在os模块中</p>
@@ -4267,6 +4161,128 @@
 <h3 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h3><p>  注册登录程序</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> pickle</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">User</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, username, password</span>):</span><br><span class="line">        <span class="variable language_">self</span>.username = username</span><br><span class="line">        <span class="variable language_">self</span>.password = password</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Client</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">regist</span>(<span class="params">self</span>):</span><br><span class="line">        uname = <span class="built_in">input</span>(<span class="string">&quot;username: &quot;</span>)</span><br><span class="line">        pwd = <span class="built_in">input</span>(<span class="string">&quot;password: &quot;</span>)</span><br><span class="line">        user = User(uname, pwd)</span><br><span class="line">        pickle.dump(user, <span class="built_in">open</span>(<span class="string">&quot;userinfo&quot;</span>, mode=<span class="string">&quot;wb&quot;</span>))</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;regist successful!&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">login</span>(<span class="params">self</span>):</span><br><span class="line">        uname = <span class="built_in">input</span>(<span class="string">&quot;username: &quot;</span>)</span><br><span class="line">        pwd = <span class="built_in">input</span>(<span class="string">&quot;password: &quot;</span>)</span><br><span class="line">        f = <span class="built_in">open</span>(<span class="string">&quot;userinfo&quot;</span>, mode=<span class="string">&quot;rb&quot;</span>)</span><br><span class="line">        <span class="keyword">while</span> <span class="number">1</span>:</span><br><span class="line">            <span class="keyword">try</span>:</span><br><span class="line">                u = pickle.load(f)</span><br><span class="line">                <span class="keyword">if</span> u.username == uname <span class="keyword">and</span> u.password == pwd:</span><br><span class="line">                    <span class="built_in">print</span>(<span class="string">&quot;login successful!&quot;</span>)</span><br><span class="line">                    <span class="keyword">break</span></span><br><span class="line">            <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">&quot;login failed!&quot;</span>)</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">run</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="variable language_">self</span>.regist()</span><br><span class="line">        <span class="variable language_">self</span>.regist()</span><br><span class="line">        <span class="variable language_">self</span>.login()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    c = Client()</span><br><span class="line">    c.run()</span><br></pre></td></tr></table></figure>
 
+]]></content>
+      <categories>
+        <category>Python</category>
+      </categories>
+      <tags>
+        <tag>Python</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>List</title>
+    <url>/2019/03/16/python-list/</url>
+    <content><![CDATA[<h2 id="列表"><a href="#列表" class="headerlink" title="列表"></a>列表</h2><p>  以[ ]括起来，每个元素用”,”隔开，且可以存放各种数据类型。</p>
+<p>  列表相比于字符串，不仅可以存放不同的数据类型，而且可存放大量的数据。32位python可以存放：536870912个元素，64位可以存放：1152921504606846975个元素。</p>
+<p>  列表是有序的(按照保存的顺序)，有索引，可以切片方便取值。</p>
+<p>  列表属于可变数据类型。</p>
+<h3 id="索引"><a href="#索引" class="headerlink" title="索引"></a>索引</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lst = [&quot;python&quot;, &quot;java&quot;, &quot;c&quot;,  &quot;c++&quot;, [11, 22,33]]</span><br><span class="line"></span><br><span class="line">print(lst[0])  # python</span><br><span class="line">print(lst[4][0]) # 11</span><br></pre></td></tr></table></figure>
+
+<h3 id="切片"><a href="#切片" class="headerlink" title="切片"></a>切片</h3><p>  列表切片后得到还是列表</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lst = [11, 22, 33, 44, 55, 66]</span><br><span class="line"></span><br><span class="line">print(lst[0:3]) # [11, 22, 33] </span><br><span class="line">print(lst[1::2]) # [22, 44, 66]</span><br><span class="line">print(lst[2::-1]) # [33,22,11]</span><br></pre></td></tr></table></figure>
+
+<h3 id="增删改查"><a href="#增删改查" class="headerlink" title="增删改查"></a>增删改查</h3><p>1).增</p>
+<ul>
+<li><p>append</p>
+<p>在列表末尾增加元素</p>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lst = [11, 22, 33, 44]lst.append(55)</span><br><span class="line">print(lst) # [11, 22, 33, 44, 55]</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>insert</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lst = [11, 22,33]</span><br><span class="line">lst.insert(1, 55)</span><br><span class="line">print(lst) # [11, 55, 22, 33]</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>extend</p>
+<p>迭代添加，增加的元素须为可迭代对象，且添加位置为末尾</p>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lst = [11, 22, 33]</span><br><span class="line">lst.extend([55, 66]) # [11, 22, 33, 55, 66]</span><br><span class="line">lst.extend(&quot;python&quot;) # [11, 22, 33, 55，66， &#x27;p&#x27;, &#x27;y&#x27;, &#x27;t&#x27;, &#x27;h&#x27;, &#x27;o&#x27;, &#x27;n&#x27;]</span><br><span class="line">lst.extend(44) # 报错</span><br></pre></td></tr></table></figure>
+
+<p>2).删除</p>
+<ul>
+<li><p>pop</p>
+<p>默认删除列表末尾元素，也可删除指定位置元素，前提得提供索引。该删除有返回值，返回值为删除的元素</p>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lst = [11, 22, 33,  44, 55]</span><br><span class="line">el = lst.pop() # 55</span><br><span class="line">print(lst) # [11, 22, 33, 44]</span><br><span class="line"></span><br><span class="line">lst.pop(2)</span><br><span class="line">print(lst) # [11, 22, 44]</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>remove</p>
+<p> 根据元素内容进行删除，若列表中有多个相同的元素，则执行remove操作删除的是第一个元素</p>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lst = [11, 22, 33, 44]</span><br><span class="line"></span><br><span class="line">lst.remove(44)</span><br><span class="line">print(lst) # [11, 22, 33]</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>del</p>
+<p>切片删除</p>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lst = [11, 22, 33, 44, 55, 66]</span><br><span class="line"></span><br><span class="line">del lst[0] </span><br><span class="line">print(lst) # [22, 33, 44, 55, 66]</span><br><span class="line"></span><br><span class="line">del[1:4:2] </span><br><span class="line">print(lst) # [22, 44, 66]</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>clear</p>
+<p>清空列表</p>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lst = [11, 22, 33, 44, 55]</span><br><span class="line"></span><br><span class="line">lst.clear()</span><br><span class="line">print(lst) # []</span><br></pre></td></tr></table></figure>
+
+<p> 3).修改</p>
+<p>  指定索引修改</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lst = [11, 22, 33, 44]</span><br><span class="line"></span><br><span class="line">lst[2] = 55</span><br><span class="line">print(lst) # [11, 22, 55, 44]</span><br></pre></td></tr></table></figure>
+
+<p>  根据切片修改，如果步长不是1，则修改的元素的个数与提供的元素个数须匹配。如果切片没有步长或者步长是1，则不用关心个数</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lst = [11, 22, 33, 44, 55]</span><br><span class="line"></span><br><span class="line">lst[1:4] = &#x27;编程&#x27;</span><br><span class="line">print(lst) # [11, &quot;编&quot;, &quot;程&quot;, 55]lst = [11, 22, 33, 44, 55, 66]lst[1:5:2] = &quot;编程&quot;print(lst) # [11, &quot;编&quot;, 33, &quot;程&quot;, 55, 66]</span><br></pre></td></tr></table></figure>
+
+<p> 4).查询</p>
+<p>  列表是一个可打迭代对象，所以可以进行for循环</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">for i in lst:</span><br><span class="line">    print(i)</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="其他操作"><a href="#其他操作" class="headerlink" title="其他操作"></a>其他操作</h3><ul>
+<li><p>count</p>
+<p>查询某元素出现的次数</p>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lst = [11, 22, 11, 44, 55, 66]</span><br><span class="line"></span><br><span class="line">c = lst.count(11)</span><br><span class="line">print(c) # 2</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>sort</p>
+<p>默认按升序排列，若需降序排列，只需在括号内添加reverse&#x3D;True</p>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lst = [11, 44, 33, 22, 55]</span><br><span class="line"></span><br><span class="line">lst.sort()</span><br><span class="line">print(lst) # [11, 22, 33, 44, 55]</span><br><span class="line">lst.sort(reverse=True) </span><br><span class="line">print(lst) # [55, 44, 33, 22, 11]</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>reverse</p>
+<p>翻转列表，无返回值</p>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lst = [11, 33, 22, 55, 44]</span><br><span class="line"></span><br><span class="line">lst.reverse()</span><br><span class="line">print(lst) # [44, 55, 22, 33, 11]</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="列表嵌套"><a href="#列表嵌套" class="headerlink" title="列表嵌套"></a>列表嵌套</h3><p>  采用降维操作</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lst = [11, 22, [33, [&quot;python&quot;, 55]], 66]</span><br><span class="line"></span><br><span class="line">print(lst[1])  # 22</span><br><span class="line"></span><br><span class="line">print(lst[2][0]) # 33</span><br><span class="line"></span><br><span class="line">print(lst[2][1][0]) # p</span><br><span class="line"></span><br><span class="line">lst[2][1][0] = lst[2][1][0].replace(&quot;p&quot;, &quot;P&quot;)</span><br><span class="line"></span><br><span class="line">print(lst) # [11, 22, [33, [&#x27;Python&#x27;, 55]], 66]lst[2].append(77)print(lst) # [11, 22, [33, [&quot;Python&quot;, 55], 77], 66]</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="循环过程中删除列表元素问题"><a href="#循环过程中删除列表元素问题" class="headerlink" title="循环过程中删除列表元素问题"></a>循环过程中删除列表元素问题</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lst = [11, 22, 33, 44]</span><br><span class="line"></span><br><span class="line">for i in lst:</span><br><span class="line">    lst.remove(i)</span><br><span class="line">print(lst) # [22, 44]</span><br></pre></td></tr></table></figure>
+
+<p>原因：</p>
+<p>  在for的运行过程中，会有一个指针来记录当前循环的元素是哪个，一开始这个指针指向第0个，然后获取到第0个元素。紧接着删除第0个。这个时候，原来是第一个的元素会自动的变成第0个。然后指针向后移动一次，指向第1个元素。这时原来的1已经变成了0，也就不会被删除了。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lst = [11, 22, 33, 44]</span><br><span class="line">del_lst = []</span><br><span class="line"></span><br><span class="line">for i in lst:</span><br><span class="line">    del_lst.append(i)</span><br><span class="line"></span><br><span class="line">for i in del_lst:</span><br><span class="line">    lst.remove(i)</span><br><span class="line"></span><br><span class="line">print(lst)  # []</span><br></pre></td></tr></table></figure>
+
+<p> 注意：由于删除元素会导致元素的索引改变，所以容易出现问题。尽量不要在循环中直接删除元素。可以把要删除的元素添加到另一个列表中然后批量删除。</p>
+<h2 id="range"><a href="#range" class="headerlink" title="range"></a>range</h2><ul>
+<li>range(start, end, 步长)</li>
+<li>获取元素的索引和元素</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lst = [&quot;语文&quot;, &quot;数学&quot;, &quot;英语&quot;,&quot;高数&quot;,&quot;体育&quot;]</span><br><span class="line">for i in range(len(lst)):</span><br><span class="line">        print(i, lst[i])</span><br></pre></td></tr></table></figure>
 ]]></content>
       <categories>
         <category>Python</category>
@@ -5340,59 +5356,6 @@
       </tags>
   </entry>
   <entry>
-    <title>初识面向象</title>
-    <url>/2019/03/20/python-%E5%88%9D%E8%AF%86%E9%9D%A2%E5%90%91%E8%B1%A1/</url>
-    <content><![CDATA[<h2 id="面向对象与面向过程"><a href="#面向对象与面向过程" class="headerlink" title="面向对象与面向过程"></a>面向对象与面向过程</h2><h3 id="面向过程"><a href="#面向过程" class="headerlink" title="面向过程"></a>面向过程</h3><ul>
-<li>特点：一切以事物的流程为核心</li>
-<li>优点：负责的问题流程化，编写相对简单</li>
-<li>缺点：可扩展性差</li>
-</ul>
-<h3 id="面向对象"><a href="#面向对象" class="headerlink" title="面向对象"></a>面向对象</h3><ul>
-<li>特点：一切以对象为中心</li>
-<li>优点：可扩展性强</li>
-<li>缺点：编程的复杂度高于面向过程</li>
-</ul>
-<h2 id="类与对象"><a href="#类与对象" class="headerlink" title="类与对象"></a>类与对象</h2><h3 id="类"><a href="#类" class="headerlink" title="类"></a>类</h3><ul>
-<li>类是对事物的总结，抽象的概念，类用来描述对象</li>
-<li><strong>init</strong>():称为初始化方法，对对象进行初始化操作，创建对象的时候自动调用这个方法</li>
-</ul>
-<h3 id="对象"><a href="#对象" class="headerlink" title="对象"></a>对象</h3><ul>
-<li>对象是类的实例化的结果</li>
-<li>对象能执行哪些方法，都由类来决定，类中定义了什么，对象就拥有什么</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">class User(object):</span><br><span class="line">    def __init__(self, username, password):</span><br><span class="line">        self.username = username</span><br><span class="line">        self.password = password</span><br><span class="line"></span><br><span class="line">    def login(self, uname, pwd):</span><br><span class="line">        if self.username == uname and self.password == pwd:</span><br><span class="line">            return True</span><br><span class="line">        else:</span><br><span class="line">            return False</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">u1 = User(&quot;尝试了就好&quot;, &quot;123&quot;)</span><br><span class="line">ret = u1.login(input(&quot;username:&quot;).strip(), input(&quot;password:&quot;).strip())</span><br><span class="line">print(ret)</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="创建对象"><a href="#创建对象" class="headerlink" title="创建对象"></a>创建对象</h3><p>xxx &#x3D; 类名()</p>
-<ul>
-<li>先自动执行__new__()来开辟内存，此时新开辟出来的内存区域是空的</li>
-<li>再自动调用__init__()来完成对象的初始化工作</li>
-</ul>
-<h2 id="面向对象三大特征"><a href="#面向对象三大特征" class="headerlink" title="面向对象三大特征"></a>面向对象三大特征</h2><h3 id="封装"><a href="#封装" class="headerlink" title="封装"></a>封装</h3><ul>
-<li>在面向对象思想中，是把一些看似无关紧要的内容组合到一起统一进行存储和使用。面向对象中表现为对属性和方法进行封装</li>
-</ul>
-<h3 id="继承"><a href="#继承" class="headerlink" title="继承"></a>继承</h3><ul>
-<li>子类可以自动拥有父类中除了私有属性外的其他所有内容</li>
-<li>一个类可以同时继承多个父类</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">class Animal(object):</span><br><span class="line"></span><br><span class="line">    def run(self):</span><br><span class="line">        print(&quot;----run----&quot;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Cat(Animal):</span><br><span class="line">    pass</span><br><span class="line"></span><br><span class="line">cat = Cat()</span><br><span class="line">cat.run()  # ----run----</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="多态"><a href="#多态" class="headerlink" title="多态"></a>多态</h3><ul>
-<li>同一个对象，多种形态</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">class Animal(object):</span><br><span class="line">    def run(self):</span><br><span class="line">        print(&quot;Animal is running...&quot;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Dog(Animal):</span><br><span class="line">    def run(self):</span><br><span class="line">        print(&quot;Dog is running...&quot;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Cat(Animal):</span><br><span class="line">    def run(self):</span><br><span class="line">        print(&quot;Cat is running...&quot;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Observer():</span><br><span class="line">    def observe(self, animal):</span><br><span class="line">        animal.run()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">dg = Dog()</span><br><span class="line">ct = Cat()</span><br><span class="line"></span><br><span class="line">ob = Observer()</span><br><span class="line">ob.observe(dg)</span><br><span class="line">ob.observe(ct)</span><br><span class="line"></span><br><span class="line">结果：</span><br><span class="line">Dog is running...</span><br><span class="line">Cat is running...</span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>Python</category>
-      </categories>
-      <tags>
-        <tag>Python</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>初识函数</title>
     <url>/2019/03/16/python-%E5%88%9D%E8%AF%86%E5%87%BD%E6%95%B0/</url>
     <content><![CDATA[<h2 id="函数定义及调用"><a href="#函数定义及调用" class="headerlink" title="函数定义及调用"></a>函数定义及调用</h2><ul>
@@ -5577,6 +5540,59 @@
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">def outer():</span><br><span class="line">    name = &quot;Tom&quot;</span><br><span class="line">    def inner():</span><br><span class="line">        print(name)</span><br><span class="line">    return inner</span><br><span class="line"></span><br><span class="line">ret = outer()</span><br><span class="line">ret()  # Tom</span><br></pre></td></tr></table></figure>
 
 <p>   如果一个函数执行完毕，则这个函数中的变量以及局部命名空间中的内容都将会被销毁。但由于外界可以通过ret()去访问内部函数。那这个时候内部函数访问的时间和时机就不一定了。如果此时，闭包中变量被销毁了，那么内部函数将不能正常执行。所以，Python规定，如果在内部函数中访问了外层函数的变量，那么这个么变量将不会消亡。</p>
+]]></content>
+      <categories>
+        <category>Python</category>
+      </categories>
+      <tags>
+        <tag>Python</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>初识面向象</title>
+    <url>/2019/03/20/python-%E5%88%9D%E8%AF%86%E9%9D%A2%E5%90%91%E8%B1%A1/</url>
+    <content><![CDATA[<h2 id="面向对象与面向过程"><a href="#面向对象与面向过程" class="headerlink" title="面向对象与面向过程"></a>面向对象与面向过程</h2><h3 id="面向过程"><a href="#面向过程" class="headerlink" title="面向过程"></a>面向过程</h3><ul>
+<li>特点：一切以事物的流程为核心</li>
+<li>优点：负责的问题流程化，编写相对简单</li>
+<li>缺点：可扩展性差</li>
+</ul>
+<h3 id="面向对象"><a href="#面向对象" class="headerlink" title="面向对象"></a>面向对象</h3><ul>
+<li>特点：一切以对象为中心</li>
+<li>优点：可扩展性强</li>
+<li>缺点：编程的复杂度高于面向过程</li>
+</ul>
+<h2 id="类与对象"><a href="#类与对象" class="headerlink" title="类与对象"></a>类与对象</h2><h3 id="类"><a href="#类" class="headerlink" title="类"></a>类</h3><ul>
+<li>类是对事物的总结，抽象的概念，类用来描述对象</li>
+<li><strong>init</strong>():称为初始化方法，对对象进行初始化操作，创建对象的时候自动调用这个方法</li>
+</ul>
+<h3 id="对象"><a href="#对象" class="headerlink" title="对象"></a>对象</h3><ul>
+<li>对象是类的实例化的结果</li>
+<li>对象能执行哪些方法，都由类来决定，类中定义了什么，对象就拥有什么</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">class User(object):</span><br><span class="line">    def __init__(self, username, password):</span><br><span class="line">        self.username = username</span><br><span class="line">        self.password = password</span><br><span class="line"></span><br><span class="line">    def login(self, uname, pwd):</span><br><span class="line">        if self.username == uname and self.password == pwd:</span><br><span class="line">            return True</span><br><span class="line">        else:</span><br><span class="line">            return False</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">u1 = User(&quot;尝试了就好&quot;, &quot;123&quot;)</span><br><span class="line">ret = u1.login(input(&quot;username:&quot;).strip(), input(&quot;password:&quot;).strip())</span><br><span class="line">print(ret)</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="创建对象"><a href="#创建对象" class="headerlink" title="创建对象"></a>创建对象</h3><p>xxx &#x3D; 类名()</p>
+<ul>
+<li>先自动执行__new__()来开辟内存，此时新开辟出来的内存区域是空的</li>
+<li>再自动调用__init__()来完成对象的初始化工作</li>
+</ul>
+<h2 id="面向对象三大特征"><a href="#面向对象三大特征" class="headerlink" title="面向对象三大特征"></a>面向对象三大特征</h2><h3 id="封装"><a href="#封装" class="headerlink" title="封装"></a>封装</h3><ul>
+<li>在面向对象思想中，是把一些看似无关紧要的内容组合到一起统一进行存储和使用。面向对象中表现为对属性和方法进行封装</li>
+</ul>
+<h3 id="继承"><a href="#继承" class="headerlink" title="继承"></a>继承</h3><ul>
+<li>子类可以自动拥有父类中除了私有属性外的其他所有内容</li>
+<li>一个类可以同时继承多个父类</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">class Animal(object):</span><br><span class="line"></span><br><span class="line">    def run(self):</span><br><span class="line">        print(&quot;----run----&quot;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Cat(Animal):</span><br><span class="line">    pass</span><br><span class="line"></span><br><span class="line">cat = Cat()</span><br><span class="line">cat.run()  # ----run----</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="多态"><a href="#多态" class="headerlink" title="多态"></a>多态</h3><ul>
+<li>同一个对象，多种形态</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">class Animal(object):</span><br><span class="line">    def run(self):</span><br><span class="line">        print(&quot;Animal is running...&quot;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Dog(Animal):</span><br><span class="line">    def run(self):</span><br><span class="line">        print(&quot;Dog is running...&quot;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Cat(Animal):</span><br><span class="line">    def run(self):</span><br><span class="line">        print(&quot;Cat is running...&quot;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Observer():</span><br><span class="line">    def observe(self, animal):</span><br><span class="line">        animal.run()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">dg = Dog()</span><br><span class="line">ct = Cat()</span><br><span class="line"></span><br><span class="line">ob = Observer()</span><br><span class="line">ob.observe(dg)</span><br><span class="line">ob.observe(ct)</span><br><span class="line"></span><br><span class="line">结果：</span><br><span class="line">Dog is running...</span><br><span class="line">Cat is running...</span><br></pre></td></tr></table></figure>
 ]]></content>
       <categories>
         <category>Python</category>
@@ -6080,42 +6096,6 @@
       </tags>
   </entry>
   <entry>
-    <title>日志</title>
-    <url>/2019/03/20/python-%E6%97%A5%E5%BF%97/</url>
-    <content><![CDATA[<h2 id="basicConfig"><a href="#basicConfig" class="headerlink" title="basicConfig"></a>basicConfig</h2><ul>
-<li>导入logging模块</li>
-<li>简单配置一下logging</li>
-<li>出现异常的时候（except），向日志里写错误信息</li>
-</ul>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> logging</span><br><span class="line"><span class="keyword">import</span> traceback</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">logging.basicConfig(filename=<span class="string">&quot;x1.log&quot;</span>,</span><br><span class="line">                    <span class="built_in">format</span>=<span class="string">&quot;%(asctime)s - %(name)s - %(levelname)s - %(module)s: %(message)s&quot;</span>,</span><br><span class="line">                    datefmt=<span class="string">&quot;%Y-%m-%d %H:%M:%S&quot;</span>, level=<span class="number">30</span>)</span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    <span class="built_in">print</span>(<span class="number">1</span>/<span class="number">0</span>)</span><br><span class="line"><span class="keyword">except</span> Exception:</span><br><span class="line">    logging.error(traceback.format_exc())</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;出现错误&quot;</span>)</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>filename：文件名</li>
-<li>format：数据的格式化输出，最终在日志文件中的样子。时间-名称-级别-模块：错误信息</li>
-<li>datefmt：时间的格式</li>
-<li>level:错误的级别权重，当错误的级别权重大于等于leval的时候才会写入文件</li>
-</ul>
-<p>CRITICAL &#x3D; 50</p>
-<p>FATAL &#x3D; CRITICAL</p>
-<p>ERROR &#x3D; 40</p>
-<p>WARNING &#x3D; 30</p>
-<p>WARN &#x3D; WARNING</p>
-<p>INFO &#x3D; 20</p>
-<p>DEBUG &#x3D; 10</p>
-<p>LOG &#x3D; 0</p>
-<h2 id="FileHandler"><a href="#FileHandler" class="headerlink" title="FileHandler"></a>FileHandler</h2><ul>
-<li>可实现日志分开记录</li>
-</ul>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> logging</span><br><span class="line"><span class="keyword">import</span> traceback</span><br><span class="line"></span><br><span class="line">file_handler = logging.FileHandler(<span class="string">&quot;x2.log&quot;</span>, <span class="string">&quot;a&quot;</span>, encoding=<span class="string">&#x27;UTF-8&#x27;</span>)</span><br><span class="line">file_handler.setFormatter(logging.Formatter(fmt=<span class="string">&quot;%(asctime)s - %(name)s - %(levelname)s - %(module)s: %(message)s&quot;</span>))</span><br><span class="line"></span><br><span class="line">logger1 = logging.Logger(<span class="string">&quot;系统A&quot;</span>, level=<span class="number">30</span>)</span><br><span class="line">logger1.addHandler(file_handler)</span><br><span class="line"></span><br><span class="line">logger1.error(<span class="string">&quot;出现错误&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">file_handler = logging.FileHandler(<span class="string">&quot;x3.log&quot;</span>, <span class="string">&quot;a&quot;</span>, encoding=<span class="string">&#x27;UTF-8&#x27;</span>)</span><br><span class="line">file_handler.setFormatter(logging.Formatter(fmt=<span class="string">&quot;%(asctime)s - %(name)s - %(levelname)s - %(module)s: %(message)s&quot;</span>))</span><br><span class="line"></span><br><span class="line">logger2 = logging.Logger(<span class="string">&quot;系统B&quot;</span>, level=<span class="number">30</span>)</span><br><span class="line">logger2.addHandler(file_handler)</span><br><span class="line"></span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    <span class="built_in">print</span>(<span class="number">1</span>/<span class="number">0</span>)</span><br><span class="line"><span class="keyword">except</span> Exception:</span><br><span class="line">    logger2.error(traceback.format_exc())</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;出错了&quot;</span>)</span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>Python</category>
-      </categories>
-      <tags>
-        <tag>Python</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>模块语法</title>
     <url>/2019/03/20/python-%E6%A8%A1%E5%9D%97%E8%AF%AD%E6%B3%95/</url>
     <content><![CDATA[<h2 id="模块"><a href="#模块" class="headerlink" title="模块"></a>模块</h2><p>  模块就是一个包含python定义和声明的文件，文件名就是模块的名字加上.py后缀。换句话说，所有的py文件都可以看成是一个模块。</p>
@@ -6199,6 +6179,42 @@
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># test模块</span></span><br><span class="line">__all__ = [<span class="string">&quot;x&quot;</span>, <span class="string">&quot;y&quot;</span>]</span><br><span class="line">x = <span class="number">2</span></span><br><span class="line">y = <span class="number">3</span></span><br><span class="line">z = <span class="number">5</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">test</span>():</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;-----test-----&quot;</span>)</span><br></pre></td></tr></table></figure>
 
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 调用方</span></span><br><span class="line"><span class="keyword">from</span> test <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(x)  <span class="comment"># 2</span></span><br><span class="line"><span class="built_in">print</span>(z)  <span class="comment"># NameError: name &#x27;z&#x27; is not defined</span></span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>Python</category>
+      </categories>
+      <tags>
+        <tag>Python</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>日志</title>
+    <url>/2019/03/20/python-%E6%97%A5%E5%BF%97/</url>
+    <content><![CDATA[<h2 id="basicConfig"><a href="#basicConfig" class="headerlink" title="basicConfig"></a>basicConfig</h2><ul>
+<li>导入logging模块</li>
+<li>简单配置一下logging</li>
+<li>出现异常的时候（except），向日志里写错误信息</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> logging</span><br><span class="line"><span class="keyword">import</span> traceback</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">logging.basicConfig(filename=<span class="string">&quot;x1.log&quot;</span>,</span><br><span class="line">                    <span class="built_in">format</span>=<span class="string">&quot;%(asctime)s - %(name)s - %(levelname)s - %(module)s: %(message)s&quot;</span>,</span><br><span class="line">                    datefmt=<span class="string">&quot;%Y-%m-%d %H:%M:%S&quot;</span>, level=<span class="number">30</span>)</span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    <span class="built_in">print</span>(<span class="number">1</span>/<span class="number">0</span>)</span><br><span class="line"><span class="keyword">except</span> Exception:</span><br><span class="line">    logging.error(traceback.format_exc())</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;出现错误&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>filename：文件名</li>
+<li>format：数据的格式化输出，最终在日志文件中的样子。时间-名称-级别-模块：错误信息</li>
+<li>datefmt：时间的格式</li>
+<li>level:错误的级别权重，当错误的级别权重大于等于leval的时候才会写入文件</li>
+</ul>
+<p>CRITICAL &#x3D; 50</p>
+<p>FATAL &#x3D; CRITICAL</p>
+<p>ERROR &#x3D; 40</p>
+<p>WARNING &#x3D; 30</p>
+<p>WARN &#x3D; WARNING</p>
+<p>INFO &#x3D; 20</p>
+<p>DEBUG &#x3D; 10</p>
+<p>LOG &#x3D; 0</p>
+<h2 id="FileHandler"><a href="#FileHandler" class="headerlink" title="FileHandler"></a>FileHandler</h2><ul>
+<li>可实现日志分开记录</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> logging</span><br><span class="line"><span class="keyword">import</span> traceback</span><br><span class="line"></span><br><span class="line">file_handler = logging.FileHandler(<span class="string">&quot;x2.log&quot;</span>, <span class="string">&quot;a&quot;</span>, encoding=<span class="string">&#x27;UTF-8&#x27;</span>)</span><br><span class="line">file_handler.setFormatter(logging.Formatter(fmt=<span class="string">&quot;%(asctime)s - %(name)s - %(levelname)s - %(module)s: %(message)s&quot;</span>))</span><br><span class="line"></span><br><span class="line">logger1 = logging.Logger(<span class="string">&quot;系统A&quot;</span>, level=<span class="number">30</span>)</span><br><span class="line">logger1.addHandler(file_handler)</span><br><span class="line"></span><br><span class="line">logger1.error(<span class="string">&quot;出现错误&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">file_handler = logging.FileHandler(<span class="string">&quot;x3.log&quot;</span>, <span class="string">&quot;a&quot;</span>, encoding=<span class="string">&#x27;UTF-8&#x27;</span>)</span><br><span class="line">file_handler.setFormatter(logging.Formatter(fmt=<span class="string">&quot;%(asctime)s - %(name)s - %(levelname)s - %(module)s: %(message)s&quot;</span>))</span><br><span class="line"></span><br><span class="line">logger2 = logging.Logger(<span class="string">&quot;系统B&quot;</span>, level=<span class="number">30</span>)</span><br><span class="line">logger2.addHandler(file_handler)</span><br><span class="line"></span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    <span class="built_in">print</span>(<span class="number">1</span>/<span class="number">0</span>)</span><br><span class="line"><span class="keyword">except</span> Exception:</span><br><span class="line">    logger2.error(traceback.format_exc())</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;出错了&quot;</span>)</span><br></pre></td></tr></table></figure>
 ]]></content>
       <categories>
         <category>Python</category>
@@ -6431,47 +6447,6 @@
       </tags>
   </entry>
   <entry>
-    <title>类与类之间的关系</title>
-    <url>/2019/03/20/python-%E7%B1%BB%E4%B8%8E%E7%B1%BB%E4%B9%8B%E9%97%B4%E7%9A%84%E5%85%B3%E7%B3%BB/</url>
-    <content><![CDATA[<h2 id="依赖关系"><a href="#依赖关系" class="headerlink" title="依赖关系"></a>依赖关系</h2><ul>
-<li>在方法中给方法传递一个对象</li>
-<li>此种关系，类与类之间的关系是最轻的</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 植物大战僵尸</span><br><span class="line">class Plant(object):</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    植物类</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    def __init__(self, name, attack, hp):</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        初始化</span><br><span class="line">        :param name:植物名</span><br><span class="line">        :param attack: 攻击力</span><br><span class="line">        :param hp: 血量</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        self.name = name</span><br><span class="line">        self.attack = attack</span><br><span class="line">        self.hp = hp</span><br><span class="line"></span><br><span class="line">    def fight(self, zombie):</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        攻击js,使js掉血</span><br><span class="line">        :param js: 攻击对象</span><br><span class="line">        :return: None</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        zombie.hp -= self.attack</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Zombie(object):</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    僵尸类</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    def __init__(self, name, hp, attack):</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        初始化</span><br><span class="line">        :param name: 僵尸名</span><br><span class="line">        :param hp: 血量</span><br><span class="line">        :param attack: 攻击力</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        self.name = name</span><br><span class="line">        self.hp = hp</span><br><span class="line">        self.attack = attack</span><br><span class="line"></span><br><span class="line">    def eat(self, plant):</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        僵尸吃plant</span><br><span class="line">        :param plant: 吃的对象</span><br><span class="line">        :return: None</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        plant.hp -= self.attack</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">lvluo = Plant(&quot;绿萝&quot;, 20, 100)</span><br><span class="line">js1 = Zombie(&quot;僵尸1号&quot;, 100, 5)</span><br><span class="line"></span><br><span class="line">lvluo.fight(js1)</span><br><span class="line">js1.eat(lvluo)</span><br><span class="line"></span><br><span class="line">print(lvluo.hp)  # 95</span><br><span class="line">print(js1.hp)    # 80</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="关联关系"><a href="#关联关系" class="headerlink" title="关联关系"></a>关联关系</h2><ul>
-<li>两种事物必须是互相关联的，但是在某些特殊情况下是可以更改和更换的</li>
-<li>一对多：一的一方埋集合，多的一方埋实体</li>
-</ul>
-<h3 id="一对一关系"><a href="#一对一关系" class="headerlink" title="一对一关系"></a>一对一关系</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">class Person(object):</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    Person类</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    def __init__(self, name, id=None):</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        初始化</span><br><span class="line">        :param name: 姓名</span><br><span class="line">        :param id: 身份证号码</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        self.name = name</span><br><span class="line">        self.id = id</span><br><span class="line"></span><br><span class="line">    def display(self):</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        展示有无身份证</span><br><span class="line">        :return: None</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        if self.id:</span><br><span class="line">            print(&quot;我叫%s, 我的身份证号码为%s&quot; % (self.name, self.id))</span><br><span class="line">        else:</span><br><span class="line">            print(&quot;我未成年，没有身份证！！！&quot;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Id(object):</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    Id类</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    def __init__(self, name, num):</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        初始化</span><br><span class="line">        :param name: 姓名</span><br><span class="line">        :param num: 身份证号</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        self.name = name</span><br><span class="line">        self.num = num</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">p_id = Id(&quot;Tom&quot;, 123456789)</span><br><span class="line">p1 = Person(&quot;Tom&quot;, p_id.num)</span><br><span class="line">p1.display()  # 我叫Tom, 我的身份证号码为123456789</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="一对多关系"><a href="#一对多关系" class="headerlink" title="一对多关系"></a>一对多关系</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">class Teacher(object):</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    Teacher类</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    def __init__(self, name, lst=None):</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        初始化</span><br><span class="line">        :param name: 姓名</span><br><span class="line">        :param lst: 学生列表</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        self.name = name</span><br><span class="line">        if lst == None:</span><br><span class="line">            self.lst = []</span><br><span class="line">        else:</span><br><span class="line">            self.lst = lst</span><br><span class="line"></span><br><span class="line">    def add(self, student):</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        添加学生</span><br><span class="line">        :param student: 学生对象</span><br><span class="line">        :return: None</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        self.lst.append(student)</span><br><span class="line"></span><br><span class="line">    def display(self):</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        打印学生姓名</span><br><span class="line">        :return: None</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        for el in self.lst:</span><br><span class="line">            print(el.name)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Student(object):</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    Student类</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    def __init__(self, name, num):</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        初始化</span><br><span class="line">        :param name: 姓名</span><br><span class="line">        :param num: 学号</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        self.name = name</span><br><span class="line">        self.num = num</span><br><span class="line"></span><br><span class="line"># 创建对象</span><br><span class="line">t = Teacher(&quot;Tom&quot;)</span><br><span class="line">s1 = Student(&quot;andy&quot;, 1)</span><br><span class="line">s2 = Student(&quot;Linda&quot;, 2)</span><br><span class="line"></span><br><span class="line"># 把学生添加给老师</span><br><span class="line">t.add(s1)</span><br><span class="line">t.add(s2)</span><br><span class="line"></span><br><span class="line">t.display()</span><br><span class="line"></span><br><span class="line">结果：</span><br><span class="line">andy</span><br><span class="line">Linda</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="继承关系"><a href="#继承关系" class="headerlink" title="继承关系"></a>继承关系</h2><ul>
-<li>在具体继承关系中，访问方法时，self永远都是指向创建对象时的对象。</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">class Base(object):</span><br><span class="line">    def __init__(self, num):</span><br><span class="line">        self.num = num</span><br><span class="line">    </span><br><span class="line">    def func1(self):</span><br><span class="line">        print(self.num)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Foo(Base):</span><br><span class="line">    pass</span><br><span class="line"></span><br><span class="line">obj = Foo(123)  # 调用__init__方法，自己没有，找父类</span><br><span class="line">obj.func1()  # 123</span><br></pre></td></tr></table></figure>
-
-<p> Next：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">class Base(object):</span><br><span class="line">    def __init__(self, num):</span><br><span class="line">        self.num = num</span><br><span class="line"></span><br><span class="line">    def func1(self):</span><br><span class="line">        print(self.num)</span><br><span class="line">        self.func2()</span><br><span class="line"></span><br><span class="line">    def func2(self):</span><br><span class="line">        print(&quot;Base.func2&quot;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Foo(Base):</span><br><span class="line"></span><br><span class="line">    def func2(self):</span><br><span class="line">        print(&quot;Foo.func2&quot;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">obj = Foo(123)</span><br><span class="line">obj.func1()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">结果：</span><br><span class="line">123</span><br><span class="line">Foo.func</span><br></pre></td></tr></table></figure>
-
-<p> Next：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">class Base(object):</span><br><span class="line">    def __init__(self, num):</span><br><span class="line">        self.num = num</span><br><span class="line"></span><br><span class="line">    def func1(self):</span><br><span class="line">        print(self.num)</span><br><span class="line">        self.func2()</span><br><span class="line"></span><br><span class="line">    def func2(self):</span><br><span class="line">        print(111, self.num)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Foo(Base):</span><br><span class="line"></span><br><span class="line">    def func2(self):</span><br><span class="line">        print(222, self.num)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">lst = [Base(1), Base(2), Foo(3)]</span><br><span class="line">for obj in lst:</span><br><span class="line">    obj.func1()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">结果：</span><br><span class="line">1</span><br><span class="line">111 1</span><br><span class="line">2</span><br><span class="line">111 2</span><br><span class="line">3</span><br><span class="line">222 3</span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>Python</category>
-      </categories>
-      <tags>
-        <tag>Python</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>类成员</title>
     <url>/2019/03/20/python-%E7%B1%BB%E6%88%90%E5%91%98/</url>
     <content><![CDATA[<h2 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h2><h3 id="实例变量-字段"><a href="#实例变量-字段" class="headerlink" title="实例变量(字段)"></a>实例变量(字段)</h3><ul>
@@ -6619,6 +6594,47 @@
 <h3 id="ge"><a href="#ge" class="headerlink" title="_ge_()"></a><strong>_<em>ge</em>_()</strong></h3><ul>
 <li>触发：<strong>对象1 &gt;&#x3D; 对象2</strong></li>
 </ul>
+]]></content>
+      <categories>
+        <category>Python</category>
+      </categories>
+      <tags>
+        <tag>Python</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>类与类之间的关系</title>
+    <url>/2019/03/20/python-%E7%B1%BB%E4%B8%8E%E7%B1%BB%E4%B9%8B%E9%97%B4%E7%9A%84%E5%85%B3%E7%B3%BB/</url>
+    <content><![CDATA[<h2 id="依赖关系"><a href="#依赖关系" class="headerlink" title="依赖关系"></a>依赖关系</h2><ul>
+<li>在方法中给方法传递一个对象</li>
+<li>此种关系，类与类之间的关系是最轻的</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 植物大战僵尸</span><br><span class="line">class Plant(object):</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    植物类</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    def __init__(self, name, attack, hp):</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        初始化</span><br><span class="line">        :param name:植物名</span><br><span class="line">        :param attack: 攻击力</span><br><span class="line">        :param hp: 血量</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        self.name = name</span><br><span class="line">        self.attack = attack</span><br><span class="line">        self.hp = hp</span><br><span class="line"></span><br><span class="line">    def fight(self, zombie):</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        攻击js,使js掉血</span><br><span class="line">        :param js: 攻击对象</span><br><span class="line">        :return: None</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        zombie.hp -= self.attack</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Zombie(object):</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    僵尸类</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    def __init__(self, name, hp, attack):</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        初始化</span><br><span class="line">        :param name: 僵尸名</span><br><span class="line">        :param hp: 血量</span><br><span class="line">        :param attack: 攻击力</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        self.name = name</span><br><span class="line">        self.hp = hp</span><br><span class="line">        self.attack = attack</span><br><span class="line"></span><br><span class="line">    def eat(self, plant):</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        僵尸吃plant</span><br><span class="line">        :param plant: 吃的对象</span><br><span class="line">        :return: None</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        plant.hp -= self.attack</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">lvluo = Plant(&quot;绿萝&quot;, 20, 100)</span><br><span class="line">js1 = Zombie(&quot;僵尸1号&quot;, 100, 5)</span><br><span class="line"></span><br><span class="line">lvluo.fight(js1)</span><br><span class="line">js1.eat(lvluo)</span><br><span class="line"></span><br><span class="line">print(lvluo.hp)  # 95</span><br><span class="line">print(js1.hp)    # 80</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="关联关系"><a href="#关联关系" class="headerlink" title="关联关系"></a>关联关系</h2><ul>
+<li>两种事物必须是互相关联的，但是在某些特殊情况下是可以更改和更换的</li>
+<li>一对多：一的一方埋集合，多的一方埋实体</li>
+</ul>
+<h3 id="一对一关系"><a href="#一对一关系" class="headerlink" title="一对一关系"></a>一对一关系</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">class Person(object):</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    Person类</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    def __init__(self, name, id=None):</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        初始化</span><br><span class="line">        :param name: 姓名</span><br><span class="line">        :param id: 身份证号码</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        self.name = name</span><br><span class="line">        self.id = id</span><br><span class="line"></span><br><span class="line">    def display(self):</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        展示有无身份证</span><br><span class="line">        :return: None</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        if self.id:</span><br><span class="line">            print(&quot;我叫%s, 我的身份证号码为%s&quot; % (self.name, self.id))</span><br><span class="line">        else:</span><br><span class="line">            print(&quot;我未成年，没有身份证！！！&quot;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Id(object):</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    Id类</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    def __init__(self, name, num):</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        初始化</span><br><span class="line">        :param name: 姓名</span><br><span class="line">        :param num: 身份证号</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        self.name = name</span><br><span class="line">        self.num = num</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">p_id = Id(&quot;Tom&quot;, 123456789)</span><br><span class="line">p1 = Person(&quot;Tom&quot;, p_id.num)</span><br><span class="line">p1.display()  # 我叫Tom, 我的身份证号码为123456789</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="一对多关系"><a href="#一对多关系" class="headerlink" title="一对多关系"></a>一对多关系</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">class Teacher(object):</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    Teacher类</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    def __init__(self, name, lst=None):</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        初始化</span><br><span class="line">        :param name: 姓名</span><br><span class="line">        :param lst: 学生列表</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        self.name = name</span><br><span class="line">        if lst == None:</span><br><span class="line">            self.lst = []</span><br><span class="line">        else:</span><br><span class="line">            self.lst = lst</span><br><span class="line"></span><br><span class="line">    def add(self, student):</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        添加学生</span><br><span class="line">        :param student: 学生对象</span><br><span class="line">        :return: None</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        self.lst.append(student)</span><br><span class="line"></span><br><span class="line">    def display(self):</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        打印学生姓名</span><br><span class="line">        :return: None</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        for el in self.lst:</span><br><span class="line">            print(el.name)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Student(object):</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    Student类</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    def __init__(self, name, num):</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        初始化</span><br><span class="line">        :param name: 姓名</span><br><span class="line">        :param num: 学号</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        self.name = name</span><br><span class="line">        self.num = num</span><br><span class="line"></span><br><span class="line"># 创建对象</span><br><span class="line">t = Teacher(&quot;Tom&quot;)</span><br><span class="line">s1 = Student(&quot;andy&quot;, 1)</span><br><span class="line">s2 = Student(&quot;Linda&quot;, 2)</span><br><span class="line"></span><br><span class="line"># 把学生添加给老师</span><br><span class="line">t.add(s1)</span><br><span class="line">t.add(s2)</span><br><span class="line"></span><br><span class="line">t.display()</span><br><span class="line"></span><br><span class="line">结果：</span><br><span class="line">andy</span><br><span class="line">Linda</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="继承关系"><a href="#继承关系" class="headerlink" title="继承关系"></a>继承关系</h2><ul>
+<li>在具体继承关系中，访问方法时，self永远都是指向创建对象时的对象。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">class Base(object):</span><br><span class="line">    def __init__(self, num):</span><br><span class="line">        self.num = num</span><br><span class="line">    </span><br><span class="line">    def func1(self):</span><br><span class="line">        print(self.num)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Foo(Base):</span><br><span class="line">    pass</span><br><span class="line"></span><br><span class="line">obj = Foo(123)  # 调用__init__方法，自己没有，找父类</span><br><span class="line">obj.func1()  # 123</span><br></pre></td></tr></table></figure>
+
+<p> Next：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">class Base(object):</span><br><span class="line">    def __init__(self, num):</span><br><span class="line">        self.num = num</span><br><span class="line"></span><br><span class="line">    def func1(self):</span><br><span class="line">        print(self.num)</span><br><span class="line">        self.func2()</span><br><span class="line"></span><br><span class="line">    def func2(self):</span><br><span class="line">        print(&quot;Base.func2&quot;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Foo(Base):</span><br><span class="line"></span><br><span class="line">    def func2(self):</span><br><span class="line">        print(&quot;Foo.func2&quot;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">obj = Foo(123)</span><br><span class="line">obj.func1()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">结果：</span><br><span class="line">123</span><br><span class="line">Foo.func</span><br></pre></td></tr></table></figure>
+
+<p> Next：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">class Base(object):</span><br><span class="line">    def __init__(self, num):</span><br><span class="line">        self.num = num</span><br><span class="line"></span><br><span class="line">    def func1(self):</span><br><span class="line">        print(self.num)</span><br><span class="line">        self.func2()</span><br><span class="line"></span><br><span class="line">    def func2(self):</span><br><span class="line">        print(111, self.num)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Foo(Base):</span><br><span class="line"></span><br><span class="line">    def func2(self):</span><br><span class="line">        print(222, self.num)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">lst = [Base(1), Base(2), Foo(3)]</span><br><span class="line">for obj in lst:</span><br><span class="line">    obj.func1()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">结果：</span><br><span class="line">1</span><br><span class="line">111 1</span><br><span class="line">2</span><br><span class="line">111 2</span><br><span class="line">3</span><br><span class="line">222 3</span><br></pre></td></tr></table></figure>
 ]]></content>
       <categories>
         <category>Python</category>
@@ -6894,6 +6910,44 @@
       </tags>
   </entry>
   <entry>
+    <title>递归函数</title>
+    <url>/2019/03/16/python-%E9%80%92%E5%BD%92%E5%87%BD%E6%95%B0/</url>
+    <content><![CDATA[<h2 id="递归函数"><a href="#递归函数" class="headerlink" title="递归函数"></a>递归函数</h2><h3 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h3><ul>
+<li>在函数中调用函数本身，就是递归</li>
+<li>在python中递归的深度最大为1000，但实际达不到1000</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">def func():</span><br><span class="line">    print(&quot;-----func-----&quot;)</span><br><span class="line">    func()</span><br><span class="line"></span><br><span class="line">func()</span><br></pre></td></tr></table></figure>
+
+<h3 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h3><ul>
+<li>可以使用递归来遍历各种树形结构，比如文件夹系统：可以使用递归来遍历该文件夹中的所有文件</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">import os</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def func(filepath, n):</span><br><span class="line">    files_list = os.listdir(filepath)  # 获取当前文件夹中的所有文件</span><br><span class="line">    for file in files_list:</span><br><span class="line">        file_d = os.path.join(filepath, file)  # 拼接文件的真实路径</span><br><span class="line">        if os.path.isdir(file_d):  # 递归入口  判断文件是否为文件夹</span><br><span class="line">            print(&quot;\t&quot;*n, file)</span><br><span class="line">            func(file_d, n+1)  #</span><br><span class="line">        else:</span><br><span class="line">            print(&quot;\t&quot;*n, file)  # 递归出口</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="二分查找"><a href="#二分查找" class="headerlink" title="二分查找"></a>二分查找</h2><ul>
+<li>优点：每次能够除掉一半的数据，查找效率高</li>
+<li>要求：查找的序列必须是有序序列</li>
+</ul>
+<h3 id="非递归算法"><a href="#非递归算法" class="headerlink" title="非递归算法"></a>非递归算法</h3><h4 id="利用索引"><a href="#利用索引" class="headerlink" title="利用索引"></a>利用索引</h4><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 让用户输入一个数n. 判断这个n是否出现在lst中</span></span><br><span class="line">lst = [<span class="number">4</span>, <span class="number">56</span>, <span class="number">178</span>, <span class="number">253</span>, <span class="number">625</span>, <span class="number">1475</span>, <span class="number">2580</span>, <span class="number">3574</span>, <span class="number">15963</span>]</span><br><span class="line"></span><br><span class="line">left = <span class="number">0</span></span><br><span class="line">right = <span class="built_in">len</span>(lst) - <span class="number">1</span></span><br><span class="line"></span><br><span class="line">num = <span class="built_in">int</span>(<span class="built_in">input</span>(<span class="string">&quot;请输入一个数n：&quot;</span>))</span><br><span class="line"><span class="keyword">while</span> left &lt;= right:</span><br><span class="line">    mid = (left + right) // <span class="number">2</span></span><br><span class="line">    <span class="keyword">if</span> lst[mid] &gt; num:</span><br><span class="line">        right = mid - <span class="number">1</span></span><br><span class="line">    <span class="keyword">elif</span> lst[mid] &lt; num:</span><br><span class="line">        left = mid + <span class="number">1</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;这个数在lst中&quot;</span>)</span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;这个数不在lst中&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="递归算法"><a href="#递归算法" class="headerlink" title="递归算法"></a>递归算法</h3><h4 id="利用索引-1"><a href="#利用索引-1" class="headerlink" title="利用索引"></a>利用索引</h4><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 让用户输入一个数n. 判断这个n是否出现在lst中</span></span><br><span class="line">lst = [<span class="number">4</span>, <span class="number">56</span>, <span class="number">178</span>, <span class="number">253</span>, <span class="number">625</span>, <span class="number">1475</span>, <span class="number">2580</span>, <span class="number">3574</span>, <span class="number">15963</span>]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">binary_search</span>(<span class="params">lst, num, left, right</span>):</span><br><span class="line">    <span class="keyword">if</span> left &gt; right:</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">    mid = (left + right) // <span class="number">2</span></span><br><span class="line">    <span class="keyword">if</span> lst[mid] &gt; num:</span><br><span class="line">        right = mid - <span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span> binary_search(lst, num, left, right)</span><br><span class="line">    <span class="keyword">elif</span> lst[mid] &lt; num:</span><br><span class="line">        left = mid + <span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span> binary_search(lst, num, left, right)</span><br><span class="line">    <span class="keyword">else</span>:<span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line"></span><br><span class="line">num = <span class="built_in">int</span>(<span class="built_in">input</span>(<span class="string">&quot;请输入一个数n：&quot;</span>))</span><br><span class="line">ret = binary_search(lst, num, <span class="number">0</span>, <span class="built_in">len</span>(lst)-<span class="number">1</span>)</span><br><span class="line"><span class="built_in">print</span>(ret)</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="切换列表"><a href="#切换列表" class="headerlink" title="切换列表"></a>切换列表</h4><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 让用户输入一个数n. 判断这个n是否出现在lst中</span></span><br><span class="line">lst = [<span class="number">4</span>, <span class="number">56</span>, <span class="number">178</span>, <span class="number">253</span>, <span class="number">625</span>, <span class="number">1475</span>, <span class="number">2580</span>, <span class="number">3574</span>, <span class="number">15963</span>]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">binary_search</span>(<span class="params">lst, num</span>):</span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">len</span>(lst) == <span class="number">0</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">    mid = (<span class="built_in">len</span>(lst) - <span class="number">1</span>) // <span class="number">2</span></span><br><span class="line">    <span class="keyword">if</span> num &gt; lst[mid]:</span><br><span class="line">        <span class="keyword">return</span> binary_search(lst[mid+<span class="number">1</span>:], num)</span><br><span class="line">    <span class="keyword">elif</span> num &lt; lst[mid]:</span><br><span class="line">        <span class="keyword">return</span> binary_search(lst[:mid], num)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;这个数在lst中&quot;</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">num = <span class="built_in">int</span>(<span class="built_in">input</span>(<span class="string">&quot;请输入一个数n：&quot;</span>))</span><br><span class="line"></span><br><span class="line">ret = binary_search(lst, num)</span><br><span class="line"><span class="built_in">print</span>(ret)</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>Python</category>
+      </categories>
+      <tags>
+        <tag>Python</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>迭代器</title>
     <url>/2019/03/16/python-%E8%BF%AD%E4%BB%A3%E5%99%A8/</url>
     <content><![CDATA[<h2 id="迭代器"><a href="#迭代器" class="headerlink" title="迭代器"></a>迭代器</h2><ul>
@@ -6951,44 +7005,6 @@
 <li>可迭代对象不一定是迭代器，但可通过__iter__方法转换成迭代器</li>
 </ul>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lst = [11, 22, 33]</span><br><span class="line">ret = lst.__iter__()</span><br><span class="line"></span><br><span class="line">print(&quot;__next__&quot; in dir(ret))  # True</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>Python</category>
-      </categories>
-      <tags>
-        <tag>Python</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>递归函数</title>
-    <url>/2019/03/16/python-%E9%80%92%E5%BD%92%E5%87%BD%E6%95%B0/</url>
-    <content><![CDATA[<h2 id="递归函数"><a href="#递归函数" class="headerlink" title="递归函数"></a>递归函数</h2><h3 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h3><ul>
-<li>在函数中调用函数本身，就是递归</li>
-<li>在python中递归的深度最大为1000，但实际达不到1000</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">def func():</span><br><span class="line">    print(&quot;-----func-----&quot;)</span><br><span class="line">    func()</span><br><span class="line"></span><br><span class="line">func()</span><br></pre></td></tr></table></figure>
-
-<h3 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h3><ul>
-<li>可以使用递归来遍历各种树形结构，比如文件夹系统：可以使用递归来遍历该文件夹中的所有文件</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">import os</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def func(filepath, n):</span><br><span class="line">    files_list = os.listdir(filepath)  # 获取当前文件夹中的所有文件</span><br><span class="line">    for file in files_list:</span><br><span class="line">        file_d = os.path.join(filepath, file)  # 拼接文件的真实路径</span><br><span class="line">        if os.path.isdir(file_d):  # 递归入口  判断文件是否为文件夹</span><br><span class="line">            print(&quot;\t&quot;*n, file)</span><br><span class="line">            func(file_d, n+1)  #</span><br><span class="line">        else:</span><br><span class="line">            print(&quot;\t&quot;*n, file)  # 递归出口</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="二分查找"><a href="#二分查找" class="headerlink" title="二分查找"></a>二分查找</h2><ul>
-<li>优点：每次能够除掉一半的数据，查找效率高</li>
-<li>要求：查找的序列必须是有序序列</li>
-</ul>
-<h3 id="非递归算法"><a href="#非递归算法" class="headerlink" title="非递归算法"></a>非递归算法</h3><h4 id="利用索引"><a href="#利用索引" class="headerlink" title="利用索引"></a>利用索引</h4><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 让用户输入一个数n. 判断这个n是否出现在lst中</span></span><br><span class="line">lst = [<span class="number">4</span>, <span class="number">56</span>, <span class="number">178</span>, <span class="number">253</span>, <span class="number">625</span>, <span class="number">1475</span>, <span class="number">2580</span>, <span class="number">3574</span>, <span class="number">15963</span>]</span><br><span class="line"></span><br><span class="line">left = <span class="number">0</span></span><br><span class="line">right = <span class="built_in">len</span>(lst) - <span class="number">1</span></span><br><span class="line"></span><br><span class="line">num = <span class="built_in">int</span>(<span class="built_in">input</span>(<span class="string">&quot;请输入一个数n：&quot;</span>))</span><br><span class="line"><span class="keyword">while</span> left &lt;= right:</span><br><span class="line">    mid = (left + right) // <span class="number">2</span></span><br><span class="line">    <span class="keyword">if</span> lst[mid] &gt; num:</span><br><span class="line">        right = mid - <span class="number">1</span></span><br><span class="line">    <span class="keyword">elif</span> lst[mid] &lt; num:</span><br><span class="line">        left = mid + <span class="number">1</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;这个数在lst中&quot;</span>)</span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;这个数不在lst中&quot;</span>)</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="递归算法"><a href="#递归算法" class="headerlink" title="递归算法"></a>递归算法</h3><h4 id="利用索引-1"><a href="#利用索引-1" class="headerlink" title="利用索引"></a>利用索引</h4><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 让用户输入一个数n. 判断这个n是否出现在lst中</span></span><br><span class="line">lst = [<span class="number">4</span>, <span class="number">56</span>, <span class="number">178</span>, <span class="number">253</span>, <span class="number">625</span>, <span class="number">1475</span>, <span class="number">2580</span>, <span class="number">3574</span>, <span class="number">15963</span>]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">binary_search</span>(<span class="params">lst, num, left, right</span>):</span><br><span class="line">    <span class="keyword">if</span> left &gt; right:</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">    mid = (left + right) // <span class="number">2</span></span><br><span class="line">    <span class="keyword">if</span> lst[mid] &gt; num:</span><br><span class="line">        right = mid - <span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span> binary_search(lst, num, left, right)</span><br><span class="line">    <span class="keyword">elif</span> lst[mid] &lt; num:</span><br><span class="line">        left = mid + <span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span> binary_search(lst, num, left, right)</span><br><span class="line">    <span class="keyword">else</span>:<span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line"></span><br><span class="line">num = <span class="built_in">int</span>(<span class="built_in">input</span>(<span class="string">&quot;请输入一个数n：&quot;</span>))</span><br><span class="line">ret = binary_search(lst, num, <span class="number">0</span>, <span class="built_in">len</span>(lst)-<span class="number">1</span>)</span><br><span class="line"><span class="built_in">print</span>(ret)</span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="切换列表"><a href="#切换列表" class="headerlink" title="切换列表"></a>切换列表</h4><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 让用户输入一个数n. 判断这个n是否出现在lst中</span></span><br><span class="line">lst = [<span class="number">4</span>, <span class="number">56</span>, <span class="number">178</span>, <span class="number">253</span>, <span class="number">625</span>, <span class="number">1475</span>, <span class="number">2580</span>, <span class="number">3574</span>, <span class="number">15963</span>]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">binary_search</span>(<span class="params">lst, num</span>):</span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">len</span>(lst) == <span class="number">0</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">    mid = (<span class="built_in">len</span>(lst) - <span class="number">1</span>) // <span class="number">2</span></span><br><span class="line">    <span class="keyword">if</span> num &gt; lst[mid]:</span><br><span class="line">        <span class="keyword">return</span> binary_search(lst[mid+<span class="number">1</span>:], num)</span><br><span class="line">    <span class="keyword">elif</span> num &lt; lst[mid]:</span><br><span class="line">        <span class="keyword">return</span> binary_search(lst[:mid], num)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;这个数在lst中&quot;</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">num = <span class="built_in">int</span>(<span class="built_in">input</span>(<span class="string">&quot;请输入一个数n：&quot;</span>))</span><br><span class="line"></span><br><span class="line">ret = binary_search(lst, num)</span><br><span class="line"><span class="built_in">print</span>(ret)</span><br></pre></td></tr></table></figure>
 
 ]]></content>
       <categories>
@@ -8362,7 +8378,7 @@
 </tr>
 <tr>
 <td>mail address</td>
-<td>当日志轮替时，输出内容通过邮件发送到指定的邮件地址。如mail <a href="mailto:&#x61;&#97;&#x61;&#x40;&#49;&#54;&#x33;&#x2e;&#99;&#x6f;&#109;">aaa@163.com</a></td>
+<td>当日志轮替时，输出内容通过邮件发送到指定的邮件地址。如mail <a href="mailto:&#97;&#x61;&#97;&#64;&#x31;&#54;&#x33;&#x2e;&#x63;&#x6f;&#x6d;">aaa@163.com</a></td>
 </tr>
 <tr>
 <td>missingok</td>
