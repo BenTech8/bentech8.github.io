@@ -3302,7 +3302,7 @@
   </entry>
   <entry>
     <title>k8s网络组件-Flannel</title>
-    <url>/2024/03/31/k8s-Flannel%E5%8E%9F%E7%90%86/</url>
+    <url>/2022/03/31/k8s-Flannel%E5%8E%9F%E7%90%86/</url>
     <content><![CDATA[<h2 id="Flannel概述"><a href="#Flannel概述" class="headerlink" title="Flannel概述"></a>Flannel概述</h2><p>Flannel是CoreOS维护的一个网络组件，Flannel为每个Pod提供全局唯一的IP，Flannel使用ETCD来存储Pod子网与NodeIP之间的关系。Flannel守护进程在每台主机上运行，并负责维护ETCD信息和路由数据包。</p>
 <h2 id="Flannel部署"><a href="#Flannel部署" class="headerlink" title="Flannel部署"></a>Flannel部署</h2><h3 id="默认配置部署"><a href="#默认配置部署" class="headerlink" title="默认配置部署"></a>默认配置部署</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">kubectl apply -f https://github.com/flannel-io/flannel/releases/latest/download/kube-flannel.yml</span><br></pre></td></tr></table></figure>
 
@@ -3330,7 +3330,7 @@
 <li>Host-GW：Flannel通过在各个节点上的Agent进程，将容器网络的路由信息刷到主机的路由表上，这样一来所有的主机都有整个容器网络的路由数据了。</li>
 </ul>
 <h3 id="同一节点内Pod通信流程"><a href="#同一节点内Pod通信流程" class="headerlink" title="同一节点内Pod通信流程"></a>同一节点内Pod通信流程</h3><p>特点：全程无封包&#x2F;解包，不经过Flannel的Overlay（如VXLAN），延迟极低(等同主机内进程通信)。</p>
-<img src="/2024/03/31/k8s-Flannel%E5%8E%9F%E7%90%86/2025-03-31_16-08.png" class="">
+<img src="/2022/03/31/k8s-Flannel%E5%8E%9F%E7%90%86/2025-03-31_16-08.png" class="">
 
 <p>通信步骤：</p>
 <p>1）Pod 1发起请求</p>
@@ -3352,7 +3352,7 @@
 
 
 
-<h3 id="跨节点Pod通信流程（VXLAN模式）"><a href="#跨节点Pod通信流程（VXLAN模式）" class="headerlink" title="跨节点Pod通信流程（VXLAN模式）"></a>跨节点Pod通信流程（VXLAN模式）</h3> <img src="/2024/03/31/k8s-Flannel%E5%8E%9F%E7%90%86/2025-03-31_17-03.png" class="">
+<h3 id="跨节点Pod通信流程（VXLAN模式）"><a href="#跨节点Pod通信流程（VXLAN模式）" class="headerlink" title="跨节点Pod通信流程（VXLAN模式）"></a>跨节点Pod通信流程（VXLAN模式）</h3> <img src="/2022/03/31/k8s-Flannel%E5%8E%9F%E7%90%86/2025-03-31_17-03.png" class="">
 
 <p>通信步骤：</p>
 <p>1）Pod 1发起请求</p>
@@ -3389,7 +3389,7 @@
 <li>网络要求高：宿主机之间必须二层网络连通，要求集群所有节点处于同一网络中。</li>
 <li>路由表复杂：在大规模集群中，路由表的动态更新存在一定压力。</li>
 </ul>
-<img src="/2024/03/31/k8s-Flannel%E5%8E%9F%E7%90%86/2025-04-01_12-06.png" class="">
+<img src="/2022/03/31/k8s-Flannel%E5%8E%9F%E7%90%86/2025-04-01_12-06.png" class="">
 
 <p>通信步骤：</p>
 <p>1）Pod 1发起请求</p>
@@ -8478,7 +8478,7 @@
 </tr>
 <tr>
 <td>mail address</td>
-<td>当日志轮替时，输出内容通过邮件发送到指定的邮件地址。如mail <a href="mailto:&#97;&#x61;&#97;&#x40;&#49;&#54;&#51;&#46;&#x63;&#111;&#109;">aaa@163.com</a></td>
+<td>当日志轮替时，输出内容通过邮件发送到指定的邮件地址。如mail <a href="mailto:&#97;&#x61;&#97;&#x40;&#49;&#54;&#51;&#46;&#99;&#x6f;&#109;">aaa@163.com</a></td>
 </tr>
 <tr>
 <td>missingok</td>
