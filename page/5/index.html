@@ -162,6 +162,128 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://bentech8.github.io/2019/03/20/python-%E6%97%A5%E5%BF%97/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Ben">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ben's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/03/20/python-%E6%97%A5%E5%BF%97/" class="post-title-link" itemprop="url">日志</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-03-20 17:02:40" itemprop="dateCreated datePublished" datetime="2019-03-20T17:02:40+08:00">2019-03-20</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-03-20 17:04:47" itemprop="dateModified" datetime="2025-03-20T17:04:47+08:00">2025-03-20</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2019/03/20/python-%E6%97%A5%E5%BF%97/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2019/03/20/python-%E6%97%A5%E5%BF%97/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>1.5k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>3 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="basicConfig"><a href="#basicConfig" class="headerlink" title="basicConfig"></a>basicConfig</h2><ul>
+<li>导入logging模块</li>
+<li>简单配置一下logging</li>
+<li>出现异常的时候（except），向日志里写错误信息</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> logging</span><br><span class="line"><span class="keyword">import</span> traceback</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">logging.basicConfig(filename=<span class="string">&quot;x1.log&quot;</span>,</span><br><span class="line">                    <span class="built_in">format</span>=<span class="string">&quot;%(asctime)s - %(name)s - %(levelname)s - %(module)s: %(message)s&quot;</span>,</span><br><span class="line">                    datefmt=<span class="string">&quot;%Y-%m-%d %H:%M:%S&quot;</span>, level=<span class="number">30</span>)</span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    <span class="built_in">print</span>(<span class="number">1</span>/<span class="number">0</span>)</span><br><span class="line"><span class="keyword">except</span> Exception:</span><br><span class="line">    logging.error(traceback.format_exc())</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;出现错误&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>filename：文件名</li>
+<li>format：数据的格式化输出，最终在日志文件中的样子。时间-名称-级别-模块：错误信息</li>
+<li>datefmt：时间的格式</li>
+<li>level:错误的级别权重，当错误的级别权重大于等于leval的时候才会写入文件</li>
+</ul>
+<p>CRITICAL &#x3D; 50</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/03/20/python-%E6%97%A5%E5%BF%97/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://bentech8.github.io/2019/03/20/python-%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1205,121 +1327,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://bentech8.github.io/2019/03/16/python-%E9%80%92%E5%BD%92%E5%87%BD%E6%95%B0/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Ben">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Ben's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2019/03/16/python-%E9%80%92%E5%BD%92%E5%87%BD%E6%95%B0/" class="post-title-link" itemprop="url">递归函数</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2019-03-16 17:20:24" itemprop="dateCreated datePublished" datetime="2019-03-16T17:20:24+08:00">2019-03-16</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-03-16 18:13:04" itemprop="dateModified" datetime="2025-03-16T18:13:04+08:00">2025-03-16</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a>
-                </span>
-            </span>
-
-          
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2019/03/16/python-%E9%80%92%E5%BD%92%E5%87%BD%E6%95%B0/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2019/03/16/python-%E9%80%92%E5%BD%92%E5%87%BD%E6%95%B0/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>2k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>4 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="递归函数"><a href="#递归函数" class="headerlink" title="递归函数"></a>递归函数</h2><h3 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h3><ul>
-<li>在函数中调用函数本身，就是递归</li>
-<li>在python中递归的深度最大为1000，但实际达不到1000</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">def func():</span><br><span class="line">    print(&quot;-----func-----&quot;)</span><br><span class="line">    func()</span><br><span class="line"></span><br><span class="line">func()</span><br></pre></td></tr></table></figure>
-
-<h3 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h3>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2019/03/16/python-%E9%80%92%E5%BD%92%E5%87%BD%E6%95%B0/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1389,7 +1396,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">67</span>
+          <span class="site-state-item-count">68</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1441,12 +1448,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">333k</span>
+    <span title="站点总字数">346k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">10:05</span>
+    <span title="站点阅读时长">10:28</span>
 </div>
 <!--
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
