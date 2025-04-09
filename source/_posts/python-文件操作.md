@@ -58,7 +58,8 @@ print(content)f.close()
 ```
 f = open("送别.txt", mode="r", encoding="utf-8")
 content = f.read(5)
-print(content)f.close()
+print(content)
+f.close()
 
 
 结果：
@@ -158,7 +159,8 @@ f.write("- 王维")f.close()
 ```
 f = open("送别.txt", mode="rb")
 content = f.read()
-print(content)f.close()
+print(content)
+f.close()
 
 结果：
 b'\xe4\xb8\x8b\xe9\xa9\xac\xe9\xa5\xae\xe5\x90\x9b\xe9\x85\x92\xef\xbc\x8c \xe9\x97\xae\xe5\x90\x9b\xe4\xbd\x95\xe6\x89\x80\xe4\xb9\x8b\xef\xbc\x9f\r\n\xe5\x90\x9b\xe8\xa8\x80\xe4\xb8\x8d\xe5\xbe\x97\xe6\x84\x8f\xef\xbc\x8c \xe5\xbd\x92\xe5\x8d\xa7\xe5\x8d\x97\xe5\xb1\xb1\xe9\x99\xb2\xe3\x80\x82\r\n\xe4\xbd\x86\xe5\x8e\xbb\xe8\x8e\xab\xe5\xa4\x8d\xe9\x97\xae\xef\xbc\x8c \xe7\x99\xbd\xe4\xba\x91\xe6\x97\xa0\xe5\xb0\xbd\xe6\x97\xb6\xe3\x80\x82'
@@ -172,7 +174,8 @@ b'\xe4\xb8\x8b\xe9\xa9\xac\xe9\xa5\xae\xe5\x90\x9b\xe9\x85\x92\xef\xbc\x8c \xe9\
 
 ```
 f = open("送别.txt", mode="wb")
-f.write("   五言古诗".encode("utf-8"))f.close()
+f.write("   五言古诗".encode("utf-8"))
+f.close()
 
 
 结果：
@@ -215,7 +218,8 @@ f2.close()
 f = open("place.txt", mode="r+", encoding="utf-8")
 content = f.read()
 f.write("广州")
-print(content)f.close()
+print(content)
+f.close()
 
 结果：
 北京
@@ -341,7 +345,8 @@ introduction.txt:
 f = open("introduction.txt", mode="r", encoding="utf-8")
 f.seek(3)
 content = f.read(3)
-print(content)f.close()
+print(content)
+f.close()
 
 
 结果：
@@ -361,7 +366,8 @@ introduction.txt:
 
 f = open("introduction.txt", mode="r", encoding="utf-8")
 content = f.read(3)
-print(f.tell())  # 9f.close()
+print(f.tell())  # 9
+f.close()
 ```
 
 

@@ -11,7 +11,9 @@ categories: Python
 
 ```
 lst1 = [11, 22, 33, 44]
-lst2 = lst1print(id(lst1)) # 1916361712712print(id(lst2)) # 1916361712712
+lst2 = lst1
+print(id(lst1)) # 1916361712712
+print(id(lst2)) # 1916361712712
 
 lst1.append("hello")
 print(lst1)  # [11, 22, 33, 44, 'hello']
@@ -21,7 +23,8 @@ print(lst2)  # [11, 22, 33, 44, 'hello']
 ```
 dic1 = {"name": "Tom", "age": 18}
 dic2 = dic1
-print(id(dic1)) # 2020711820888print(id(dic2)) # 2020711820888
+print(id(dic1)) # 2020711820888
+print(id(dic2)) # 2020711820888
 dic1["hobby"]  = "football"
 
 print(dic1)  # {'name': 'Tom', 'age': 18, 'hobby': 'football'}
