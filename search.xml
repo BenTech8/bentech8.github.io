@@ -3700,31 +3700,69 @@
       </tags>
   </entry>
   <entry>
-    <title>k8s-k8s安装</title>
-    <url>/2025/04/16/k8s-k8s%E5%AE%89%E8%A3%85/</url>
-    <content><![CDATA[<h2 id="kind安装方式"><a href="#kind安装方式" class="headerlink" title="kind安装方式"></a>kind安装方式</h2><h3 id="kind安装"><a href="#kind安装" class="headerlink" title="kind安装"></a>kind安装</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[ $(uname -m) = x86_64 ] &amp;&amp; curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.27.0/kind-linux-amd64</span><br><span class="line">chmod +x ./kind</span><br><span class="line">sudo mv ./kind /usr/local/bin/kind</span><br></pre></td></tr></table></figure>
+    <title>k8s安装方式</title>
+    <url>/2020/04/16/k8s-k8s%E5%AE%89%E8%A3%85/</url>
+    <content><![CDATA[<h2 id="kind安装方式"><a href="#kind安装方式" class="headerlink" title="kind安装方式"></a>kind安装方式</h2><h3 id="kind安装"><a href="#kind安装" class="headerlink" title="kind安装"></a>kind安装</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.27.0/kind-linux-amd64</span><br><span class="line">[root@localhost ~]# chmod +x ./kind</span><br><span class="line">[root@localhost ~]# sudo mv ./kind /usr/local/bin/kind</span><br></pre></td></tr></table></figure>
 
 
 
-<h3 id="集群管理"><a href="#集群管理" class="headerlink" title="集群管理"></a>集群管理</h3><p>1）创建集群</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">默认name创建集群</span></span><br><span class="line">kind create cluster</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">指定name创建集群</span></span><br><span class="line">kind create cluster --name kind-2</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">指定配置文件创建集群（用于配置多节点）</span></span><br><span class="line">kind create cluster --config config.yaml</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查看集群</span></span><br><span class="line">kind get clusters</span><br><span class="line">kind</span><br><span class="line">kind-2</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">kubectl指定context</span></span><br><span class="line">kubectl cluster-info --context kind-kind</span><br></pre></td></tr></table></figure>
+<h3 id="集群管理"><a href="#集群管理" class="headerlink" title="集群管理"></a>集群管理</h3><p>1）快速创建集群</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">默认name创建集群</span></span><br><span class="line">[root@localhost ~]# kind create cluster</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">指定name创建集群</span></span><br><span class="line">[root@localhost ~]# kind create cluster --name kind-2</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查看集群</span></span><br><span class="line">[root@localhost ~]# kind get clusters</span><br><span class="line">kind</span><br><span class="line">kind-2</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">kubectl指定context</span></span><br><span class="line">[root@localhost ~]# kubectl cluster-info --context kind-kind</span><br></pre></td></tr></table></figure>
 
 
 
-<p>2）配置集群（高可用）</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# more config.yaml</span><br><span class="line">kind: Cluster</span><br><span class="line">apiVersion: kind.x-k8s-io/v1alpha4</span><br><span class="line">nodes:</span><br><span class="line">- role: control-plane</span><br><span class="line">- role: control-plane</span><br><span class="line">- role: control-plane</span><br><span class="line">- role: worker</span><br><span class="line">- role: worker</span><br><span class="line"></span><br><span class="line">[root@localhost ~]# kind create cluster --config config.yaml</span><br></pre></td></tr></table></figure>
+<p>2）创建高可用集群</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# more config.yaml</span><br><span class="line">kind: Cluster</span><br><span class="line">apiVersion: kind.x-k8s-io/v1alpha4</span><br><span class="line">nodes:</span><br><span class="line">- role: control-plane</span><br><span class="line">- role: control-plane</span><br><span class="line">- role: control-plane</span><br><span class="line">- role: worker</span><br><span class="line">- role: worker</span><br><span class="line">- role: worker</span><br><span class="line"></span><br><span class="line">[root@localhost ~]# kind create cluster --config config.yaml</span><br></pre></td></tr></table></figure>
 
 
 
 <p>3）删除集群</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">删除name为kind集群</span></span><br><span class="line">kind delete cluster </span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">删除name为kind-2集群</span></span><br><span class="line">kind delete cluster --name kind-2</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">删除name为kind集群</span></span><br><span class="line">[root@localhost ~]# kind delete cluster </span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">删除name为kind-2集群</span></span><br><span class="line">[root@localhost ~]# kind delete cluster --name kind-2</span><br></pre></td></tr></table></figure>
 
 
 
-<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><ul>
-<li></li>
-</ul>
-<h2 id="Minikube安装方式"><a href="#Minikube安装方式" class="headerlink" title="Minikube安装方式"></a>Minikube安装方式</h2>]]></content>
+<h3 id="集群测试"><a href="#集群测试" class="headerlink" title="集群测试"></a>集群测试</h3><p>1）load nginx镜像至集群节点</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">向节点导入镜像</span></span><br><span class="line">[root@localhost ~]# kind load docker-image docker.io/library/nginx:latest</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查看节点镜像是否导入成功</span></span><br><span class="line">[root@localhost ~]# docker exec -it kind-worker crictl images</span><br></pre></td></tr></table></figure>
+
+<p>2）创建deployment</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">创建deployment</span></span><br><span class="line">[root@localhost ~]# kubectl create deployment nginx --image=docker.io/library/nginx:latest</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">扩容</span></span><br><span class="line">[root@localhost ~]# kubectl scale deployment/nginx --replicas=3</span><br></pre></td></tr></table></figure>
+
+<p>3）暴露服务</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">实质是创建一个service</span></span><br><span class="line">[root@localhost ~]# kubectl expose deployment nginx --port=8000 --target-port=80</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">port-forward至本机端口</span></span><br><span class="line">[root@localhost ~]# kubectl port-forward service/nginx 7000:8000</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">访问nginx</span></span><br><span class="line">[root@localhost ~]# curl http://localhost:7000</span><br></pre></td></tr></table></figure>
+
+<h3 id="自定义参数集群配置"><a href="#自定义参数集群配置" class="headerlink" title="自定义参数集群配置"></a>自定义参数集群配置</h3><figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">kind:</span> <span class="string">Cluster</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">kind.x-k8s.io/v1alpha4</span></span><br><span class="line"><span class="comment"># 节点配置</span></span><br><span class="line"><span class="attr">node:</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">role:</span> <span class="string">control-plane</span></span><br><span class="line">  <span class="comment"># 将control-plane容器的80端口映射至主机8080端口，这样可不必使用port-forward</span></span><br><span class="line">  <span class="attr">extraPortMappings:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">containerPort:</span> <span class="number">80</span></span><br><span class="line">    <span class="attr">hostPort:</span> <span class="number">8080</span></span><br><span class="line">    <span class="attr">listenAddress:</span> <span class="string">&quot;127.0.0.1&quot;</span></span><br><span class="line">    <span class="attr">protocol:</span> <span class="string">TCP</span></span><br><span class="line">  <span class="comment"># 挂载</span></span><br><span class="line">  <span class="attr">extraMounts:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">hostPath:</span> <span class="string">/path/to/my/files</span></span><br><span class="line">    <span class="attr">containerPath:</span> <span class="string">/files</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">role:</span> <span class="string">control-plane</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">role:</span> <span class="string">control-plane</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">role:</span> <span class="string">worker</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">role:</span> <span class="string">worker</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">role:</span> <span class="string">worker</span></span><br><span class="line"><span class="comment"># 网络配置</span></span><br><span class="line"><span class="attr">networking:</span></span><br><span class="line">  <span class="comment"># apiServer服务暴露端口</span></span><br><span class="line">  <span class="attr">apiServerPort:</span> <span class="number">6443</span></span><br><span class="line">  <span class="comment"># pod IP地址范围</span></span><br><span class="line">  <span class="attr">podSubnet:</span> <span class="string">&quot;10.244.0.0/16&quot;</span></span><br><span class="line">  <span class="comment"># service IP地址范围</span></span><br><span class="line">  <span class="attr">serviceSubnet:</span> <span class="string">&quot;10.96.0.0/12&quot;</span></span><br><span class="line">  <span class="comment"># kubeProxy工作模式</span></span><br><span class="line">  <span class="attr">kubeProxyMode:</span> <span class="string">&quot;ipvs&quot;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="minikube安装方式"><a href="#minikube安装方式" class="headerlink" title="minikube安装方式"></a>minikube安装方式</h2><h3 id="minikube安装"><a href="#minikube安装" class="headerlink" title="minikube安装"></a>minikube安装</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# curl -LO https://github.com/kubernetes/minikube/releases/latest/download/minikube-linux-amd64</span><br><span class="line">[root@localhost ~]# sudo install minikube-linux-amd64 /usr/local/bin/minikube &amp;&amp; rm minikube-linux-amd64</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="集群管理-1"><a href="#集群管理-1" class="headerlink" title="集群管理"></a>集群管理</h3><p>1）创建集群</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# minikube start</span><br></pre></td></tr></table></figure>
+
+<p>2）删除集群</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">停止minikube</span></span><br><span class="line">[root@localhost ~]# minikube stop</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">删除集群(不再使用时操作)</span></span><br><span class="line">[root@localhost ~]# minikube delete --all</span><br></pre></td></tr></table></figure>
+
+
+
+<p>3）minikube常用操作命令</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查看minikube自带插件</span></span><br><span class="line">[root@localhost ~]# minikube addons list</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="集群测试-1"><a href="#集群测试-1" class="headerlink" title="集群测试"></a>集群测试</h3><p>1）创建deployment</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# kubectl create deployment nginx --image=docker.io/library/nginx:latest</span><br></pre></td></tr></table></figure>
+
+<p>2）创建service</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# kubectl expose deployment nginx --port=8000 --target-port=80</span><br></pre></td></tr></table></figure>
+
+
+
+<p>3）暴露服务</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# minikube service nginx</span><br></pre></td></tr></table></figure>
+
+]]></content>
       <categories>
         <category>Kubernetes</category>
       </categories>
@@ -3734,19 +3772,19 @@
   </entry>
   <entry>
     <title>k8s网络组件-calico</title>
-    <url>/0202/04/01/k8s%E7%BD%91%E7%BB%9C%E7%BB%84%E4%BB%B6-calico/</url>
+    <url>/2022/04/01/k8s%E7%BD%91%E7%BB%9C%E7%BB%84%E4%BB%B6-calico/</url>
     <content><![CDATA[<h2 id="Calico概述"><a href="#Calico概述" class="headerlink" title="Calico概述"></a>Calico概述</h2><p>Calico是一个纯三层的数据中心网络方案，Calico支持广泛的平台，包括Kubernetes、OpenStack等。</p>
 <p>Calico在每一个计算节点利用Linux Kernel实现了一个高效的虚拟路由器(yRouter)来负责数据转发，而每个yRouter通过BGP协议负责把自己运行的workload的路由信息向整个Calico网络内传播。</p>
 <p>此外，Calico项目还实现了Kubernetes网络策略，提供ACL功能。</p>
 <h2 id="BGP概述"><a href="#BGP概述" class="headerlink" title="BGP概述"></a>BGP概述</h2><p>实际上，Calico项目提供的网络解决方案，与Flannel的host-gw模式几乎一样。也就是说，Calico也是基于路由表实现容器数据包转发，但不同于Flannel使用Flannel进程来维护路由信息的做法，Calico项目使用BGP协议来自动维护整个集群的路由信息。</p>
 <p>BGP英文全称是Border Gateway Protocol，即边界网关协议，它是一种自治系统间的动态路由发现协议，与其他BGP系统交换网络可达信息。</p>
 <p>为了能让你更清楚理解BGP，举个例子：</p>
-<img src="/0202/04/01/k8s%E7%BD%91%E7%BB%9C%E7%BB%84%E4%BB%B6-calico/2025-04-02_05-42.png" class="">
+<img src="/2022/04/01/k8s%E7%BD%91%E7%BB%9C%E7%BB%84%E4%BB%B6-calico/2025-04-02_05-42.png" class="">
 
 <p>在这个图中，有两个自治系统(autonomous system，简称为AS)：AS 1和AS 2。</p>
 <p>在互联网中，一个自治系统(AS)是一个有权自主决定在本系统中应用何种路由协议的小型单位。这个网络单位可以是一个简单的网络，也可以是一个由一个或多个普通的网络管理员来控制的网络群体，它是一个单独的可管理的网络单元(例如一所大学，一个企业或者一个公司个体)。一个自治系统有时也被称为一个路由选择域(routing domain)。一个自治系统将会分配一个全局的唯一的16位号码，有时我们把这个号码叫做自治系统号(ASN)。</p>
 <p>在正常情况下，自治系统之间不会有任何来往。如果两个自治系统里的主机要通过IP地址直接进行通信。我们就必须使用路由器把这两个自治系统连接起来，BGP协议就是让他们互联的一种方式。</p>
-<h2 id="Calico-BGP模式"><a href="#Calico-BGP模式" class="headerlink" title="Calico BGP模式"></a>Calico BGP模式</h2><h3 id="Calico-BGP实现"><a href="#Calico-BGP实现" class="headerlink" title="Calico BGP实现"></a>Calico BGP实现</h3><img src="/0202/04/01/k8s%E7%BD%91%E7%BB%9C%E7%BB%84%E4%BB%B6-calico/2025-04-02_06-10.png" class="">
+<h2 id="Calico-BGP模式"><a href="#Calico-BGP模式" class="headerlink" title="Calico BGP模式"></a>Calico BGP模式</h2><h3 id="Calico-BGP实现"><a href="#Calico-BGP实现" class="headerlink" title="Calico BGP实现"></a>Calico BGP实现</h3><img src="/2022/04/01/k8s%E7%BD%91%E7%BB%9C%E7%BB%84%E4%BB%B6-calico/2025-04-02_06-10.png" class="">
 
 <p>Calico主要由三部分组成：</p>
 <ul>
@@ -3755,7 +3793,7 @@
 <li>Etcd：分布式键值存储，保存Calico的策略和网络配置状态。</li>
 <li>calicoctl：允许你从简单的命令行界面实现高级策略和网络。</li>
 </ul>
-<h3 id="Calico-BGP原理"><a href="#Calico-BGP原理" class="headerlink" title="Calico BGP原理"></a>Calico BGP原理</h3><img src="/0202/04/01/k8s%E7%BD%91%E7%BB%9C%E7%BB%84%E4%BB%B6-calico/2025-04-02_06-17.png" class="">
+<h3 id="Calico-BGP原理"><a href="#Calico-BGP原理" class="headerlink" title="Calico BGP原理"></a>Calico BGP原理</h3><img src="/2022/04/01/k8s%E7%BD%91%E7%BB%9C%E7%BB%84%E4%BB%B6-calico/2025-04-02_06-17.png" class="">
 
 <p>Pod 1访问Pod 2大致流程如下：</p>
 <ul>
@@ -3765,7 +3803,7 @@
 </ul>
 <p>其中，这里最核心的“下一跳”路由规则，就是由Calico的Felix进程负责维护的，这些路由规则信息，则是通过BGP Client也就是BIRD组件，使用BGP协议传输而来的。</p>
 <p>不难发现，Calico项目实际上将集群里的所有节点，都当作是连边界路由器来处理，它们一起组成了一个全连通的网络，互相之间通过BGP协议交换路由规则，这些节点，我们称为BGP Peer。</p>
-<h2 id="Calico-IPIP模式"><a href="#Calico-IPIP模式" class="headerlink" title="Calico IPIP模式"></a>Calico IPIP模式</h2><h3 id="IPIP原理"><a href="#IPIP原理" class="headerlink" title="IPIP原理"></a>IPIP原理</h3><img src="/0202/04/01/k8s%E7%BD%91%E7%BB%9C%E7%BB%84%E4%BB%B6-calico/2025-04-02_06-32.png" class="">
+<h2 id="Calico-IPIP模式"><a href="#Calico-IPIP模式" class="headerlink" title="Calico IPIP模式"></a>Calico IPIP模式</h2><h3 id="IPIP原理"><a href="#IPIP原理" class="headerlink" title="IPIP原理"></a>IPIP原理</h3><img src="/2022/04/01/k8s%E7%BD%91%E7%BB%9C%E7%BB%84%E4%BB%B6-calico/2025-04-02_06-32.png" class="">
 
 <p>Pod 1访问Pod 2大致流程如下：</p>
 <ul>
@@ -8764,7 +8802,7 @@
 </tr>
 <tr>
 <td>mail address</td>
-<td>当日志轮替时，输出内容通过邮件发送到指定的邮件地址。如mail <a href="mailto:&#x61;&#97;&#97;&#x40;&#x31;&#x36;&#x33;&#x2e;&#x63;&#x6f;&#109;">aaa@163.com</a></td>
+<td>当日志轮替时，输出内容通过邮件发送到指定的邮件地址。如mail <a href="mailto:&#97;&#x61;&#x61;&#x40;&#49;&#x36;&#51;&#x2e;&#x63;&#111;&#109;">aaa@163.com</a></td>
 </tr>
 <tr>
 <td>missingok</td>
