@@ -12,9 +12,138 @@
       </tags>
   </entry>
   <entry>
-    <title>Linux-入侵检测</title>
+    <title>入侵检测</title>
     <url>/2025/04/09/Linux-%E5%85%A5%E4%BE%B5%E6%A3%80%E6%B5%8B/</url>
-    <content><![CDATA[]]></content>
+    <content><![CDATA[<h2 id="入侵检测"><a href="#入侵检测" class="headerlink" title="入侵检测"></a>入侵检测</h2><h3 id="查看系统日志"><a href="#查看系统日志" class="headerlink" title="查看系统日志"></a>查看系统日志</h3><h4 id="查看安全相关日志"><a href="#查看安全相关日志" class="headerlink" title="查看安全相关日志"></a>查看安全相关日志</h4><p>1）ssh远程登录失败日志</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# grep -i Failed /var/log/secure</span><br><span class="line">Apr    9 15:58:33 localhost unix_chkpwd[1572]: password check failed for user (root) </span><br><span class="line">Apr    9 15:58:35 localhost login: FAILED LOGIN 1 FROM tty1 FOR root, Authentication failure</span><br></pre></td></tr></table></figure>
+
+<p>2）ssh远程登录成功日志</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# grep -i Accepted /var/log/secure</span><br><span class="line">Apr    6 15:21:19 localhost sshd[1594]: Accepted password for root from 172.20.10.3 port 50205 ssh2</span><br></pre></td></tr></table></figure>
+
+<p>3）统计登录成功或登录失败的ip，并进行去重降序排列</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# grep -i Accepted /var/log/secure | awk &#x27;&#123;print $(NF-3)&#125;&#x27; | grep &#x27;^[0-9]&#x27; | sort | uniq -c | sort -rn</span><br><span class="line">1 172.20.10.7</span><br><span class="line">1 172.20.10.3</span><br><span class="line">[root@localhost ~]# grep -i Failed /var/log/secure | awk &#x27;&#123;print $(NF-3)&#125;&#x27; | grep &#x27;^[0-9]&#x27; | sort | uniq -c | sort -rn</span><br></pre></td></tr></table></figure>
+
+<h4 id="查看历史用户登录信息"><a href="#查看历史用户登录信息" class="headerlink" title="查看历史用户登录信息"></a>查看历史用户登录信息</h4><p>1）查看最后5条登录信息</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# last -a -5</span><br></pre></td></tr></table></figure>
+
+
+
+<p>2）查看指定时间之前登录信息</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# last -a -t 20250304123030</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">2025-03-04 12：30：30之前</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>3）查看登录系统的用户相关信息</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# last -a -f /var/log/btmp</span><br><span class="line">Ben      ssh:notty    Wed Apr  9 17:20    gone - no logout  172.20.10.3</span><br><span class="line">Ben      ssh:notty    Wed Apr  9 17:20 - 17:20  (00:00)     172.20.10.3</span><br><span class="line">Ben      ssh:notty    Wed Apr  9 17:20 - 17:20  (00:00)     172.20.10.3</span><br><span class="line">root     tty1         Wed Apr  9 15:58    gone - no logout</span><br><span class="line">root     ssh:notty    Sun Apr  6 14:25 - 17:20 (3+02:54)    172.20.10.7</span><br><span class="line">root     ssh:notty    Sun Apr  6 14:25 - 14:25  (00:00)     172.20.10.7</span><br><span class="line">root     ssh:notty    Sun Apr  6 14:25 - 14:25  (00:00)     172.20.10.7</span><br><span class="line">root     ssh:notty    Sun Apr  6 14:23 - 14:25  (00:01)     172.20.10.7</span><br><span class="line">root     ssh:notty    Sun Apr  6 14:23 - 14:23  (00:00)     172.20.10.7</span><br><span class="line">root     ssh:notty    Sun Apr  6 14:23 - 14:23  (00:00)     172.20.10.7</span><br><span class="line">root     ssh:notty    Sun Apr  6 14:23 - 14:23  (00:00)     172.20.10.7</span><br><span class="line">root     ssh:notty    Sun Apr  6 14:23 - 14:23  (00:00)     172.20.10.7</span><br><span class="line">root     ssh:notty    Sun Apr  6 14:22 - 14:23  (00:00)     172.20.10.7</span><br><span class="line">root     ssh:notty    Sun Apr  6 14:05 - 14:22  (00:17)     172.20.10.7</span><br><span class="line">test1    ssh:notty    Sun Apr  6 14:05 - 14:05  (00:00)     172.20.10.7</span><br><span class="line">test3    ssh:notty    Sun Apr  6 14:05 - 14:05  (00:00)     172.20.10.7</span><br><span class="line">test3    ssh:notty    Sun Apr  6 13:58 - 14:05  (00:06)     172.20.10.7</span><br><span class="line">test3    ssh:notty    Sun Apr  6 13:58 - 13:58  (00:00)     172.20.10.7</span><br><span class="line">test3    ssh:notty    Sun Apr  6 13:58 - 13:58  (00:00)     172.20.10.7</span><br><span class="line">root     ssh:notty    Sat Apr  5 22:17 - 13:58  (15:41)     172.20.10.7</span><br><span class="line">root     ssh:notty    Sat Apr  5 22:17 - 22:17  (00:00)     172.20.10.7</span><br><span class="line">root     ssh:notty    Sat Apr  5 21:54 - 22:17  (00:22)     172.20.10.7</span><br><span class="line">root     ssh:notty    Sat Apr  5 21:54 - 21:54  (00:00)     172.20.10.7</span><br><span class="line">ben      tty1         Sat Apr  5 21:50 - 15:58 (3+18:08)</span><br><span class="line">ben      tty1         Sat Apr  5 20:24 - 21:50  (01:25)</span><br><span class="line">ben      tty1         Sat Apr  5 20:24 - 20:24  (00:00)</span><br><span class="line">ben      tty1         Sat Apr  5 20:24 - 20:24  (00:00)</span><br><span class="line">ben      tty1         Sat Apr  5 20:23 - 20:24  (00:00)</span><br><span class="line">root     ssh:notty    Sat Apr  5 19:59 - 21:54  (01:55)     172.20.10.7</span><br><span class="line">root     ssh:notty    Sat Apr  5 19:59 - 19:59  (00:00)     172.20.10.7</span><br><span class="line">root     ssh:notty    Sat Apr  5 19:58 - 19:59  (00:00)     172.20.10.7</span><br><span class="line">(unknown tty1         Fri Apr  4 12:02 - 20:23 (1+08:20)</span><br></pre></td></tr></table></figure>
+
+
+
+<p>4）查看记录每个用户最后的登录信息</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# lastlog</span><br><span class="line">root             pts/0    172.20.10.3      三 4月  9 17:23:24 +0800 2025</span><br><span class="line">bin                                        **从未登录过**</span><br><span class="line">daemon                                     **从未登录过**</span><br><span class="line">adm                                        **从未登录过**</span><br><span class="line">lp                                         **从未登录过**</span><br><span class="line">sync                                       **从未登录过**</span><br><span class="line">shutdown                                   **从未登录过**</span><br><span class="line">halt                                       **从未登录过**</span><br><span class="line">mail                                       **从未登录过**</span><br><span class="line">operator                                   **从未登录过**</span><br><span class="line">games                                      **从未登录过**</span><br><span class="line">ftp                                        **从未登录过**</span><br><span class="line">nobody                                     **从未登录过**</span><br><span class="line">systemd-network                            **从未登录过**</span><br><span class="line">dbus                                       **从未登录过**</span><br><span class="line">polkitd                                    **从未登录过**</span><br><span class="line">sshd                                       **从未登录过**</span><br><span class="line">postfix                                    **从未登录过**</span><br><span class="line">chrony                                     **从未登录过**</span><br><span class="line">ben              tty1                      六 4月  5 21:50:06 +0800 2025</span><br><span class="line">owen                                       **从未登录过**</span><br><span class="line">it01             tty1                      六 4月  5 17:44:42 +0800 2025</span><br><span class="line">it02                                       **从未登录过**</span><br><span class="line">test1            pts/0    172.20.10.7      日 4月  6 13:57:05 +0800 2025</span><br><span class="line">test2                                      **从未登录过**</span><br><span class="line">test3            pts/0    172.20.10.7      日 4月  6 13:58:58 +0800 2025</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="统计当前在线状态"><a href="#统计当前在线状态" class="headerlink" title="统计当前在线状态"></a>统计当前在线状态</h4><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# w</span><br><span class="line"> 17:32:18 up 17 min,  3 users,  load average: 0.00, 0.01, 0.05</span><br><span class="line">USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU WHAT</span><br><span class="line">root     tty1                      17:15   16:26   0.03s  0.03s -bash</span><br><span class="line">root     pts/0    172.20.10.3      17:23    2.00s  0.68s  0.00s w</span><br><span class="line">root     pts/1    172.20.10.3      17:21    9:22   0.14s  0.14s -bash</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="查看系统主日志"><a href="#查看系统主日志" class="headerlink" title="查看系统主日志"></a>查看系统主日志</h4><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# less /var/log/messages</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="查看计划任务"><a href="#查看计划任务" class="headerlink" title="查看计划任务"></a>查看计划任务</h4><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# less /var/log/cron</span><br><span class="line">[root@localhost ~]# cat /var/spool/cron/*</span><br><span class="line">[root@localhost ~]# less /etc/crontab</span><br><span class="line">[root@localhost ~]# ls /etc/cron.*</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="查看异常流量"><a href="#查看异常流量" class="headerlink" title="查看异常流量"></a>查看异常流量</h3><h4 id="iftop动态查看网卡接口流量"><a href="#iftop动态查看网卡接口流量" class="headerlink" title="iftop动态查看网卡接口流量"></a>iftop动态查看网卡接口流量</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# yum -y install epel-release</span><br><span class="line">[root@localhost ~]# yum -y install iftop</span><br><span class="line">[root@localhost ~]# iftop -i ens33</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="流量监控"><a href="#流量监控" class="headerlink" title="流量监控"></a>流量监控</h4><ul>
+<li>Cacti</li>
+<li>Zabbix</li>
+<li>Ganglia</li>
+<li>Prometheus</li>
+</ul>
+<h4 id="数据包抓取"><a href="#数据包抓取" class="headerlink" title="数据包抓取"></a>数据包抓取</h4><ul>
+<li>wireshark</li>
+<li>tcpdump</li>
+<li>sniffer</li>
+</ul>
+<h4 id="tcpdump"><a href="#tcpdump" class="headerlink" title="tcpdump"></a>tcpdump</h4><p>1）基本用法</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# tcpdump -i eth0 -nnv</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">抓取100个包</span></span><br><span class="line">[root@localhost ~]# tcpdump -i eth0 -nnv -c 100</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">抓取包内容写入文件</span></span><br><span class="line">[root@localhost ~]# tcpdump -i eth0 -nnv -w /file1.tcpdump</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">从文件中读取包，一般不用tcpdump查看，用wireshark可视化查看更清晰</span></span><br><span class="line">[root@localhost ~]# tcpdump -nnv -r /file1.tcpdump</span><br></pre></td></tr></table></figure>
+
+<p>2）条件(port|host|net)</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">抓取指定端口的包</span></span><br><span class="line">[root@localhost ~]# tcpdump -i eth0 -nnv not port 80</span><br><span class="line">[root@localhost ~]# tcpdump -i eth0 -nnv port 22</span><br><span class="line">[root@localhost ~]# tcpdump -i eth0 -nnv port 80</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">抓取指定网络的包</span></span><br><span class="line">[root@localhost ~]# tcpdump -i eth0 -nnv net 192.168.0.0/24</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">抓取指定主机的包</span></span><br><span class="line">[root@localhost ~]# tcpdump -i eth0 -nnv host 192.168.0.15</span><br><span class="line">[root@localhost ~]# tcpdump -i eth0 -nnv dst port 22</span><br><span class="line">[root@localhost ~]# tcpdump -i eth0 -nnv src port 22</span><br></pre></td></tr></table></figure>
+
+<p>3）条件(协议)</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# tcpdump -i eth0 -nnv arp</span><br><span class="line">[root@localhost ~]# tcpdump -i eth0 -nnv icmp</span><br><span class="line">[root@localhost ~]# tcpdump -i eth0 -nnv udp</span><br><span class="line">[root@localhost ~]# tcpdump -i eth0 -nnv tcp</span><br><span class="line">[root@localhost ~]# tcpdump -i eth0 -nnv ip</span><br><span class="line">[root@localhost ~]# tcpdump -i eth0 -nnv vrrp</span><br></pre></td></tr></table></figure>
+
+<p>4）多条件(与或非)</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# tcpdump -i eth0 -nnv not net 192.168.0.0/24</span><br><span class="line">[root@localhost ~]# tcpdump -i eth0 -nnv not port 80</span><br><span class="line">[root@localhost ~]# tcpdump -i eth0 -nnv host 192.168.0.15 and port 22</span><br><span class="line">[root@localhost ~]# tcpdump -i eth0 -nnv host 192.168.0.15 and host 192.168.0.33</span><br><span class="line">[root@localhost ~]# tcpdump -i eth0 -nnv host 192.168.0.15 or host 192.168.0.33</span><br><span class="line">[root@localhost ~]# tcpdump -i eth0 -nnv \(host 192.168.0.15 and port 22\) or \(host 192.168.0.33 and port 89 \)</span><br><span class="line"></span><br><span class="line">[root@localhost ~]# tcpdump -i eth0 -nnv host 192.168.0.110 and port 22 or port 80</span><br><span class="line">[root@localhost ~]# tcpdump -i eth0 -nnv host 192.168.0.110 and \(port 22 or port 80 \)</span><br><span class="line"></span><br><span class="line">[root@localhost ~]# tcpdump -i eth0 -nnv host 192.168.0.110 and port 80</span><br><span class="line">[root@localhost ~]# tcpdump -i eth0 -nnv host 192.168.0.110 and ! port 80</span><br></pre></td></tr></table></figure>
+
+<p>5）条件为tcp仅有的SYN标记的</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">tcp包标识位</span><br><span class="line">| C | E | U | A | P | R | S | F |</span><br><span class="line">| 7 | 6 | 5 | 4 | 3 | 2 | 1 | 0 |</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">抓取SYN的包</span></span><br><span class="line">[root@localhost ~]# tcpdump -i eth0 -nnv tcp[13]==2</span><br><span class="line">[root@localhost ~]# tcpdump -i eth0 -nnv tcp[13]==2 and port 22 -w ssh-conn.tcpdump</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">条件是：TCP仅有SYN/ACK标记的</span></span><br><span class="line">[root@localhost ~]# tcpdump -i eth0 -nnv tcp[13]==18      # SYN+ACK的包</span><br><span class="line">[root@localhost ~]# tcpdump -i eth0 -nnv tcp[13]==17      # FIN+ACK的包</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="检查可疑进程"><a href="#检查可疑进程" class="headerlink" title="检查可疑进程"></a>检查可疑进程</h3><h4 id="ps"><a href="#ps" class="headerlink" title="ps"></a>ps</h4><p>系统进程一般带有“[]”</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# px -aux | less</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="pstree"><a href="#pstree" class="headerlink" title="pstree"></a>pstree</h4><p>显示每个程序的完全指令，包含路径、参数或是常驻服务标识、列出树状图时特别标注现在执行的程序</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">显示所有</span></span><br><span class="line">[root@localhost ~]# pstree -a</span><br><span class="line">[root@localhost ~]# pstree -h</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="top"><a href="#top" class="headerlink" title="top"></a>top</h4><p>按cpu、内存排序</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# top -d 1</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">按P以CPU使用排序</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">按M以内存使用排序</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="netstat"><a href="#netstat" class="headerlink" title="netstat"></a>netstat</h4><p>查看网络连接情况</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# netstat -anputl</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="ss"><a href="#ss" class="headerlink" title="ss"></a>ss</h4><p>查看某个协议或端口的监听状态</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# ss -an | grep tcp</span><br><span class="line">[root@localhost ~]# ss -an | grep 22</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="根据文件或端口查找进程"><a href="#根据文件或端口查找进程" class="headerlink" title="根据文件或端口查找进程"></a>根据文件或端口查找进程</h4><p>1）根据某文件查看正在被某些进程使用</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# lsof /usr/sbin/vsftpd</span><br><span class="line">[root@localhost ~]# fuser /usr/local/nginx/sbin/nginx</span><br></pre></td></tr></table></figure>
+
+<p>2）根据某个端口查看对应进程</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# lsof -i TCP:22</span><br><span class="line">[root@localhost ~]# fuser -v 22/tcp</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="kernel-audit-内核审计"><a href="#kernel-audit-内核审计" class="headerlink" title="kernel audit 内核审计"></a>kernel audit 内核审计</h3><h3 id="文件完全性检查"><a href="#文件完全性检查" class="headerlink" title="文件完全性检查"></a>文件完全性检查</h3><h4 id="检验RPM包完整性"><a href="#检验RPM包完整性" class="headerlink" title="检验RPM包完整性"></a>检验RPM包完整性</h4><p>没有显示说明包没有被修改</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# rpm -V bash</span><br><span class="line">[root@localhost ~]# rpm -V kernel</span><br><span class="line">[root@localhost ~]# rpm -v vsftpd</span><br><span class="line">[root@localhost ~]# rpm -vf /etc/ssh/sshd_config</span><br></pre></td></tr></table></figure>
+
+<h4 id="md5sum-sha1sum检测"><a href="#md5sum-sha1sum检测" class="headerlink" title="md5sum&#x2F;sha1sum检测"></a>md5sum&#x2F;sha1sum检测</h4><p>1）获取当前的&#x2F;etc目录的md5值</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# find /etc -type f -exec md5sum &#123;&#125; \; &gt;/tmp/`date +%F%H%M`-md5.txt</span><br></pre></td></tr></table></figure>
+
+<p>2）对比以上md5值获取操作过的文件</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]#　diff /tmp/1-md5.txt /tmp/2-md5.txt</span><br></pre></td></tr></table></figure>
+
+<h4 id="HIDS-AIDE高级入侵检测环境"><a href="#HIDS-AIDE高级入侵检测环境" class="headerlink" title="HIDS:AIDE高级入侵检测环境"></a>HIDS:AIDE高级入侵检测环境</h4><h2 id="拓展"><a href="#拓展" class="headerlink" title="拓展"></a>拓展</h2><h3 id="arp"><a href="#arp" class="headerlink" title="arp"></a>arp</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查看本机mac地址列表</span></span><br><span class="line">[root@localhost ~]# arp -a</span><br></pre></td></tr></table></figure>
+
+<h3 id="arping"><a href="#arping" class="headerlink" title="arping"></a>arping</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">获取某个IP对应的mac地址</span></span><br><span class="line">[root@localhost ~]# arping -I eth0 192.168.43.20</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>Linux</tag>
+      </tags>
   </entry>
   <entry>
     <title>系统安全</title>
@@ -6177,44 +6306,6 @@
       </tags>
   </entry>
   <entry>
-    <title>区分函数与方法</title>
-    <url>/2019/03/20/python-%E5%8C%BA%E5%88%86%E5%87%BD%E6%95%B0%E4%B8%8E%E6%96%B9%E6%B3%95/</url>
-    <content><![CDATA[<h2 id="通过print打印区分"><a href="#通过print打印区分" class="headerlink" title="通过print打印区分"></a>通过print打印区分</h2><ul>
-<li>函数在打印的时候，显示的是function</li>
-<li>方法在打印的时候，显示的是method</li>
-</ul>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">func</span>():</span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Animal</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">run</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(func)  <span class="comment"># &lt;function func at 0x0000022343CD1F28&gt;</span></span><br><span class="line"></span><br><span class="line">c = Animal()</span><br><span class="line"><span class="built_in">print</span>(c.run)  <span class="comment"># &lt;bound method Animal.run of &lt;__main__.Animal object at 0x0000022344128400&gt;&gt;</span></span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="MethodType与FunctionType"><a href="#MethodType与FunctionType" class="headerlink" title="MethodType与FunctionType"></a>MethodType与FunctionType</h2><h3 id="实例方法"><a href="#实例方法" class="headerlink" title="实例方法"></a>实例方法</h3><ul>
-<li>通过<strong>对象.方法名</strong>，得到的是<strong>方法</strong>类型</li>
-<li>通过<strong>类名.方法名</strong>，得到的是<strong>函数</strong>类型</li>
-</ul>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> types <span class="keyword">import</span> FunctionType, MethodType</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Foo</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">run</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">fn = Foo()</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">isinstance</span>(fn.run, MethodType))     <span class="comment"># True</span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">isinstance</span>(Foo.run, FunctionType))  <span class="comment"># True</span></span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="静态方法"><a href="#静态方法" class="headerlink" title="静态方法"></a>静态方法</h3><ul>
-<li>通过<strong>对象.方法名</strong>，得到的是<strong>函数</strong>类型</li>
-<li>通过<strong>类名.方法名</strong>，得到的是<strong>函数</strong>类型</li>
-</ul>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> types <span class="keyword">import</span> FunctionType, MethodType</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Foo</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line"></span><br><span class="line"><span class="meta">    @staticmethod</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">run</span>():</span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line">fn = Foo()</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">isinstance</span>(fn.run, FunctionType))   <span class="comment"># True</span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">isinstance</span>(Foo.run, FunctionType))  <span class="comment"># True</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="类方法"><a href="#类方法" class="headerlink" title="类方法"></a>类方法</h3><ul>
-<li>通过<strong>对象.方法名</strong>，得到的是<strong>方法</strong>类型</li>
-<li>通过<strong>类名.方法名</strong>，得到的是<strong>方法</strong>类型</li>
-</ul>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> types <span class="keyword">import</span> FunctionType, MethodType</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Foo</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line"></span><br><span class="line"><span class="meta">    @classmethod</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">run</span>(<span class="params">cls</span>):</span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line">fn = Foo()</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">isinstance</span>(fn.run, MethodType))   <span class="comment"># True</span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">isinstance</span>(Foo.run, MethodType))  <span class="comment"># True</span></span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>Python</category>
-      </categories>
-      <tags>
-        <tag>Python</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>单例模式</title>
     <url>/2019/03/20/python-%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/</url>
     <content><![CDATA[<h2 id="单例模式"><a href="#单例模式" class="headerlink" title="单例模式"></a>单例模式</h2><p>单例模式(Singleton Pattern)， 是一种常用的软件设计模式。该模式的主要目的是确保某一个类只有一个实例存在。当你希望在整个系统中，某个类只能出现一个实例时，单例对象就能派上用场。</p>
@@ -6248,6 +6339,44 @@
 <p>  使用单例对象(尤其在类库中定义的对象)时，开发人员必须记住自己不能使用new关键字实例化对象。因为可能无法访问库源代码，因此应用程序开发人员可能会意外发现自己无法直接实例化此类</p>
 <p>对象生存期</p>
 <p>  不能解决删除单个对象的问题。在提供内存管理的语言中(例如基于.NET Framework的语言)，只有单例类能够导致实例被取消分配，因为它包含对该实例的私有引用。在某些语言中(如c++)，其他类可以删除对象实例，但这样会导致单例类中出现悬浮引用</p>
+]]></content>
+      <categories>
+        <category>Python</category>
+      </categories>
+      <tags>
+        <tag>Python</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>区分函数与方法</title>
+    <url>/2019/03/20/python-%E5%8C%BA%E5%88%86%E5%87%BD%E6%95%B0%E4%B8%8E%E6%96%B9%E6%B3%95/</url>
+    <content><![CDATA[<h2 id="通过print打印区分"><a href="#通过print打印区分" class="headerlink" title="通过print打印区分"></a>通过print打印区分</h2><ul>
+<li>函数在打印的时候，显示的是function</li>
+<li>方法在打印的时候，显示的是method</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">func</span>():</span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Animal</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">run</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(func)  <span class="comment"># &lt;function func at 0x0000022343CD1F28&gt;</span></span><br><span class="line"></span><br><span class="line">c = Animal()</span><br><span class="line"><span class="built_in">print</span>(c.run)  <span class="comment"># &lt;bound method Animal.run of &lt;__main__.Animal object at 0x0000022344128400&gt;&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="MethodType与FunctionType"><a href="#MethodType与FunctionType" class="headerlink" title="MethodType与FunctionType"></a>MethodType与FunctionType</h2><h3 id="实例方法"><a href="#实例方法" class="headerlink" title="实例方法"></a>实例方法</h3><ul>
+<li>通过<strong>对象.方法名</strong>，得到的是<strong>方法</strong>类型</li>
+<li>通过<strong>类名.方法名</strong>，得到的是<strong>函数</strong>类型</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> types <span class="keyword">import</span> FunctionType, MethodType</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Foo</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">run</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">fn = Foo()</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">isinstance</span>(fn.run, MethodType))     <span class="comment"># True</span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">isinstance</span>(Foo.run, FunctionType))  <span class="comment"># True</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="静态方法"><a href="#静态方法" class="headerlink" title="静态方法"></a>静态方法</h3><ul>
+<li>通过<strong>对象.方法名</strong>，得到的是<strong>函数</strong>类型</li>
+<li>通过<strong>类名.方法名</strong>，得到的是<strong>函数</strong>类型</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> types <span class="keyword">import</span> FunctionType, MethodType</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Foo</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line"></span><br><span class="line"><span class="meta">    @staticmethod</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">run</span>():</span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line">fn = Foo()</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">isinstance</span>(fn.run, FunctionType))   <span class="comment"># True</span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">isinstance</span>(Foo.run, FunctionType))  <span class="comment"># True</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="类方法"><a href="#类方法" class="headerlink" title="类方法"></a>类方法</h3><ul>
+<li>通过<strong>对象.方法名</strong>，得到的是<strong>方法</strong>类型</li>
+<li>通过<strong>类名.方法名</strong>，得到的是<strong>方法</strong>类型</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> types <span class="keyword">import</span> FunctionType, MethodType</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Foo</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line"></span><br><span class="line"><span class="meta">    @classmethod</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">run</span>(<span class="params">cls</span>):</span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line">fn = Foo()</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">isinstance</span>(fn.run, MethodType))   <span class="comment"># True</span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">isinstance</span>(Foo.run, MethodType))  <span class="comment"># True</span></span><br></pre></td></tr></table></figure>
 ]]></content>
       <categories>
         <category>Python</category>
@@ -8872,7 +9001,7 @@
 </tr>
 <tr>
 <td>mail address</td>
-<td>当日志轮替时，输出内容通过邮件发送到指定的邮件地址。如mail <a href="mailto:&#97;&#x61;&#x61;&#x40;&#49;&#54;&#51;&#46;&#99;&#x6f;&#x6d;">aaa@163.com</a></td>
+<td>当日志轮替时，输出内容通过邮件发送到指定的邮件地址。如mail <a href="mailto:&#x61;&#97;&#97;&#64;&#x31;&#54;&#51;&#x2e;&#99;&#111;&#109;">aaa@163.com</a></td>
 </tr>
 <tr>
 <td>missingok</td>
