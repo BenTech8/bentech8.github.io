@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"bentech8.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":5,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Pod联网每个Pod在每个地址族中获得一个唯一的IP地址。Pod中的每个容器共享网络名字空间，包括IP地址和网络端口。Pod内的容器可以使用localhost互相通信。当Pod中的容器与Pod之外的实体通信时，它们必须协调如何使用共享的网络资源(例如端口)。 Pod使用主机网络 123456789apiVersion: v1kind: Podmetadata:  name: pod-use-hos">
+<meta property="og:type" content="article">
+<meta property="og:title" content="pod核心对象">
+<meta property="og:url" content="https://bentech8.github.io/2025/06/01/k8s-pod%E6%A0%B8%E5%BF%83%E5%AF%B9%E8%B1%A1/index.html">
+<meta property="og:site_name" content="Ben&#39;s Blog">
+<meta property="og:description" content="Pod联网每个Pod在每个地址族中获得一个唯一的IP地址。Pod中的每个容器共享网络名字空间，包括IP地址和网络端口。Pod内的容器可以使用localhost互相通信。当Pod中的容器与Pod之外的实体通信时，它们必须协调如何使用共享的网络资源(例如端口)。 Pod使用主机网络 123456789apiVersion: v1kind: Podmetadata:  name: pod-use-hos">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-06-01T08:01:49.000Z">
+<meta property="article:modified_time" content="2025-06-01T14:26:18.674Z">
+<meta property="article:author" content="Ben">
+<meta property="article:tag" content="Kubernetes">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://bentech8.github.io/2025/06/01/k8s-pod%E6%A0%B8%E5%BF%83%E5%AF%B9%E8%B1%A1/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>pod核心对象 | Ben's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Ben's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Ben's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://bentech8.github.io/2025/06/01/k8s-pod%E6%A0%B8%E5%BF%83%E5%AF%B9%E8%B1%A1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Ben">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ben's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          pod核心对象
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2025-06-01 16:01:49 / 修改时间：22:26:18" itemprop="dateCreated datePublished" datetime="2025-06-01T16:01:49+08:00">2025-06-01</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Kubernetes/" itemprop="url" rel="index"><span itemprop="name">Kubernetes</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2025/06/01/k8s-pod%E6%A0%B8%E5%BF%83%E5%AF%B9%E8%B1%A1/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2025/06/01/k8s-pod%E6%A0%B8%E5%BF%83%E5%AF%B9%E8%B1%A1/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>2.8k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>5 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="Pod联网"><a href="#Pod联网" class="headerlink" title="Pod联网"></a>Pod联网</h3><p>每个Pod在每个地址族中获得一个唯一的IP地址。Pod中的每个容器共享网络名字空间，包括IP地址和网络端口。Pod内的容器可以使用localhost互相通信。当Pod中的容器与Pod之外的实体通信时，它们必须协调如何使用共享的网络资源(例如端口)。</p>
+<p>Pod使用主机网络</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Pod</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">pod-use-hostnetwork</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">containers:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">myapp</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">ikubernetes/myapp:v1</span></span><br><span class="line">  <span class="attr">hostNetwork:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="Pod管理多个容器"><a href="#Pod管理多个容器" class="headerlink" title="Pod管理多个容器"></a>Pod管理多个容器</h3><p>Pod被设计成支持形成内聚服务单元的多个协作过程(形式为容器)。Pod中的容器被自动安排到集群中的同一物理机或虚拟机上，并可以一起进行调度。容器之间可以共享资源和依赖、彼此通信、协调何时以及何种方式终止自身。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"> <span class="attr">6apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Pod</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">mc1</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">volumes:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">html</span></span><br><span class="line">    <span class="attr">emptyDir:</span> &#123;&#125;</span><br><span class="line">  <span class="attr">containers:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">1st</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">nginx</span></span><br><span class="line">    <span class="attr">volumeMounts:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">html</span></span><br><span class="line">      <span class="attr">mountPath:</span> <span class="string">/usr/share/nginx/html</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">2nd</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">debian</span></span><br><span class="line">    <span class="attr">volumeMounts:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">html</span></span><br><span class="line">      <span class="attr">mountPath:</span> <span class="string">/html</span></span><br><span class="line">    <span class="attr">command:</span> [<span class="string">&quot;/bin/bash&quot;</span>, <span class="string">&quot;-c&quot;</span>]</span><br><span class="line">    <span class="attr">args:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">while</span> <span class="literal">true</span><span class="string">;</span> <span class="string">do</span></span><br><span class="line">          <span class="string">date</span> <span class="string">&gt;&gt;</span> <span class="string">/html/index.html;</span></span><br><span class="line">          <span class="string">sleep</span> <span class="number">1</span><span class="string">;</span></span><br><span class="line">        <span class="string">done</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="静态Pod"><a href="#静态Pod" class="headerlink" title="静态Pod"></a>静态Pod</h3><p>静态Pod（Static Pod）直接由特定节点上的kubelet守护进程管理，不需要API服务器看到它们。尽管大多数Pod都是通过控制面（例如Deployment）来管理的，对于静态Pod而言，kubelet直接监控每个Pod，并在其失效时重启之。</p>
+<p>静态Pod通常绑定在某个节点上的kubelet。其主要用途是运行自托管的控制面。在自托管场景中，使用kubelet来管理各个独立的控制面组件。</p>
+<p>kubelet自动尝试为每个静态Pod在Kubernetes API服务器上创建一个镜像Pod。这意味着在节点上运行的Pod在API服务器上是可见的，但不可以通过API服务器来控制。</p>
+<p>配置文件就是放在特定目录下的标准的JSON或YAML格式的pod定义文件。用kubelet –pod-manifest-path&#x3D;&lt;the directory&gt;来启动kubelet进程，kubelet定期的去扫描这个目录，根据这个目录下出现或消失的YAML&#x2F;JSON文件来创建或删除静态Pod。</p>
+<p>比如我们在node01这个节点上用静态pod的方式来启动一个nginx的服务。我们登录到node01节点上面，可以通过下面命令找到kubelet对应的启动配置文件:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查看kubelet状态</span></span><br><span class="line">[root@node01 ~]# systemctl status kubelet</span><br></pre></td></tr></table></figure>
+
+<p>可以看到，kubelet配置文件位置为：&#x2F;etc&#x2F;systemd&#x2F;system&#x2F;kubelet.service.d&#x2F;10-kubelet.conf。打开这个文件我们可以看到其中一条如下的环境变量配置：Environment&#x3D;”KUBELET_SYSTEM_PODS_ARGS&#x3D;–pod-manifest-path&#x3D;&#x2F;etc&#x2F;kubernetes&#x2F;manifests –allow-privileged&#x3D;true”。</p>
+<p>如果你的kubelet启动参数中没有配置上面的–pod-manifest-path参数的话，那么添加上这个参数然后重启kubelet即可。</p>
+<h3 id="配置Pod使用卷存储"><a href="#配置Pod使用卷存储" class="headerlink" title="配置Pod使用卷存储"></a>配置Pod使用卷存储</h3><p>只要容器存在，容器的文件系统就会存在，因此当一个容器终止并重新启动，对该容器的文件系统改动将丢失。对于独立于容器的持久化存储，你可以使用卷。这对有状态应用程序尤为重要，例如键值存储（如Redis）和数据库存。</p>
+<h4 id="emptyDir卷"><a href="#emptyDir卷" class="headerlink" title="emptyDir卷"></a>emptyDir卷</h4><p>在整个Pod生命周期中一直存在，即使Pod的容器被终止和重启。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">[root@master01 ~]# cat redis.yaml</span><br><span class="line">apiVersion: v1</span><br><span class="line">kind: Pod</span><br><span class="line">metadata: redis</span><br><span class="line">spec:</span><br><span class="line">  containers:</span><br><span class="line">  - name: redis</span><br><span class="line">    image: redis</span><br><span class="line">    volumeMounts:</span><br><span class="line">    - name: redis-storage</span><br><span class="line">      mountPath: /data/redis</span><br><span class="line">  volumes:</span><br><span class="line">  - name: redis-storage</span><br><span class="line">    emptyDir: &#123;&#125;</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">创建Pod</span></span><br><span class="line">[root@master01 ~]# kubectl apply -f redis.yaml</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">监控Pod变化</span></span><br><span class="line">[root@master01 ~]# kubectl get pod redis --watch</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">另开一个终端，进入redis容器</span></span><br><span class="line">[root@master01 ~]# kubectl exec -it redis /bin/bash</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">进入持久化目录</span></span><br><span class="line">[root@redis:data]# cd /data/redis/</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">创建新文件</span></span><br><span class="line">[root@redis:/data/redis]# echo &quot;test file&quot; &gt; test-file</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查看redis进程pid</span></span><br><span class="line">[root@redis:/data/redis]# ps aux</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash"><span class="built_in">kill</span> redis进程，此时关注另一个终端，可以观察到Pod在重启</span></span><br><span class="line">[root@redis:/data/redis]# kill &lt;pid&gt;</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">重启进入redis容器,查看持久化文件是否存在</span></span><br><span class="line">[root@master01 ~]# kubectl exec -it redis /bin/bash</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查看持久化文件是否存在</span></span><br><span class="line">[root@redis:/data]# ls ./redis</span><br></pre></td></tr></table></figure>
+
+
+
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Ben
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://bentech8.github.io/2025/06/01/k8s-pod%E6%A0%B8%E5%BF%83%E5%AF%B9%E8%B1%A1/" title="pod核心对象">https://bentech8.github.io/2025/06/01/k8s-pod核心对象/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章未经允许禁止转载！如需转载，请联系作者申请授权。
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Kubernetes/" rel="tag"># Kubernetes</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/04/09/Linux-%E5%85%A5%E4%BE%B5%E6%A3%80%E6%B5%8B/" rel="prev" title="入侵检测">
+      <i class="fa fa-chevron-left"></i> 入侵检测
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Pod%E8%81%94%E7%BD%91"><span class="nav-number">1.</span> <span class="nav-text">Pod联网</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Pod%E7%AE%A1%E7%90%86%E5%A4%9A%E4%B8%AA%E5%AE%B9%E5%99%A8"><span class="nav-number">2.</span> <span class="nav-text">Pod管理多个容器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9D%99%E6%80%81Pod"><span class="nav-number">3.</span> <span class="nav-text">静态Pod</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AEPod%E4%BD%BF%E7%94%A8%E5%8D%B7%E5%AD%98%E5%82%A8"><span class="nav-number">4.</span> <span class="nav-text">配置Pod使用卷存储</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#emptyDir%E5%8D%B7"><span class="nav-number">4.1.</span> <span class="nav-text">emptyDir卷</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Ben</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">73</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-CN" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ben</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">394k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">11:56</span>
+</div>
+<!--
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+-->
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : true,
+      notify     : true,
+      appId      : '0Ibk06MYHWKRB1WjfkdRuY1Q-gzGzoHsz',
+      appKey     : 'p4ECagerwNayDmP7n8bVSKsv',
+      placeholder: "欢迎和我一起交流!",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : 'zh-cn' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>
