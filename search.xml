@@ -4105,7 +4105,7 @@
   </entry>
   <entry>
     <title>pod核心对象</title>
-    <url>/2025/06/01/k8s-pod%E6%A0%B8%E5%BF%83%E5%AF%B9%E8%B1%A1/</url>
+    <url>/2020/06/01/k8s-pod%E6%A0%B8%E5%BF%83%E5%AF%B9%E8%B1%A1/</url>
     <content><![CDATA[<h3 id="Pod联网"><a href="#Pod联网" class="headerlink" title="Pod联网"></a>Pod联网</h3><p>每个Pod在每个地址族中获得一个唯一的IP地址。Pod中的每个容器共享网络名字空间，包括IP地址和网络端口。Pod内的容器可以使用localhost互相通信。当Pod中的容器与Pod之外的实体通信时，它们必须协调如何使用共享的网络资源(例如端口)。</p>
 <p>Pod使用主机网络</p>
 <figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Pod</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">pod-use-hostnetwork</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">containers:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">myapp</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">ikubernetes/myapp:v1</span></span><br><span class="line">  <span class="attr">hostNetwork:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure>
@@ -9172,7 +9172,7 @@
 </tr>
 <tr>
 <td>mail address</td>
-<td>当日志轮替时，输出内容通过邮件发送到指定的邮件地址。如mail <a href="mailto:&#x61;&#97;&#97;&#x40;&#49;&#54;&#51;&#46;&#99;&#x6f;&#x6d;">aaa@163.com</a></td>
+<td>当日志轮替时，输出内容通过邮件发送到指定的邮件地址。如mail <a href="mailto:&#97;&#97;&#97;&#64;&#49;&#54;&#x33;&#x2e;&#99;&#x6f;&#109;">aaa@163.com</a></td>
 </tr>
 <tr>
 <td>missingok</td>
