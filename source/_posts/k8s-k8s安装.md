@@ -1378,3 +1378,46 @@ done
 # 所有节点添加kube-proxyr的配置和service文件
 ```
 
+
+
+### calico安装
+
+```shell
+# master01执行
+[root@master01 ~]# sed -i "s#POD_CIDR#172.16.0.0/12#g" calico.yaml
+[root@master01 ~]# kubectl apply -f calico.yaml
+# 查看集群节点状态,确定节点处于ready状态
+[root@master01 ~]# kubectl get nodes 
+```
+
+
+
+### CoreDNS安装
+
+```shell
+# master01执行
+# coredns是k8s service网段的第十个IP
+[root@master01 ~]# COREDNS_SERVICE_IP=`kubectl get svc | grep kubernetes | awk '{print $3}'0
+[root@master01 ~]# sed -i "s#KUBEDNS_SERVICE_IP#${COREDNS_SERVICE_IP}#g" CoreDNS/coredns.yaml
+# 安装coredns
+[root@master01 ~]# kubectl create -f CoreDNS/coredns.yaml
+# 查看状态
+[root@master01 ~]# kubectl get po -n kube-system -l k8s-app=kube-dns
+```
+
+
+
+### 安装metrics组件
+
+```shell
+# master01执行
+# 下载metrics部署文件
+# 安装metrics
+[root@master01 ~]# cd metrics-server
+[root@master01 ~]# kubectl create -f .
+# 查看状态
+[root@master01 ~]# kubectl top node
+```
+
+
+
